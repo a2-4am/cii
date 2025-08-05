@@ -305,7 +305,8 @@
          CMP   #$03
          BNE   :CHKCLK
          JSR   PRHERE     ;Yes: warn 'em.
-         ASC   "\\ProDOS 1.3 has problems. We suggest you update. "
+         DB    $8D,$8D
+         ASC   "ProDOS 1.3 has problems. We suggest you update. "
          DB    0
          JSR   RDKEY
 :CHKCLK  LDA   MACHID
@@ -314,8 +315,9 @@
          JMP   :SKIPDAT
 *
 :NOCLK   JSR   PRHERE
-         ASC   "\\Enter date or press [Esc] to skip\\"
-         DB    $0
+         DB    $8D,$8D
+         ASC   "Enter date or press [Esc] to skip"
+         DB    $8D,$8D,$0
          LDA   DATE
          BEQ   :NODAT
          LDX   DATE+1
@@ -518,7 +520,9 @@
          BPL   :IS2C      ;ON LASER
 *
 :ASK80   JSR   PRHERE
-         ASC   "\\Do you want 80-column catalog\"
+         DB    $8D,$8D
+         ASC   "Do you want 80-column catalog"
+         DB    $8D
          ASC   "displays (Y/N) ? Y"
          DB    $0
          DEC   CH

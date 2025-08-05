@@ -102,7 +102,7 @@ FMTFIX   JMP   :FMTFIX
          BNE   :CHK35     ; (according to last status call)
          CPY   :PBLKSH
          BEQ   :CHKMM
-:CHK35   LDA   PUNIT      ;No: But are they both 3.5" DRIVES?
+:CHK35   LDA   PUNIT      ;No: But are they both 3.5-inch drives?
          JSR   :SET35     ; (to allow for a single-sided disk in
          BCS   :MISMAT    ; a double-sided drive; this does not
          LDA   SUNIT      ; correctly check for a single-sided
@@ -315,7 +315,7 @@ FMTFIX   JMP   :FMTFIX
          LDA   :PASSNUM   ;Yes: first time through?
          CMP   #1
          BNE   :RDPASSQ
-         LDA   PUNIT      ;Yes: Is source disk a 3.5" disk?
+         LDA   PUNIT      ;Yes: Is source disk a 3.5-inch disk?
          JSR   :SET35
          BCS   :RDPASSQ   ;->No.
          LDA   :PBLKSH    ;Yes: 400K or 800K?
@@ -344,9 +344,9 @@ FMTFIX   JMP   :FMTFIX
          ASC   "Formatting"
          DB    $2F,0      ; (cleol)
 *
-         LDA   FMT400K    ;Was source disk a 400K 3.5" disk?
+         LDA   FMT400K    ;Was source disk a 400K 3.5-inch disk?
          BPL   :WRFMT     ;->No, just format.
-         LDA   SUNIT      ;Yes: Is this disk a 3.5" disk?
+         LDA   SUNIT      ;Yes: Is this disk a 3.5-inch disk?
          JSR   :SET35
          STA   :UNIFLG
          BCS   :WRFMT     ;->No.
@@ -1081,7 +1081,8 @@ FMTFIX   JMP   :FMTFIX
          DB    $0
          JSR   PRFILE
          JSR   PRHERE
-         ASC   "\already exists"
+         DB    $8D
+         ASC   "already exists"
          DB    $0
          PLA
          BPL   :DUP1      ;NOT LOCKED
@@ -1103,7 +1104,8 @@ FMTFIX   JMP   :FMTFIX
          ASC   "[C]opy anyway, "
          DB    $0
 :DUP3    JSR   PRHERE
-         ASC   "[N]ew name, [D]on't copy\"
+         ASC   "[N]ew name, [D]on't copy"
+         DB    $8D
          ASC   "[Esc]-Exit copy"
          DB    $0
 *
@@ -1126,7 +1128,8 @@ FMTFIX   JMP   :FMTFIX
 *
 :NEWNAME JSR   PCOUT
          JSR   PRHERE
-         ASC   "\New name?"
+         DB    $8D
+         ASC   "New name?"
          INV   "/"
          DB    $8D
          INV   "/"

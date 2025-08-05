@@ -45,8 +45,9 @@ CATDS2   LDA   NACTIV
          CPX   #$1E
          BCC   :SEEFILE
          JSR   PRHERE
-         ASC   "\is the current booting program.\"
-         DB    $0
+         DB    $8D
+         ASC   "is the current booting program."
+         DB    $8D,$0
          LDA   #$31       ;QSTAT4
          JSR   PRINT
          JMP   DOKEY
@@ -215,7 +216,8 @@ CPYADD   LDX   CURR       ;IS IT NOW
          RTS
 *
 CPYTAB   JSR   LOHERE
-         ASC   "Insert copy number: [Return]-Complete\"
+         ASC   "Insert copy number: [Return]-Complete"
+         DB    $8D
          ASC   "insertion, [Esc]-Back out"
          DB    $0
          LDA   CURRV      ;TAB TO
@@ -543,7 +545,9 @@ PATTRN   JSR   GETPAT     ;READ PATTERN
 NOPATT   LDA   CURR
          STA   LASTM
          JSR   LOHERE
-         ASC   "Enter filename (one file)\?"
+         ASC   "Enter filename (one file)"
+         DB    $8D
+         ASC   "?"
          DB    $0
 *
          JSR   GETFNM     ;GET FILENAME
@@ -952,7 +956,8 @@ PATMOV   LDX   #$00
 ASKPR?   LDX   PSLOT      ;PRINTER SLOT
          BEQ   :OUT       ;NONZERO?
          JSR   PRHERE
-         ASC   "\\\\Do you want a printout (Y/N) ? "
+         DB    $8D,$8D,$8D,$8D
+         ASC   "Do you want a printout (Y/N) ? "
          DB    $0
          JSR   KYESC
          LDX   #$FF

@@ -440,8 +440,9 @@ DOS?     LDX   #0
          BCC   :NODOS
          RTS
 :NODOS   JSR   PRHERE
-         ASC   "\\No DOS on disk\"
-         DB    $0
+         DB    $8D,$8D
+         ASC   "No DOS on disk"
+         DB    $8D,$0
          JMP   PRESS
 *
 *
@@ -551,8 +552,8 @@ SWCK     STA   PFXADR+1
 :SWCKOUT CLC
          RTS
 :BADSWP  JSR   LOHERE
-         ASC   "Incorrect disk\"
-         DB    $87,$0
+         ASC   "Incorrect disk"
+         DB    $8D,$87,$0
          JSR   INSCOM
          LDA   SDFLG
          EOR   #$FF

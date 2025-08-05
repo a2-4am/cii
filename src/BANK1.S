@@ -1015,8 +1015,8 @@ UNDEL    JSR   COMTRE
          LDA   #$03
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "Lost files:\\"
-         DB    $0
+         ASC   "Lost files:"
+         DB    $8D,$8D,$0
          LDA   #$00
          STA   CURR
 :PAGELP  LDA   #$0E       ;14 LINES/PAGE
@@ -1229,7 +1229,8 @@ ALPHA    JSR   COMTRE
 *
 * ASK TO SAVE IT
 :DUNSEE  JSR   PRHERE
-         ASC   "\[G]-Go, [Esc]-Exit"
+         DB    $8D
+         ASC   "[G]-Go, [Esc]-Exit"
          DB    $0
          JSR   GETKEY
          CMP   #"G"

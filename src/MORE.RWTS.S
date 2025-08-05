@@ -1007,10 +1007,7 @@ PRINT2   LDY   #$00
          BEQ   :OUT
          CMP   #$2F
          BEQ   :CLEAR
-         CMP   #"\"
-         BNE   :NOTBS
-         LDA   #$8D
-:NOTBS   JSR   PCOUT      ;PRINT CHAR
+         JSR   PCOUT      ;PRINT CHAR
 :NEXT    INC   MESPNT     ;2-BYTE INC.
          BNE   PRINT2
          INC   MESPNT+1
@@ -1092,7 +1089,7 @@ MESSAG   DW    :COPY      ;0 MENU 0
          DW    :ERROR
          DW    :QUITOPT   ;3B
          DW    :SPACE
-         DW    :COPYTP
+         DW    0          ;[4am] unused, previously :COPYTP
          DW    :HEADER
          DW    :DRIVE
          DW    :FILES     ;40 MENU 9
@@ -1184,9 +1181,9 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :MTSUB   ASC   "Empty subdirectory"
          DB    $0
 *
-:TOOLONG ASC   "\\"
-:TOOLNG0 ASC   "Prefix too long\"
-         DB    $0
+:TOOLONG DB    $8D,$8D
+:TOOLNG0 ASC   "Prefix too long"
+         DB    $8D,$0
 *
 *
 :COPY    ASC   "Copy"
@@ -1258,28 +1255,36 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :BLANK3  DB    $2F,$8D,$2F,$8D,$2F
          DB    $0
 :CPYENT
-         ASC   "Enter filename (,opt. filetypes)\? "
+         ASC   "Enter filename (,opt. filetypes)"
+         DB    $8D
+         ASC   "? "
          DB    $0
 :SLOT    ASC   "Slot "
          DB    $0
 :FILE    ASC   "File"
          DB    $0
 :PSTATE0
-         ASC   "[Return]-Mark File, [D]elete, [E]nter\"
-         ASC   "Filename, Number-Insert, [G]o,\"
+         ASC   "[Return]-Mark File, [D]elete, [E]nter"
+         DB    $8D
+         ASC   "Filename, Number-Insert, [G]o,"
+         DB    $8D
          ASC   "[ESC]-EXIT"
          DB    $0
 :PSTATE1
-         ASC   "[Return]-TOGGLE MARKER, [E]NTER\"
+         ASC   "[Return]-Toggle marker, [E]nter"
+         DB    $8D
          ASC   "Filename, [G]o, [Esc]-Exit"
          DB    $0
 :PSTATE2
-         ASC   "[Return]-Toggle Asterisk, [E]nter\"
+         ASC   "[Return]-Toggle Asterisk, [E]nter"
+         DB    $8D
          ASC   " Filename, [G]o, [ESC]-Exit"
          DB    $0
 :PSTATE3
-         ASC   "[Return]-Select to rename, [E]nter\"
-         ASC   "Filename, [G]o, [ESC]-Exit\"
+         ASC   "[Return]-Select to rename, [E]nter"
+         DB    $8D
+         ASC   "Filename, [G]o, [ESC]-Exit"
+         DB    $8D
          ASC   "(Renamed files are marked)"
          DB    $0
 :PSTAT45
@@ -1292,25 +1297,31 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :CRESC1  DB    $8D
 :CRESC   ASC   "[Return]-Continue, [Esc]-Exit "
          DB    $0
-:NOFILES ASC   "\No files\"
+:NOFILES DB    $8D
+         ASC   "No files"
+         DB    $8D
 :INIT    DB    $0
 :IO      ASC   "I/O"
          DB    $0
 :ERROR   ASC   "Error"
          DB    $0
-:SPACE   ASC   "\[Space]-Next File "
+:SPACE   DB    $8D
+         ASC   "[Space]-Next File "
          DB    $0
-:QUITOPT ASC   "\\ Press [Esc] to re-enter utilities\\"
-         ASC   " Press [Q] to quit to ProDOS\\"
+:QUITOPT DB    $8D,$8D
+         ASC   " Press [Esc] to re-enter utilities"
+         DB    $8D,$8D
+         ASC   " Press [Q] to quit to ProDOS"
+         DB    $8D,$8D
          ASC   " Press [Reset] to reboot"
          DB    $0
 *
 *
-:COPYTP  ASC   "\\\Insert Copy ][ Plus disk in "
-         DB    $0
 :HEADER
-         ASC   "           Copy ][ Plus  8.5\"
-         ASC   "(C) 1982-9 Central Point Software, Inc.\"
+         ASC   "           Copy ][ Plus  8.5"
+         DB    $8D
+         ASC   "(C) 1982-9 Central Point Software, Inc."
+         DB    $8D
 :DASHES  ASC   "----------------------------------------"
          DB    $0
 :DRIVE   ASC   "Drive "
@@ -1319,7 +1330,7 @@ MESSAG   DW    :COPY      ;0 MENU 0
          DB    $0
 :WRITE   ASC   "Write"
          DB    $0
-:PRESS   ASC   "\"
+:PRESS   DB    $8D
 :PRESS1  ASC   "Press [Return] "
          DB    $0
 :MORE    ASC   "----------------- MORE -----------------"
@@ -1336,11 +1347,11 @@ MESSAG   DW    :COPY      ;0 MENU 0
          ASC   "Select option:"
          DB    $2F,$8D,0
 *
-:MSG57   ASC   "Insert source disk\"
-         DB    $0
+:MSG57   ASC   "Insert source disk"
+         DB    $8D,$0
 *
-:MSG58   ASC   "Insert target disk\"
-         DB    $0
+:MSG58   ASC   "Insert target disk"
+         DB    $8D,$0
 *
 :MSG59   ASC   "   NAME           TYPE  BLKS  MODIFIED"
          DB    $0
@@ -1354,71 +1365,95 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :MSG5C   ASC   "Copy same onto another disk (Y/N) ? "
          DB    $0
 *
-:MSG5D   ASC   "\\Target file name: "
+:MSG5D   DB    $8D,$8D
+         ASC   "Target file name: "
          DB    $0
 *
-:MSG5E   ASC   "\\Device size mismatch\\"
-         DB    $0
+:MSG5E   DB    $8D,$8D
+         ASC   "Device size mismatch"
+         DB    $8D,$8D,$0
 *
-:MSG5F   ASC   "\\\Insert disks\\"
-         DB    $0
+:MSG5F   DB    $8D,$8D,$8D
+         ASC   "Insert disks"
+         DB    $8D,$8D,$0
 *
-:MSG60   ASC   "\\Duplicate volume online\"
-         DB    $0
+:MSG60   DB    $8D,$8D
+         ASC   "Duplicate volume online"
+         DB    $8D,$0
 *
 :MSG61   DB    $0
 *
-:MSG62   ASC   "\\Insert disk to format\\"
-         DB    $0
+:MSG62   DB    $8D,$8D
+         ASC   "Insert disk to format"
+         DB    $8D,$8D,$0
 *
 :MSG63   ASC   "Ready to format (Y/N) ? "
          DB    $0
 *
-:MSG64   ASC   "\\\"
-         ASC   "  Formatting disk\\"
+:MSG64   DB    $8D,$8D,$8D
+         ASC   "  Formatting disk"
+         DB    $8D,$8D,$0
+*
+:MSG65   DB    $8D,$8D
+         ASC   "Formatting complete"
+         DB    $8D,$0
+*
+:MSG66   DB    $8D,$8D
+         ASC   "Subdirectory created"
+         DB    $8D,$0
+*
+:MSG67   DB    $8D
+         ASC   "[L]ock or [U]nlock? "
          DB    $0
 *
-:MSG65   ASC   "\\Formatting complete\"
+:MSG68   DB    $8D,$8D,$8D
+         ASC   "Insert a blank disk in "
          DB    $0
 *
-:MSG66   ASC   "\\Subdirectory created\"
-         DB    $0
-*
-:MSG67   ASC   "\[L]ock or [U]nlock? "
-         DB    $0
-*
-:MSG68   ASC   "\\\Insert a blank disk in "
-         DB    $0
-*
-:MSG69   ASC   "\\\Drive speed should be between 198.0 ms.\"
-         ASC   "and 202.0 ms.\\"
-         ASC   "Drive speed is       ms.\\"
+:MSG69   DB    $8D,$8D,$8D
+         ASC   "Drive speed should be between 198.0 ms."
+         DB    $8D
+         ASC   "and 202.0 ms."
+         DB    $8D,$8D
+         ASC   "Drive speed is       ms."
+         DB    $8D,$8D
          ASC   "([Esc]-Exit)"
          DB    $0
 *
 :MSG6A
-         ASC   "   TRACK           1               2\"
-         ASC   "   0123456789ABCDEF0123456789ABCDEF012\"
-         ASC   "\S"
-         ASC   "\E"
-         ASC   "\C"
-         ASC   "\T"
-         ASC   "\O"
-         ASC   "\R"
+         ASC   "   TRACK           1               2"
+         DB    $8D
+         ASC   "   0123456789ABCDEF0123456789ABCDEF012"
+         DB    $8D,$8D
+         ASC   "S"
+         DB    $8D
+         ASC   "E"
+         DB    $8D
+         ASC   "C"
+         DB    $8D
+         ASC   "T"
+         DB    $8D
+         ASC   "O"
+         DB    $8D
+         ASC   "R"
          DB    $0
 *
 :MSG6B   ASC   "   Use arrow keys to map other files  "
          DB    $0
 *
-:MSG6C   ASC   "\\\\No boot program to change"
+:MSG6C   DB    $8D,$8D,$8D,$8D
+         ASC   "No boot program to change"
          DB    $0
 *
-:MSG6D   ASC   "\\\Disk II function only\"
-         DB    $0
+:MSG6D   DB    $8D,$8D,$8D
+         ASC   "Disk II function only"
+         DB    $8D,$0
 *
-:MSG6E   ASC   "\\\Not a ProDOS function\"
-         DB    $0
+:MSG6E   DB    $8D,$8D,$8D
+         ASC   "Not a ProDOS function"
+         DB    $8D,$0
 *
-:MSG6F   ASC   "\\\Not a DOS 3.3 function\"
-         DB    $0
+:MSG6F   DB    $8D,$8D,$8D
+         ASC   "Not a DOS 3.3 function"
+         DB    $8D,$0
 *
