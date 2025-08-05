@@ -9,8 +9,6 @@ FMTFIX   JMP   :FMTFIX
          LDX   #$08       ;Which COPY option?
          JSR   CHOOZ1
          STA   :COPYOPT
-         CMP   #2
-         BCC   :MIKE      ;0,1 -> BitCopies.
          LDA   #>TOPMEM
          STA   HIMEM
          LDY   #0
@@ -39,81 +37,9 @@ FMTFIX   JMP   :FMTFIX
          LDA   #1
          STA   PDOS
          STA   SDOS
-         LDA   :COPYOPT
-         CMP   #2         ;Chose option 2 - FILES?
-         BNE   :JNOTFLZ   ;->No: it's DISK or DOS
+         LDA   :COPYOPT   ;Chose option 0 - FILES?
+         BNE   :NOTFILZ   ;->No: it's DISK or DOS
          JMP   :CPYFILS
-:JNOTFLZ JMP   :NOTFILZ
-*
-*
-* ****** JUMP TO BIT COPIER ********
-*
-:MIKE    JSR   HOME
-         LDY   #$FF
-         STY   DOSNOW
-         DEY
-         STY   SRCTAR
-         LDA   :COPYOPT
-         CLC
-         ADC   #$0F
-         JSR   PRINT      ;Print BIT COPY 5.25 or BIT COPY 3.5
-         JSR   MOVPFX
-         LDA   BOOTDV
-         STA   UNIT
-         JSR   PRVNM
-*
-         JSR   UNTDV0
-         TXA
-         BPL   :DOIT      ;NONREMOVABLE
-:ISFLPY  LDA   #$3D       ;INSERT C2+
-         JSR   PRINT
-         JSR   CROUT
-         LDA   BOOTDV
-         JSR   SEEDEV
-         JSR   CROUT
-         LDA   #$52       ;CRESC1
-         JSR   PRINT
-         JSR   KYESC
-:DOIT    JSR   DOC00E     ;ALTCHARSETOFF
-         JSR   PRVNM
-         LDA   #0
-         STA   WNDTOP
-         LDA   #>:NAME525 ;Set up name of file to go to NOW.
-         LDX   #:NAME525
-         LDY   :COPYOPT   ;Did they really choose 5.25 bitcopy?
-         BEQ   :GOMIKE2   ;->Yep.
-         LDA   #>:NAME35
-         LDX   #:NAME35
-:GOMIKE2 STA   POINT+1
-         STX   POINT
-*
-         JSR   SETBUT     ;Set prefix (why called SETBUT?)
-         BCS   :NOBITC    ;->Not there...: show error.
-*
-         LDA   POINT+1    ;Pt to name for program loader
-         LDX   POINT
-         JSR   LDSYS      ;& go to program.
-*
-* If LDSYS returns, that means it failed.
-*
-:NOBITC  LDA   #$5B       ;"CAN'T FIND FILE: "
-         JSR   LOWMES
-         LDY   #0
-         LDA   (POINT),Y  ;Get length of filename
-         TAX              ; for counter
-:NAMELP  INY
-         LDA   (POINT),Y  ;Print filename
-         ORA   #$80
-         JSR   PCOUT
-         DEX              ;until out of chars
-         BNE   :NAMELP
-         JMP   PRESS
-*
-:PFXLST  DB    $1
-         DW    PFX
-*
-:NAME525 STR   'BITCOPY.SYSTEM'
-:NAME35  STR   'BC3.SYSTEM'
 *
 *
 * ********* COPY DISK & DOS *********
@@ -125,8 +51,8 @@ FMTFIX   JMP   :FMTFIX
          STA   :BLKLO
          LDA   #$19       ;Fix for Smartport calls with
          STA   $19        ; AST Sprintdisk.
-         LDA   :COPYOPT
-         CMP   #5         ;Is it COPY DOS?
+         LDA   :COPYOPT   ;[4am] adjust -2 this and following COPYOPTs
+         CMP   #3         ;Is it COPY DOS?
          BNE   :ITSDISK   ;->No, it's DISK or DISK W/ FORMAT.
          JMP   :ITSDOS    ;->It's COPY DOS.
 *
@@ -384,7 +310,7 @@ FMTFIX   JMP   :FMTFIX
          JSR   :DOPASS    ;READ.
 *
          LDA   :COPYOPT   ;COPY DISK W/FORMAT?
-         CMP   #4
+         CMP   #2
          BNE   :RDPASSQ   ;->No.
          LDA   :PASSNUM   ;Yes: first time through?
          CMP   #1
@@ -404,7 +330,7 @@ FMTFIX   JMP   :FMTFIX
 :WRPASS  LDA   #$15
          JSR   VLEFT
          LDA   :COPYOPT   ;Is user's choice
-         CMP   #4         ; COPY DISK W/ FORMAT?
+         CMP   #2         ; COPY DISK W/ FORMAT?
          BNE   :WRPASS1   ;->No.
          LDA   :PASSNUM   ;Yes: 1st write pass?
          CMP   #1
@@ -443,7 +369,7 @@ FMTFIX   JMP   :FMTFIX
          STA   RTRACK     ;IF 1ST TIME:
          BNE   :WRPASS2
          LDA   :COPYOPT
-         CMP   #5         ;COPY DOS?
+         CMP   #3         ;COPY DOS?
          BEQ   :WRPASS2   ;->Yes.
          LDA   :TYPE
          BNE   :WRPASS2   ;NOT DISK II
@@ -624,7 +550,7 @@ FMTFIX   JMP   :FMTFIX
 *
 *
 :LCPASS  LDA   :COPYOPT
-         CMP   #5         ;Option 5 - COPY DOS?
+         CMP   #3         ;Option 5 - COPY DOS?
          BEQ   :LCOUT     ;->Yes: Don't use auxmem.
          LDA   ISAUX      ;No: Is there auxmem to use?
          BPL   :LCOUT     ;->No: Don't try to use it!

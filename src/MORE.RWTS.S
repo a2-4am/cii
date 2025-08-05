@@ -1038,9 +1038,9 @@ MESSAG   DW    :COPY      ;0 MENU 0
          DW    :NEWINFO
          DW    :QUIT
 *
-         DW    :BCPY525   ;F  MENU 8
-         DW    :BCPY35
-         DW    :FILES
+         DW    0          ;[4am] unused, previously :BCPY525
+         DW    0          ;[4am] unused, previously :BCPY35
+         DW    :FILES     ;11 MENU 0
          DW    :DISK
          DW    :DSKWFMT
          DW    :DOS
@@ -1220,10 +1220,6 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :QUIT    ASC   "Quit"
          DB    $0
 *
-:BCPY525 ASC   "Bit Copy 5.25"
-         DB    $0
-:BCPY35  ASC   "Bit Copy 3.5"
-         DB    $0
 :FILES   ASC   "Files"
          DB    $0
 :DISK    ASC   "Disk"
