@@ -1146,115 +1146,115 @@ MESSAG   DW    :COPY      ;0 MENU 0
 *
 *
 *
-:ERR2B   ASC   "DISK IS WRITE-PROTECTED"
+:ERR2B   ASC   "Disk is write-protected"
          DB    $0
 *
-:ERR44   ASC   "PATH NOT FOUND"
+:ERR44   ASC   "Path not found"
          DB    $0
 *
-:ERR45   ASC   "VOLUME NOT ONLINE"
+:ERR45   ASC   "Volume not online"
          DB    $0
 *
-:ERR48   ASC   "DISK FULL"
+:ERR48   ASC   "Disk full"
          DB    $0
 *
-:ERR49   ASC   "DIRECTORY FULL"
+:ERR49   ASC   "Directory full"
          DB    $0
 *
-:ERR4E   ASC   "CAN NOT DELETE NON-EMPTY SUBDIRECTORY"
+:ERR4E   ASC   "Can not delete non-empty subdirectory"
          DB    $0
 *
-:ERR3F   ASC   "SUBDIRECTORY NOT FOUND"
+:ERR3F   ASC   "Subdirectory not found"
          DB    $0
 *
-:ERR52   ASC   "NOT A PRODOS OR DOS 3.3 DISK"
+:ERR52   ASC   "Not a ProDOS or DOS 3.3 disk"
          DB    $0
-:ERR47   ASC   "SUBDIRECTORY ALREADY EXISTS"
-         DB    $0
-*
-:ERR2F   ASC   "NO DISK IN DRIVE"
+:ERR47   ASC   "Subdirectory already exists"
          DB    $0
 *
-:INROOT  ASC   "ALREADY IN ROOT DIRECTORY"
+:ERR2F   ASC   "No disk in drive"
          DB    $0
 *
-:NOTSUB  ASC   "NOT A SUBDIRECTORY"
+:INROOT  ASC   "Already in root directory"
          DB    $0
 *
-:MTSUB   ASC   "EMPTY SUBDIRECTORY"
+:NOTSUB  ASC   "Not a subdirectory"
+         DB    $0
+*
+:MTSUB   ASC   "Empty subdirectory"
          DB    $0
 *
 :TOOLONG ASC   "\\"
-:TOOLNG0 ASC   "PREFIX TOO LONG\"
+:TOOLNG0 ASC   "Prefix too long\"
          DB    $0
 *
 *
-:COPY    ASC   "COPY"
+:COPY    ASC   "Copy"
          DB    $0
-:CATALOG ASC   "CATALOG DISK"
+:CATALOG ASC   "Catalog Disk"
          DB    $0
-:DELETE  ASC   "DELETE"
+:DELETE  ASC   "Delete"
          DB    $0
-:LOCK    ASC   "LOCK/UNLOCK FILES"
+:LOCK    ASC   "Lock/Unlock Files"
          DB    $0
-:RENAME  ASC   "RENAME"
+:RENAME  ASC   "Rename"
          DB    $0
-:ALPHA   ASC   "ALPHABETIZE CATALOG"
+:ALPHA   ASC   "Alphabetize Catalog"
          DB    $0
-:FORMAT  ASC   "FORMAT DISK"
+:FORMAT  ASC   "Format Disk"
          DB    $0
-:VERIFY  ASC   "VERIFY"
+:VERIFY  ASC   "Verify"
          DB    $0
-:VIEW    ASC   "VIEW FILES"
+:VIEW    ASC   "View Files"
          DB    $0
-:TSMAP   ASC   "DISK MAP"
+:TSMAP   ASC   "Disk Map"
          DB    $0
-:NEWBOOT ASC   "CHANGE BOOT PROGRAM"
+:NEWBOOT ASC   "Change Boot Program"
          DB    $0
-:UNDEL   ASC   "UNDELETE FILES"
+:UNDEL   ASC   "Undelete Files"
          DB    $0
-:MKDIR   ASC   "CREATE SUBDIRECTORY"
+:MKDIR   ASC   "Create Subdirectory"
          DB    $0
-:NEWINFO ASC   "SET PRINTER SLOT"
+:NEWINFO ASC   "Set Printer Slot"
          DB    $0
-:QUIT    ASC   "QUIT"
+:QUIT    ASC   "Quit"
          DB    $0
 *
-:BCPY525 ASC   "BIT COPY 5.25"
+:BCPY525 ASC   "Bit Copy 5.25"
          DB    $0
-:BCPY35  ASC   "BIT COPY 3.5"
+:BCPY35  ASC   "Bit Copy 3.5"
          DB    $0
-:FILES   ASC   "FILES"
+:FILES   ASC   "Files"
          DB    $0
-:DISK    ASC   "DISK"
+:DISK    ASC   "Disk"
          DB    $0
-:DSKWFMT ASC   "DISK W/ FORMAT"
+:DSKWFMT ASC   "Disk w/ Format"
          DB    $0
 :DOS ASC   "DOS"
          DB    $0
 *
-:VOLUME  ASC   "VOLUME"
+:VOLUME  ASC   "Volume"
          DB    $0
 :DOS33   ASC   "DOS 3.3"
          DB    $0
-:PRODOS  ASC   "PRODOS"
+:PRODOS  ASC   "ProDOS"
          DB    $0
 *
-:NORMAL  ASC   "NORMAL"
+:NORMAL  ASC   "Normal"
          DB    $0
-:WLENGTH ASC   "W/ FILE LENGTHS"
+:WLENGTH ASC   "W/ File Lengths"
          DB    $0
-:WDELETE ASC   "W/ DELETED FILES"
+:WDELETE ASC   "W/ Deleted Files"
          DB    $0
-:WHIDDEN ASC   "W/ HIDDEN CHARS"
-         DB    $0
-*
-:SPEED   ASC   "DRIVE SPEED"
+:WHIDDEN ASC   "W/ Hidden Chars"
          DB    $0
 *
-:VALUES  ASC   "VALUES"
+:SPEED   ASC   "Drive Speed"
          DB    $0
-:TEXT    ASC   "TEXT"
+*
+:VALUES  ASC   "Values"
+         DB    $0
+:TEXT    ASC   "Text"
          DB    $0
 *
 *
@@ -1262,88 +1262,88 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :BLANK3  DB    $2F,$8D,$2F,$8D,$2F
          DB    $0
 :CPYENT
-         ASC   "ENTER FILENAME (,OPT. FILETYPES)\? "
+         ASC   "Enter filename (,opt. filetypes)\? "
          DB    $0
-:SLOT    ASC   "SLOT "
+:SLOT    ASC   "Slot "
          DB    $0
-:FILE    ASC   "FILE"
+:FILE    ASC   "File"
          DB    $0
 :PSTATE0
-         ASC   "[RETURN]-MARK FILE, [D]ELETE, [E]NTER\"
-         ASC   "FILENAME, NUMBER-INSERT, [G]O,\"
+         ASC   "[Return]-Mark File, [D]elete, [E]nter\"
+         ASC   "Filename, Number-Insert, [G]o,\"
          ASC   "[ESC]-EXIT"
          DB    $0
 :PSTATE1
-         ASC   "[RETURN]-TOGGLE MARKER, [E]NTER\"
-         ASC   "FILENAME, [G]O, [ESC]-EXIT"
+         ASC   "[Return]-TOGGLE MARKER, [E]NTER\"
+         ASC   "Filename, [G]o, [Esc]-Exit"
          DB    $0
 :PSTATE2
-         ASC   "[RETURN]-TOGGLE ASTERISK, [E]NTER\"
-         ASC   " FILENAME, [G]O, [ESC]-EXIT"
+         ASC   "[Return]-Toggle Asterisk, [E]nter\"
+         ASC   " Filename, [G]o, [ESC]-Exit"
          DB    $0
 :PSTATE3
-         ASC   "[RETURN]-SELECT TO RENAME, [E]NTER\"
-         ASC   "FILENAME, [G]O, [ESC]-EXIT\"
-         ASC   "(RENAMED FILES ARE MARKED)"
+         ASC   "[Return]-Select to rename, [E]nter\"
+         ASC   "Filename, [G]o, [ESC]-Exit\"
+         ASC   "(Renamed files are marked)"
          DB    $0
 :PSTAT45
-         ASC   "[G]O, [E]NTER FILENAME, [ESC] TO EXIT"
+         ASC   "[G]o, [E]nter Filename, [Esc] to exit"
          DB    $0
-:TRACK   ASC   "TRACK $"
+:TRACK   ASC   "Track $"
          DB    $0
-:SECTOR  ASC   "SECTOR $"
+:SECTOR  ASC   "Sector $"
          DB    $0
 :CRESC1  DB    $8D
-:CRESC   ASC   "[RETURN]-CONTINUE, [ESC]-EXIT "
+:CRESC   ASC   "[Return]-Continue, [Esc]-Exit "
          DB    $0
-:NOFILES ASC   "\NO FILES\"
+:NOFILES ASC   "\No files\"
 :INIT    DB    $0
 :IO      ASC   "I/O"
          DB    $0
-:ERROR   ASC   "ERROR"
+:ERROR   ASC   "Error"
          DB    $0
-:SPACE   ASC   "\[SPACE]-NEXT FILE "
+:SPACE   ASC   "\[Space]-Next File "
          DB    $0
-:QUITOPT ASC   "\\ PRESS [ESC] TO RE-ENTER UTILITIES\\"
-         ASC   " PRESS [Q] TO QUIT TO PRODOS\\"
-         ASC   " PRESS [RESET] TO REBOOT"
+:QUITOPT ASC   "\\ Press [Esc] to re-enter utilities\\"
+         ASC   " Press [Q] to quit to ProDOS\\"
+         ASC   " Press [Reset] to reboot"
          DB    $0
 *
 *
-:COPYTP  ASC   "\\\INSERT COPY ][ PLUS DISK IN "
+:COPYTP  ASC   "\\\Insert Copy ][ Plus disk in "
          DB    $0
 :HEADER
-         ASC   "           COPY ][ PLUS  8.5\"
-         ASC   "(C) 1982-9 CENTRAL POINT SOFTWARE, INC.\"
+         ASC   "           Copy ][ Plus  8.5\"
+         ASC   "(C) 1982-9 Central Point Software, Inc.\"
 :DASHES  ASC   "----------------------------------------"
          DB    $0
-:DRIVE   ASC   "DRIVE "
+:DRIVE   ASC   "Drive "
          DB    $0
-:READ    ASC   "READ"
+:READ    ASC   "Read"
          DB    $0
-:WRITE   ASC   "WRITE"
+:WRITE   ASC   "Write"
          DB    $0
 :PRESS   ASC   "\"
-:PRESS1  ASC   "PRESS [RETURN] "
+:PRESS1  ASC   "Press [Return] "
          DB    $0
 :MORE    ASC   "----------------- MORE -----------------"
          DB    $0
 *
-:MSG55   ASC   "USE ARROW KEYS"
+:MSG55   ASC   "Use arrow keys"
          DB    $2F,$8D
-         ASC   "& [RETURN] TO"
+         ASC   "& [Return] to"
          DB    $2F,$8D
-         ASC   "SELECT FUNCTION"
+         ASC   "select function"
          DB    $2F,$8D,0
 *
 :MSG56   DB    $2F,$8D,$2F,$8D
-         ASC   "SELECT OPTION:"
+         ASC   "Select option:"
          DB    $2F,$8D,0
 *
-:MSG57   ASC   "INSERT SOURCE DISK\"
+:MSG57   ASC   "Insert source disk\"
          DB    $0
 *
-:MSG58   ASC   "INSERT TARGET DISK\"
+:MSG58   ASC   "Insert target disk\"
          DB    $0
 *
 :MSG59   ASC   "   NAME           TYPE  BLKS  MODIFIED"
@@ -1352,52 +1352,52 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :MSG5A   ASC   "         CREATED          ENDFILE SUBTYPE"
          DB    $0
 *
-:MSG5B   ASC   "CAN'T FIND FILE: "
+:MSG5B   ASC   "Can't find file: "
          DB    $0
 *
-:MSG5C   ASC   "COPY SAME ONTO ANOTHER DISK (Y/N) ? "
+:MSG5C   ASC   "Copy same onto another disk (Y/N) ? "
          DB    $0
 *
-:MSG5D   ASC   "\\TARGET FILE NAME: "
+:MSG5D   ASC   "\\Target file name: "
          DB    $0
 *
-:MSG5E   ASC   "\\DEVICE SIZE MISMATCH\\"
+:MSG5E   ASC   "\\Device size mismatch\\"
          DB    $0
 *
-:MSG5F   ASC   "\\\INSERT DISKS\\"
+:MSG5F   ASC   "\\\Insert disks\\"
          DB    $0
 *
-:MSG60   ASC   "\\DUPLICATE VOLUME ONLINE\"
+:MSG60   ASC   "\\Duplicate volume online\"
          DB    $0
 *
 :MSG61   DB    $0
 *
-:MSG62   ASC   "\\INSERT DISK TO FORMAT\\"
+:MSG62   ASC   "\\Insert disk to format\\"
          DB    $0
 *
-:MSG63   ASC   "READY TO FORMAT (Y/N) ? "
+:MSG63   ASC   "Ready to format (Y/N) ? "
          DB    $0
 *
 :MSG64   ASC   "\\\"
-         ASC   "  FORMATTING DISK\\"
+         ASC   "  Formatting disk\\"
          DB    $0
 *
-:MSG65   ASC   "\\FORMATTING COMPLETE\"
+:MSG65   ASC   "\\Formatting complete\"
          DB    $0
 *
-:MSG66   ASC   "\\SUBDIRECTORY CREATED\"
+:MSG66   ASC   "\\Subdirectory created\"
          DB    $0
 *
-:MSG67   ASC   "\[L]OCK OR [U]NLOCK? "
+:MSG67   ASC   "\[L]ock or [U]nlock? "
          DB    $0
 *
-:MSG68   ASC   "\\\INSERT A BLANK DISK IN "
+:MSG68   ASC   "\\\Insert a blank disk in "
          DB    $0
 *
-:MSG69   ASC   "\\\DRIVE SPEED SHOULD BE BETWEEN 198.0 MS.\"
-         ASC   "AND 202.0 MS.\\"
-         ASC   "DRIVE SPEED IS       MS.\\"
-         ASC   "([ESC]-EXIT)"
+:MSG69   ASC   "\\\Drive speed should be between 198.0 ms.\"
+         ASC   "and 202.0 ms.\\"
+         ASC   "Drive speed is       ms.\\"
+         ASC   "([Esc]-Exit)"
          DB    $0
 *
 :MSG6A
@@ -1411,18 +1411,18 @@ MESSAG   DW    :COPY      ;0 MENU 0
          ASC   "\R"
          DB    $0
 *
-:MSG6B   ASC   "   USE ARROW KEYS TO MAP OTHER FILES  "
+:MSG6B   ASC   "   Use arrow keys to map other files  "
          DB    $0
 *
-:MSG6C   ASC   "\\\\NO BOOT PROGRAM TO CHANGE"
+:MSG6C   ASC   "\\\\No boot program to change"
          DB    $0
 *
-:MSG6D   ASC   "\\\DISK II FUNCTION ONLY\"
+:MSG6D   ASC   "\\\Disk II function only\"
          DB    $0
 *
-:MSG6E   ASC   "\\\NOT A PRODOS FUNCTION\"
+:MSG6E   ASC   "\\\Not a ProDOS function\"
          DB    $0
 *
-:MSG6F   ASC   "\\\NOT A DOS 3.3 FUNCTION\"
+:MSG6F   ASC   "\\\Not a DOS 3.3 function\"
          DB    $0
 *

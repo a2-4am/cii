@@ -58,7 +58,7 @@ DELETE   LDX   #$02
 :DDOUT   RTS
 :GODDSK  JSR   DDISK
 :DDDONE  JSR   PRHERE
-         ASC   "\\DISK"
+         ASC   "\\Disk"
          DB    $0
          JMP   :COMDEL
 *
@@ -85,7 +85,7 @@ DELETE   LDX   #$02
          ASC   "\\DOS"
          DB    $0
 :COMDEL  JSR   PRHERE
-         ASC   " DELETED\"
+         ASC   " deleted\"
          DB    $0
          JMP   PRESS
 *
@@ -95,7 +95,7 @@ DELETE   LDX   #$02
 *
 *
 :READY?  JSR   PRHERE
-         ASC   "\\READY TO DELETE (Y/N) ? "
+         ASC   "\\Ready to delete (Y/N) ? "
          DB    $0
          JSR   KEYESC
          JSR   PCOUT
@@ -429,12 +429,12 @@ FORMAT   LDX   #7
 *
 :NOTRAM  PHA
          JSR   PRHERE
-         ASC   "\\DESTROY "
+         ASC   "\\Destroy "
          DB    $0
          PLA
          BMI   :CKIT1     ;PRODOS
 :NONPRO  JSR   PRHERE
-         ASC   "NON-PRODOS VOLUME? "
+         ASC   "non-ProDOS volume? "
          DB    $0
          JMP   :CKIT2
 *
@@ -553,14 +553,14 @@ SPLGO    LDA   GODEV+2
 
 *
 NEWVOL   JSR   PRHERE
-         ASC   "\\NEW "
+         ASC   "\\New "
          DB    $0
          JMP   GVCOM
 GETVOL   JSR   PRHERE
          ASC   "\\"
          DB    $0
 GVCOM    JSR   PRHERE
-         ASC   "VOLUME NAME: /"
+         ASC   "Volume Name: /"
          DB    $0
 GVCOM1   LDA   #$0F
          STA   LINLIM
@@ -910,7 +910,7 @@ MAKEDR   JSR   COMTRE
          JMP   NODOS3
 *
 :MK0     JSR   PRHERE
-         ASC   "\\SUBDIRECTORY NAME: "
+         ASC   "\\Subdirectory name: "
          DB    $0
          JSR   GVCOM1
          BCS   :OUT

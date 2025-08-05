@@ -1220,14 +1220,14 @@ PRVCOM   STA   UNIT
          LDA   SRCTAR
          BNE   :NOTSRC
          JSR   PRHERE
-         ASC   "SOURCE:"
+         ASC   "Source:"
          DB    $0
          JMP   :CONTIN
 *
 :NOTSRC  CMP   #$FF
          BNE   :CONTIN
          JSR   PRHERE
-         ASC   "TARGET:"
+         ASC   "Target:"
          DB    $0
 *
 :CONTIN  LDA   SDCH
@@ -1255,7 +1255,7 @@ PRVCOM   STA   UNIT
          BEQ   :BLNKLP
          STA   HEXNUM
          JSR   PRHERE
-         ASC   "DISK VOLUME "
+         ASC   "Disk Volume "
          DB    $0
          JSR   HEXDEC
          JSR   PRTLZ
@@ -1520,7 +1520,7 @@ SHODAT   CMP   #0
          JMP   SHOTM0
 *
 :NODATE  JSR   PRHERE
-         ASC   "<NO DATE>"
+         ASC   "<No Date>"
          DB    $0
          RTS
 :DATEMP  DB    $0
@@ -1961,7 +1961,7 @@ DODEVP   LDA   #0
 DODEV0   STA   DEVFLG
          JSR   HOME
          JSR   PRHERE
-         ASC   "SELECT DEVICE:"
+         ASC   "Select device:"
          DB    $0
          LDA   CURDVA
          JSR   DODEV
@@ -1977,7 +1977,7 @@ DODVP1   JSR   HOME
          ORA   #$80
          STA   PPFX
          JSR   PRHERE
-         ASC   "SELECT SOURCE DEVICE:"
+         ASC   "Select source device:"
          DB    $0
          LDA   CURDVP
          JSR   DODEV
@@ -1995,7 +1995,7 @@ DODVS1   JSR   HOME
          ORA   #$80
          STA   SPFX
          JSR   PRHERE
-         ASC   "SELECT TARGET DEVICE:"
+         ASC   "Select target device:"
          DB    $0
          LDA   CURDVS
          JSR   DODEV
@@ -2011,7 +2011,7 @@ DODEV    STA   CURDEV
          LDA   #$FF
          STA   DOSNOW     ;ASSUME PRODOS
          JSR   LOHERE
-         ASC   "PRESS [?] TO DISPLAY VOLUME NAMES"
+         ASC   "Press [?] to display volume names"
          DB    $0
 :DEVMNU  JSR   :SEEDEVS
 :KEYORD  JSR   CHKKEY
@@ -2116,7 +2116,7 @@ DODEV    STA   CURDEV
          LDA   ISAUX
          BPL   :NOTDV0
          JSR   PRHERE
-         ASC   ": /RAM DISCONNECTED"
+         ASC   ": /RAM disconnected"
          DB    $0
          JMP   :NOVOL
 *
@@ -2162,7 +2162,7 @@ DODEV    STA   CURDEV
          JSR   DVTYPX
          BEQ   :SEEDII    ;DISK II
          JSR   PRHERE
-         ASC   "NON-PRODOS"
+         ASC   "non-ProDOS"
          DB    $0
          RTS
 *

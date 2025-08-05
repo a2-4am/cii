@@ -224,6 +224,7 @@ CHOPOS   LDA   #$12
 VDINIT   JSR   INIT
          JSR   SETNOR
 VDINT1   JSR   SETVID
+         JSR   DOC00F     ; [4am] set ALTCHARSET
          JMP   SETKBD
 *
 *

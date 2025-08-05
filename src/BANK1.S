@@ -95,7 +95,7 @@ VERIFY   LDX   #$03
 :VDISK   LDA   #>DATA
          STA   RPAGE
          JSR   LOHERE
-         ASC   "VERIFYING "
+         ASC   "Verifying "
          DB    $0
          LDA   #0
          STA   :VERRORS
@@ -138,7 +138,7 @@ VERIFY   LDX   #$03
          LDA   #$13
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "ERROR: "
+         ASC   "Error: "
          DB    $0
          JSR   PRTBLK
          JSR   SETTXT
@@ -221,7 +221,7 @@ VERIFY   LDX   #$03
          CMP   FILNUM
          BNE   :VFILELP
 :TOTAL   JSR   LOHERE
-         ASC   "TOTAL: "
+         ASC   "Total: "
          DB    $0
          LDX   :VERRORS+1
          LDA   :VERRORS
@@ -235,7 +235,7 @@ VERIFY   LDX   #$03
          LDX   :VERRORS   ; CMP #$01           doesn't work
          DEX              ; It mistakenly takes $0101 same as $0001.
          BEQ   :ONE
-:NOTONE  LDA   #"S"
+:NOTONE  LDA   #"s"
          JSR   PCOUT
 :ONE     JMP   PRESS
 *
@@ -728,7 +728,7 @@ TSMAP    JSR   COMHDR
          JSR   VLEFT
          INC   WNDBTM
          JSR   PRHERE
-         ASC   "INVALID: "
+         ASC   "Invalid: "
          DB    $2F,0
          BIT   DOSNOW
          BMI   :INVPRO
@@ -841,7 +841,7 @@ PRTFIL   CLC
 :DOS33   LDA   #2
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "FILE: "
+         ASC   "File: "
          DB    $2F,0
          PLP
          BCS   :DOS33A
@@ -849,7 +849,7 @@ PRTFIL   CLC
 :DOS33A  RTS
 *
 PRTBLK   JSR   PRHERE
-         ASC   "BLOCK $"
+         ASC   "Block $"
          DB    $0
          LDA   BLKNUM+1
          JSR   PHBYTE
@@ -1015,7 +1015,7 @@ UNDEL    JSR   COMTRE
          LDA   #$03
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "LOST FILES:\\"
+         ASC   "Lost files:\\"
          DB    $0
          LDA   #$00
          STA   CURR
@@ -1229,7 +1229,7 @@ ALPHA    JSR   COMTRE
 *
 * ASK TO SAVE IT
 :DUNSEE  JSR   PRHERE
-         ASC   "\[G]-GO, [ESC]-EXIT"
+         ASC   "\[G]-Go, [Esc]-Exit"
          DB    $0
          JSR   GETKEY
          CMP   #"G"

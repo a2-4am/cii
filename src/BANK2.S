@@ -369,7 +369,7 @@ FMTFIX   JMP   :FMTFIX
 :RDPASS  LDA   #$15
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "READING"
+         ASC   "Reading"
          DB    $2F,$0
          LDA   :PTYPE
          STA   :TYPE
@@ -415,7 +415,7 @@ FMTFIX   JMP   :FMTFIX
          AND   #$08
          BEQ   :WRPASS1   ;->No!
          JSR   PRHERE     ;Yup:  Announce yourself
-         ASC   "FORMATTING"
+         ASC   "Formatting"
          DB    $2F,0      ; (cleol)
 *
          LDA   FMT400K    ;Was source disk a 400K 3.5" disk?
@@ -431,7 +431,7 @@ FMTFIX   JMP   :FMTFIX
          JSR   :FMTFIX    ;Fix it back to 800K format.
 *
 :WRPASS1 JSR   PRHERE
-         ASC   "WRITING"
+         ASC   "Writing"
          DB    $2F,$0
          LDA   :STYPE
          STA   :TYPE
@@ -1128,7 +1128,7 @@ FMTFIX   JMP   :FMTFIX
 :PRFILE  JSR   LOHERE
          DB    $0
          JSR   PRHERE
-         ASC   "TARGET: "
+         ASC   "Target: "
          DB    $0
          JMP   PRFILE
 *
@@ -1151,19 +1151,19 @@ FMTFIX   JMP   :FMTFIX
          LDA   #$14
          JSR   VLEFT
          JSR   PRHERE
-         ASC   "FILE: "
+         ASC   "File: "
          DB    $0
          JSR   PRFILE
          JSR   PRHERE
-         ASC   "\ALREADY EXISTS"
+         ASC   "\already exists"
          DB    $0
          PLA
          BPL   :DUP1      ;NOT LOCKED
 :DUPLOK  JSR   PRHERE
-         ASC   " & IS LOCKED."
+         ASC   " & is locked."
          DB    $0
 :DUP1    JSR   PRHERE
-         ASC   "  NOW WHAT? "
+         ASC   "  Now what? "
          DB    $0
          LDA   CH
          STA   :CH
@@ -1174,11 +1174,11 @@ FMTFIX   JMP   :FMTFIX
          CMP   #$0D
          BEQ   :DUP3
          JSR   PRHERE
-         ASC   "[C]OPY ANYWAY, "
+         ASC   "[C]opy anyway, "
          DB    $0
 :DUP3    JSR   PRHERE
-         ASC   "[N]EW NAME, [D]ON'T COPY\"
-         ASC   "[ESC]-EXIT COPY"
+         ASC   "[N]ew name, [D]on't copy\"
+         ASC   "[Esc]-Exit copy"
          DB    $0
 *
          LDA   #$15
@@ -1200,7 +1200,7 @@ FMTFIX   JMP   :FMTFIX
 *
 :NEWNAME JSR   PCOUT
          JSR   PRHERE
-         ASC   "\NEW NAME?"
+         ASC   "\New name?"
          INV   "/"
          DB    $8D
          INV   "/"

@@ -45,7 +45,7 @@ CATDS2   LDA   NACTIV
          CPX   #$1E
          BCC   :SEEFILE
          JSR   PRHERE
-         ASC   "\IS THE CURRENT BOOTING PROGRAM.\"
+         ASC   "\is the current booting program.\"
          DB    $0
          LDA   #$31       ;QSTAT4
          JSR   PRINT
@@ -215,8 +215,8 @@ CPYADD   LDX   CURR       ;IS IT NOW
          RTS
 *
 CPYTAB   JSR   LOHERE
-         ASC   "INSERT COPY NUMBER: [RETURN]-COMPLETE\"
-         ASC   "INSERTION, [ESC]-BACK OUT"
+         ASC   "Insert copy number: [Return]-Complete\"
+         ASC   "insertion, [Esc]-Back out"
          DB    $0
          LDA   CURRV      ;TAB TO
          JSR   VLEFT      ;CURRENT LINE
@@ -543,7 +543,7 @@ PATTRN   JSR   GETPAT     ;READ PATTERN
 NOPATT   LDA   CURR
          STA   LASTM
          JSR   LOHERE
-         ASC   "ENTER FILENAME (ONE FILE)\?"
+         ASC   "Enter filename (one file)\?"
          DB    $0
 *
          JSR   GETFNM     ;GET FILENAME
@@ -590,13 +590,13 @@ LOKPAT   JSR   GETPAT     ;GET PATTERN
 :LOCK    DB    $0
 *
 NEWNAM   JSR   LOHERE
-         ASC   "RENAME "
+         ASC   "Rename "
          DB    $0
          JSR   CURPNT
          JSR   CFILE      ;PRINT FILENAME
 :ASKNAME JSR   PRHERE
          DB    #$8D
-         ASC   "AS? "
+         ASC   "as? "
          DB    $0
          JSR   GETFNM     ;GET NEW NAME
          BCS   :OUT
@@ -952,7 +952,7 @@ PATMOV   LDX   #$00
 ASKPR?   LDX   PSLOT      ;PRINTER SLOT
          BEQ   :OUT       ;NONZERO?
          JSR   PRHERE
-         ASC   "\\\\DO YOU WANT A PRINTOUT (Y/N) ? "
+         ASC   "\\\\Do you want a printout (Y/N) ? "
          DB    $0
          JSR   KYESC
          LDX   #$FF
@@ -1042,7 +1042,7 @@ TOP1A    LDA   #0
 *
 SEEDEV   PHA
          JSR   PRHERE
-         ASC   "SLOT "
+         ASC   "Slot "
          DB    $0
          PLA
          PHA
@@ -1053,7 +1053,7 @@ SEEDEV   PHA
          LSR
          JSR   PHHEX
          JSR   PRHERE
-         ASC   "  DRIVE "
+         ASC   "  Drive "
          DB    $0
          PLA
          ASL
@@ -1230,7 +1230,7 @@ DOTREE   PHA
          LSR
          JSR   SETCH
          JSR   PRHERE
-         ASC   "USE ARROWS,A,Z AND [RETURN] TO SELECT"
+         ASC   "Use arrows,A,Z and [Return] to select"
          DB    $0
 :KEYAGN  JSR   KYESC
          CMP   #$8D

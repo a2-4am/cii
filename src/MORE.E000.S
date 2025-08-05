@@ -12,7 +12,7 @@ CINFO    LDA   #$15
          LDA   #$21
          STA   CH
          JSR   PRHERE
-         INV "PRINTER"
+         INV   "PRINTER"
          DB    $0
          LDA   #$16
          JSR   VLEFT
@@ -31,7 +31,7 @@ CINFO    LDA   #$15
          JMP   CROUT
 *
 :OFF     JSR   PRHERE
-         ASC   "  OFF "
+         ASC   "  Off "
          DB    $8D,0
          RTS
 *
@@ -440,7 +440,7 @@ DOS?     LDX   #0
          BCC   :NODOS
          RTS
 :NODOS   JSR   PRHERE
-         ASC   "\\NO DOS ON DISK\"
+         ASC   "\\No DOS on disk\"
          DB    $0
          JMP   PRESS
 *
@@ -551,7 +551,7 @@ SWCK     STA   PFXADR+1
 :SWCKOUT CLC
          RTS
 :BADSWP  JSR   LOHERE
-         ASC   "INCORRECT DISK\"
+         ASC   "Incorrect disk\"
          DB    $87,$0
          JSR   INSCOM
          LDA   SDFLG
@@ -622,7 +622,7 @@ ERRMSG   LDA   RRTN
          DB    $0
 *
 :NOT27   JSR   PRHERE
-         ASC   "ERROR"
+         ASC   "Error"
          DB    $0
          BIT   DOSNOW
          BPL   :DOS33
@@ -648,7 +648,7 @@ ERRMSG   LDA   RRTN
 
 *
 :SKIP    JSR   PRHERE
-         ASC   ": BLOCK $"
+         ASC   ": Block $"
          DB    $0
          LDA   BLKNUM+1
          JSR   PHBYTE
@@ -725,7 +725,7 @@ DOLLAR   PHA
 *
 * NO FILES SELECTED
 NOSEL    JSR   LOHERE
-         ASC   "NO FILES SELECTED"
+         ASC   "No files selected"
          DB    $0
          JMP   PRESS
 *
@@ -1194,14 +1194,14 @@ CSPACE   LDA   #>VTOC1
          BIT   DOSNOW
          BPL   :DOS33
          JSR   PRHERE
-         ASC   "BLOCK"
+         ASC   "Block"
          DB    $0
          JMP   :COMMON
 :DOS33   JSR   PRHERE
-         ASC   "SECTOR"
+         ASC   "Sector"
          DB    $0
 :COMMON  JSR   PRHERE
-         ASC   "S FREE:"
+         ASC   "s free:"
          DB    $0
          LDA   FREEL
          LDX   FREEH
@@ -1210,7 +1210,7 @@ CSPACE   LDA   #>VTOC1
          LDA   #$12
          STA   CH
          JSR   PRHERE
-         ASC   "USED:"
+         ASC   "Used:"
          DB    $0
          LDA   USEDL
          LDX   USEDH
@@ -1219,7 +1219,7 @@ CSPACE   LDA   #>VTOC1
          LDA   #$1D
          STA   CH
          JSR   PRHERE
-         ASC   "TOTAL:"
+         ASC   "Total:"
          DB    $0
          LDA   FREEL
          CLC

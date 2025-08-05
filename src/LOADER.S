@@ -314,7 +314,7 @@
          JMP   :SKIPDAT
 *
 :NOCLK   JSR   PRHERE
-         ASC   "\\ENTER DATE OR PRESS [ESC] TO SKIP\\"
+         ASC   "\\Enter date or press [Esc] to skip\\"
          DB    $0
          LDA   DATE
          BEQ   :NODAT
@@ -518,8 +518,8 @@
          BPL   :IS2C      ;ON LASER
 *
 :ASK80   JSR   PRHERE
-         ASC   "\\DO YOU WANT 80-COLUMN CATALOG\"
-         ASC   "DISPLAYS (Y/N) ? Y"
+         ASC   "\\Do you want 80-column catalog\"
+         ASC   "displays (Y/N) ? Y"
          DB    $0
          DEC   CH
 :AGN80   JSR   CASKEY
