@@ -1,7 +1,7 @@
 *
 * Constants:
 *
-CIIPVER  =     $84        ;version 8.4
+CIIPVER  =     $85        ;version 8.5
 *
 * Printer message constants:
 QCAT     =     $01

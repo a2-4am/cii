@@ -1313,7 +1313,7 @@ MESSAG   DW    :COPY      ;0 MENU 0
 :COPYTP  ASC   "\\\INSERT COPY ][ PLUS DISK IN "
          DB    $0
 :HEADER
-         ASC   "           COPY ][ PLUS  8.4\"
+         ASC   "           COPY ][ PLUS  8.5\"
          ASC   "(C) 1982-9 CENTRAL POINT SOFTWARE, INC.\"
 :DASHES  ASC   "----------------------------------------"
          DB    $0
