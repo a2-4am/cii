@@ -268,7 +268,7 @@ SDNAME   DS    $100
 *-------------------------------------
 * Working backwards from program itself::
 *
-CODEADR  =     $5D00      ;<----
+CODEADR  =     $5C00      ;<----
 *
 TOPMEM   =     CODEADR-$300 ;$300 for VOLNMS, PRIM, SECOND, etc.
 VOLNMS   =     TOPMEM
