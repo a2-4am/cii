@@ -128,7 +128,8 @@
 *  2025-08-05  8.4 again
 *
 *  Rebuilt utilities with modern assembler, from recovered
-*    source code. UTIL.SYSTEM is identical to v8.4 from 1989.
+*    source code. UTIL.SYSTEM is byte-for-byte identical
+*    to v8.4 from 1989.
 *
 *  (in progress)  8.5
 *
