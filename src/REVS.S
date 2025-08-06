@@ -113,18 +113,31 @@
 *  Changed VOLUME NAME: prompt to VOLUME NAME :/  to remove
 *    ambiguity over whether to type a /.
 *
-* xx/xx/xx  8.3
+*  xx/xx/xx  8.3
 *
-* This version is exactly the same as for version 8.2.
-* The version number was changed because of some bugs that were
-* fixed in the 3.5 bitcopy program.
-* Date unknown.
+*  This version is exactly the same as for version 8.2.
+*  The version number was changed because of some bugs that were
+*  fixed in the 3.5 bitcopy program.
+*  Date unknown.
 *
-* 02/03/89  8.4
+*  02/03/89  8.4
 *
-* Made changes so that code works with stand-alone
-*   UDC card with new UDC G/A.
+*  Made changes so that code works with stand-alone
+*    UDC card with new UDC G/A.
 *
+*  2025-08-05  8.4 again
+*
+*  Rebuilt utilities with modern assembler, from recovered
+*    source code. UTIL.SYSTEM is identical to v8.4 from 1989.
+*
+*  (in progress)  8.5
+*
+*  Remove bitcopy launchers and associated text and menu items.
+*    The utilities stand alone.
+*  Use lowercase for most strings, if available.
+*  Support Pronto-DOS disks in Change Boot Program.
+*    Sectors for startup program and filetype are offset by 2.
+*  Add more recognized filetypes, mostly IIgs-related.
 *
 ********************************
 *
