@@ -138,6 +138,9 @@
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.
 *  Add more recognized filetypes, mostly IIgs-related.
+*  Don't format RAM disk on quit if we didn't actually find one.
+*    This fixes a bug that could clobber block 2 of the last
+*    used device before quitting to ProDOS.
 *
 ********************************
 *
