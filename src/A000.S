@@ -40,6 +40,8 @@ QUIT     JSR   TOP1
 *
          LDA   #$B0
          JSR   UNTDEV
+         LDA   GODEV+2    ;Did we actually find /RAM to format?
+         BEQ   :QUIT2     ;No->don't call
          JSR   SPLFRM
 :QUIT2   JSR   MOVPFX
          JSR   SETBUT

@@ -1657,6 +1657,13 @@ BLK2ER   LDY   #0
 *
 *
 UNTDEV   STA   UNIT
+*
+* [4am] clear GODEV ptr before starting
+* so caller can tell if it didn't work
+*
+         LDA   #0
+         STA   GODEV+1
+         STA   GODEV+2
 UNTDV0   LDX   NUMDEV
 :LOOP    LDA   UNIT
          EOR   DVICES,X
@@ -1667,6 +1674,7 @@ UNTDV0   LDX   NUMDEV
 *
 * CAN'T FALL THROUGH
 *
+         RTS
 :GOTIT   STX   CURDEV
 *
 *
