@@ -488,7 +488,7 @@ FMTFIX   JMP   :FMTFIX
 * Called after the format, and at Reset time.
 :FMTFIX  LDA   FMT400K    ;Need to fix back to 800K format?
          BPL   :SETSIDQ
-         LDA   SUNIT      ;Yes: 3.5" drive?
+         LDA   SUNIT      ;Yes: 3.5-inch drive?
          JSR   :SET35
          BCS   :SETSIDQ   ;->No: RTS.
          SEC              ;Yes:
