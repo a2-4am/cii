@@ -1313,6 +1313,8 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DB    $8D,$8D
             ASC   " Press [Q] to quit to ProDOS"
             DB    $8D,$8D
+            ASC   " Press [M] to enter monitor"
+            DB    $8D,$8D
             ASC   " Press [Reset] to reboot"
             DB    $0
 *
