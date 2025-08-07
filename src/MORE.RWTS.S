@@ -1264,7 +1264,7 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :FILE       ASC   "File"
             DB    $0
 :PSTATE0
-            ASC   "[Return]-Mark File, [D]elete, [E]nter"
+            ASC   "[Return]-Mark File, [U]nmark, [E]nter"
             DB    $8D
             ASC   "Filename, Number-Insert, [G]o,"
             DB    $8D

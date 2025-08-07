@@ -120,7 +120,9 @@ DOKEY       JSR   SEECAT
             BEQ   :INDEX          ;TO INDEX #
             DEX
             BPL   :NXTCHAR
-            BMI   DOKEY           ;NOT FOUND
+            CMP   #"D"
+            BNE   DOKEY           ;NOT FOUND
+            LDX   #3              ;ALLOW D=U
 *
 :INDEX      CPX   #6
             BCC   :INDEX1
@@ -154,7 +156,7 @@ DOKEY       JSR   SEECAT
 *
 :TEMP       DB    $00
 :CHARS      DB    $8D,$23
-            ASC   "ED<>,."
+            ASC   "EU<>,."
 *
 * STATE TABLE FOR CATALOG DISPLAY
 * STATE 0
