@@ -26,6 +26,8 @@ QUIT        JSR   TOP1
 *
 :QUIT0      CMP   #"Q"
             BEQ   :QUIT1      ;QUIT TO PRODOS
+            CMP   #$8D
+            BEQ   :QUIT1
             CMP   #$9B
             BEQ   :ESC
             JSR   BELL

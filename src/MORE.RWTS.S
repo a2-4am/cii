@@ -1311,8 +1311,8 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :QUITOPT    DB    $8D,$8D
             ASC   " Press [Esc] to re-enter utilities"
             DB    $8D,$8D
-            ASC   " Press [Q] to quit to ProDOS"
-            DB    $8D,$8D
+            ASC   " Press [Q] or [Return] to quit to ProDOS"
+            DB    $8D
             ASC   " Press [M] to enter monitor"
             DB    $8D,$8D
             ASC   " Press [Reset] to reboot"
