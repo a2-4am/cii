@@ -22,26 +22,10 @@
 *
 * Move MAIN portion of program into place
 *
-            LDA   #FROM
-            STA   SRC
-            LDA   #>FROM
-            STA   SRC+1
-            LDA   #TO
-            STA   DEST
-            LDA   #>TO
-            STA   DEST+1
-            LDY   #0
-            LDX   #MOVESIZE/$100
-:MEMLP      LDA   (SRC),Y
-            STA   (DEST),Y
-            INY
-            BNE   :MEMLP
-            DEC   DEST+1
-            DEC   SRC+1
-            DEX
-            BNE   :MEMLP
+            JSR   DECRUNCH            ;DECRUNCH->CODEADR
 *
-            LDX   $FBB3               ;FOR LATER
+            LDA   $FBB3               ;FOR LATER
+            PHA
 *
 * MOVE NOBOOT TO $D000
 *
@@ -49,18 +33,18 @@
 *
             LDA   $C083
             LDA   $C083
-:NBLP       LDA   BOOTBEG,Y
-            CPY   #BOOTEND-BOOTBEG+1
-            BCC   :NBLP1
-            LDA   #0                  ;FILL WITH 0'S FROM $A2(?) TO $FF
-:NBLP1      STA   $D000,Y
-            INY
-            BNE   :NBLP
+            TYA                       ;FILL WITH 0'S
+:NBLP1      STA   $D000,Y             ;BECAUSE WE COPY THE
+            INY                       ;ENTIRE PAGE LATER
+            BNE   :NBLP1
+            JSR   DECRUNCH            ;DECRUNCH->$D000
+
 *
 * WHILE WE'RE IN THE LANGUAGE CARD,
 * SAVE AUXMEM IRQ VECTOR.
 *
-            CPX   #6
+            PLA                       ;FBB3 from ROM
+            CMP   #6
             BNE   :SKIPIRQ            ;NOT //E
 *
             STA   $C009               ;AUX LC
@@ -253,6 +237,7 @@
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
+            JSR   DECRUNCH            ;DECRUNCH->MMBEG
             LDA   #MMBEG              ;source start.
             STA   A1L
             LDA   #>MMBEG

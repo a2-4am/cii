@@ -1,4 +1,10 @@
 *
+            TYP   $06
+            DSK   ../build/OBJ.BOOTSEC
+            PUT   VARS
+            ORG   $800
+BOOTBEG
+*
 * NO-BOOT CODE FOR FORMATTED
 * & 'DELETED' DISK (WATCH CODE IN
 * FORMAT ROUTINE)
@@ -37,5 +43,6 @@
             ASC   "        PRESS A KEY TO REBOOT.  "
             DB    0
 *
-
-
+            DUM   *
+BOOTEND     DB    0           ;where image of boot sector ends
+            DEND

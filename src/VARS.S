@@ -354,6 +354,16 @@ SETKBD      =     $FE89
 SETVID      =     $FE93
 BELL        =     $FF3A
 *
+* Commands for MMCMD:
+MMOPEN      EQU   0
+MMREAD      EQU   1
+MMWRITE     EQU   2
+MMCLOSE     EQU   3
+MMCHECK     EQU   4
 *
-
-
+* Additional error numbers for MMERRNUM:
+OPENERR     EQU   $80           ;MM already open.
+SIZEERR     EQU   $81           ;Request exceeds end of memory.
+TRANSERR    EQU   $82           ;Not all requested bytes were transferred.
+HNDERR      EQU   $83           ;Handle in zero page invalid (overwritten!)
+NOMEMERR    EQU   $84           ;No memory found in OPEN call.

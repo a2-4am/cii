@@ -1,6 +1,12 @@
-
-* XC                      ;Allow 65C02 opcodes.
-* XC                      ;Allow 65802 stuff.
+*
+            TYP   $06
+            DSK   ../build/OBJ.MM
+            PUT   VARS
+            ORG   MMSPOT
+*
+            DUM   *
+MMBEG       DB    0
+            DEND
 *
 JSLOP       EQU   $22           ;JSL opcode
 BCSOP       EQU   $B0           ;BCS opcode
@@ -42,20 +48,19 @@ MMMARK      DS    2             ;current position in pseudo-file, in PAGES
 MMSIZE      DS    2             ;size of pseudo-file, in PAGES (info only)
 MMERRNUM    DS    1             ;error number if carry set
 MMFNUM      DS    1             ;ProDOS unitnum of memory RAMdisk.
+* Commands for MMCMD: (now in VARS file)
+*MMOPEN      EQU   0
+*MMREAD      EQU   1
+*MMWRITE     EQU   2
+*MMCLOSE     EQU   3
+*MMCHECK     EQU   4
 *
-* Commands for MMCMD:
-MMOPEN      EQU   0
-MMREAD      EQU   1
-MMWRITE     EQU   2
-MMCLOSE     EQU   3
-MMCHECK     EQU   4
-*
-* Additional error numbers for MMERRNUM:
-OPENERR     EQU   $80           ;MM already open.
-SIZEERR     EQU   $81           ;Request exceeds end of memory.
-TRANSERR    EQU   $82           ;Not all requested bytes were transferred.
-HNDERR      EQU   $83           ;Handle in zero page invalid (overwritten!)
-NOMEMERR    EQU   $84           ;No memory found in OPEN call.
+* Additional error numbers for MMERRNUM: (now in VARS file)
+*OPENERR     EQU   $80           ;MM already open.
+*SIZEERR     EQU   $81           ;Request exceeds end of memory.
+*TRANSERR    EQU   $82           ;Not all requested bytes were transferred.
+*HNDERR      EQU   $83           ;Handle in zero page invalid (overwritten!)
+*NOMEMERR    EQU   $84           ;No memory found in OPEN call.
 *
 * Private stuff starts here:
 *
@@ -805,5 +810,7 @@ RAMDCHK2    STX   :XTEMP2
 *
 :XTEMP2     DS    1
 :YTEMP2     DS    1
-
-
+*
+            DUM   *
+MMEND       DB    0
+            DEND
