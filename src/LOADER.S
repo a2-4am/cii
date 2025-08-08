@@ -294,6 +294,7 @@
             ASC   "ProDOS 1.3 has problems. We suggest you update. "
             DB    0
             JSR   RDKEY
+            JSR   HOME
 :CHKCLK     LDA   MACHID
             LSR
             BCC   :NOCLK
