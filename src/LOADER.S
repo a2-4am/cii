@@ -283,12 +283,12 @@
             JSR   INIT
             LDA   #0
             JSR   VLEFT
-            LDA   #QHEADR
-            JSR   PRINT
 *
             LDA   KVERSION            ;ProDOS version # is 1.3?
             CMP   #$03
             BNE   :CHKCLK
+            LDA   #QHEADR
+            JSR   PRINT
             JSR   PRHERE              ;Yes: warn 'em.
             DB    $8D,$8D
             ASC   "ProDOS 1.3 has problems. We suggest you update. "
@@ -299,7 +299,9 @@
             BCC   :NOCLK
             JMP   :SKIPDAT
 *
-:NOCLK      JSR   PRHERE
+:NOCLK      LDA   #QHEADR
+            JSR   PRINT
+            JSR   PRHERE
             DB    $8D,$8D
             ASC   "Enter date or press [Esc] to skip"
             DB    $8D,$8D,$0
