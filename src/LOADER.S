@@ -287,21 +287,18 @@
             LDA   KVERSION            ;ProDOS version # is 1.3?
             CMP   #$03
             BNE   :CHKCLK
-            LDA   #QHEADR
-            JSR   PRINT
+            JSR   :MAYBEHDR
             JSR   PRHERE              ;Yes: warn 'em.
             DB    $8D,$8D
             ASC   "ProDOS 1.3 has problems. We suggest you update. "
             DB    0
             JSR   RDKEY
-            JSR   HOME
 :CHKCLK     LDA   MACHID
             LSR
             BCC   :NOCLK
             JMP   :SKIPDAT
 *
-:NOCLK      LDA   #QHEADR
-            JSR   PRINT
+:NOCLK      JSR   :MAYBEHDR
             JSR   PRHERE
             DB    $8D,$8D
             ASC   "Enter date or press [Esc] to skip"
@@ -507,7 +504,8 @@
             LDA   $C060
             BPL   :IS2C               ;ON LASER
 *
-:ASK80      JSR   PRHERE
+:ASK80      JSR   :MAYBEHDR
+            JSR   PRHERE
             DB    $8D,$8D
             ASC   "Do you want 80-column catalog"
             DB    $8D
@@ -560,7 +558,13 @@
             AND   #$0F
             CLC
             ADC   :TEMP
-            RTS
+:X          RTS
+:MAYBEHDR   LDA   :DONEHDR
+            BNE   :X
+            DEC   :DONEHDR
+            LDA   #QHEADR
+            JMP   PRINT
+:DONEHDR    DB    $0
 :TEMP       DB    $0
 :DAY        DB    $0
 :MONTH      DB    $0
