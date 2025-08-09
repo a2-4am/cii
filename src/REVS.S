@@ -88,7 +88,7 @@
 *
 *  Fixed beta bug: MM error #$80 when no memory was available.
 *  Added code to COPY DISK W/ FORMAT to check for a single-
-*    sided  3.5" disk, and force the format of the target
+*    sided 3.5-inch disk, and force the format of the target
 *    disk to be single-sided.
 *  (Mike plans to ship Copy II Plus as a single-sided disk.)
 *  Moved program start from $5D00 to $5C00, reducing file
@@ -135,15 +135,21 @@
 *
 *  Remove bitcopy launchers and associated text and menu items.
 *    The utilities stand alone.
+*  Don't format RAM disk on quit if we didn't actually find one.
+*    This fixes a long-standing bug that could overwrite block 2
+*    of the last used device before quitting to ProDOS.
 *  Use lowercase for most strings, if available.
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.
 *  Add more recognized filetypes, mostly IIgs-related.
-*  Don't format RAM disk on quit if we didn't actually find one.
-*    This fixes a bug that could clobber block 2 of the last
-*    used device before quitting to ProDOS.
+*  Change "[D]elete" to "[U]nmark" in copy file.
+*    [D] still works.
+*  Change "[Q]" to "[Return]" in quit options.
+*    [Q] still works.
+*  Add "[M] to enter monitor" in quit options. This was
+*    first implemented in v6.0 but never displayed.
+*  If there were no prompts at program startup, the header
+*    was briefly displayed then cleared. This has been fixed.
 *
 ********************************
 *
-
-
