@@ -20,7 +20,8 @@ EXOMIZER=exomizer mem -q -P23 -lnone
 
 SRCDIR=src
 SOURCES=$(wildcard src/*.S)
-DATA=$(wildcard res/*)
+PRODOS=PRODOS
+CLOCK=CLOCK
 OBJMM=$(BUILDDIR)/OBJ.MM
 OBJMMX=$(OBJMM).X
 MMVARS=$(BUILDDIR)/MM.VARS.S
@@ -34,7 +35,7 @@ EXE=$(BUILDDIR)/$(SYSNAME)
 
 .PHONY: clean mount all
 
-$(BUILDDISK): $(EXE) $(DATA)
+$(BUILDDISK): $(PRODOS) $(CLOCK) $(EXE)
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
 $(EXE): $(OBJMMX) $(OBJBOOTSECX) $(OBJFILERX) $(FILERVARS) $(BUILDDIR)
@@ -94,9 +95,9 @@ $(OBJFILER): $(MMVARS) $(BOOTSECVARS)
 $(FILERVARS): $(OBJFILER)
 	awk -F';' '!/VARS;/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/OBJ.FILER_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
 
-$(DATA): $(BUILDDIR)
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
-	@touch "$@"
+# things that go in the root directory
+$(PRODOS) $(CLOCK): $(BUILDDIR)
+	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
 
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
