@@ -40,10 +40,10 @@ PHRWTS      JMP   :PHRWTS
 * GENERAL PURPOSE DELAY ROUTINE
 *
 :DELAY      LDX   #$11
-*]SPOT = *&$FF00
+]SPOT = *
 :DELAY2     DEX
             BNE   :DELAY2
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
             INC   :COUNTL
             BNE   :DELAY3
             INC   :COUNTH
@@ -70,7 +70,7 @@ PHRWTS      JMP   :PHRWTS
             PLA
             NOP
             LDA   #$FF
-*]SPOT = *&$FF00
+]SPOT = *
 :NOPAGE     PHA
             PLA
 :LOOP       JSR   :WRITE7
@@ -91,7 +91,7 @@ PHRWTS      JMP   :PHRWTS
             JSR   :WRITE0
             DEY
             BNE   :D5LOOP
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
             LDA   #$FF
             JSR   :WRITE5
             LDA   $C08E,X
@@ -104,7 +104,7 @@ PHRWTS      JMP   :PHRWTS
             LDY   #$00           ;INIT COUNT
             STY   HEXNUM+1
             LDX   HSLOT
-*]SPOT = *&$FF00
+]SPOT = *
 :LOOPD5     LDA   $C08C,X        ;WAIT FOR 'D5'
             BPL   :LOOPD5
             CMP   #$D5
@@ -122,7 +122,7 @@ PHRWTS      JMP   :PHRWTS
             BNE   :LOOP1
             INC   HEXNUM+1
             BNE   :LOOP2
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 :DONE       STY   HEXNUM
             PLP
             RTS
@@ -130,7 +130,7 @@ PHRWTS      JMP   :PHRWTS
 *
 * READ 62 TRANSLATE TABLE, ORG=xx96
 *
-*         ERR *&$FF-$96
+            ERR   {*&$FF}-$96
 :RDTR62     DB    $00,$04
             DB    $FF,$FF,$08,$0C,$FF,$10,$14,$18
             DB    $FF,$FF,$FF,$FF,$FF,$FF,$1C,$20
@@ -239,7 +239,7 @@ PHRWTS      JMP   :PHRWTS
 *
             LDY   #$AB
             LDA   #0             ;CKSEED
-*]SPOT = *&$FF00
+]SPOT = *
 :RDSEC2     LDX   $C0EC          ;GET BYTE
             BPL   :RDSEC2
             EOR   :RDTR62-$96,X  ;TRANSLATE,XOR
@@ -409,7 +409,7 @@ PHRWTS      JMP   :PHRWTS
 *
 * WRITE SYNC BYTES
 *
-*]SPOT = *&$FF00
+]SPOT = *
 :TRAKLP     NOP
             CMP   $00
             JSR   :WRITE9
@@ -483,7 +483,7 @@ PHRWTS      JMP   :PHRWTS
             LDA   #$FF
             STA   $C08D,X        ;WRITE A SYNC
             ORA   $C08C,X
-*]SPOT = *&$FF00
+]SPOT = *
             BCS   :TRAKQ         ;QUIT IF DONE
             LDY   ASYNC          ;ELSE GET # OF
             NOP                  ;SYNC
@@ -563,7 +563,7 @@ PHRWTS      JMP   :PHRWTS
 * WRITE SYNC
 *
             LDY   DSYNC          ;HOW MANY SYNC
-*]SPOT = *&$FF00
+]SPOT = *
 :WRDSNC     NOP
             JSR   :WRITE9        ;WRITE SYNC
             CMP   $00
@@ -585,7 +585,7 @@ PHRWTS      JMP   :PHRWTS
 *
             TYA
             LDY   #$56
-*]SPOT = *&$FF00
+]SPOT = *
             BNE   :WR2ND
 *
 :LP2ND      LDA   SECOND,Y       ;<-
@@ -1234,5 +1234,3 @@ PHRWTS      JMP   :PHRWTS
 *
 *
 *
-
-

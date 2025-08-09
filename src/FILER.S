@@ -11,7 +11,7 @@ MAINBEG     DB    0           ;where image of main program begins
 *
             ORG   CODEADR     ;Image of main program!
             PUT   PHRWTS      ;<--Page-aligned start of disk code here.
-            PUT   MORE.RWTS
+            PUT   MORE.RWTS   ;/!\ MUST FOLLOW PHRWTS
             PUT   MAIN
             PUT   MORE.E000
             PUT   BANK2

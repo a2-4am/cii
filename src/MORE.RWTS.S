@@ -4,7 +4,8 @@
 *
 *-----------------------------------
 *
-*
+* /!\ NOTE: MUST BE FIRST, PREVIOUS FILE
+*     FALLS THROUGH TO SETPX
 SETPX       JSR   MLI
             DB    $C6
             DW    SPLST
