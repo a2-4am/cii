@@ -150,6 +150,10 @@
 *    first implemented in v6.0 but never displayed.
 *  If there were no prompts at program startup, the header
 *    was briefly displayed then cleared. This has been fixed.
+*  Distributed on a self-booting disk image with
+*    ProDOS 2.4.3 from <https://prodos8.com/>
+*    and the universal ("jumbo") clock driver from
+*    <https://github.com/a2stuff/prodos-drivers>
 *
 ********************************
 *
