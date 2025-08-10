@@ -317,7 +317,7 @@ PHRWTS      JMP   :PHRWTS
             BNE   :BADDTA        ;BAD CKSM
 :RDDEP2     LDA   $C08C,X
             BPL   :RDDEP2
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
             CMP   #$AA
             CLC
             BEQ   :GOODAT
@@ -415,7 +415,7 @@ PHRWTS      JMP   :PHRWTS
             JSR   :WRITE9
             DEY
             BNE   :TRAKLP
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 * WRITE A SYNC BYTE WHILE CALCULATING
 * ADDR CHECKSUM
@@ -500,7 +500,7 @@ PHRWTS      JMP   :PHRWTS
             CMP   $00            ;BY...
             DEY
             BNE   :WAITSNC
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
             JSR   :RDADDR        ;LOOK FOR
             BCS   :WRTRKX        ;SECTOR 0
             LDA   ADRSEC         ;1ST
@@ -569,7 +569,7 @@ PHRWTS      JMP   :PHRWTS
             CMP   $00
             DEY
             BNE   :WRDSNC
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 * WRITE PROLOG
 *
@@ -611,7 +611,7 @@ PHRWTS      JMP   :PHRWTS
 :PPRIM      LDA   PRIM,Y         ;<-
             INY
             BNE   :WRPRIM
-*         ERR *&$FF00-]SPOT
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 * WRITE CHECKSUM
 *
