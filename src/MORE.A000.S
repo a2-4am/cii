@@ -1,5 +1,3 @@
-*
-*
 ***********************************
 *                                 *
 *       CATALOG DISPLAY           *
@@ -1357,12 +1355,8 @@ DOTREE      PHA
 :HDR80      JSR   COL80
             JMP   COMH00
 *
-*
-*
 :ERRFLG     DB    $0
 :TEMP       DB    $0
 :CHMAX      DB    $4F,$27
 :DSPNUM     DB    $03,$01
 :KEYS       DB    $88,$95,$8B,$8A,$C1,$DA
-
-

@@ -1,12 +1,8 @@
-*
             TYP   $06
             DSK   ../build/OBJ.MM
             PUT   VARS
             ORG   MMSPOT
-*
-            DUM   *
-MMBEG       DB    0
-            DEND
+MMBEG
 *
 JSLOP       EQU   $22           ;JSL opcode
 BCSOP       EQU   $B0           ;BCS opcode

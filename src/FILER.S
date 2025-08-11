@@ -1,13 +1,7 @@
-*
             TYP   $06
             DSK   ../build/OBJ.FILER
             PUT   VARS
             PUT   ../build/MM.VARS
-            PUT   ../build/BOOTSEC.VARS
-*
-            DUM   *
-MAINBEG     DB    0           ;where image of main program begins
-            DEND
 *
             ORG   CODEADR     ;Image of main program!
             PUT   PHRWTS      ;<--Page-aligned start of disk code here.

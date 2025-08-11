@@ -1,5 +1,3 @@
-*
-*
 * LOCK/UNLOCK
 * RENAME
 * VERIFY
@@ -8,7 +6,6 @@
 * UNDELETE
 * ALPHABETIZE
 * SET PRINTER SLOT
-*
 *
 **********************************
 *      FILE LOCK/UNLOCK          *
@@ -1428,8 +1425,3 @@ INFO        LDA   #$16
             ORA   #$80         ;FROM EXISTING
             STA   (BASL),Y     ;CHAR
             RTS
-*
-*
-*
-
-

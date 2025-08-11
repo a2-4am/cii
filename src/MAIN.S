@@ -1,4 +1,3 @@
-*
 MONTH1      ASC   "JFMAMJJASOND"
 MONTH2      ASC   "AEAPAUUUECOE"
 MONTH3      ASC   "NBRRYNLGPTVC"
@@ -226,7 +225,3 @@ VDINIT      JSR   INIT
 VDINT1      JSR   SETVID
             JSR   DOC00F         ; [4am] set ALTCHARSET
             JMP   SETKBD
-*
-*
-
-

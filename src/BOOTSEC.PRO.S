@@ -1,4 +1,3 @@
-*
             DB    $01
             SEC
             BCS   :APPLE2
@@ -246,6 +245,3 @@
 :RDWAIT     LDA   $C08C,X
             BPL   :RDWAIT
             DB    $0,$0,$0,$0,$0,$0,$0,$0,$0
-*
-
-

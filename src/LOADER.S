@@ -1,12 +1,5 @@
-*
-:LOCATE     CLD
+            CLD
             CLI
-            JSR   SETNOR
-            JSR   INIT
-            JSR   HOME                ;Clear screen before SETVID might
-            JSR   SETVID              ; change 80 screen to 40.
-            JSR   SETKBD
-            STA   KBDSTB
 *
 * FIGURE OUT SLOT NUMBER
 *
@@ -22,10 +15,17 @@
 *
 * Move MAIN portion of program into place
 *
-            JSR   DECRUNCH            ;DECRUNCH->CODEADR
+            LDA   #MAINXEND
+            STA   ZXSRC
+            LDA   #>MAINXEND
+            STA   ZXSRC+1
+            LDA   #MAINEND
+            STA   ZXDST
+            LDA   #>MAINEND
+            STA   ZXDST+1
+            JSR   ZXUNPACK
 *
-            LDA   $FBB3               ;FOR LATER
-            PHA
+            LDX   $FBB3               ;FOR LATER
 *
 * MOVE NOBOOT TO $D000
 *
@@ -33,18 +33,18 @@
 *
             LDA   $C083
             LDA   $C083
-            TYA                       ;FILL WITH 0'S
-:NBLP1      STA   $D000,Y             ;BECAUSE WE COPY THE
-            INY                       ;ENTIRE PAGE LATER
-            BNE   :NBLP1
-            JSR   DECRUNCH            ;DECRUNCH->$D000
-
+:NBLP       LDA   BOOTBEG,Y
+            CPY   #BOOTEND-BOOTBEG+1
+            BCC   :NBLP1
+            LDA   #0                  ;FILL WITH 0'S FROM $A2(?) TO $FF
+:NBLP1      STA   $D000,Y
+            INY
+            BNE   :NBLP
 *
 * WHILE WE'RE IN THE LANGUAGE CARD,
 * SAVE AUXMEM IRQ VECTOR.
 *
-            PLA                       ;FBB3 from ROM
-            CMP   #6
+            CPX   #6
             BNE   :SKIPIRQ            ;NOT //E
 *
             STA   $C009               ;AUX LC
@@ -237,14 +237,22 @@
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
-            JSR   DECRUNCH            ;DECRUNCH->MMBEG
-            LDA   #MMBEG              ;source start.
+            LDA   #MMXEND
+            STA   ZXSRC
+            LDA   #>MMXEND
+            STA   ZXSRC+1
+            LDA   #MMSPOT+MMEND-MMBEG
+            STA   ZXDST
+            LDA   #>MMSPOT+MMEND-MMBEG
+            STA   ZXDST+1
+            JSR   ZXUNPACK            ;unpack into main mem
+            LDA   #MMSPOT             ;source start.
             STA   A1L
-            LDA   #>MMBEG
+            LDA   #>MMSPOT
             STA   A1H
-            LDA   #MMEND              ;source end (+1, but oh well)
+            LDA   #MMSPOT+MMEND-MMBEG ;source end (+1, but oh well)
             STA   A2L
-            LDA   #>MMEND
+            LDA   #>MMSPOT+MMEND-MMBEG
             STA   A2H
             LDA   #AUXMM              ;destination
             STA   A4L
@@ -256,7 +264,14 @@
 *
 * Continue with miscellaneous initialization stuff.
 *
-:SETMISC    LDY   #0
+:SETMISC
+            JSR   SETNOR
+            JSR   INIT
+            JSR   HOME                ;Clear screen before SETVID might
+            JSR   SETVID              ; change 80 screen to 40.
+            JSR   SETKBD
+            STA   KBDSTB
+            LDY   #0
             STY   DOSNOW
             STY   AUXFLG
             STY   PSLOT               ;NO PRINTER.
@@ -581,6 +596,3 @@
 *
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
-*
-
-

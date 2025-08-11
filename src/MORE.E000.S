@@ -1,4 +1,3 @@
-*
 ************************************
 *                                  *
 *    MISCELLANEOUS ROUTINES        *
@@ -1232,5 +1231,3 @@ CSPACE      LDA   #>VTOC1
             PLA
             JSR   HEXDC2
             JMP   PRT5LJ
-
-

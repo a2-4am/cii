@@ -1,5 +1,3 @@
-*
-*
 * DELETE
 * FORMAT
 * VIEW
@@ -939,7 +937,3 @@ MAKEDR      JSR   COMTRE
             JMP   PRTPRS
 :OUT        RTS
 :ERROUT     JMP   ERROUT
-*
-*
-
-

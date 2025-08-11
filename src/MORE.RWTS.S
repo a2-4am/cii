@@ -1459,6 +1459,3 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :MSG6F      DB    $8D,$8D,$8D
             ASC   "Not a DOS 3.3 function"
             DB    $8D,$0
-*
-
-
