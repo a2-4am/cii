@@ -1,18 +1,8 @@
+            DS    $12
 *
-* I wish I didn't have to do it this way, but here are the
-* global entries into the PHRWTS-local routines that are
-* needed from elsewhere:
-RDADDR      EQU   *+3
-CRIT1       EQU   *+6
-CRIT2       EQU   *+9
-UNTPFX      EQU   *+12
-FAKTRK      EQU   *+15
-PHRWTS      JMP   :PHRWTS
-            JMP   :RDADDR
-            JMP   :CRIT1
-            JMP   :CRIT2
-            JMP   :UNTPFX
-            JMP   :FAKETRK
+* 
+*
+
 *
 * Time out from code for some LOCAL LABELS
 *
@@ -59,7 +49,7 @@ PHRWTS      JMP   :PHRWTS
 *    DISK SPEED CRITICAL CODE      *
 ************************************
 *
-:CRIT1      PHP
+CRIT1       PHP
             SEI
             LDA   #$1D           ;INIT HIBYTE
             STA   TEMP           ;OF COUNTER.
@@ -99,7 +89,7 @@ PHRWTS      JMP   :PHRWTS
             PLP
 :WRTS       RTS
 *
-:CRIT2      PHP
+CRIT2       PHP
             SEI
             LDY   #$00           ;INIT COUNT
             STY   HEXNUM+1
@@ -326,7 +316,7 @@ PHRWTS      JMP   :PHRWTS
 :GOODAT     RTS
 *
 *
-:PHRWTS     PHP
+PHRWTS      PHP
             SEI
             JSR   :RWTS
             BCC   :RWTSC
@@ -362,7 +352,7 @@ PHRWTS      JMP   :PHRWTS
 *
 * TELL RWTS WHAT TRACK IT'S ON
 *
-:FAKETRK    JSR   :DRINDEX
+FAKTRK      JSR   :DRINDEX
             STA   $478,X         ;STORE IN TABLE
             RTS
 *
@@ -792,7 +782,7 @@ PHRWTS      JMP   :PHRWTS
 *
 :RESEEK     LDA   ADRTRK         ;SAY YOU'RE ON
             ASL                  ;TRACK THE ADR
-            JSR   :FAKETRK       ;FIELD THINKS,
+            JSR   FAKTRK         ;FIELD THINKS,
             LDA   RTRACK         ;THEN SEEK TO
 *
 * FALL INTO SEEK
@@ -1017,7 +1007,7 @@ PHRWTS      JMP   :PHRWTS
             PHA                  ;YOU'RE ON A
             ASL                  ;HIGHER TRACK,
             ADC   #$10
-            JSR   :FAKETRK
+            JSR   FAKTRK
             LDA   #$00           ;THEN SEEK 0
             JSR   :SEEK          ;TO RATCHET.
             PLA
@@ -1103,7 +1093,7 @@ PHRWTS      JMP   :PHRWTS
             CMP   #$40           ;IF RATCHET:
             BNE   :GOSTART
             LDA   #$60
-            JSR   :FAKETRK       ;SAY TRK 48
+            JSR   FAKTRK         ;SAY TRK 48
             LDA   #$00
             STA   RTRACK         ;SET TRK 0
 :GOSTART    JSR   :START         ;START UP
@@ -1179,17 +1169,12 @@ PHRWTS      JMP   :PHRWTS
             BCC   :GOODOUT
 *
 *
-:ONLST      DB    $2
-:UNIT       DB    $0
-            DW    PFX+1
-*
-*
 *-----------------------------
 *
 *
 * SET PREFIX TO UNIT IN A REG
 *
-:UNTPFX     LDA   UNIT
+UNTPFX      LDA   UNIT
             STA   :UNIT
 * BIT *DOSNOW
 * BPL DOS33
@@ -1220,6 +1205,9 @@ PHRWTS      JMP   :PHRWTS
             STA   PFX+5
             CLC
             RTS
+:ONLST      DB    $2
+:UNIT       DB    $0
+            DW    PFX+1
 *
 *
 :PRODOS     LDA   PFX+1
@@ -1229,8 +1217,11 @@ PHRWTS      JMP   :PHRWTS
             STY   PFX
             LDA   #$2F           ;"/"
             STA   PFX+1
+            JSR   MLI
+            DB    $C6
+            DW    :SPLST
+            STA   RRTN
+            RTS
 *
-* fall through into next source file(!) to SETPX
-*
-*
-*
+:SPLST      DB    $1
+            DW    PFX

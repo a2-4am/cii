@@ -5,7 +5,7 @@
 *
             ORG   CODEADR     ;Image of main program!
             PUT   PHRWTS      ;<--Page-aligned start of disk code here.
-            PUT   MORE.RWTS   ;/!\ MUST FOLLOW PHRWTS
+            PUT   MORE.RWTS
             PUT   MAIN
             PUT   MORE.E000
             PUT   BANK2
