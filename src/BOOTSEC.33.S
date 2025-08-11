@@ -1,6 +1,3 @@
-            TYP   $06
-            DSK   ../build/OBJ.BOOTSEC
-            PUT   VARS
             DUM   *
 BOOTBEG     DB    0
             DEND

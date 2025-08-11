@@ -225,3 +225,65 @@ VDINIT      JSR   INIT
 VDINT1      JSR   SETVID
             JSR   DOC00F         ; [4am] set ALTCHARSET
             JMP   SETKBD
+*
+*   SEE DISK INFO
+*
+CINFO       LDA   #$15
+            JSR   VLEFT
+            LDA   #$21
+            STA   CH
+            JSR   PRHERE
+            INV   "PRINTER"
+            DB    $0
+            LDA   #$16
+            JSR   VLEFT
+            LDA   DATE
+            LDX   DATE+1
+            JSR   SHODAT
+            LDA   #$21
+            STA   CH
+            LDA   PSLOT
+            BEQ   :OFF
+            PHA
+            LDA   #$2A         ;'SLOT'
+            JSR   PRINT
+            PLA
+            JSR   PHHEX
+            JMP   CROUT
+*
+:OFF        JSR   PRHERE
+            ASC   "  Off "
+            DB    $8D,0
+            RTS
+*
+* CHANGE PRINTER SLOT
+*
+INFO        LDA   #$16
+            JSR   TABV
+            LDA   #$21
+            STA   CH
+            LDA   #$2A
+            JSR   PRINT
+            LDA   PSLOT
+            JSR   PHHEX
+*
+            LDA   #$26
+            STA   CH
+:GETCHAR    JSR   KEYESC
+            CMP   #$8D         ;CR?
+            BEQ   :DEFAULT
+            SEC
+            SBC   #$B0         ;CONVERT TO #
+            CMP   #8
+            BCS   :ERR
+            STA   PSLOT
+            JMP   PHHEX        ;PRINT IT
+*
+:ERR        JSR   BELL         ;TRY AGAIN
+            JMP   :GETCHAR
+*
+:DEFAULT    LDA   (BASL),Y     ;REMOVE FLASH
+            AND   #$3F
+            ORA   #$80         ;FROM EXISTING
+            STA   (BASL),Y     ;CHAR
+            RTS

@@ -885,7 +885,7 @@ FMTFIX      JMP   :FMTFIX
 * BEGIN THE COPY CYCLE
 *
 :GOTFILS    JSR   SWPCHK
-            JSR   FILMOV               ;ARRANGE 'EM
+            JSR   :FILMOV              ;ARRANGE 'EM
             LDA   #$00
             STA   CURR
             JSR   PATMOV               ;SQUISH LIST
@@ -1188,7 +1188,7 @@ FMTFIX      JMP   :FMTFIX
 * OPEN DEST. FILE FOR WRITING
 * (FIND 1ST DELETED CATALOG ENTRY )
 *
-:OPNDEST    JSR   CNVNAM               ;CNVT FILE NAME
+:OPNDEST    JSR   :CNVNAM              ;CNVT FILE NAME
             LDA   DATADR
             STA   RPAGE
             LDY   #$FF
@@ -2262,3 +2262,100 @@ TXTCNV      LDA   SDOS
             STA   RADR
 :NOTTXT     RTS
 :RPG        DB    $0
+*
+*
+* PUT LIST OF FILES IN COPY ORDER
+*
+:FILMOV     LDX   #$01
+            STX   :ORDER       ;START WITH #1
+:NXTFIL2    DEX                ;POSITION -1
+            CPX   FILNUM       ;DONE ALL
+            BEQ   :MOUT        ;FILES?
+            LDX   #$FF
+:NXTLOOK    INX
+            LDA   STATUS,X     ;LOOK FOR #
+            CMP   :ORDER
+            BNE   :NXTLOOK
+            LDY   :ORDER       ;FOUND IT:
+            DEY
+            PHA
+            LDA   STATUS,Y     ;SWAP ENTRIES
+            STA   STATUS,X     ;WITH CORRECT
+            PLA                ;POSITION
+            STA   STATUS,Y
+            LDA   CBYTE,X
+            PHA
+            LDA   CBYTE,Y
+            STA   CBYTE,X
+            PLA
+            STA   CBYTE,Y
+            LDA   CSECTR,X
+            PHA
+            LDA   CSECTR,Y
+            STA   CSECTR,X
+            PLA
+            STA   CSECTR,Y
+            INC   :ORDER       ;NEXT #
+            LDX   :ORDER
+            BNE   :NXTFIL2
+:MOUT       RTS
+*
+:ORDER      DB    $0
+*
+*
+* CONVERT FILENAME: DOS <--> PRODOS
+*
+:CNVNAM     LDA   DOSNOW
+            EOR   PDOS
+            BPL   :NOCNV       ;NO CONVERT
+            BIT   DOSNOW
+            BPL   :CNDOS33
+*
+* DOS --> PRODOS
+*
+            LDY   FILE
+            CPY   #$10
+            BCC   :CNVLP
+            LDY   #$0F
+:CNVLP      LDA   FILE,Y
+            DEY
+            CMP   #" "
+            BEQ   :CNVLP
+            INY
+            STY   FILE
+:CNVLP1     LDA   FILE,Y
+            CMP   #$B0
+            BCC   :MAKEDOT
+            CMP   #$BA
+            BCC   :USEIT
+            CMP   #$C1
+            BCC   :MAKEDOT
+            CMP   #$DB
+            BCC   :USEIT
+:MAKEDOT    LDA   #"."
+:USEIT      AND   #$7F
+            STA   FILE,Y
+            DEY
+            BNE   :CNVLP1
+            LDA   FILE+1       ;1ST CHAR
+            CMP   #$2E         ;IS IT A DOT?
+            BNE   :NOCNV       ;NO
+            LDA   #$41         ;YES: CHANGE
+            STA   FILE+1       ; TO 'A'
+:NOCNV      RTS
+*
+* PRODOS --> DOS
+*
+:CNDOS33    LDY   #0
+:DSLP       INY
+            LDA   FILE,Y
+            ORA   #$80
+            STA   FILE,Y
+            CPY   FILE
+            BCC   :DSLP
+:DSLP1      INY
+            LDA   #$A0         ;BLANK FILL
+            STA   FILE,Y
+            CPY   #$1E
+            BCC   :DSLP1
+            RTS

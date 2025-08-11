@@ -1,41 +1,3 @@
-************************************
-*                                  *
-*    MISCELLANEOUS ROUTINES        *
-*                                  *
-************************************
-*
-*   SEE DISK INFO
-*
-CINFO       LDA   #$15
-            JSR   VLEFT
-            LDA   #$21
-            STA   CH
-            JSR   PRHERE
-            INV   "PRINTER"
-            DB    $0
-            LDA   #$16
-            JSR   VLEFT
-            LDA   DATE
-            LDX   DATE+1
-            JSR   SHODAT
-            LDA   #$21
-            STA   CH
-            LDA   PSLOT
-            BEQ   :OFF
-            PHA
-            LDA   #$2A         ;'SLOT'
-            JSR   PRINT
-            PLA
-            JSR   PHHEX
-            JMP   CROUT
-*
-:OFF        JSR   PRHERE
-            ASC   "  Off "
-            DB    $8D,0
-            RTS
-*
-*
-*
 *************************************
 *       FILE ACCESS ROUTINES        *
 *************************************
@@ -699,535 +661,656 @@ PRTTRK      LDA   #$33
             JMP   PHBYTE
 
 *
-*
-*********************************
-*     GENERAL I/O STUFF         *
-*********************************
-*
-*
-* IS CHAR IN ACC A CONTROL?
-*
-CTRL?       CMP   #$A0
-            BCS   :OK
-            CMP   #$80
-            BCS   :BADOUT
-:OK         CLC
-:BADOUT     RTS
-*
-* PRINT DOLLAR SIGN, KEEP ACC
-*
-DOLLAR      PHA
-            LDA   #"$"
-            JSR   PCOUT
-            PLA
-            RTS
-*
-*
-* NO FILES SELECTED
-NOSEL       JSR   LOHERE
-            ASC   "No files selected"
-            DB    $0
-            JMP   PRESS
-*
-* NO FILES TO WORK WITH
-NOFIL0      LDA   #5
-            JSR   VLEFT
-NOFILS      LDA   #$36
-PRTPRS      JSR   PRINT
-*
-* PRESS A KEY & PROGRAM RESTART
-PRESS       LDA   #$43
-            JSR   PRINT
-            JSR   GETKEY
-KYESX       JMP   FILER
-*
-*
-* RDKEY WITH CASE CONVERT
-*
-CASKEY      JSR   PRDKEY
-            JMP   LOW2UP
-*
-* READS KEYBOARD WITHOUT CURSOR GAMES
-* -> CHARACTER IN AREG
-*
-GETKEY      BIT   KBDSTB
-:LOOP       LDA   KBD
-            BPL   :LOOP
-            JSR   CHKALT
-            BCS   GETKEY
-            BIT   KBDSTB
-LOW2UP      CMP   #$E0         ;CONVERT LOWER
-            BCC   :LOWQ        ;TO UPPER CASE
-            SBC   #$20
-:LOWQ       RTS
-*
-*
-CKESC       LDA   $C000
-            JMP   KEYES1
-*
-* GET CHARACTER, CHECK ESC
-*
-KEYESC      JSR   CASKEY
-KEYES1      CMP   #$9B
-            BEQ   KYESX
-            RTS
-*
-KYESC       JSR   GETKEY
-            JMP   KEYES1
-*
-PRDKEY      BIT   $C010        ;NO TYPEAHEAD
-            JSR   RDKEY
-            JSR   CHKALT
-            BCS   PRDKEY
-            RTS
-*
-* FOR KEYPRESSES, CHECK FOR CTRL-@
-* ALTCHARSET TOGGLE
-*
-CHKALT      CMP   #$80         ;CTRL-@?
-            BNE   :CHKQ
-*
-* CARRY SET NOW
-*
-            BIT   A2E          ;ON A //E?
-            BPL   :CHKQ        ;NO: CLC OUT.
-            LDA   $C01E        ;YES: WHAT'S
-            BPL   :ALTON       ;ALTCHARSET?
-            STA   $C00E        ;-: GO +
-            RTS
-:ALTON      STA   $C00F        ;+: GO -
-            RTS
-:CHKQ       CLC
-            RTS
-*
-*
-* DO VTAB, & HTAB 0
-*
-VLEFT       JSR   TABV
-            LDA   #$00
-SETCH       STA   CH
-* BIT *FLAG80
-* BPL NOT80
-* STA $57B                ;OURCH
-:NOT80      RTS
-*
-* HEX TO DECIMAL CONVERTER
-* PUT 2-BYTE HEX NUMBER IN HEXNUM  ->
-* 5 DECIMAL NUMBERS LEFT IN DIGIT
-*
-HEXDC1      LDX   #0
-HEXDC2      STX   HEXNUM+1
-            STA   HEXNUM
-HEXDEC      LDA   #0
-            STA   HEXNUM+2
-HEXDC3      LDA   #$00
-            LDX   #$07
-:CLRLOOP    STA   DIGIT,X
-            DEX
-            BNE   :CLRLOOP
-            LDX   #$07
-            BNE   :START
-:MAKEIT     INC   DIGIT,X
-:START      LDA   HEXNUM
-            STA   :LAST
-            LDA   HEXNUM+1
-            STA   :LAST+1
-            LDA   HEXNUM+2
-            STA   :LAST+2
-:DIGITLP    SEC
-            LDA   :LAST
-            SBC   :POWER0,X
-            STA   HEXNUM
-            LDA   :LAST+1
-            SBC   :POWER1,X
-            STA   HEXNUM+1
-            LDA   :LAST+2
-            SBC   :POWER2,X
-            STA   HEXNUM+2
-            BCS   :MAKEIT
-            DEX
-            BNE   :DIGITLP
-            LDA   :LAST
-            STA   DIGIT
-            RTS
-:POWER0     DB    $01,$0A,$64,$E8,$10,$A0,$40,$80
-:POWER1     DB    $00,$00,$00,$03,$27,$86,$42,$96
-:POWER2     DB    $00,$00,$00,$00,$00,$01,$0F,$98
-:LAST       DB    $00,$00,$00
-*
-* PRINT 3 DECIMAL DIGITS IN *DIGIT
-* LEADING ZEROS PRINTED
-PRTLZ       LDX   #$02
-:NEXTDIG    LDA   DIGIT,X      ;PRINT DECIMAL
-            JSR   MYHEX        ;DIGITS
-            DEX
-            BPL   :NEXTDIG
-            RTS
-*
-*
-PRT8RJ      LDX   #7
-            DB    $2C
-PRT5RJ      LDX   #4
-            DB    $2C
-PRT3RJ      LDX   #2
-            DB    $2C
-PRT2RJ      LDX   #1
-:PRTRJ      LDA   DIGIT,X
-            BNE   PRTDIG
-            LDA   #" "
-            JSR   PCOUT
-            DEX
-            BNE   :PRTRJ
-            BEQ   PRTDIG       ;ALWAYS
-*
-PRT8LJ      LDX   #7
-            DB    $2C
-PRT5LJ      LDX   #4
-:PRTLJ      LDA   DIGIT,X
-            BNE   PRTDIG
-            DEX
-            BNE   :PRTLJ
-            BEQ   PRTDIG
-PRT2DG      LDX   #1
-PRTDIG      LDA   DIGIT,X
-            JSR   MYHEX
-            DEX
-            BPL   PRTDIG
-            RTS
-*
-*
-MYHEX       ORA   #$B0
-            CMP   #$BA
-            BCC   :PRINT
-            ADC   #$06
-:PRINT      JMP   PCOUT
-*
-*
-*
-*
-*
-*
-* CATALOG
-* COPY
-*
-**********************************
-*          CATALOG DISK          *
-**********************************
-*
-CATLOG      LDX   #$01         ;SELECT OPTION
-            JSR   CHOOZ1
-            STA   :TYPE
-            CMP   #$02
-            BNE   :NOTDEL
-            LDA   #$01
-            STA   DELFLG
-:NOTDEL     LDA   #$FF
-            STA   OPTCHS
-            JSR   DODEVP
-            JSR   TREEA
-            JSR   CT1
-            JSR   PRVNM
-            JSR   ASKPR?       ;PRINTER ON?
-            LDA   PSLOT
-            BEQ   :SKIP2
-            JSR   HOME
-:SKIP2      JSR   RDACNT       ;GET CATALOG
-            LDA   #$80
-            STA   DELFLG       ;RESET DELETE
-            LDA   #0
-            STA   :COUNT       ;CR COUNTER
-            LDA   PRNTR?       ;YES PRINTER?
-            BEQ   :CHOOSE
-            JSR   HOME
-            JSR   PRON         ;PRINTER ON
-            JSR   :CROUNT
-:CHOOSE     JSR   TOP1         ;3/6/87 (WAS TOP1A)
-            JSR   PRVNM
-            BIT   DOSNOW
-            BPL   :VOL2
-            JSR   :CROUNT
-*
-* NAME           TYPE  BLKS  MODIFIED
-*
-            LDA   #$59
-            JSR   PRINT
-            LDA   :TYPE
-            CMP   #1
-            BNE   :VOL1
-            INC   :COUNT
-*
-*CREATED          ENDFILE SUBTYPE
-*
-            LDA   #$5A
-            JSR   PRINT
-:VOL1       JSR   :CROUNT
-*
-*
-:VOL2       JSR   :CROUNT
-            LDA   NACTIV       ;ANY FILES?
-            BNE   :CONTINU
-            LDA   #$36         ;'NO FILES'
-            JSR   PRINT
-            JSR   :CROUNT
-            JMP   :ALLDONE
-*
-:CONTINU    LDA   #0
-            STA   CH
-            STA   SHOW
-            LDA   :TYPE        ;CHOOSE OPTION
-            BEQ   :NORMAL
-            CMP   #$01
-            BEQ   :LENGTHS
-            CMP   #$02
-            BEQ   :DELETED
-*
-* HIDDEN CHARACTERS
-*
-:HID1       LDX   SHOW
-            JSR   SETPNT
-            BIT   DOSNOW
-            BMI   :SKIPHID     ;PRODOS
-*
-            LDY   #$03
-:HID2       LDA   (POINT),Y    ;GET FILENAME
-            BPL   :HID3        ;CHAR
-            CMP   #$A0
-            BCS   :HID3        ;IF CONTROL,
-            BIT   PRNTR?
-            BMI   :PRTHID
-            AND   #$1F
-* BIT *A2E
-* BPL HIDPUT
-* ORA #$40
-* STA    $C00F            ;ALTCHARSET
-            BPL   :HIDPUT      ;ALWAYS
-*
-:PRTHID     EOR   #$60         ;OR LOWERCASE
-:HIDPUT     STA   (POINT),Y
-:HID3       INY                ;NEXT...
-            CPY   #$21
-            BCC   :HID2
-*
-:SKIPHID    LDA   :TYPE
-            JSR   CATLIN
-            JSR   :NEXTFIL
-            BCC   :HID1
-            BCS   :GOALLD
-*
-* NORMAL CATALOG
-:NORMAL     LDA   :TYPE
-            JSR   CATLIN
-            JSR   :NEXTFIL
-            BCC   :NORMAL
-:GOALLD     JMP   :ALLDONE
-*
-* SEE DELETED FILES
-:DELETED    LDX   SHOW
-            JSR   SETPNT
-            LDY   #$00
-            LDX   #" "
-            BIT   DOSNOW
-            BPL   :DELF33
-*
-            LDA   (POINT),Y
-            AND   #$0F
-            BNE   :NOTDEL1
-            BEQ   :ISDEL1
-*
-:DELF33     LDA   (POINT),Y    ;CHECK DELETED
-            BPL   :NOTDEL1     ;STATUS
-:ISDEL1     LDX   #"D"         ;PRINT "D" OR
-:NOTDEL1    TXA                ;SPACE
-            JSR   PCOUT
-            JSR   PRSPC
-            JSR   CATLN1       ;SEE LINE
-            JSR   :NEXTFIL
-            BCC   :DELETED
-            BCS   :GOALLD
-*
-* CATALOG W/ FILE LENGTHS
-:LENGTHS    BIT   DOSNOW
-            BMI   :NORMAL      ;PRODOS
-*
-            LDA   #$00
-            STA   SHOW
-            LDA   #>DATA
-            STA   DATADR
-            LDA   #>DATPAG
-            STA   HIMEM
-:FILELP4    JSR   CATLIN
-            LDA   SHOW
-            STA   CURR
-            LDY   #$02
-            LDA   (POINT),Y
-            AND   #$07
-            STA   :FILTYPE
-            BEQ   :NEXT2
-:SEEIT      JSR   OPNSRC
-            JSR   RDDATA       ;READ 1 PAGE
-            BIT   FLAG80
-            BMI   :SEEIT0
-            JSR   :CROUNT
-:SEEIT0     LDX   #$07
-            JSR   PRBL2
-            LDY   #$00
-            LDA   :FILTYPE
-            CMP   #$04
-            BNE   :LENGTH
-            LDA   #"A"
-            JSR   PCOUT
-            LDA   DATA
-            LDX   DATA+1
-            JSR   :SEEADR
-            JSR   :COMMA
-:LENGTH     LDA   #"L"
-            JSR   PCOUT
-            LDA   DATA,Y
-            LDX   DATA+$1,Y
-            JSR   :SEEADR
-            JSR   PRHERE
-            ASC   "  ("
-            DB    $0
-            LDY   #$00
-            LDA   :FILTYPE
-            CMP   #$04
-            BNE   :HLENGTH
-            LDA   #"A"
-            JSR   PCOUT
-            JSR   DOLLAR
-            LDA   DATA+1
-            JSR   PHBYTE
-            LDA   DATA
-            JSR   PHBYTE
-            JSR   :COMMA
-:HLENGTH    LDA   #"L"
-            JSR   PCOUT
-            JSR   DOLLAR
-            LDA   DATA+$1,Y
-            JSR   PHBYTE
-            LDA   DATA,Y
-            JSR   PHBYTE
-            LDA   #")"
-            JSR   PCOUT
-:NEXT2      JSR   :NEXTFIL
-            BCS   :ALLDONE
-            JMP   :FILELP4
-:TYPE       DB    $0
-:FILTYPE    DB    $0
-*
-:COMMA
-            LDA   #$AC         ;","
-            JSR   PCOUT
-            JSR   PRSPC
-            INY
-            INY
-            RTS
-*
-*
-:NEXTFIL    JSR   :CROUNT
-            BIT   DOSNOW
-            BPL   :NF1
-            LDA   :TYPE
-            CMP   #1
-            BNE   :NF1
-            LDA   FLAG80
-            BMI   :NF1         ;80-COL
-            INC   :COUNT
-:NF1        INC   SHOW
-            LDA   PRNTR?
-            BNE   :NEXTF
-            LDA   :COUNT
-            CMP   #$12
-            BCC   :NEXTF
-            LDA   #$00
-            STA   :COUNT
-            JSR   KYESC
-:NEXTF      LDA   SHOW
-            CMP   NACTIV
-            RTS
-*
-:CROUNT     JSR   CROUT
-            INC   :COUNT
-            RTS
-:COUNT      DB    $0
-*
-:SEEADR     STY   YSAV
-            STA   HEXNUM
-            STX   HEXNUM+1
-            JSR   HEXDEC
-            JSR   PRT5LJ
-            LDY   YSAV
-            RTS
-*
-:ALLDONE    JSR   CROUT
-            JSR   CSPACE
-            JSR   CROUT
-            LDA   PRNTR?
-            BEQ   :ALLDN1
-            JSR   PROFF
-:ALLDN1     JMP   PRESS
-*
-*
-COL80       BIT   FLAG80
-            BPL   :OUT80
-            LDA   #$C3
-            STA   CSWL+1
-            LDA   #0
-            STA   CSWL
-            LDA   #$41
-            STA   SDCH
-            JSR   CROUT
-:OUT80      RTS
-*
-*
-COL40       LDA   #$19
-            STA   SDCH
-            BIT   FLAG80       ;(10/6/87)
-            BPL   :OUT40
-            LDA   #$15         ;
-            JSR   $C300        ;
-:OUT40      JMP   VDINIT
-*
-*
-CSPACE      LDA   #>VTOC1
-            JSR   SPACE
+* READ SOURCE DATA
+*
+RDDATA      LDY   RELCNT
+            BEQ   :RDD1
+            LDA   RBLKL-1,Y
+            STA   RBLKL-1
+            LDA   RBLKH-1,Y
+            STA   RBLKH-1
+:RDD1       LDA   #$00
+            STA   RELCNT
+            STA   EOF
             BIT   DOSNOW
             BPL   :DOS33
-            JSR   PRHERE
-            ASC   "Block"
-            DB    $0
-            JMP   :COMMON
-:DOS33      JSR   PRHERE
-            ASC   "Sector"
-            DB    $0
-:COMMON     JSR   PRHERE
-            ASC   "s free:"
-            DB    $0
-            LDA   FREEL
-            LDX   FREEH
-            JSR   HEXDC2
-            JSR   PRT5LJ
-            LDA   #$12
-            STA   CH
-            JSR   PRHERE
-            ASC   "Used:"
-            DB    $0
-            LDA   USEDL
-            LDX   USEDH
-            JSR   HEXDC2
-            JSR   PRT5LJ
-            LDA   #$1D
-            STA   CH
-            JSR   PRHERE
-            ASC   "Total:"
-            DB    $0
-            LDA   FREEL
+            JMP   :PRODOS
+*
+:DOS33      LDA   #$01
+            STA   RCMND
+            LDA   DATADR
+            STA   RPAGE
+            LDA   STSP         ;TSLIST EMPTY?
+            BNE   :RDMORE
+:NXTTSL     LDA   SRCTSL+1     ;POINT TO IT
+            STA   RTRACK
+            LDA   SRCTSL+2
+            STA   RSECTR
+            JSR   RDTSL        ;READ IT
+*
+:RDMORE     LDX   STSP
+            LDA   SRCTSL,X     ;NONZERO TS
+            STA   RTRACK       ;PAIR?
+            ORA   SRCTSL+$1,X
+            BEQ   :NEXTRD
+            LDA   SRCTSL+$1,X  ;SET TRACK
+            STA   RSECTR       ;& SECTOR
+*
+* SET RBLKH = $7A*TSLCTR+(STSP-$C)/2
+*
+            LDA   #0
+            STA   :SUM
+            STA   :SUM+1
+            LDX   #7
+            LDA   #$7A
+            STA   :TEMP2
+            LDA   TSLCTR
+            STA   :TEMP0
+            LDA   TSLCTR+1
+            STA   :TEMP1
+:MULTLP     LSR   :TEMP2
+            BCC   :SKIPADD
+            LDA   :SUM
             CLC
-            ADC   USEDL
+            ADC   :TEMP0
+            STA   :SUM
+            LDA   :SUM+1
+            ADC   :TEMP1
+            STA   :SUM+1
+:SKIPADD    ASL   :TEMP0
+            ROL   :TEMP1
+            DEX
+            BPL   :MULTLP
+            LDA   STSP
+            SEC
+            SBC   #$0C
+            LSR
+            CLC
+            ADC   :SUM
+            LDY   RELCNT
+            STA   RBLKL,Y
+            LDA   :SUM+1
+            ADC   #0
+            STA   RBLKH,Y
+*
+            INC   RELCNT
+            JSR   PHRWTS       ;READ DATA
+            BCS   :ERROUT
+            INC   RPAGE        ;NEXT PAGE
+:NEXTRD     INC   STSP         ;NEXT TS PAIR
+            INC   STSP
+            BEQ   :EOTSL       ;END OF LIST?
+            LDA   RPAGE
+            CMP   HIMEM        ;OUT OF MEMORY?
+            BCC   :RDMORE
+            RTS
+:EOTSL      LDA   SRCTSL+1     ;A NEXT TSLIST?
+            ORA   SRCTSL+2
+            BEQ   :OUT
+            JMP   :NXTTSL
+:OUT        DEC   EOF          ;NO: EOF
+            RTS
+:TEMP0      DB    $0
+:TEMP1      DB    $0
+:TEMP2      DB    $0
+:SUM        DB    $0,$0
+:ERROUT     JMP   ERROUT
+*
+:PRODOS     LDA   DATADR
+            STA   :TEMP
+            LDA   BLKNUM
+            ORA   BLKNUM+1
+            BEQ   :READ2
+            LDA   :TEMP
+:READLP     STA   RPAGE
+            JSR   :RDBLOK
+            JSR   CURPNT
+            LDY   #$15
+            LDA   (POINT),Y
+            INY
+            ORA   (POINT),Y
+            INY
+            ORA   (POINT),Y
+            BEQ   :GTEOF1
+            LDY   RELCNT
+            LDA   IBPTR
+            STA   RBLKL,Y
+            LDA   MIBPTR
+            STA   RBLKH,Y
+            INC   RELCNT
+            INC   :TEMP
+            INC   :TEMP
+:READ2      JSR   FNDBLK
+            BCS   :GOTEOF
+            LDA   :TEMP
+            CMP   HIMEM
+            BCC   :READLP
+            STA   RPAGE
+            RTS
+*
+:GOTEOF     LDA   :TEMP
+            STA   RPAGE
+            LDA   :BUFF
+            BEQ   :GTEOF1
+            LDY   RELCNT
+            LDA   RBLKL-1,Y
+            CLC
+            ADC   #1
+            STA   RBLKL,Y
+            LDA   RBLKH-1,Y
+            ADC   #0
+            STA   RBLKH,Y
+            INC   RELCNT
+            INC   RPAGE
+:GTEOF1     DEC   EOF
+            RTS
+:TEMP       DB    $0
+*
+:RDBLOK     LDA   UNIT
+            STA   :UNIT
+            LDA   BLKNUM
+            STA   :BLKNUM
+            LDA   BLKNUM+1
+            STA   :BLKNUM+1
+            LDA   RPAGE
+            STA   :BUFF+1
+            LDA   RADR
+            STA   :BUFF
+            JSR   MLI
+            DB    $80
+            DW    :RBLST
+            STA   RRTN
+            BCS   ERR1
+            RTS
+:RBLST      DB    $3
+:UNIT       DB    $0
+:BUFF       DB    $0,$0
+:BLKNUM     DB    $0,$0
+*
+* READ TSLIST & UPDATE SECTOR POINTER
+RDTSL       JSR   RDTSL1
+            BCS   ERR1
+            RTS
+*
+FNDBLK      JSR   FNBLK1
+            BCC   :FND1
+:ERR?       CMP   #$FF
+            BEQ   ERR1
+            SEC
+:FND1       RTS
+ERR1        JMP   ERROUT
+*
+FNBLK1      LDA   STRTYP       ;IF SAPLING,
+            CMP   #$10         ; RETURN EOF
+            BEQ   :FNDEOF
+            CMP   #$D0
+            BEQ   :SUBDIR
+:CKINDX     INC   IBPTR
+            BEQ   :CKTREE
+:LOOKDAT    LDX   IBPTR
+            LDA   SIB,X
+            STA   BLKNUM
+            ORA   SIB+$100,X
+            BEQ   :CKINDX      ;NO ENTRY
+            LDA   SIB+$100,X
+            STA   BLKNUM+1
+            CLC
+            RTS
+*
+* INDEX BLOCK USED UP
+*
+:CKTREE     LDA   STRTYP
+            CMP   #$30
+            BNE   :FNDEOF      ;NOT TREE
+:CKMSTR     INC   MIBPTR
+            LDX   MIBPTR
+            BMI   :FNDEOF
+            LDA   SMIB,X
+            STA   BLKNUM
+            ORA   SMIB+$100,X
+            BEQ   :CKMSTR
+            LDA   SMIB+$100,X
+            STA   BLKNUM+1
+            LDA   #>SIB
+            STA   RPAGE
+            JSR   RDBLK
+            BCC   :LOOKDAT
+            LDA   #$FF
+            DB    $CD
+:FNDEOF     LDA   #0
+:ERR        SEC
+            RTS
+*
+:SUBDIR     LDA   #0
+            STA   RADR
+            JSR   RDBLK
+            LDA   #$FF
+            BCS   :ERR
+            LDY   #2
+            LDA   (RADR),Y
+            STA   BLKNUM
+            INY
+            LDA   (RADR),Y
+            STA   BLKNUM+1
+            ORA   BLKNUM
+            BEQ   :FNDEOF      ;END OF SUBDIR
+*
+* CARRY ALREADY CLEAR
+*
+*CLC
+            RTS
+*
+*
+*-------------------------------------
+*
+* OPEN SOURCE FILE
+*
+OPNSRC      JSR   OPNFIL
+            BCS   ERR1
+            RTS
+*
+OPNFIL      JSR   CURPNT       ;POINT TO FILE
+            BIT   DOSNOW
+            BPL   :DOS33
+*
+:PRODOS     LDY   #$11
+            LDA   (POINT),Y    ;KEY BLK LO
+            STA   BLKNUM
+            INY
+            LDA   (POINT),Y    ;KEY BLK HI
+            STA   BLKNUM+1
+            LDY   #$0F
+:NAMELP     LDA   (POINT),Y
+            STA   FILE,Y
+            DEY
+            BPL   :NAMELP
+            LDA   FILE
             PHA
-            LDA   FREEH
-            ADC   USEDH
-            TAX
+            AND   #$0F
+            STA   FILE
             PLA
-            JSR   HEXDC2
-            JMP   PRT5LJ
+            AND   #$F0
+            STA   STRTYP
+            CMP   #$10
+            BEQ   :OPENDAT
+            CMP   #$20
+            BEQ   :OPENIB
+            CMP   #$30
+            BNE   :OPENDAT     ;SUBDIRECTORY
+*
+:OPENMIB    LDA   #>SMIB
+            STA   RPAGE
+            JSR   RDBLK
+            BCS   :ERR
+            LDA   SMIB
+            STA   BLKNUM
+            LDA   SMIB+$100
+            STA   BLKNUM+1
+:OPENIB     LDA   #>SIB
+            STA   RPAGE
+            JSR   RDBLK
+            BCS   :ERR
+            LDA   SIB
+            STA   BLKNUM
+            LDA   SIB+$100
+            STA   BLKNUM+1
+:OPENDAT    LDA   #0
+            STA   MIBPTR
+            STA   IBPTR
+            STA   RELCNT
+            CLC
+:ERR        RTS
+*
+:DOS33      LDA   #$10
+            STA   STRTYP
+            LDY   #$FF
+            STY   TSLCTR
+            STY   TSLCTR+1
+            LDY   #0
+            LDA   (POINT),Y
+            STA   RTRACK
+            INY
+            LDA   (POINT),Y
+            STA   RSECTR
+            INY
+:DNMLP      LDA   (POINT),Y
+            STA   FILE-2,Y
+            INY
+            CPY   #$21
+            BCC   :DNMLP
+            LDA   #$1E
+            STA   FILE         ;LENGTH
+            LDA   #$01
+            STA   RCMND        ;FALL THRU...
+*
+*
+RDTSL1      LDA   RPAGE
+            PHA
+            LDA   #>SRCTSL     ;READ INTO
+            STA   RPAGE        ;TSLIST AREA
+            INC   TSLCTR
+            BNE   :RDTS1
+            INC   TSLCTR+1
+:RDTS1      JSR   PHRWTS       ;GET TSLIST
+            LDA   #$0C         ;RESET SOURCE
+            STA   STSP         ;TS POINTER
+            PLA
+            STA   RPAGE
+            RTS
+*
+*
+*
+CTREE       LDA   #>SDNAME
+            STA   POINT2+1
+            LDY   #0
+            STY   POINT2
+            STY   :CURR
+:TREELP     LDA   XS,Y
+            SEC
+            SBC   XSTART
+            BCC   :GOSKIP
+            CMP   DSPNUM
+            BEQ   :TREELP0
+            BCS   :GOSKIP
+:TREELP0    STA   :CHINDX
+            TAX
+            LDA   :CH,X
+            STA   CH
+            LDA   YS,Y
+            SEC
+            SBC   YSTART
+            BCC   :GOSKIP
+            CMP   #$09
+            BCC   :NOSKIP0
+:GOSKIP     JMP   :SKIP
+*
+:NOSKIP0    ASL
+            CLC
+            ADC   #4
+            JSR   TABV
+            CPY   #0
+            BEQ   :SPCS
+*
+            LDA   #"-"
+            LDX   PREV,Y
+            CPX   #$FF
+            BEQ   :NOPRE1
+            LDA   #"!"
+:NOPRE1     PHA
+            LDY   :CURR
+            LDA   SIS,Y
+            CMP   #$FF
+            BEQ   :NOPRE2
+            LDA   #$8A
+            JSR   PCOUT
+            LDA   #"!"
+            JSR   PCOUT
+            LDA   #$88
+            JSR   PCOUT
+            DEC   CV
+            JSR   $FC22
+:NOPRE2     PLA
+            JSR   PCOUT
+            LDA   #"-"
+            JSR   PCOUT
+            LDA   #">"
+            BNE   :NOARO
+*
+:SPCS       LDA   #" "
+            JSR   PCOUT
+            JSR   PCOUT
+:NOARO      JSR   PCOUT
+            LDA   YS,Y
+            CMP   YPOS
+            BNE   :NOTINVS
+            LDA   XS,Y
+            CMP   XPOS
+            BNE   :NOTINVS
+            LDY   #$C0         ;INVERSE
+            STY   PINVFL
+:NOTINVS    LDY   #0
+            LDA   (POINT2),Y
+            STA   :LEN
+:CLP        INY
+            LDA   (POINT2),Y
+            ORA   #$80
+            JSR   PCOUT
+            CPY   :LEN
+            BCC   :CLP
+            STY   :LEN
+            LDY   #0           ;NORMAL
+            STY   PINVFL
+            LDY   :CURR
+            LDA   KITTEN,Y
+            CMP   #$FF
+            BEQ   :SKIP
+            LDY   :LEN
+:DASHLP     LDA   #"-"
+            JSR   PCOUT
+            LDA   CH
+            CMP   CHMAX
+            BCS   :SKIP
+            INY
+            CPY   #$11
+            BCC   :DASHLP
+            LDA   #">"
+            JSR   PCOUT
+*
+:SKIP       JSR   INCPT2
+            INC   :CURR
+            LDY   :CURR
+            CPY   END
+            BCS   :FIN
+            JMP   :TREELP
+*
+:FIN        LDX   #5
+:FIN0       LDA   :CHL,X
+            TAY
+            LDA   #$15
+            STA   CV
+:FIN1       JSR   $FC22
+            LDA   (BASL),Y
+            CMP   #"!"
+            BEQ   :FIN2A
+:FIN1A      DEC   CV
+            LDA   CV
+            CMP   #4
+            BCS   :FIN1
+:FIN2       DEX
+            BPL   :FIN0
+:OUT        RTS
+*
+:FIN2A      INY
+            LDA   (BASL),Y
+            DEY
+            CMP   #" "
+            BNE   :FIN3
+            LDA   CV
+            PHA
+:FIN2B      INC   CV
+            JSR   $FC22
+            LDA   CV
+            CMP   #$16
+            BCS   :FIN2C
+            LDA   #"!"
+            STA   (BASL),Y
+            BNE   :FIN2B       ;ALWAYS
+*
+:FIN2C      PLA
+            STA   CV
+
+:FIN3       DEC   CV
+            LDA   CV
+            CMP   #4
+            BCC   :FIN2
+            JSR   $FC22
+            LDA   (BASL),Y
+            CMP   #"-"
+            BEQ   :FIN1A
+            LDA   #"!"
+            STA   (BASL),Y
+            BNE   :FIN3        ;ALWAYS
+
+:LEN        DB    $0
+:CURR       DB    $0
+:CH         DB    $1,$13,$25,$37
+:CHINDX     DB    $0
+:TEMP       DB    $0
+:CHL        DB    $0,$1,$9,$12,$13,$1B
+*
+*
+*
+INCPT2      LDA   POINT2
+            CLC
+            ADC   #$10
+            STA   POINT2
+            BCC   IP3
+            INC   POINT2+1
+IP3         RTS
+*
+MKTREE      LDA   #>FILBUF
+            STA   RPAGE
+            LDA   #>SDNAME
+            STA   POINT2+1
+            LDY   #$FF
+            STY   CURMOM
+            INY
+            STY   YCUR
+            STY   CURR
+            STY   BLKNUM+1
+            STY   SDBLKH
+            STY   POINT2
+            STY   XS
+            STY   XCUR
+            INY
+            INY
+            STY   BLKNUM
+            STY   SDBLKL
+:SBDR00     LDA   #0
+            STA   SISPTR
+:SBDR0      JSR   RDBLK
+            BCS   IP3          ;READ ERR
+:SBDR01     LDA   RPAGE
+            STA   POINT+1
+            LDA   FILBUF+2
+            STA   BLKNUM
+            LDA   FILBUF+3
+            STA   BLKNUM+1
+            LDA   #4
+            STA   POINT
+:SBDR1      LDY   #0
+            LDX   CURR
+            BEQ   :ISROOT
+            LDA   (POINT),Y
+            AND   #$F0
+            CMP   #$D0
+            BNE   :NOTDIR
+            LDY   #$11
+            LDA   (POINT),Y
+            STA   SDBLKL,X
+            INY
+            LDA   (POINT),Y
+            STA   SDBLKH,X
+:ISROOT     LDA   #0
+            STA   SDBLKL+$1,X
+            STA   SDBLKH+$1,X
+            LDA   CURMOM
+            STA   MOM,X
+            LDA   #$FF
+            STA   KITTEN,X
+            STA   SIS,X
+            STA   PREV,X
+            LDA   SISPTR
+            BEQ   :SBDR2
+            LDA   CURR
+            STA   SIS-1,X
+            SEC
+            SBC   #1
+            STA   PREV,X
+:SBDR2      INC   SISPTR
+*
+* MOVE NAME INTO SDNAME
+*
+            LDY   #$0F
+:MVNAME     LDA   (POINT),Y
+            STA   (POINT2),Y
+            DEY
+            BNE   :MVNAME
+            LDA   (POINT),Y
+            AND   #$0F
+            STA   (POINT2),Y
+            JSR   INCPT2
+*
+            INC   CURR
+            BEQ   :DONE        ;3/29/86
+            LDA   CURR
+            CMP   #1
+            BEQ   :DIRDNE
+:NOTDIR     LDA   POINT
+            CLC
+            ADC   #$27
+            STA   POINT
+:GOSBDR1    BCC   :SBDR1
+            INC   POINT+1
+            LDA   POINT+1
+            CMP   #$0E         ;<--
+            BCC   :GOSBDR1
+            LDA   BLKNUM
+            ORA   BLKNUM+1
+            BEQ   :DIRDNE
+            JMP   :SBDR0
+*
+* DONE WITH CURRENT SUBDIR
+*
+:DIRDNE     INC   CURMOM
+            LDX   CURMOM
+            LDA   SDBLKL,X
+            STA   BLKNUM
+            LDA   SDBLKH,X
+            STA   BLKNUM+1
+            ORA   BLKNUM
+            BEQ   :DONE
+            LDA   CURR
+            STA   KITTEN,X
+            CMP   KITTEN-1,X
+            BNE   :DIRDN1
+            LDA   #$FF
+            STA   KITTEN-1,X
+:DIRDN1     JMP   :SBDR00
+*
+:DONE       LDA   #$FF
+            STA   KITTEN-1,X
+            STX   END
+            LDA   #0
+            STA   CURR
+            STA   YS
+:TREE0      LDY   CURR
+            LDA   KITTEN,Y
+            CMP   #$FF
+            BEQ   :NODAUG
+            INC   XCUR
+            LDX   XCUR
+            STX   XMAX
+            JMP   :TREE1
+*
+:NOSIS      LDA   MOM,Y
+            CMP   #$FF
+            BEQ   :ATROOT
+            DEC   XCUR
+            STA   CURR
+            TAY
+:NODAUG     LDA   SIS,Y
+            CMP   #$FF
+            BEQ   :NOSIS
+            INC   YCUR
+:TREE1      STA   CURR
+            TAY
+            LDA   XCUR
+            STA   XS,Y
+            LDA   YCUR
+            STA   YS,Y
+            JMP   :TREE0
+*
+*
+:ATROOT     CLC
+            RTS

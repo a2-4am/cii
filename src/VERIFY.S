@@ -1,0 +1,347 @@
+*************************************
+*           VERIFY OPTIONS          *
+*************************************
+*
+VERIFY      LDX   #$03
+            JSR   CHOOZ1       ;SELECT VERIFY
+            STA   :TEMP        ;OPTION.
+            CMP   #1
+            BNE   :NOTFIL
+            JSR   COMTRE
+            JMP   :VFILES
+*
+:NOTFIL     JSR   COMHDR
+            LDA   :TEMP        ;JUMP TO
+            BEQ   :VDISK       ;OPTION
+            JMP   SPEED1
+*
+*
+**********  VERIFY DISK  **********
+*
+:VDISK      LDA   #>DATA
+            STA   RPAGE
+            JSR   LOHERE
+            ASC   "Verifying "
+            DB    $0
+            LDA   #0
+            STA   :VERRORS
+            STA   :VERRORS+1
+            JSR   DEVTYP
+            BNE   :PRODOS      ;NOT FLOPPY
+            JMP   :DOS33
+*
+:PRODOS     LDA   #0
+            STA   BLKNUM
+            STA   BLKNUM+1
+            JSR   GTBLKS
+            STX   :BLKSLO
+            STY   :BLKSHI
+:BLKLP      JSR   CKESC
+            LDA   #$15
+            JSR   TABV
+            LDA   #$0A
+            STA   CH
+            JSR   PRTBLK
+            JSR   RDBLK
+            BCS   :BLKERR
+:NXTBLK     INC   BLKNUM
+            BNE   :BLK2
+            INC   BLKNUM+1
+:BLK2       LDA   BLKNUM+1
+            CMP   :BLKSHI
+            BCC   :BLKLP
+            LDA   BLKNUM
+            CMP   :BLKSLO
+            BCC   :BLKLP
+            JMP   :TOTAL       ;DONE!
+:BLKERR     INC   :VERRORS
+            BNE   :BLKER1
+            INC   :VERRORS+1
+:BLKER1     LDA   #3
+            STA   WNDTOP
+            LDA   #$14
+            STA   WNDBTM
+            LDA   #$13
+            JSR   VLEFT
+            JSR   PRHERE
+            ASC   "Error: "
+            DB    $0
+            JSR   PRTBLK
+            JSR   SETTXT
+            JMP   :NXTBLK
+*
+*
+:DOS33      LDA   #$33         ;'TRACK'
+            JSR   PRINT
+            LDA   #$40         ;RATCHET!
+            STA   RCMND        ;(SETS TRK 0)
+            JSR   DORWTS
+            LDA   #$10         ;SET VERIFY
+            STA   RCMND
+:TRACKLP    JSR   CKESC
+            LDA   #$15
+            JSR   TABV
+            LDA   #$11         ;PRINT TRACK
+            STA   CH           ;BEING
+            LDA   RTRACK       ;VERIFIED
+            JSR   PHBYTE
+            JSR   PHRWTS       ;GO VERIFY
+            BCC   :OK          ;ANY ERRORS?
+*
+            LDA   #$03         ;SET WINDOW
+            STA   WNDTOP
+            LDA   #$14
+            STA   WNDBTM
+            LDA   #$13
+            JSR   VLEFT        ;POSITION
+            JSR   CROUT2
+            LDA   #$3A         ;'ERROR'
+            JSR   PRINT
+            JSR   PRSPC
+            JSR   PRTTRK       ;'TRACK'
+            JSR   CROUT
+            LDA   #$34         ;'SECTOR'
+            JSR   PRINT
+            LDY   #$00
+:BADLP      LDA   SOFAR,Y      ;GET SECTOR
+            BMI   :NEXTBAD     ;BAD?
+            LDA   INTLV1,Y
+            JSR   PHHEX        ;PRINT NUMBER
+            JSR   PRSPC
+            INC   :VERRORS     ;INC ERROR
+            BNE   :NEXTBAD     ;COUNT
+            INC   :VERRORS+1
+:NEXTBAD    INY                ;NEXT SECTOR
+            CPY   #$10
+            BCC   :BADLP
+            JSR   SETTXT
+*
+:OK         INC   RTRACK       ;NEXT TRACK
+            LDA   RTRACK
+            CMP   #$23
+            BCC   :TRACKLP
+            BCS   :TOTAL
+*
+:BLKSLO     DB    $0
+:BLKSHI     DB    $0
+*
+************  VERIFY FILES  ********
+:VFILES     LDA   #$01
+            STA   STATE
+            JSR   CATDIS       ;SELECT FILES
+            JSR   PATMOV
+            LDA   FILNUM
+            BNE   :GOTFILS
+            JMP   NOSEL
+:GOTFILS    JSR   SWPCHK
+            JSR   HOME
+            LDA   #$00
+            STA   :VERRORS
+            STA   :VERRORS+1
+            STA   CURR
+:VFILELP    JSR   FILEQ
+            JSR   :V1FILE
+            JSR   CKESC
+            INC   CURR
+            LDA   CURR
+            CMP   FILNUM
+            BNE   :VFILELP
+:TOTAL      JSR   LOHERE
+            ASC   "Total: "
+            DB    $0
+            LDX   :VERRORS+1
+            LDA   :VERRORS
+            JSR   HEXDC2
+            JSR   PRT5LJ
+            JSR   PRSPC
+            LDA   #$3A         ;'ERROR'
+            JSR   PRINT
+            LDA   :VERRORS+1   ; LDA :VERRORS+1 <- The old
+            BNE   :NOTONE      ; ORA :VERRORS
+            LDX   :VERRORS     ; CMP #$01           doesn't work
+            DEX                ; It mistakenly takes $0101 same as $0001.
+            BEQ   :ONE
+:NOTONE     LDA   #"s"
+            JSR   PCOUT
+:ONE        JMP   PRESS
+*
+************************
+*
+:V1FILE     JSR   OPNFIL
+            BCS   :VOUCH
+*
+:CKDOS      BIT   DOSNOW
+            BPL   :GOTTSL
+*
+:NOERR      LDA   #>DATA
+            STA   RPAGE
+            JSR   RDBLK
+            BCS   :VOUCH
+            JSR   FNBLK1
+            BCC   :NOERR
+            CMP   #$FF
+            BEQ   :VOUCH
+            RTS
+*
+:MORETS     LDA   SRCTSL+1
+            STA   RTRACK
+            LDA   SRCTSL+2
+            STA   RSECTR
+            JSR   RDTSL1
+:GOTTSL     LDA   #>DATA
+            STA   RPAGE
+:RDMORE     LDX   STSP
+            LDA   SRCTSL,X
+            STA   RTRACK
+            ORA   SRCTSL+$1,X
+            BEQ   :NEXTRD
+            LDA   SRCTSL+$1,X
+            STA   RSECTR
+            JSR   :VRWTS
+            BCS   :V1FOUT
+:NEXTRD     INC   STSP
+            INC   STSP
+            BNE   :RDMORE
+            LDA   SRCTSL+1
+            ORA   SRCTSL+2
+            BNE   :MORETS
+:V1FOUT     RTS
+*
+:VRWTS      JSR   CKESC
+            LDA   RTRACK
+            CMP   #$23
+            BCS   :VOUCH
+            LDA   RSECTR
+            CMP   #$10
+            BCS   :VOUCH
+            JSR   PHRWTS
+            BCC   :V1FOUT
+:VOUCH      INC   :VERRORS
+            BNE   :NOCARI2
+            INC   :VERRORS+1
+:NOCARI2    JSR   LOHERE
+            DB    $0
+            LDA   #$27
+            STA   RRTN
+            JSR   ERRMSG
+            LDA   #$35
+            JSR   PRINT
+            LDA   RPAGE
+            CMP   #>SRCTSL
+            BEQ   :KEY
+            LDX   CURR
+            INX
+            CPX   FILNUM
+            BCS   :KEY
+            LDA   #$3C
+            JSR   PRINT
+:KEY        JSR   KYESC
+            PHA
+            LDA   #$16
+            JSR   VLEFT        ;CLEAR PROMPT
+            JSR   PRHERE       ;(LEAVE ERROR)
+            DB    $2F,$8D,$2F,0
+            PLA
+            CMP   #" "
+            BEQ   :SET         ;IF EQUAL, CARRY WILL BE SET
+            CLC
+:SET        RTS
+*
+:VERRORS    DB    $0,$0
+:TEMP       DB    $0
+*
+*
+**********  DISK SPEED  *************
+*
+SPEED1      JSR   CROUT
+            JSR   DEVTYP
+            BEQ   :DOSPEED
+            JMP   FLONLY
+*
+:DOSPEED    LDA   #$68
+            JSR   PRINT
+            LDA   UNIT
+            JSR   SEEDEV
+            JSR   CROUT2
+            LDA   #$35
+            JSR   PRINT
+            JSR   KYESC
+            JSR   HOME
+            LDA   #$40         ;RATCHET!
+            STA   RCMND
+            JSR   DORWTS       ;(This call will enforce UDC 5.25 mode)
+            LDA   #$22
+            STA   RTRACK
+            LDA   #$00
+            STA   RCMND        ;SEEK TRK $22
+            JSR   DORWTS
+*LDX RSLOT
+            LDX   HSLOT
+            LDA   $C089,X      ;MOTOR BACK ON
+            LDA   $C08D,X
+            LDA   $C08E,X      ;WP CHECK
+            BPL   :OK2
+            LDA   $C08C,X      ;FAILED:
+            LDA   $C088,X      ;MOTOR OFF,
+            LDA   #$2B
+            STA   RRTN
+            JMP   OUCH
+*
+:OK2        JSR   CRIT1        ;ELSE WRITE
+            LDA   #$69
+            JSR   PRINT
+
+:TEST       JSR   CRIT2        ;TIME IT.
+            ASL   HEXNUM
+            ROL   HEXNUM+1     ; * 2.
+            LDA   HEXNUM+1     ;TOO BIG?
+            BMI   :TEST        ;TRY AGAIN.
+            STA   :SHIFTER+1
+            LDA   HEXNUM
+            STA   :SHIFTER
+            LDA   #$3E         ; / $1.053E
+            STA   :DIVER       ;=/  1.020477
+            LDA   #$05
+            STA   :DIVER+1
+            LDX   #$10
+:DIVLP      LSR   :SHIFTER+1   ;SHIFT DIVDEND
+            ROR   :SHIFTER     ;BIT SMALLER
+            ASL   :DIVER       ;DIVISOR BIT
+            ROL   :DIVER+1     ;TO KNOCK OFF?
+            BCC   :DIVNEXT     ;NO.
+            LDA   HEXNUM       ;YES:SUBTRACT.
+            SBC   :SHIFTER
+            STA   HEXNUM
+            LDA   HEXNUM+1
+            SBC   :SHIFTER+1
+            STA   HEXNUM+1
+:DIVNEXT    DEX
+            BNE   :DIVLP
+            JSR   HEXDEC       ;-> 20,000
+            LDA   #$09
+            JSR   TABV
+            LDA   #$0F
+            STA   CH
+            LDY   #3
+:HEXLP      LDA   DIGIT+1,Y
+            JSR   PHHEX
+            DEY
+            BNE   :HEXLP
+            LDA   #"."
+            JSR   PCOUT
+            LDA   DIGIT+1
+            JSR   PHHEX
+            LDA   $C000        ;ESC?
+            CMP   #$9B
+            BNE   :TEST        ;NOT YET...
+            STA   $C010
+*LDX RSLOT
+            LDX   HSLOT
+            LDA   $C088,X      ;MOTOR OFF.
+            RTS
+*
+*
+:SHIFTER    DB    $00,$00
+:DIVER      DB    $3E,$05
+*
+*

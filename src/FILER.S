@@ -3,25 +3,29 @@
             PUT   VARS
             PUT   ../build/MM.VARS
 *
-            ORG   CODEADR     ;Image of main program!
-            PUT   PHRWTS      ;<--Page-aligned start of disk code here.
-            PUT   MORE.RWTS
-            PUT   MAIN
-            PUT   MORE.E000
-            PUT   BANK2
-            PUT   MORE.BANK2
-            PUT   BANK1
-            PUT   A000
+            ORG   CODEADR
+            PUT   DISKACCESS  ;Page-aligned, timing-critical disk code
+            PUT   FILEACCESS
+            PUT   FILELIST
+            PUT   INPUT
+            PUT   OUTPUT
+            PUT   MESSAGES
             PUT   PRODOS
-            PUT   MORE.A000
-*
-            DUM   *
-PBOOT       DB    0           ;Marker for MAIN to move ProDOS bootsec.
-            DEND
-PROBEG      ORG   $800
             PUT   BOOTSEC.PRO
-            ORG
-*
+            PUT   COPY
+            PUT   CATALOG
+            PUT   DELETE
+            PUT   LOCKRENAME
+            PUT   ALPHABETIZE
+            PUT   FORMAT
+            PUT   VERIFY
+            PUT   VIEW
+            PUT   DISKMAP
+            PUT   CHANGEBOOT
+            PUT   UNDELETE
+            PUT   MKDIR
+            PUT   QUIT
+            PUT   MENU
             DUM   *
 MAINEND     DB    0           ;where image of main program ends
             DEND
