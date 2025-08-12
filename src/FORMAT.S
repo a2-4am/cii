@@ -26,14 +26,15 @@ FORMAT      LDX   #7
 :PRO1       TXA
             BPL   :NOTRMV
 *
-:ISRMV      LDA   #MINS2FRM
-            JSR   PRINT
+:ISRMV      JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "Insert disk to format",8D,8D,00
             JMP   :COMRMV
 *
 :NOTRMV     JSR   PRHERE
             DB    $8D,$8D,$8D,$8D,$8D,$0
-:COMRMV     LDA   #MRDY2FRM
-            JSR   PRINT
+:COMRMV     JSR   PRHERE
+            ASC   "Ready to format (Y/N) ? ",00
             JSR   CASKEY
             CMP   #"Y"           ;YES
             BNE   :GOFOUT
@@ -100,8 +101,9 @@ FORMAT      LDX   #7
             BCS   :GOFOUT        ;ABORT
 *
 *
-:DOITNOW    LDA   #MFMTING
-            JSR   PRINT
+:DOITNOW    JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "  Formatting disk",8D,8D,00
             JSR   DEVTYP
             BEQ   :DODSK2        ;DISK II
 *
@@ -151,8 +153,10 @@ FORMAT      LDX   #7
             BCC   :FORMLP
 *
 :FORMDN     JSR   DDISK
-:FORMDN1    LDA   #MFMTDONE
-            JMP   PRTPRS
+:FORMDN1    JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "Formatting complete",8D,00
+            JMP   PRESS
 *
 *
 *

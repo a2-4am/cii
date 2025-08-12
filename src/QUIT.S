@@ -11,8 +11,12 @@ QUIT        JSR   TOP1
             INY
             BPL   :QUITZZ
 *
-            LDA   #MQUITOPT
-            JSR   PRINT
+            JSR   PRHERE
+            DB    $8D,$8D
+            ASC   " Press [Esc] to re-enter utilities",8D,8D
+            ASC   " Press [Return] to quit to ProDOS",8D,8D
+            ASC   " Press [M] to enter monitor",8D,8D
+            ASC   " Press [Reset] to reboot",00
 :QUIT00     INC   $3F4        ;Mess up vector so RESET will reboot
             JSR   GETKEY      ; on Autostart Apple II Plus.
             DEC   $3F4        ;Fix RESET vector again.

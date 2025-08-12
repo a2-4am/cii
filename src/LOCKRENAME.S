@@ -44,8 +44,9 @@ RENVOL      JSR   NEWVOL       ;GET NEW NAME
 *
 *
 *
-ASKLOK      LDA   #MASKLOCK
-            JSR   PRINT
+ASKLOK      JSR   PRHERE
+            DB    $8D
+            ASC   "[L]ock or [U]nlock? ",00
 :TRY        JSR   CASKEY
             CMP   #$9B
             BEQ   ALOUT        ;C IS SET

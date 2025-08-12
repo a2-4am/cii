@@ -50,8 +50,10 @@ BOOTPG      JSR   COMHDR
             INC   RCMND
             JMP   DORWTS       ;WRITE BACK
 *
-:NODOS      LDA   #MNOBOOTP
-            JMP   PRTPRS
+:NODOS      JSR   PRHERE
+            DB    $8D,$8D,$8D,$8D
+            ASC   "No boot program to change",00
+            JMP   PRESS
 *
 :NAMESEC    DB    $0
 T0SECT      DB    $0

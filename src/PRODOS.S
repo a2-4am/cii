@@ -1636,14 +1636,20 @@ CKDEL1      BIT   DOSNOW
 *
 NODOS3      JSR   DOSTYP
             BCS   BLK2ER
-            LDA   #MNOTDOS
-            DB    $2C
+            JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Not a DOS 3.3 function",8D,00
+            JMP   PRESS
 *
-FLONLY      LDA   #MNOTFL
-            DB    $2C
+FLONLY      JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Disk II function only",8D,00
+            JMP   PRESS
 *
-NOPRO       LDA   #MNOTPRO
-            JMP   PRTPRS
+NOPRO       JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Not a ProDOS function",8D,00
+            JMP   PRESS
 *
 BLK2ER      LDY   #0
             STY   BLKNUM+1

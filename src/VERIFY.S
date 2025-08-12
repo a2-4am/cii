@@ -233,8 +233,9 @@ VERIFY      LDX   #$03
             INX
             CPX   FILNUM
             BCS   :KEY
-            LDA   #MSPACE
-            JSR   PRINT
+            JSR   PRHERE
+            DB    $8D
+            ASC   "[Space]-Next File ",00
 :KEY        JSR   KYESC
             PHA
             LDA   #$16
@@ -258,8 +259,9 @@ SPEED1      JSR   CROUT
             BEQ   :DOSPEED
             JMP   FLONLY
 *
-:DOSPEED    LDA   #MINSBLNK
-            JSR   PRINT
+:DOSPEED    JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Insert a blank disk in ",00
             LDA   UNIT
             JSR   SEEDEV
             JSR   CROUT2
@@ -288,9 +290,12 @@ SPEED1      JSR   CROUT
             JMP   OUCH
 *
 :OK2        JSR   CRIT1        ;ELSE WRITE
-            LDA   #MBETWEEN
-            JSR   PRINT
-
+            JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Drive speed should be between 198.0 ms.",8D
+            ASC   "and 202.0 ms.",8D,8D
+            ASC   "Drive speed is       ms.",8D,8D
+            ASC   "([Esc]-Exit)",00
 :TEST       JSR   CRIT2        ;TIME IT.
             ASL   HEXNUM
             ROL   HEXNUM+1     ; * 2.

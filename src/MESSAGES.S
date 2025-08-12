@@ -27,8 +27,8 @@ MQUIT       DS    1
 *
 * COPY submenu
 *
-            DS    1           ;[4am] unused, previously :BCPY525
-            DS    1           ;[4am] unused, previously :BCPY35
+            DS    1           ;[4am] unused, was :BCPY525
+            DS    1           ;[4am] unused, was :BCPY35
 MCOPFILE    DS    1           ;11 MENU 0
 MCOPDISK    DS    1
 MDSKWFMT    DS    1
@@ -72,7 +72,7 @@ MWRITE      DS    1           ;26
 *
 MBLANK4     DS    1           ;27
 MBLANK3     DS    1           ;28
-MCPYENT     DS    1           ;29
+            DS    1           ;[4am] moved inline, was :CPYENT
 MSLOT       DS    1           ;2A
 MPRESS1     DS    1           ;2B
 MFILE       DS    1           ;2C
@@ -88,15 +88,15 @@ MTRACK      DS    1           ;33
 MSECTOR     DS    1           ;34
 MCRESC      DS    1           ;35
 MNOFILES    DS    1           ;36
-            DS    1           ;[4am] unused, previously :INIT
+            DS    1           ;[4am] unused, was :INIT
 MINROOT     DS    1           ;38
-            DS    1           ;[4am] unused, previously :IO
+            DS    1           ;[4am] unused, was :IO
 MERROR      DS    1           ;3A
-MQUITOPT    DS    1           ;3B
-MSPACE      DS    1           ;3C
-            DS    1           ;[4am] unused, previously :COPYTP
+            DS    1           ;[4am] moved inline, was :QUITOPT
+            DS    1           ;[4am] moved inline, was :SPACE
+            DS    1           ;[4am] unused, was :COPYTP
 MHEADER     DS    1           ;3E
-            DS    1           ;[4am] unused, previously :DRIVE
+            DS    1           ;[4am] unused, was :DRIVE
 *
 * RENAME submenu
 *
@@ -126,33 +126,33 @@ MERR2F      DS    1
 MCRESC1     DS    1           ;52
 MMTSUB      DS    1           ;now 53
 MTOOLNG0    DS    1           ;now 54
-MSELFUNC    DS    1           ;55
-MSELOPT     DS    1           ;56
-MINSSRC     DS    1           ;57
-MINSTGT     DS    1           ;58
-MPROHDR1    DS    1           ;59
-MPROHDR2    DS    1           ;5A
-            DS    1           ;[4am] unused, previously :MSG5B 'can't find file: '
-MANOTHER    DS    1           ;5C
-            DS    1           ;[4am] unused, previously :MSG5D 'enter file name: '
-MDIFSIZE    DS    1           ;5E
-MINSDSKS    DS    1           ;5F
-MDUPVOL     DS    1           ;60
+*           DS    1           ;[4am] moved inline, was :SELFUNC
+*           DS    1           ;[4am] moved inline, was :SELOPT
+MINSSRC     DS    1           ;now 55
+MINSTGT     DS    1           ;now 56
+            DS    1           ;[4am] moved inline, was :PROHDR1
+            DS    1           ;[4am] moved inline, was :PROHDR2
+            DS    1           ;[4am] unused, was :MSG5B 'can't find file: '
+            DS    1           ;[4am] moved inline, was :ANOTHER
+            DS    1           ;[4am] unused, was :MSG5D 'enter file name: '
+            DS    1           ;[4am] moved inline, was :DIFSIZE
+            DS    1           ;[4am] moved inline, was :INSDSKS
+            DS    1           ;[4am] moved inline, was :DUPVOL
             DS    1
-MINS2FRM    DS    1           ;62
-MRDY2FRM    DS    1           ;63
-MFMTING     DS    1           ;64
-MFMTDONE    DS    1           ;65
-MDIRMADE    DS    1           ;66
-MASKLOCK    DS    1           ;67
-MINSBLNK    DS    1           ;68
-MBETWEEN    DS    1           ;69
-MMAPGRID    DS    1           ;6A
-MMAPOTHR    DS    1           ;6B
-MNOBOOTP    DS    1           ;6C
-MNOTFL      DS    1           ;6D
-MNOTPRO     DS    1           ;6E
-MNOTDOS     DS    1           ;6F
+            DS    1           ;[4am] moved inline, was :INS2FRM
+            DS    1           ;[4am] moved inline, was :RDY2FRM
+            DS    1           ;[4am] moved inline, was :FMTING
+            DS    1           ;[4am] moved inline, was :FMTDONE
+            DS    1           ;[4am] moved inline, was :DIRMADE
+            DS    1           ;[4am] moved inline, was :ASKLOCK
+            DS    1           ;[4am] moved inline, was :INSBLNK
+            DS    1           ;[4am] moved inline, was :BETWEEN
+            DS    1           ;[4am] moved inline, was :MAPGRID
+            DS    1           ;[4am] moved inline, was :MAPOTHR
+            DS    1           ;[4am] moved inline, was :NOBOOTP
+            DS    1           ;[4am] moved inline, was :NOTFL
+            DS    1           ;[4am] moved inline, was :NOTPRO
+            DS    1           ;[4am] moved inline, was :NOTDOS
             DEND
 
 MESSAG      DW    :COPY        ;0 MENU 0
@@ -171,8 +171,8 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :NEWINFO
             DW    :QUIT
 *
-            DW    0            ;[4am] unused, previously :BCPY525
-            DW    0            ;[4am] unused, previously :BCPY35
+            DW    0            ;[4am] unused, was :BCPY525
+            DW    0            ;[4am] unused, was :BCPY35
             DW    :FILES       ;11 MENU 0
             DW    :DISK
             DW    :DSKWFMT
@@ -204,7 +204,7 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :WRITE       ;26
             DW    :BLANK4      ;27
             DW    :BLANK3      ;28
-            DW    :CPYENT      ;29
+            DW    0            ;[4am] moved inline
             DW    :SLOT        ;2A
             DW    :PRESS1      ;2B
             DW    :FILE        ;2C
@@ -218,15 +218,15 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :SECTOR      ;34
             DW    :CRESC       ;35
             DW    :NOFILES     ;36
-            DW    0            ;[4am] unused, previously :INIT
+            DW    0            ;[4am] unused, was :INIT
             DW    :INROOT      ;38
-            DW    0            ;[4am] unused, previously :IO
+            DW    0            ;[4am] unused, was :IO
             DW    :ERROR       ;3A
-            DW    :QUITOPT     ;3B
-            DW    :SPACE       ;3C
-            DW    0            ;[4am] unused, previously :COPYTP
+            DW    0            ;[4am] moved inline
+            DW    0            ;[4am] moved inline
+            DW    0            ;[4am] unused, was :COPYTP
             DW    :HEADER      ;3E
-            DW    0            ;[4am] unused, previously :DRIVE
+            DW    0            ;[4am] unused, was :DRIVE
             DW    :FILES       ;40 MENU 9
             DW    :VOLUME      ;41
             DW    :DASHES      ;42
@@ -248,33 +248,8 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :CRESC1      ;52
             DW    :MTSUB       ;now 53
             DW    :TOOLNG0     ;now 54
-            DW    :SELFUNC     ;55
-            DW    :SELOPT      ;56
-            DW    :INSSRC      ;57
-            DW    :INSTGT      ;58
-            DW    :PROHDR1     ;59
-            DW    :PROHDR2     ;5A
-            DW    0            ;[4am] unused, previously 'can't find file: '
-            DW    :ANOTHER     ;5C
-            DW    0            ;[4am] unused, previously 'enter file name: '
-            DW    :DIFSIZE     ;5E
-            DW    :INSDSKS     ;5F
-            DW    :DUPVOL      ;60
-            DW    0
-            DW    :INS2FRM     ;62
-            DW    :RDY2FRM     ;63
-            DW    :FMTING      ;64
-            DW    :FMTDONE     ;65
-            DW    :DIRMADE     ;66
-            DW    :ASKLOCK     ;67
-            DW    :INSBLNK     ;68
-            DW    :BETWEEN     ;69
-            DW    :MAPGRID     ;6A
-            DW    :MAPOTHR     ;6B
-            DW    :NOBOOTP     ;6C
-            DW    :NOTFL       ;6D
-            DW    :NOTPRO      ;6E
-            DW    :NOTDOS      ;6F
+            DW    :INSSRC      ;now 55
+            DW    :INSTGT      ;now 56
 *
 *
 *
@@ -390,21 +365,19 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :BLANK4     DB    $2F,$8D
 :BLANK3     DB    $2F,$8D,$2F,$8D,$2F
             DB    $0
-:CPYENT
-            ASC   "Enter filename (,opt. filetypes)"
-            DB    $8D
-            ASC   "? "
-            DB    $0
+*
 :SLOT       ASC   "Slot "
             DB    $0
+*
 :FILE       ASC   "File"
             DB    $0
+*
 :PSTATE0
             ASC   "[Return]-Mark file, [U]nmark, [E]nter"
             DB    $8D
             ASC   "filename, Number-Insert, [G]o,"
             DB    $8D
-            ASC   "[ESC]-Exit"
+            ASC   "[Esc]-Exit"
             DB    $0
 :PSTATE1
             ASC   "[Return]-Toggle marker, [E]nter"
@@ -414,12 +387,12 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :PSTATE2
             ASC   "[Return]-Toggle asterisk, [E]nter"
             DB    $8D
-            ASC   "filename, [G]o, [ESC]-Exit"
+            ASC   "filename, [G]o, [Esc]-Exit"
             DB    $0
 :PSTATE3
             ASC   "[Return]-Select to rename, [E]nter"
             DB    $8D
-            ASC   "filename, [G]o, [ESC]-Exit"
+            ASC   "filename, [G]o, [Esc]-Exit"
             DB    $8D
             ASC   "(Renamed files are marked)"
             DB    $0
@@ -442,20 +415,6 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :ERROR      ASC   "Error"
             DB    $0
 *
-:SPACE      DB    $8D
-            ASC   "[Space]-Next File "
-            DB    $0
-*
-:QUITOPT    DB    $8D,$8D
-            ASC   " Press [Esc] to re-enter utilities"
-            DB    $8D,$8D
-            ASC   " Press [Return] to quit to ProDOS"
-            DB    $8D,$8D
-            ASC   " Press [M] to enter monitor"
-            DB    $8D,$8D
-            ASC   " Press [Reset] to reboot"
-            DB    $0
-*
 :HEADER
             ASC   "           Copy ][ Plus  8.5"
             DB    $8D
@@ -473,114 +432,9 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :MORE       ASC   "----------------- MORE -----------------"
             DB    $0
 *
-:SELFUNC    ASC   "Use arrow keys"
-            DB    $2F,$8D
-            ASC   "& [Return] to"
-            DB    $2F,$8D
-            ASC   "select function"
-            DB    $2F,$8D,0
-*
-:SELOPT     DB    $2F,$8D,$2F,$8D
-            ASC   "Select option:"
-            DB    $2F,$8D,0
-*
 :INSSRC     ASC   "Insert source disk"
             DB    $8D,$0
 *
 :INSTGT     ASC   "Insert target disk"
             DB    $8D,$0
 *
-:PROHDR1    ASC   "   NAME           TYPE  BLKS  MODIFIED"
-            DB    $0
-*
-:PROHDR2    ASC   "         CREATED          ENDFILE SUBTYPE"
-            DB    $0
-*
-:ANOTHER    ASC   "Copy same onto another disk (Y/N) ? "
-            DB    $0
-*
-:DIFSIZE    DB    $8D,$8D
-            ASC   "Device size mismatch"
-            DB    $8D,$8D,$0
-*
-:INSDSKS    DB    $8D,$8D,$8D
-            ASC   "Insert disks"
-            DB    $8D,$8D,$0
-*
-:DUPVOL     DB    $8D,$8D
-            ASC   "Duplicate volume online"
-            DB    $8D,$0
-*
-:INS2FRM    DB    $8D,$8D
-            ASC   "Insert disk to format"
-            DB    $8D,$8D,$0
-*
-:RDY2FRM    ASC   "Ready to format (Y/N) ? "
-            DB    $0
-*
-:FMTING     DB    $8D,$8D,$8D
-            ASC   "  Formatting disk"
-            DB    $8D,$8D,$0
-*
-:FMTDONE    DB    $8D,$8D
-            ASC   "Formatting complete"
-            DB    $8D,$0
-*
-:DIRMADE    DB    $8D,$8D
-            ASC   "Subdirectory created"
-            DB    $8D,$0
-*
-:ASKLOCK    DB    $8D
-            ASC   "[L]ock or [U]nlock? "
-            DB    $0
-*
-:INSBLNK    DB    $8D,$8D,$8D
-            ASC   "Insert a blank disk in "
-            DB    $0
-*
-:BETWEEN    DB    $8D,$8D,$8D
-            ASC   "Drive speed should be between 198.0 ms."
-            DB    $8D
-            ASC   "and 202.0 ms."
-            DB    $8D,$8D
-            ASC   "Drive speed is       ms."
-            DB    $8D,$8D
-            ASC   "([Esc]-Exit)"
-            DB    $0
-*
-:MAPGRID
-            ASC   "   TRACK           1               2"
-            DB    $8D
-            ASC   "   0123456789ABCDEF0123456789ABCDEF012"
-            DB    $8D,$8D
-            ASC   "S"
-            DB    $8D
-            ASC   "E"
-            DB    $8D
-            ASC   "C"
-            DB    $8D
-            ASC   "T"
-            DB    $8D
-            ASC   "O"
-            DB    $8D
-            ASC   "R"
-            DB    $0
-*
-:MAPOTHR    ASC   "   Use arrow keys to map other files  "
-            DB    $0
-*
-:NOBOOTP    DB    $8D,$8D,$8D,$8D
-            ASC   "No boot program to change"
-            DB    $0
-*
-:NOTFL      DB    $8D,$8D,$8D
-            ASC   "Disk II function only"
-            DB    $8D,$0
-*
-:NOTPRO     DB    $8D,$8D,$8D
-            ASC   "Not a ProDOS function"
-            DB    $8D,$0
-*
-:NOTDOS     DB    $8D,$8D,$8D
-            ASC   "Not a DOS 3.3 function"
-            DB    $8D,$0

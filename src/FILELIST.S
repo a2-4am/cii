@@ -624,8 +624,8 @@ GETLN0      STA   LINLIM
 *
 GETPAT      LDA   CURR
             STA   LASTM
-            LDA   #MCPYENT
-            JSR   LOWMES
+            JSR   LOHERE
+            ASC   "Enter filename (,opt. filetypes)",8D,"? ",00
             LDA   #$24            ;PATTERN LIMIT
             BNE   GETLN0          ;ALWAYS
 *
@@ -698,7 +698,7 @@ SEECAT      LDA   #0
             LDA   #$03
             STA   :VCOUNT
             JSR   VLEFT
-            LDA   #$42            ;PRINT DASHES
+            LDA   #MDASHES        ;PRINT DASHES
             CPX   #$00            ;IF AT TOP OF
             BEQ   :TOPLINE        ;CATALOG, ELSE
             BIT   CFLAG

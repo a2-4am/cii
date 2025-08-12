@@ -30,7 +30,9 @@ MAKEDR      JSR   COMTRE
             JSR   GETDAT
             JSR   MKDIR
             BCS   :ERROUT
-            LDA   #MDIRMADE
-            JMP   PRTPRS
+            JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "Subdirectory created",8D,00
+            JMP   PRESS
 :OUT        RTS
 :ERROUT     JMP   ERROUT

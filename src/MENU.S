@@ -109,8 +109,10 @@ CLOSEMM     BIT   MMISOPEN
 * ACC HAS TRUE CHOICE #
 *
 CHOOZ0      JSR   CHOPOS
-            LDA   #MSELFUNC
-            JSR   PRINT
+            JSR   PRHERE
+            ASC   "Use arrow keys",2F,8D
+            ASC   "& [Return] to",2F,8D
+            ASC   "select function",2F,8D,00
             JSR   INIT
             LDX   #$00
             JSR   CHOOZ
@@ -119,8 +121,9 @@ CHOOZ0      JSR   CHOPOS
             RTS
 *
 CHOOZ1      JSR   CHOPOS
-            LDA   #MSELOPT
-            JSR   PRINT
+            JSR   PRHERE
+            DB    $2F,$8D,$2F,$8D
+            ASC   "Select option:",2F,8D,00
 *
 CHOOZ       JSR   MENU
 :LOOP1      JSR   CHKKEY

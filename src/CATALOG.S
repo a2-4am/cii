@@ -34,20 +34,14 @@ CATLOG      LDX   #$01         ;SELECT OPTION
             BIT   DOSNOW
             BPL   :VOL2
             JSR   :CROUNT
-*
-* NAME           TYPE  BLKS  MODIFIED
-*
-            LDA   #MPROHDR1
-            JSR   PRINT
+            JSR   PRHERE
+            ASC   "   NAME           TYPE  BLKS  MODIFIED",00
             LDA   :TYPE
             CMP   #1
             BNE   :VOL1
             INC   :COUNT
-*
-*CREATED          ENDFILE SUBTYPE
-*
-            LDA   #MPROHDR2
-            JSR   PRINT
+            JSR   PRHERE
+            ASC   "         CREATED          ENDFILE SUBTYPE",00
 :VOL1       JSR   :CROUNT
 *
 *

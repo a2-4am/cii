@@ -27,8 +27,15 @@ TSMAP       JSR   COMHDR
             STA   HIMEM
             JSR   READBM
 :CBIT33     JSR   HOME
-            LDA   #MMAPGRID
-            JSR   PRINT
+            JSR   PRHERE
+            ASC   "   TRACK           1               2",8D
+            ASC   "   0123456789ABCDEF0123456789ABCDEF012",8D,8D
+            ASC   "S",8D
+            ASC   "E",8D
+            ASC   "C",8D
+            ASC   "T",8D
+            ASC   "O",8D
+            ASC   "R",00
             JSR   :CLEAR
             LDA   #0
             STA   SP
@@ -191,8 +198,8 @@ TSMAP       JSR   COMHDR
 *
 :NXTFILE    LDA   #$17
             JSR   VLEFT
-            LDA   #MMAPOTHR
-            JSR   PRINT
+            JSR   PRHERE
+            ASC   "   Use arrow keys to map other files  ",00
             JSR   CHKKEY
             BNE   :NOTARO
             BCS   :NEXT

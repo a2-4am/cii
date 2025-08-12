@@ -55,8 +55,10 @@ FMTFIX      JMP   :FMTFIX
             JMP   :ITSDOS              ;->It's COPY DOS.
 *
 *
-:MISMAT     LDA   #MDIFSIZE
-            JMP   PRTPRS
+:MISMAT     JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "Device size mismatch",8D,8D,00
+            JMP   PRESS
 *
 * *** COPY DISK ***
 *
@@ -175,8 +177,8 @@ FMTFIX      JMP   :FMTFIX
             LDA   :PASSNUM             ;How many passes were needed?
             CMP   #1                   ;Only 1?
             BNE   :COPYQ               ;->No: all done.
-            LDA   #MANOTHER            ;Yes!: Ask 'COPY SAME ONTO ANOTHER
-            JSR   LOWMES               ; DISK (Y/N) ? '
+            JSR   LOHERE               ;Yes!: Ask
+            ASC   "Copy same onto another disk (Y/N) ? ",00
             JSR   CASKEY
             JSR   PCOUT                ;(Show the character typed)
             CMP   #"Y"
@@ -265,8 +267,9 @@ FMTFIX      JMP   :FMTFIX
             JSR   SRCHDR
             LDA   ONLY1                ;1 OR 2 DRIVES?
             BNE   :ONEDISK
-            LDA   #MINSDSKS
-            JSR   PRINT
+            JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Insert disks",8D,8D,00
             LDA   #MCRESC
             JSR   PRINT
             JSR   KYESC
@@ -871,8 +874,10 @@ FMTFIX      JMP   :FMTFIX
             BEQ   :NOTDUP
 *
 :DUPERR     JSR   HOME
-            LDA   #MDUPVOL
-            JMP   PRTPRS
+            JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "Duplicate volume online",8D,00
+            JMP   PRESS
 *
 :NOTDUP     STA   ONLY1
 :NOTDUPV    JSR   TREES
