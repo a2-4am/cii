@@ -26,13 +26,13 @@ FORMAT      LDX   #7
 :PRO1       TXA
             BPL   :NOTRMV
 *
-:ISRMV      LDA   #$62
+:ISRMV      LDA   #MINS2FRM
             JSR   PRINT
             JMP   :COMRMV
 *
 :NOTRMV     JSR   PRHERE
             DB    $8D,$8D,$8D,$8D,$8D,$0
-:COMRMV     LDA   #$63           ;READY?
+:COMRMV     LDA   #MRDY2FRM
             JSR   PRINT
             JSR   CASKEY
             CMP   #"Y"           ;YES
@@ -100,7 +100,7 @@ FORMAT      LDX   #7
             BCS   :GOFOUT        ;ABORT
 *
 *
-:DOITNOW    LDA   #$64
+:DOITNOW    LDA   #MFMTING
             JSR   PRINT
             JSR   DEVTYP
             BEQ   :DODSK2        ;DISK II
@@ -137,7 +137,7 @@ FORMAT      LDX   #7
             CMP   #$2B           ;WP?
             BNE   :NOTWP
             JMP   OUCH
-:NOTWP      LDA   #$3A           ;NO:PRINT
+:NOTWP      LDA   #MERROR        ;NO:PRINT
             JSR   LOWMES         ;ERROR
             JSR   PRSPC
             JSR   PRTTRK
@@ -151,7 +151,7 @@ FORMAT      LDX   #7
             BCC   :FORMLP
 *
 :FORMDN     JSR   DDISK
-:FORMDN1    LDA   #$65
+:FORMDN1    LDA   #MFMTDONE
             JMP   PRTPRS
 *
 *

@@ -55,7 +55,7 @@ FMTFIX      JMP   :FMTFIX
             JMP   :ITSDOS              ;->It's COPY DOS.
 *
 *
-:MISMAT     LDA   #$5E
+:MISMAT     LDA   #MDIFSIZE
             JMP   PRTPRS
 *
 * *** COPY DISK ***
@@ -175,13 +175,13 @@ FMTFIX      JMP   :FMTFIX
             LDA   :PASSNUM             ;How many passes were needed?
             CMP   #1                   ;Only 1?
             BNE   :COPYQ               ;->No: all done.
-            LDA   #$5C                 ;Yes!: Ask 'COPY SAME ONTO ANOTHER
+            LDA   #MANOTHER            ;Yes!: Ask 'COPY SAME ONTO ANOTHER
             JSR   LOWMES               ; DISK (Y/N) ? '
             JSR   CASKEY
             JSR   PCOUT                ;(Show the character typed)
             CMP   #"Y"
             BNE   :COPYQ               ;->Not Y.
-            LDA   #$58                 ;Y: Prompt to insert target disk
+            LDA   #MINSTGT             ;Y: Prompt to insert target disk
             JSR   LOWMES
             JSR   INSCOM               ;Wait for keypress & clear message.
             JSR   :ERRWND
@@ -265,10 +265,10 @@ FMTFIX      JMP   :FMTFIX
             JSR   SRCHDR
             LDA   ONLY1                ;1 OR 2 DRIVES?
             BNE   :ONEDISK
-            LDA   #$5F
+            LDA   #MINSDSKS
             JSR   PRINT
-            LDA   #$35
-            JSR   PRINT                ;CRESC
+            LDA   #MCRESC
+            JSR   PRINT
             JSR   KYESC
 *
 :ONEDISK    JSR   HOME
@@ -769,7 +769,7 @@ FMTFIX      JMP   :FMTFIX
             JMP   ERROUT
 *
 :NOTWP      JSR   :ERRWND              ;Set scrolling window area
-            LDX   #$25                 ;SET 'READ'
+            LDX   #MREAD               ;SET 'READ'
             LDA   RCMND
             CMP   #$20
             BEQ   :SEERR
@@ -777,7 +777,7 @@ FMTFIX      JMP   :FMTFIX
 :SEERR      TXA
             JSR   PRINT
             JSR   PRSPC
-            LDA   #$3A                 ;'ERROR'
+            LDA   #MERROR              ;'ERROR'
             JSR   PRINT
             JSR   PRSPC
             JSR   :TRKBLK
@@ -871,7 +871,7 @@ FMTFIX      JMP   :FMTFIX
             BEQ   :NOTDUP
 *
 :DUPERR     JSR   HOME
-            LDA   #$60
+            LDA   #MDUPVOL
             JMP   PRTPRS
 *
 :NOTDUP     STA   ONLY1

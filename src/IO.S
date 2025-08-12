@@ -3,6 +3,65 @@
 *     MISC. I/O ROUTINES          *
 *                                 *
 ***********************************
+
+*
+* ASK  PRINTER OPTION QUESTION
+ASKPR?      LDX   PSLOT           ;PRINTER SLOT
+            BEQ   :OUT            ;NONZERO?
+            JSR   PRHERE
+            DB    $8D,$8D,$8D,$8D
+            ASC   "Do you want a printout (Y/N) ? "
+            DB    $0
+            JSR   KYESC
+            LDX   #$FF
+            CMP   #"Y"            ;YES?
+            BEQ   :SETIT
+            LDX   #$00
+            LDA   #"N"
+:SETIT      JSR   PCOUT
+            STX   PRNTR?
+            JMP   HOME
+:OUT        STX   PRNTR?          ;SET FLAG
+            RTS
+*
+* TURN ON PRINTER
+PRON        LDA   CSWL
+            STA   CSWSAV
+            LDA   CSWL+1
+            STA   CSWSAV+1
+            LDA   #$00
+            STA   CSWL
+            LDA   PSLOT
+            ORA   #$C0
+            STA   CSWL+1
+            RTS
+CSWSAV      DB    $0,$0
+*
+PROFF       LDA   CSWSAV+1
+            STA   CSWL+1
+            LDA   CSWSAV
+            STA   CSWL
+            JMP   SETKBD
+*
+*
+* MY OWN INVERSE FLAG...
+PINVRS      LDY   #$C0
+            DB    $2C
+PFLASH      LDY   #$80
+            DB    $2C
+PNORML      LDY   #$00
+            STY   PINVFL
+            RTS
+*
+DOC00E      BIT   A2E
+            BPL   :C00EQ
+            STA   $C00E
+:C00EQ      RTS
+*
+DOC00F      BIT   A2E
+            BPL   :C00FQ
+            STA   $C00F
+:C00FQ      RTS
 *
 *
 * IS CHAR IN ACC A CONTROL?
@@ -21,25 +80,6 @@ DOLLAR      PHA
             JSR   PCOUT
             PLA
             RTS
-*
-*
-* NO FILES SELECTED
-NOSEL       JSR   LOHERE
-            ASC   "No files selected"
-            DB    $0
-            JMP   PRESS
-*
-* NO FILES TO WORK WITH
-NOFIL0      LDA   #5
-            JSR   VLEFT
-NOFILS      LDA   #$36
-PRTPRS      JSR   PRINT
-*
-* PRESS A KEY & PROGRAM RESTART
-PRESS       LDA   #$43
-            JSR   PRINT
-            JSR   GETKEY
-KYESX       JMP   FILER
 *
 *
 * RDKEY WITH CASE CONVERT
@@ -64,13 +104,6 @@ LOW2UP      CMP   #$E0         ;CONVERT LOWER
 *
 CKESC       LDA   $C000
             JMP   KEYES1
-*
-* GET CHARACTER, CHECK ESC
-*
-KEYESC      JSR   CASKEY
-KEYES1      CMP   #$9B
-            BEQ   KYESX
-            RTS
 *
 KYESC       JSR   GETKEY
             JMP   KEYES1
@@ -174,8 +207,7 @@ PRT3RJ      LDX   #2
 PRT2RJ      LDX   #1
 :PRTRJ      LDA   DIGIT,X
             BNE   PRTDIG
-            LDA   #" "
-            JSR   PCOUT
+            JSR   PRSPC
             DEX
             BNE   :PRTRJ
             BEQ   PRTDIG       ;ALWAYS
@@ -195,12 +227,42 @@ PRTDIG      LDA   DIGIT,X
             BPL   PRTDIG
             RTS
 *
+* PRINT TRACK & SECTOR #'S
 *
+TSVALS      JSR   PRTTRK
+            JSR   PRHERE
+            ASC   ", "
+            DB    $0
+            LDA   #MSECTOR
+            JSR   PRINT        ;'SECTOR $'
+            LDA   RSECTR       ;SECTOR MORE
+            CMP   #$10         ;THAN 1 DIGIT?
+            BCS   PHBYTE       ;YES:PRINTBYTE
+            BCC   PHHEX        ;NO:PRINTDIGIT
+*
+PRTTRK      LDA   #MTRACK
+            JSR   PRINT        ;'TRACK $'
+            LDA   RTRACK
+* falls through to PHBYTE
+*
+* MY PRINT BYTE & HEX ROUTINE
+PHBYTE      PHA
+            LSR
+            LSR
+            LSR
+            LSR
+            JSR   MYHEX           ;HIGH DIGIT
+            PLA
+PHHEX       AND   #$0F            ;LOW DIGIT
 MYHEX       ORA   #$B0
             CMP   #$BA
-            BCC   :PRINT
+            BCC   PCOUT
             ADC   #$06
-:PRINT      JMP   PCOUT
+            JMP   PCOUT
+*
+*
+PRSPC       LDA   #" "
+* falls through to PCOUT
 *
 * MY COUT ROUTINE
 *
@@ -280,11 +342,76 @@ PCOUT       BIT   A2E
             LDA   #$DF         ;FF'S
 :GOCOUT2    JMP   COUT
 *
+* GIVE CATALOG DISPLAY FUNCTION TITLE
 *
+TOP1        JSR   HOME
+TOP1A       LDA   #0
+            STA   WNDTOP
+            JSR   TABV
+            LDA   CHOICE          ;FUNCTION NAME
+            JSR   PRINT
+            JSR   PRSPC
+            LDA   OPTCHS
+            BMI   :TOP1A
+            JSR   PRINT
+:TOP1A      RTS
+*
+SEEDEV      PHA
+            JSR   PRHERE
+            ASC   "Slot "
+            DB    $0
+            PLA
+            PHA
+            AND   #$70
+            LSR
+            LSR
+            LSR
+            LSR
+            JSR   PHHEX
+            JSR   PRHERE
+            ASC   "  Drive "
+            DB    $0
+            PLA
+            ASL
+            LDA   #1
+            ADC   #0
+            JMP   PHHEX
+*
+*
+* BOTTOM OF SCREEN MESSAGE
+*
+LOWMES      JSR   LOWSET
+            JSR   PRINT
+            CLC
+            RTS
+*
+LOWSET      PHA
+            LDA   #$14
+            JSR   VLEFT
+            LDA   #MBLANK4
+            JSR   PRINT
+            LDA   #$15
+            JSR   TABV
+            PLA
+            RTS
+*
+INSCOM      LDA   #MCRESC
+            JSR   PRINT
+            JSR   KYESC
+            JSR   LOHERE
+            DB    $0
+            LDA   #1
+            RTS
+*
+* BLANK BOTTOM 4 LINES THEN
+* PRINT TEXT THAT FOLLOWS THE JSR
+* AT BOTTOM OF SCREEN
+LOHERE      JSR   LOWSET
+*
+* falls through to PRHERE
 *
 * PRINT TEXT THAT FOLLOWS THE JSR
-* TO HERE
-*
+* AT CURRENT TEXT POSITION
 PRHERE      PLA                ;GET RETURN
             CLC                ;ADDRESS
             ADC   #$01
@@ -298,6 +425,17 @@ PRHERE      PLA                ;GET RETURN
             LDA   MESPNT
             PHA
             RTS                ;RETURN!
+*
+* PRINT MESSAGE BY ID
+* AT BOTTOM OF SCREEN
+LINE24      PHA
+            LDA   #$17
+            JSR   VLEFT
+            LDA   #3
+            STA   CH
+            JSR   CLREOL
+            PLA
+* falls through to PRINT
 *
 * MESSAGE PRINTER
 * MESSAGE # IN ACC ->
@@ -322,3 +460,114 @@ PRINT2      LDY   #$00
 *
 :CLEAR      JSR   CLREOL
             JMP   :NEXT
+*
+*
+*
+* NO FILES SELECTED
+NOSEL       JSR   LOHERE
+            ASC   "No files selected"
+            DB    $0
+            JMP   PRESS
+*
+* NO FILES TO WORK WITH
+NOFIL0      LDA   #5
+            JSR   VLEFT
+* falls through to NOFILS
+NOFILS      LDA   #MNOFILES
+* falls through to PRTPRS
+*
+* PRINT MESSAGE BY ID THEN RESTART
+PRTPRS      JSR   PRINT
+* falls through to PRESS
+*
+* PRESS A KEY & PROGRAM RESTART
+PRESS       LDA   #MPRESS
+            JSR   PRINT
+            JSR   GETKEY
+KYESX       JMP   FILER
+*
+* GET CHARACTER, CHECK ESC
+*
+KEYESC      JSR   CASKEY
+KEYES1      CMP   #$9B
+            BEQ   KYESX
+            RTS
+*
+* PRINT BEST ERROR MESSAGE
+* FOR ERROR CODE IN RRTN
+*
+ERRMSG      LDA   RRTN
+            LDY   #$0C
+:OUCHLP     CMP   :ERRNUM,Y
+            BEQ   :OUCH0       ;FOUND ERROR # IN TABLE
+            DEY
+            BPL   :OUCHLP
+*
+:OUCH2      CMP   #$40
+            BCS   :NOT27
+            JSR   PRHERE
+            ASC   "I/O "
+            DB    $0
+*
+:NOT27      JSR   PRHERE
+            ASC   "Error"
+            DB    $0
+            BIT   DOSNOW
+            BPL   :DOS33
+*
+            LDA   RRTN
+            CMP   #$29
+            BCC   :SKIP
+            JSR   PRHERE
+            ASC   " $"
+            DB    $0
+            LDA   RRTN
+            BNE   :SKIP1       ;ALWAYS (BECAUSE RRTN >= $29)
+*
+* These are CII-specific error codes, some
+* of which happen to match ProDOS error codes.
+* We search for the value of RRTN, and the
+* match index is used to calculate the message ID
+* to PRINT (simple +offset, see :OUCH0 below)
+:ERRNUM     DB    $2B,$44,$45,$46,$48,$49,$4E,$3F,$52,$47
+            DB    $40,$2F,$28
+*
+:OUCH0      JSR   CROUT2
+            TYA
+            CLC
+            ADC   #$45
+            JSR   PRINT
+            JMP   CROUT2
+
+*
+:SKIP       JSR   PRHERE
+            ASC   ": Block $"
+            DB    $0
+            LDA   BLKNUM+1
+            JSR   PHBYTE
+            LDA   BLKNUM
+:SKIP1      JSR   PHBYTE
+:SKIPBLK    JMP   :OUCH1
+*
+:DOS33      JSR   PRHERE
+            ASC   ": "
+            DB    $0
+            JSR   TSVALS
+:OUCH1      JMP   CROUT
+*
+CROUT2      JSR   CROUT
+            JMP   CROUT
+*
+OUCH        JSR   HOME
+            JSR   ERRMSG
+            JSR   CROUT
+*LDA LEVEL
+*PHA
+*LDA #1
+*STA LEVEL
+            JSR   CLOSE
+*PLA
+*STA LEVEL
+            LDA   #MPRESS
+            JSR   PRINT
+            JMP   GETKEY

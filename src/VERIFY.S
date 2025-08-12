@@ -71,7 +71,7 @@ VERIFY      LDX   #$03
             JMP   :NXTBLK
 *
 *
-:DOS33      LDA   #$33         ;'TRACK'
+:DOS33      LDA   #MTRACK      ;'TRACK'
             JSR   PRINT
             LDA   #$40         ;RATCHET!
             STA   RCMND        ;(SETS TRK 0)
@@ -95,12 +95,12 @@ VERIFY      LDX   #$03
             LDA   #$13
             JSR   VLEFT        ;POSITION
             JSR   CROUT2
-            LDA   #$3A         ;'ERROR'
+            LDA   #MERROR      ;'ERROR'
             JSR   PRINT
             JSR   PRSPC
             JSR   PRTTRK       ;'TRACK'
             JSR   CROUT
-            LDA   #$34         ;'SECTOR'
+            LDA   #MSECTOR     ;'SECTOR'
             JSR   PRINT
             LDY   #$00
 :BADLP      LDA   SOFAR,Y      ;GET SECTOR
@@ -154,7 +154,7 @@ VERIFY      LDX   #$03
             JSR   HEXDC2
             JSR   PRT5LJ
             JSR   PRSPC
-            LDA   #$3A         ;'ERROR'
+            LDA   #MERROR      ;'ERROR'
             JSR   PRINT
             LDA   :VERRORS+1   ; LDA :VERRORS+1 <- The old
             BNE   :NOTONE      ; ORA :VERRORS
@@ -224,7 +224,7 @@ VERIFY      LDX   #$03
             LDA   #$27
             STA   RRTN
             JSR   ERRMSG
-            LDA   #$35
+            LDA   #MCRESC
             JSR   PRINT
             LDA   RPAGE
             CMP   #>SRCTSL
@@ -233,7 +233,7 @@ VERIFY      LDX   #$03
             INX
             CPX   FILNUM
             BCS   :KEY
-            LDA   #$3C
+            LDA   #MSPACE
             JSR   PRINT
 :KEY        JSR   KYESC
             PHA
@@ -258,12 +258,12 @@ SPEED1      JSR   CROUT
             BEQ   :DOSPEED
             JMP   FLONLY
 *
-:DOSPEED    LDA   #$68
+:DOSPEED    LDA   #MINSBLNK
             JSR   PRINT
             LDA   UNIT
             JSR   SEEDEV
             JSR   CROUT2
-            LDA   #$35
+            LDA   #MCRESC
             JSR   PRINT
             JSR   KYESC
             JSR   HOME
@@ -288,7 +288,7 @@ SPEED1      JSR   CROUT
             JMP   OUCH
 *
 :OK2        JSR   CRIT1        ;ELSE WRITE
-            LDA   #$69
+            LDA   #MBETWEEN
             JSR   PRINT
 
 :TEST       JSR   CRIT2        ;TIME IT.

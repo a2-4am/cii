@@ -18,14 +18,14 @@ VIEW        LDX   #$04           ;VALUES OR TEXT
             STA   WNDTOP
             JSR   PRTFL1         ;CLEAR FILENAME
             JSR   HOME
-            LDA   #$31           ;STAT4
+            LDA   #MPSTAT45
             JSR   LOWMES
             JSR   DOKEY          ;CAT DISPLAY
             JSR   HOME           ;VIEW FILES
 *
             LDA   #4
             JSR   VLEFT
-            LDA   #$42           ;DASHES
+            LDA   #MDASHES
             JSR   PRINT
             LDA   #5
             STA   WNDTOP
@@ -86,7 +86,7 @@ VIEW        LDX   #$04           ;VALUES OR TEXT
             JSR   VLEFT          ;VTAB
             LDA   :DONE
             BMI   :PROMPT2
-            LDA   #$35
+            LDA   #MCRESC
             JSR   PRINT
 :PROMPT3    JSR   GETKEY
             CMP   #$9B
@@ -94,7 +94,7 @@ VIEW        LDX   #$04           ;VALUES OR TEXT
             CLC
 :SECOUT     RTS
 *
-:PROMPT2    LDA   #$2B           ;PRESS1
+:PROMPT2    LDA   #MPRESS1
             JSR   PRINT
             LDA   #$1E           ;CLEAR LINE
             STA   WNDWTH         ;UP TO BYTE

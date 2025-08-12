@@ -14,7 +14,7 @@ CATDIS      JSR   INITCD
             LDA   NACTIV
             BNE   CATDS2
             JSR   CROUT
-            LDA   #$36            ;NO FILES
+            LDA   #MNOFILES
             JMP   PRTPRS
 *
 CATDS1      LDA   CURR
@@ -31,7 +31,7 @@ CATDS2      LDA   NACTIV
             JSR   ST8MSG
             JMP   DOKEY
 *
-:BOOTMES    LDA   #$2C            ;QFILE
+:BOOTMES    LDA   #MFILE
             JSR   LOWMES
             JSR   PRHERE
             ASC   ": "
@@ -46,14 +46,14 @@ CATDS2      LDA   NACTIV
             DB    $8D
             ASC   "is the current booting program."
             DB    $8D,$0
-            LDA   #$31            ;QSTAT4
+            LDA   #MPSTAT45
             JSR   PRINT
             JMP   DOKEY
 *
 :NOFILES    JSR   CROUT
-            LDA   #$36
+            LDA   #MNOFILES
             JSR   PRINT
-            LDA   #$43
+            LDA   #MPRESS
             JSR   PRINT
             JSR   GETKEY
             CMP   #"<"
@@ -331,7 +331,7 @@ CPYNUM      JSR   CPYTAB
             BCC   :PUTIT          ;INSERT INTO
             LDA   :INSERT         ;STATUS
 :PUTIT      STA   STATUS,Y
-:OUT        LDA   #$2D            ;QSTAT0
+:OUT        LDA   #MPSTATE0
             JMP   LOWMES
 :INSERT     DB    $0
 :TEMP       DB    $0
@@ -353,7 +353,7 @@ CPYENT      JSR   GETPAT
             BCC   :LOOP
 :OUT        LDA   LASTM
             STA   CURR
-            LDA   #$2D            ;QSTAT0
+            LDA   #MPSTATE0
             JMP   LOWMES
 *
 CPYDEL      JSR   DODEL
@@ -393,7 +393,7 @@ DIVOT0      LDA   #$FF
             AND   #$F0            ;STOR TYPE
             CMP   #$F0
             BNE   :NOTROOT
-:ISROOT     LDA   #$38            ;IN ROOT
+:ISROOT     LDA   #MINROOT        ;ALREADY IN ROOT
             SEC
             RTS
 *
@@ -457,7 +457,7 @@ ERR2        JSR   LOWMES
             JSR   KYESC
 ST8MSG      LDA   STATE
             CLC
-            ADC   #$2D            ;QSTAT0
+            ADC   #MPSTATE0
             JMP   LOWMES
 *
 DIVEIN      JSR   CURPNT
@@ -499,9 +499,9 @@ DIVEIN      JSR   CURPNT
             JMP   SP0
 :NAMELEN    DB    $0
 *
-:NOTDIR     LDA   #$24            ;C ALREADY SET
+:NOTDIR     LDA   #MNOTSUB       ;C ALREADY SET
             RTS
-:TOOLONG    LDA   #$54
+:TOOLONG    LDA   #MTOOLNG0
             RTS
 *
 DIR?        LDY   #0
@@ -589,7 +589,7 @@ LOKPAT      JSR   GETPAT          ;GET PATTERN
             BCC   :LOOP
 :OUT        LDA   LASTM
             STA   CURR
-            LDA   #$2F            ;STAT2
+            LDA   #MPSTATE2
             JMP   LOWMES
 :LOCK       DB    $0
 *
@@ -610,24 +610,24 @@ NEWNAM      JSR   LOHERE
             STA   STATUS,X        ;RENAMED
             LDA   #$01
             STA   FILNUM          ;FLAG IT
-:OUT        LDA   #$30            ;QSTAT3
+:OUT        LDA   #MPSTATE3
             JMP   LOWMES
 *
 * GET FILE NAME
 *
-GETFNM      LDA   #$1E
+GETFNM      LDA   #$1E            ;DOS FILENAME LIMIT
             BIT   DOSNOW
             BPL   GETLN0
-            LDA   #$0F
+            LDA   #$0F            ;PRODOS FILENAME LIMIT
 GETLN0      STA   LINLIM
             JMP   GETLN
 *
 GETPAT      LDA   CURR
             STA   LASTM
-            LDA   #$29
+            LDA   #MCPYENT
             JSR   LOWMES
-            LDA   #$24
-            BNE   GETLN0
+            LDA   #$24            ;PATTERN LIMIT
+            BNE   GETLN0          ;ALWAYS
 *
 * INITIALIZES CATALOG DISPLAY
 *
@@ -703,7 +703,7 @@ SEECAT      LDA   #0
             BEQ   :TOPLINE        ;CATALOG, ELSE
             BIT   CFLAG
             BMI   :TOPLINE
-            LDA   #$44            ;PRINT MORE
+            LDA   #MMORE          ;'--MORE--'
 :TOPLINE    JSR   PRINT
 :NEXT       INC   :VCOUNT         ;NEXT LINE
             LDA   :VCOUNT
@@ -948,415 +948,3 @@ PATMOV      LDX   #$00
             BCC   :LOOP
             STX   FILNUM
             RTS
-*
-*
-***********************************
-*
-* ASK  PRINTER OPTION QUESTION
-ASKPR?      LDX   PSLOT           ;PRINTER SLOT
-            BEQ   :OUT            ;NONZERO?
-            JSR   PRHERE
-            DB    $8D,$8D,$8D,$8D
-            ASC   "Do you want a printout (Y/N) ? "
-            DB    $0
-            JSR   KYESC
-            LDX   #$FF
-            CMP   #"Y"            ;YES?
-            BEQ   :SETIT
-            LDX   #$00
-            LDA   #"N"
-:SETIT      JSR   PCOUT
-            STX   PRNTR?
-            JMP   HOME
-:OUT        STX   PRNTR?          ;SET FLAG
-            RTS
-*
-* TURN ON PRINTER
-PRON        LDA   CSWL
-            STA   CSWSAV
-            LDA   CSWL+1
-            STA   CSWSAV+1
-            LDA   #$00
-            STA   CSWL
-            LDA   PSLOT
-            ORA   #$C0
-            STA   CSWL+1
-            RTS
-CSWSAV      DB    $0,$0
-*
-PROFF       LDA   CSWSAV+1
-            STA   CSWL+1
-            LDA   CSWSAV
-            STA   CSWL
-            JMP   SETKBD
-*
-PRSPC       LDA   #" "
-            JMP   PCOUT
-*
-* MY PRINT BYTE & HEX ROUTINE
-PHBYTE      PHA
-            LSR
-            LSR
-            LSR
-            LSR
-            JSR   MYHEX           ;HIGH DIGIT
-            PLA
-PHHEX       AND   #$0F            ;LOW DIGIT
-            JMP   MYHEX
-*
-*
-* MY OWN INVERSE FLAG...
-PINVRS      LDY   #$C0
-            DB    $2C
-PFLASH      LDY   #$80
-            DB    $2C
-PNORML      LDY   #$00
-            STY   PINVFL
-            RTS
-*
-DOC00E      BIT   A2E
-            BPL   :C00EQ
-            STA   $C00E
-:C00EQ      RTS
-*
-DOC00F      BIT   A2E
-            BPL   :C00FQ
-            STA   $C00F
-:C00FQ      RTS
-*
-***********************************
-*                                 *
-*          MESSAGES               *
-*                                 *
-***********************************
-*
-* GIVE CATALOG DISPLAY FUNCTION TITLE
-*
-TOP1        JSR   HOME
-TOP1A       LDA   #0
-            STA   WNDTOP
-            JSR   TABV
-            LDA   CHOICE          ;FUNCTION NAME
-            JSR   PRINT
-            JSR   PRSPC
-            LDA   OPTCHS
-            BMI   :TOP1A
-            JSR   PRINT
-:TOP1A      RTS
-*
-*
-SEEDEV      PHA
-            JSR   PRHERE
-            ASC   "Slot "
-            DB    $0
-            PLA
-            PHA
-            AND   #$70
-            LSR
-            LSR
-            LSR
-            LSR
-            JSR   PHHEX
-            JSR   PRHERE
-            ASC   "  Drive "
-            DB    $0
-            PLA
-            ASL
-            LDA   #1
-            ADC   #0
-            JMP   PHHEX
-*
-*
-* BOTTOM OF SCREEN MESSAGE
-*
-LOWMES      JSR   LOWSET
-            JSR   PRINT
-            CLC
-            RTS
-*
-LOHERE      JSR   LOWSET
-            JMP   PRHERE
-*
-LOWSET      PHA
-            LDA   #$14
-            JSR   VLEFT
-            LDA   #$27            ;QBLNK4
-            JSR   PRINT
-            LDA   #$15
-            JSR   TABV
-            PLA
-            RTS
-*
-LINE24      PHA
-            LDA   #$17
-            JSR   VLEFT
-            LDA   #3
-            STA   CH
-            JSR   CLREOL
-            PLA
-            JMP   PRINT
-*
-*
-*
-*
-*
-* DOTREE
-*
-* INPUT:
-* A = VALUE FOR *CURR
-* (PFXADR) = OLD PREFIX
-*
-* OUTPUT:
-* C = 1: I/O ERROR
-*
-* C=0:
-*        A = SELECTION
-* (PFXADR) = NEW PREFIX
-*      PFX = NEW PREFIX
-* DIRBLK,+1= BLK # OF SUBDIR
-*
-* CALLS SETPFX AND SETSD
-*
-*
-*
-DOTREE      PHA
-            LDY   FLAG80          ;FF OR 0
-            INY
-            LDA   :CHMAX,Y
-            STA   CHMAX
-            LDA   :DSPNUM,Y
-            STA   DSPNUM
-            LDA   UNIT
-            JSR   SETSD
-            JSR   UNTPFX
-            BIT   DOSNOW
-            BMI   :DOTREE0
-            LDY   #5
-            LDA   PFX+5
-            STA   (PFXADR),Y
-            LDY   #0
-            LDA   PFX
-            STA   (PFXADR),Y
-            SEC
-            BCS   :FAKERR         ;ALWAYS
-*
-:DOTREE0    LDA   RRTN
-            CMP   #$52
-            BEQ   :FAKERR         ;C IS SET
-            JSR   MKTREE
-:FAKERR     PLA
-            PHP
-            STA   CURR
-            LDA   #0
-            STA   POINT
-            STA   XPOS
-            STA   YPOS
-            STA   XSTART
-            STA   YSTART
-            LDX   CHOICE
-            CPX   #1
-            BNE   :DOT1           ;NOT CATALOG
-            JSR   :HDR80
-:DOT1       PLP
-            LDA   #0
-            BCS   :ERR
-            LDA   CURMOM
-            EOR   #1
-            BEQ   :ONLY1
-            LDX   CHOICE
-            CPX   #1
-            BEQ   :DOT2
-            JSR   :HDR80
-:DOT2       LDA   CURR            ;IS CURR LARGER
-            CMP   CURMOM          ; THAN CURMOM?
-            BCC   :DOT3           ;NO
-:ZERCUR     LDA   #0              ;YES, ZERO CURR
-            BEQ   :DOT4           ;ALWAYS
-*
-* CURR VALUE IS VALID, NOW CHECK
-* IF PREFIX GENERATED FROM CURR IS
-* SAME AS OLD PREFIX. IF NOT, SET CURR
-* TO ZERO.
-*
-:DOT3       JSR   :MKPFX
-            LDY   #0
-            LDA   (PFXADR),Y
-            AND   #$7F
-            CMP   PFX
-            BNE   :ZERCUR         ;LENS DIFFER
-:CMPLOOP    INY
-            LDA   (PFXADR),Y
-            CMP   PFX,Y
-            BNE   :ZERCUR
-            CPY   PFX
-            BCC   :CMPLOOP
-            LDA   CURR
-:DOT4       JMP   :COM00
-*
-*
-:ONLY1      STA   CURR
-            JSR   :MKPFX
-*
-:CHOOSE     JSR   SETPFX
-            BCS   :ERR
-            LDY   #$3F
-:CHSLOOP    LDA   PFX,Y
-            STA   (PFXADR),Y
-            DEY
-            BPL   :CHSLOOP
-            LDX   CURR
-            LDA   SDBLKL,X
-            STA   DIRBLK
-            LDA   SDBLKH,X
-            STA   DIRBLK+1
-            TXA
-:ERR        PHP
-            PHA
-            LDA   CHOICE
-            CMP   #1              ;CATALOG?
-            BEQ   :SKIP40         ;YES
-            JSR   COL40
-:SKIP40     JSR   HOME
-            PLA
-            PLP
-            RTS
-*
-*
-*
-:CAGN0      CPX   #0
-            BEQ   :CAGN
-            JSR   HOME
-:CAGN       JSR   CTREE
-            LDA   #$17
-            JSR   VLEFT
-            LDA   SDCH
-            SEC
-            SBC   #$19
-            LSR
-            JSR   SETCH
-            JSR   PRHERE
-            ASC   "Use arrows,A,Z and [Return] to select"
-            DB    $0
-:KEYAGN     JSR   KYESC
-            CMP   #$8D
-            BEQ   :CHOOSE
-            LDX   #5
-:KEY1       CMP   :KEYS,X
-            BEQ   :GOTKEY
-            DEX
-            BPL   :KEY1
-            BMI   :KEYAGN
-*
-:GOTKEY     CPX   #4
-            BCC   :GOTKY1
-            DEX
-            DEX
-:GOTKY1     TXA
-            CLC
-            ADC   #>MOM
-            STA   POINT+1
-            LDY   CURR
-            LDA   (POINT),Y
-            CMP   #$FF
-            BEQ   :COMMON0
-:COM00      STA   CURR
-            PHA
-            JSR   :MKPFX
-            JSR   PRVNM
-            PLA
-            TAY
-:COMMON0    LDX   #0
-            LDA   XS,Y
-            STA   XPOS
-            SEC
-            SBC   DSPNUM
-            BCS   :COMX
-            LDA   #0
-:COMX       CMP   XSTART
-            BEQ   :COMX1
-            DEX
-:COMX1      STA   XSTART
-            LDA   YS,Y
-            STA   YPOS
-            SEC
-            SBC   #$08
-            BCS   :COMY
-            LDA   #0
-:COMY       CMP   YSTART
-            BEQ   :COMY1
-            DEX
-:COMY1      STA   YSTART
-            JMP   :CAGN0
-*
-*
-*
-:MKPFX      LDA   #0
-            STA   :ERRFLG
-*
-:MK00       LDA   CURR
-            STA   :TEMP
-            LDX   #$3F
-*
-:MK0        LDA   #0
-            STA   POINT2+1
-            LDA   :TEMP
-            LDY   #4
-:MK1        ASL
-            ROL   POINT2+1
-            DEY
-            BNE   :MK1
-            STA   POINT2
-            LDA   POINT2+1
-            CLC
-            ADC   #>SDNAME
-            STA   POINT2+1
-            LDA   (POINT2),Y      ;LEN
-            TAY
-:MK2        LDA   (POINT2),Y
-            STA   PFX,X
-            CPX   #0
-            BEQ   :TOOLONG
-            DEX
-            DEY
-            BPL   :MK2
-            LDA   #$2F
-            STA   PFX+$1,X
-            LDY   :TEMP
-            LDA   MOM,Y
-            STA   :TEMP
-            CMP   #$FF
-            BNE   :MK0
-:MK2A       LDY   #0
-:MK3        LDA   PFX,X
-            STA   PFX,Y
-            INY
-            INX
-            CPX   #$40
-            BCC   :MK3
-            DEY
-            STY   PFX
-            LDA   :ERRFLG
-            BNE   :TLERR
-            RTS
-*
-* PREFIX TOO LONG. SET ERROR FLAG
-* AND DECREMENT *CURR TO GENERATE
-* A MEANINGFUL PREFIX.
-*
-:TOOLONG    DEC   :ERRFLG
-            DEC   CURR
-            JMP   :MK00
-*
-:TLERR      JSR   COL40
-            JSR   COMH00
-            LDA   #$21
-            JMP   PRTPRS
-*
-:HDR80      JSR   COL80
-            JMP   COMH00
-*
-:ERRFLG     DB    $0
-:TEMP       DB    $0
-:CHMAX      DB    $4F,$27
-:DSPNUM     DB    $03,$01
-:KEYS       DB    $88,$95,$8B,$8A,$C1,$DA

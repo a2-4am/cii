@@ -37,7 +37,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 *
 * NAME           TYPE  BLKS  MODIFIED
 *
-            LDA   #$59
+            LDA   #MPROHDR1
             JSR   PRINT
             LDA   :TYPE
             CMP   #1
@@ -46,7 +46,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 *
 *CREATED          ENDFILE SUBTYPE
 *
-            LDA   #$5A
+            LDA   #MPROHDR2
             JSR   PRINT
 :VOL1       JSR   :CROUNT
 *
@@ -54,7 +54,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 :VOL2       JSR   :CROUNT
             LDA   NACTIV       ;ANY FILES?
             BNE   :CONTINU
-            LDA   #$36         ;'NO FILES'
+            LDA   #MNOFILES    ;'NO FILES'
             JSR   PRINT
             JSR   :CROUNT
             JMP   :ALLDONE

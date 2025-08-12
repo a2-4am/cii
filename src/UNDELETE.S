@@ -90,7 +90,7 @@ UNDEL       JSR   COMTRE
             BCS   :PRESS
             LDA   :COUNT       ;LINE COUNT?
             BNE   :BADLP
-            LDA   #$52         ;CRESC1
+            LDA   #MCRESC1
             JSR   PRINT
             JSR   KYESC
             JSR   CROUT2

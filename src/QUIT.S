@@ -11,7 +11,7 @@ QUIT        JSR   TOP1
             INY
             BPL   :QUITZZ
 *
-            LDA   #$3B
+            LDA   #MQUITOPT
             JSR   PRINT
 :QUIT00     INC   $3F4        ;Mess up vector so RESET will reboot
             JSR   GETKEY      ; on Autostart Apple II Plus.

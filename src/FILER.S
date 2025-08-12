@@ -7,8 +7,9 @@
             PUT   DISKACCESS  ;Page-aligned, timing-critical disk code
             PUT   FILEACCESS
             PUT   FILELIST
-            PUT   INPUT
-            PUT   OUTPUT
+            PUT   DIRTREE
+            PUT   LINEINPUT
+            PUT   IO
             PUT   MESSAGES
             PUT   PRODOS
             PUT   BOOTSEC.PRO

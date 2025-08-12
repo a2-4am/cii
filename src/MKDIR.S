@@ -30,7 +30,7 @@ MAKEDR      JSR   COMTRE
             JSR   GETDAT
             JSR   MKDIR
             BCS   :ERROUT
-            LDA   #$66
+            LDA   #MDIRMADE
             JMP   PRTPRS
 :OUT        RTS
 :ERROUT     JMP   ERROUT

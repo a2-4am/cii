@@ -50,7 +50,7 @@ BOOTPG      JSR   COMHDR
             INC   RCMND
             JMP   DORWTS       ;WRITE BACK
 *
-:NODOS      LDA   #$6C
+:NODOS      LDA   #MNOBOOTP
             JMP   PRTPRS
 *
 :NAMESEC    DB    $0

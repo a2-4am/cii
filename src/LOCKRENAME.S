@@ -44,7 +44,7 @@ RENVOL      JSR   NEWVOL       ;GET NEW NAME
 *
 *
 *
-ASKLOK      LDA   #$67
+ASKLOK      LDA   #MASKLOCK
             JSR   PRINT
 :TRY        JSR   CASKEY
             CMP   #$9B

@@ -16,6 +16,9 @@ CADIUS=cadius
 
 # https://github.com/einar-saukas/ZX0
 # note: -b flag to pack backwards
+# you can also add a -q flag during development
+# to do worse compression at a more reasonable speed
+# (does not affect format, so unpacker still works)
 ZX0=zx0 -b
 
 SRCDIR=src

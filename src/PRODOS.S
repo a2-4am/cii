@@ -1636,13 +1636,13 @@ CKDEL1      BIT   DOSNOW
 *
 NODOS3      JSR   DOSTYP
             BCS   BLK2ER
-            LDA   #$6F
+            LDA   #MNOTDOS
             DB    $2C
 *
-FLONLY      LDA   #$6D
+FLONLY      LDA   #MNOTFL
             DB    $2C
 *
-NOPRO       LDA   #$6E
+NOPRO       LDA   #MNOTPRO
             JMP   PRTPRS
 *
 BLK2ER      LDY   #0

@@ -12,9 +12,9 @@ TSMAP       JSR   COMHDR
             JSR   RDACNT       ;READ CATALOG
             LDA   NACTIV       ;ANY FILES?
             BNE   :GOTFILS
-            LDA   #$36         ;'NO FILES'
+            LDA   #MNOFILES    ;'NO FILES'
             JSR   PRINT
-            LDA   #$52         ;CRESC1
+            LDA   #MCRESC1     ;CRESC1
             JSR   PRINT        ;CR OR ESC
             JSR   KYESC
             JMP   :CBITMAP
@@ -27,7 +27,7 @@ TSMAP       JSR   COMHDR
             STA   HIMEM
             JSR   READBM
 :CBIT33     JSR   HOME
-            LDA   #$6A
+            LDA   #MMAPGRID
             JSR   PRINT
             JSR   :CLEAR
             LDA   #0
@@ -98,7 +98,7 @@ TSMAP       JSR   COMHDR
             CPY   #$8C
             BCC   :TRKLP       ;DONE BITMAP
             JSR   :PRSCRN      ;PRINT SCREEN?
-            LDA   #$35         ;PROMPT TO
+            LDA   #MCRESC      ;PROMPT TO
             JSR   LINE24       ;CONTINUE
             JSR   KYESC
             LDA   NACTIV
@@ -191,7 +191,7 @@ TSMAP       JSR   COMHDR
 *
 :NXTFILE    LDA   #$17
             JSR   VLEFT
-            LDA   #$6B
+            LDA   #MMAPOTHR
             JSR   PRINT
             JSR   CHKKEY
             BNE   :NOTARO
@@ -232,7 +232,7 @@ TSMAP       JSR   COMHDR
 :PRINT      JSR   :PRSCRN
             JMP   :NXTFILE
 *
-:MTSUB      LDA   #$53         ;EMPTY SUBDIR
+:MTSUB      LDA   #MMTSUB      ;EMPTY SUBDIR
             JSR   LINE24
             JSR   GETKEY
             JMP   :DO2

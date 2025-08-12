@@ -443,7 +443,7 @@ INSS1       LDA   ONLY1        ;IF ONLY 1:
             BPL   :SELECT
             LDA   #0
             STA   SDFLG
-            LDA   #$57         ;INSERT SRC
+            LDA   #MINSSRC     ;'INSERT SOURCE DISK'
             JSR   LOWMES
             JSR   INSCOM       ;WAIT FOR KEY
             STA   PDOS         ;1
@@ -467,19 +467,12 @@ INSD1       LDA   ONLY1
             BMI   :SELECT
             LDA   #$FF
             STA   SDFLG
-            LDA   #$58
+            LDA   #MINSTGT     ;'INSERT TARGET DISK'
             JSR   LOWMES
             JSR   INSCOM
             STA   SDOS         ;1
 :SELECT     RTS
 *
-INSCOM      LDA   #$35         ;CRESC
-            JSR   PRINT
-            JSR   KYESC
-            JSR   LOHERE
-            DB    $0
-            LDA   #1
-            RTS
 SDFLG       DB    $0
 *
 SWCK        STA   PFXADR+1
@@ -569,97 +562,6 @@ SET1A2      STA   CVTOC+$3C
 DORWTS      JSR   PHRWTS
             BCC   SWPRET
             JMP   ERROUT
-*
-ERRMSG      LDA   RRTN
-            LDY   #$0C
-:OUCHLP     CMP   :ERRNUM,Y
-            BEQ   :OUCH0       ;FOUND ERROR # IN TABLE
-            DEY
-            BPL   :OUCHLP
-*
-:OUCH2      CMP   #$40
-            BCS   :NOT27
-            JSR   PRHERE
-            ASC   "I/O "
-            DB    $0
-*
-:NOT27      JSR   PRHERE
-            ASC   "Error"
-            DB    $0
-            BIT   DOSNOW
-            BPL   :DOS33
-*
-            LDA   RRTN
-            CMP   #$29
-            BCC   :SKIP
-            JSR   PRHERE
-            ASC   " $"
-            DB    $0
-            LDA   RRTN
-            BNE   :SKIP1       ;ALWAYS (BECAUSE RRTN >= $29)
-*
-:ERRNUM     DB    $2B,$44,$45,$46,$48,$49,$4E,$3F,$52,$47
-            DB    $40,$2F,$28
-*
-:OUCH0      JSR   CROUT2
-            TYA
-            CLC
-            ADC   #$45
-            JSR   PRINT
-            JMP   CROUT2
-
-*
-:SKIP       JSR   PRHERE
-            ASC   ": Block $"
-            DB    $0
-            LDA   BLKNUM+1
-            JSR   PHBYTE
-            LDA   BLKNUM
-:SKIP1      JSR   PHBYTE
-:SKIPBLK    JMP   :OUCH1
-*
-:DOS33      JSR   PRHERE
-            ASC   ": "
-            DB    $0
-            JSR   TSVALS
-:OUCH1      JMP   CROUT
-*
-CROUT2      JSR   CROUT
-            JMP   CROUT
-*
-OUCH        JSR   HOME
-            JSR   ERRMSG
-            JSR   CROUT
-*LDA LEVEL
-*PHA
-*LDA #1
-*STA LEVEL
-            JSR   CLOSE
-*PLA
-*STA LEVEL
-            LDA   #$43         ;PRESS
-            JSR   PRINT
-            JMP   GETKEY
-*
-* PRINT TRACK & SECTOR #'S
-*
-TSVALS      JSR   PRTTRK
-            JSR   PRHERE
-            ASC   ", "
-            DB    $0
-            LDA   #$34
-            JSR   PRINT        ;'SECTOR $'
-            LDA   RSECTR       ;SECTOR MORE
-            CMP   #$10         ;THAN 1 DIGIT?
-            BCS   :BIGSEC
-            JMP   PHHEX        ;NO:PRINTDIGIT
-:BIGSEC     JMP   PHBYTE       ;YES:PRINTBYTE
-*
-PRTTRK      LDA   #$33
-            JSR   PRINT        ;'TRACK $'
-            LDA   RTRACK
-            JMP   PHBYTE
-
 *
 * READ SOURCE DATA
 *

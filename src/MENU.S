@@ -53,7 +53,7 @@ FILER       LDX   #$FF
             JSR   COL40          ; so you don't see 80 switch in and out.
             LDA   #0             ;But now CV is at bottom of screen.
             JSR   VLEFT          ; Put it back at the top before printing the...
-            LDA   #$3E           ;HEADER
+            LDA   #MHEADER
             JSR   PRINT
             JSR   CINFO          ;DISK INFO LINE
             LDX   #$00           ;MAIN MENU
@@ -109,7 +109,7 @@ CLOSEMM     BIT   MMISOPEN
 * ACC HAS TRUE CHOICE #
 *
 CHOOZ0      JSR   CHOPOS
-            LDA   #$55
+            LDA   #MSELFUNC
             JSR   PRINT
             JSR   INIT
             LDX   #$00
@@ -119,7 +119,7 @@ CHOOZ0      JSR   CHOPOS
             RTS
 *
 CHOOZ1      JSR   CHOPOS
-            LDA   #$56           ;OPTION
+            LDA   #MSELOPT
             JSR   PRINT
 *
 CHOOZ       JSR   MENU
@@ -206,10 +206,10 @@ MENU        LDA   #4
 *  8 Copy
 *  9 Rename
 *
-*  Menu:        0   1   2   3   4   5   6   7   8   9
-LAST        DB    $0F,$19,$21,$1C,$1E,$00,$00,$24,$15,$42
-FIRST       DB    $00,$15,$1E,$19,$1C,$00,$00,$22,$11,$40
-CHOICE      DB    $00,$15,$1E,$19,$1C,$00,$00,$22,$11,$40
+*  Menu:          0       1          2         3        4       5   6   7        8         9
+LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,$00,$00,MDOS33+1,MCOPDOS+1,MVOLUME+1
+FIRST       DB    MCOPY,  MNORMAL,   MDELFILE, MVERDISK,MVALUES,$00,$00,MPRODOS, MCOPFILE, MFILES
+CHOICE      DB    MCOPY,  MNORMAL,   MDELFILE, MVERDISK,MVALUES,$00,$00,MPRODOS, MCOPFILE, MFILES
 *
 * POSITION FOR MAIN SCREEN CHOOSES
 *
@@ -245,7 +245,7 @@ CINFO       LDA   #$15
             LDA   PSLOT
             BEQ   :OFF
             PHA
-            LDA   #$2A         ;'SLOT'
+            LDA   #MSLOT
             JSR   PRINT
             PLA
             JSR   PHHEX
@@ -262,7 +262,7 @@ INFO        LDA   #$16
             JSR   TABV
             LDA   #$21
             STA   CH
-            LDA   #$2A
+            LDA   #MSLOT
             JSR   PRINT
             LDA   PSLOT
             JSR   PHHEX
