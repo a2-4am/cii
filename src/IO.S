@@ -1,47 +1,97 @@
+*
 ***********************************
 *                                 *
-*     MISC. I/O ROUTINES          *
+*        CORE I/O ROUTINES        *
 *                                 *
 ***********************************
-
 *
-* ASK  PRINTER OPTION QUESTION
-ASKPR?      LDX   PSLOT       ;PRINTER SLOT
-            BEQ   :OUT        ;NONZERO?
-            JSR   PRHERE
-            DB    $8D,$8D,$8D,$8D
-            ASC   "Do you want a printout (Y/N) ? "
-            DB    $0
-            JSR   KYESC
-            LDX   #$FF
-            CMP   #"Y"        ;YES?
-            BEQ   :SETIT
-            LDX   #$00
-            LDA   #"N"
-:SETIT      JSR   PCOUT
-            STX   PRNTR?
-            JMP   HOME
-:OUT        STX   PRNTR?      ;SET FLAG
-            RTS
+* PINVRS    set inverse mode for PCOUT
+* PFLASH    set flash mode for PCOUT
+* PNORML    set normal mode for PCOUT
+* PCOUT     print 1 character
+*           - auto-uppercase on < //e
+*           - inverse/flashing/normal (call P* mode routine)
+*           - lowercase inverse
+*           - 40 and 80 columns
+*           - screen or printer
+* PHHEX     print 1-digit hex value (0..F)
+* PHBYTE    print 2-digit hex value (00..FF)
+* PRSPC     print 1 space character
+* CROUT2    print 2 carriage returns
+* TSVALS    print current track and sector
+* PRTTRK    print current track
+* SEEDEV    print slot and drive
+* LOWMES
+* LOWSET
+* INSCOM
+* LOHERE
+* PRHERE
+* LINE24
+* PRINT
+* KEYESC
+* KEYES1
 *
-* TURN ON PRINTER
-PRON        LDA   CSWL
-            STA   CSWSAV
-            LDA   CSWL+1
-            STA   CSWSAV+1
-            LDA   #$00
-            STA   CSWL
-            LDA   PSLOT
-            ORA   #$C0
-            STA   CSWL+1
-            RTS
-CSWSAV      DB    $0,$0
+* NOSEL
+* NOFIL0
+* NOFILS
+* PRTPRS
+* PRESS
+* ERRMSG
+* OUCH
 *
-PROFF       LDA   CSWSAV+1
-            STA   CSWL+1
-            LDA   CSWSAV
-            STA   CSWL
-            JMP   SETKBD
+* CTRL?     check if ACC is a control character
+* DOLLAR    print $, save/restore ACC
+* PRDKEY    read 1 key [visible cursor][blocking]
+* CASKEY    read 1 key, convert to uppercase [visible cursor][blocking]
+* GETKEY    read 1 key, convert to uppercase [no cursor][blocking]
+* KYESC     read 1 key, check if it's Esc [no cursor][blocking]
+* CKESC     check if Esc has been pressed [non-blocking]
+* CHKKEY
+*
+* VLEFT     set VTAB to ACC, then set HTAB to 0
+* SETCH     set HTAB
+*
+* HEXDEC    convert value to decimal, store in DIGIT
+* HEXDC1
+* HEXDC2
+* HEXDC3
+* PRTLZ     print 3 DIGITs with leading zeros
+* PRT8RJ    print 1 DIGIT right-justified in 8 spaces
+* PRT5RJ    print 1 DIGIT right-justified in 5 spaces
+* PRT3RJ    print 1 DIGIT right-justified in 3 spaces
+* PRT2RJ    print 1 DIGIT right-justified in 2 spaces
+* PRT8LJ    print 1 DIGIT left-justified in 8 spaces
+* PRT5LJ    print 1 DIGIT left-justified in 5 spaces
+* PRT2DG    print 2 DIGITs
+* PRTDIG    print 1 DIGIT
+*
+* COL40     set to 40 columns
+* VDINIT    initialize machine video
+*
+* CHKALT    modify video setting if ACC = Ctrl-@
+* LOW2UP    convert 1 character from lowercase to uppercase
+* MYHEX
+* PRINT2
+*
+COL40       LDA   #$19
+            STA   SDCH
+            BIT   FLAG80      ;(10/6/87)
+            BPL   :OUT40
+            LDA   #$15        ;
+            JSR   $C300       ;
+:OUT40
+* fall through to VDINIT
+VDINIT      JSR   INIT
+            JSR   SETNOR
+            JSR   SETVID
+            JSR   SETKBD
+*[4am] fall through to set ALTCHARSET on //e
+*DOC00F
+            BIT   A2E
+            BPL   :C00FQ
+            STA   $C00F
+:C00FQ      RTS
+SDCH        DB    $19
 *
 *
 * MY OWN INVERSE FLAG...
@@ -53,19 +103,7 @@ PNORML      LDY   #$00
             STY   PINVFL
             RTS
 *
-DOC00E      BIT   A2E
-            BPL   :C00EQ
-            STA   $C00E
-:C00EQ      RTS
-*
-DOC00F      BIT   A2E
-            BPL   :C00FQ
-            STA   $C00F
-:C00FQ      RTS
-*
-*
 * IS CHAR IN ACC A CONTROL?
-*
 CTRL?       CMP   #$A0
             BCS   :OK
             CMP   #$80
@@ -74,22 +112,18 @@ CTRL?       CMP   #$A0
 :BADOUT     RTS
 *
 * PRINT DOLLAR SIGN, KEEP ACC
-*
 DOLLAR      PHA
             LDA   #"$"
             JSR   PCOUT
             PLA
             RTS
 *
-*
 * RDKEY WITH CASE CONVERT
-*
 CASKEY      JSR   PRDKEY
             JMP   LOW2UP
 *
 * READS KEYBOARD WITHOUT CURSOR GAMES
-* -> CHARACTER IN AREG
-*
+* -> CHARACTER IN ACC
 GETKEY      BIT   KBDSTB
 :LOOP       LDA   KBD
             BPL   :LOOP
@@ -101,6 +135,17 @@ LOW2UP      CMP   #$E0        ;CONVERT LOWER
             SBC   #$20
 :LOWQ       RTS
 *
+CHKKEY      JSR   KYESC
+            CMP   #$88        ;LEFT ARROW
+            BEQ   :RETCLR
+            CMP   #$8B        ;UP ARROW
+            BEQ   :RETCLR
+            CMP   #$95        ;RIGHT ARROW
+            BEQ   :RETSET
+            CMP   #$8A
+            RTS
+:RETCLR     CLC
+:RETSET     RTS
 *
 CKESC       LDA   $C000
             JMP   KEYES1
@@ -116,7 +161,6 @@ PRDKEY      BIT   $C010       ;NO TYPEAHEAD
 *
 * FOR KEYPRESSES, CHECK FOR CTRL-@
 * ALTCHARSET TOGGLE
-*
 CHKALT      CMP   #$80        ;CTRL-@?
             BNE   :CHKQ
 *
@@ -133,9 +177,7 @@ CHKALT      CMP   #$80        ;CTRL-@?
 :CHKQ       CLC
             RTS
 *
-*
 * DO VTAB, & HTAB 0
-*
 VLEFT       JSR   TABV
             LDA   #$00
 SETCH       STA   CH
@@ -147,7 +189,6 @@ SETCH       STA   CH
 * HEX TO DECIMAL CONVERTER
 * PUT 2-BYTE HEX NUMBER IN HEXNUM  ->
 * 5 DECIMAL NUMBERS LEFT IN DIGIT
-*
 HEXDC1      LDX   #0
 HEXDC2      STX   HEXNUM+1
             STA   HEXNUM
@@ -228,7 +269,6 @@ PRTDIG      LDA   DIGIT,X
             RTS
 *
 * PRINT TRACK & SECTOR #'S
-*
 TSVALS      JSR   PRTTRK
             JSR   PRHERE
             ASC   ", "
@@ -342,20 +382,7 @@ PCOUT       BIT   A2E
             LDA   #$DF        ;FF'S
 :GOCOUT2    JMP   COUT
 *
-* GIVE CATALOG DISPLAY FUNCTION TITLE
-*
-TOP1        JSR   HOME
-TOP1A       LDA   #0
-            STA   WNDTOP
-            JSR   TABV
-            LDA   CHOICE      ;FUNCTION NAME
-            JSR   PRINT
-            JSR   PRSPC
-            LDA   OPTCHS
-            BMI   :TOP1A
-            JSR   PRINT
-:TOP1A      RTS
-*
+* DISPLAY SLOT AND DRIVE
 SEEDEV      PHA
             JSR   PRHERE
             ASC   "Slot "
@@ -377,14 +404,14 @@ SEEDEV      PHA
             ADC   #0
             JMP   PHHEX
 *
-*
 * BOTTOM OF SCREEN MESSAGE
-*
 LOWMES      JSR   LOWSET
             JSR   PRINT
             CLC
             RTS
 *
+* BLANK BOTTOM 4 LINES OF SCREEN
+* AND SET VTAB THERE
 LOWSET      PHA
             LDA   #$14
             JSR   VLEFT
@@ -461,8 +488,6 @@ PRINT2      LDY   #$00
 :CLEAR      JSR   CLREOL
             JMP   :NEXT
 *
-*
-*
 * NO FILES SELECTED
 NOSEL       JSR   LOHERE
             ASC   "No files selected"
@@ -535,7 +560,7 @@ ERRMSG      LDA   RRTN
 :OUCH0      JSR   CROUT2
             TYA
             CLC
-            ADC   #$45
+            ADC   #MERRENUM
             JSR   PRINT
             JMP   CROUT2
 

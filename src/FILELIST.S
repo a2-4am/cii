@@ -449,11 +449,11 @@ DO1         BIT   DOSNOW
 DO2         BIT   DOSNOW
             BPL   NIL0
             JSR   DIVEIN
-DO1A        BCS   ERR2
+DO1A        BCS   :ERR2
             SEC
             RTS
 *
-ERR2        JSR   LOWMES
+:ERR2       JSR   LOWMES
             JSR   KYESC
 ST8MSG      LDA   STATE
             CLC
@@ -727,9 +727,9 @@ SEECAT      LDA   #0
             BNE   :NEXT
             BIT   CFLAG
             BMI   :OUT        ;SKIP 'MORE'
-            LDA   #$44
+            LDA   #MMORE
             DB    $2C
-:OUT        LDA   #$42
+:OUT        LDA   #MDASHES
             PHA
             LDA   #$13
             JSR   VLEFT

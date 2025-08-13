@@ -15,15 +15,9 @@
 *
 * Move MAIN portion of program into place
 *
-            LDA   #MAINXEND
-            STA   ZXSRC
-            LDA   #>MAINXEND
-            STA   ZXSRC+1
-            LDA   #MAINEND
-            STA   ZXDST
-            LDA   #>MAINEND
-            STA   ZXDST+1
             JSR   ZXUNPACK
+            DA    MAINXEND
+            DA    MAINEND
 *
             LDX   $FBB3       ;FOR LATER
 *
@@ -237,15 +231,9 @@
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
-            LDA   #MMXEND
-            STA   ZXSRC
-            LDA   #>MMXEND
-            STA   ZXSRC+1
-            LDA   #MMSPOT+MMEND-MMBEG
-            STA   ZXDST
-            LDA   #>MMSPOT+MMEND-MMBEG
-            STA   ZXDST+1
             JSR   ZXUNPACK    ;unpack into main mem
+            DA    MMXEND
+            DA    MMSPOT+MMEND-MMBEG
             LDA   #MMSPOT     ;source start.
             STA   A1L
             LDA   #>MMSPOT

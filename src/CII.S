@@ -1,4 +1,4 @@
-            TYP   $FF         ;Specify SYS-type object file
+            TYP   SYS         ;Specify SYS-type object file
             DSK   ../build/UTIL.SYSTEM  ;Assemble directly into file
             TR    ON          ;Truncate object code printout
             PUT   REVS        ;revision info -- comments only
@@ -9,8 +9,8 @@
             PUT   LOADER      ;This relocates & gets everything started.
             PUT   DZX0TURBO   ;Unpack modules on startup
             PUT   BOOTSEC.33  ;Copied to LCRAM
-            PUTBIN  ../build/OBJ.MM.X
+            PUTBIN  ../build/MM.X
 MMXEND
-            PUTBIN  ../build/OBJ.FILER.X
+            PUTBIN  ../build/FILER.X
 MAINXEND
 

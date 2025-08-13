@@ -251,7 +251,18 @@ DOTREE      PHA
             LDA   #MTOOLONG
             JMP   PRTPRS
 *
-:HDR80      JSR   COL80
+:HDR80
+*COL80
+            BIT   FLAG80
+            BPL   :OUT80
+            LDA   #$C3
+            STA   CSWL+1
+            LDA   #0
+            STA   CSWL
+            LDA   #$41
+            STA   SDCH
+            JSR   CROUT
+:OUT80
             JMP   COMH00
 *
 :ERRFLG     DB    $0

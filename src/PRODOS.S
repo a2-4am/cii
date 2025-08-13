@@ -1275,7 +1275,6 @@ PRVCOM      STA   UNIT
             STA   WNDTOP
             JMP   VLEFT
 :PFXLEN     DB    $0
-SDCH        DB    $19
 *
 *
 SRCHDR      LDA   #0
@@ -2374,11 +2373,3 @@ SETSD
 :UDCSLOT    DB    0
 :UDCTBL1    DB    $00,$01,$03,$05,$07,$12
 :UDCTBL2    DB    $E5,$20,$00,$03,$00,$4C
-*
-*
-CLOSE       JSR   MLI
-            DB    $CC
-            DW    :CLSLST
-            RTS
-:CLSLST     DB    $1,$0
-

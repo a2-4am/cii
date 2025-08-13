@@ -1,6 +1,3 @@
-MONTH1      ASC   "JFMAMJJASOND"
-MONTH2      ASC   "AEAPAUUUECOE"
-MONTH3      ASC   "NBRRYNLGPTVC"
 *
 *
 *************************************
@@ -14,8 +11,7 @@ FILER       LDX   #$FF
             TXS
             CLD
             JSR   PNORML
-            JSR   VDINIT
-            JSR   DOC00F      ;ALTCHARSET ON
+            JSR   VDINIT      ;[4am] also sets ALTCHARSET
             JSR   GETDAT
             JSR   CLOSEMM     ;Close MM in case of Reset.
 *
@@ -60,7 +56,18 @@ FILER       LDX   #$FF
             STX   PRNTR?
             STX   RADR
             STX   TOPDIF
-            JSR   CHOOZ0      ;SELECT
+*:CHOOZ0
+            JSR   CHOPOS
+            JSR   PRHERE
+            ASC   "Use arrow keys",2F,8D
+            ASC   "& [Return] to",2F,8D
+            ASC   "select function",2F,8D,00
+            JSR   INIT
+            LDX   #$00
+            JSR   CHOOZ
+            LDX   #$FF
+            STX   OPTCHS
+*
             ASL
             TAY
             LDA   :MENUTBL,Y
@@ -69,7 +76,6 @@ FILER       LDX   #$FF
             STA   :JUMP+2
 :JUMP       JSR   $1000
             JMP   FILER
-*
 *
 :MENUTBL    DW    COPY
             DW    CATLOG
@@ -85,40 +91,8 @@ FILER       LDX   #$FF
             DW    BOOTPG
             DW    UNDEL
             DW    MAKEDR
-            DW    INFO
+            DW    SETPRINT
             DW    QUIT
-*
-*
-* Close MM if it appears to be open.
-*
-CLOSEMM     BIT   MMISOPEN
-            BPL   :CLOSMMQ
-            LDA   #MMCLOSE
-            STA   MMCMD
-            JSR   MM
-            LDA   #0
-            STA   MMISOPEN
-:CLOSMMQ    RTS
-*
-*
-* MORE MENU STUFF
-*
-* DISPLAY MENU & SELECT DESIRED OPTION
-* XREG=# OF DESIRED MENU  ->
-* CARRY SET IF ESC OUT, ELSE
-* ACC HAS TRUE CHOICE #
-*
-CHOOZ0      JSR   CHOPOS
-            JSR   PRHERE
-            ASC   "Use arrow keys",2F,8D
-            ASC   "& [Return] to",2F,8D
-            ASC   "select function",2F,8D,00
-            JSR   INIT
-            LDX   #$00
-            JSR   CHOOZ
-            LDX   #$FF
-            STX   OPTCHS
-            RTS
 *
 CHOOZ1      JSR   CHOPOS
             JSR   PRHERE
@@ -161,20 +135,6 @@ CHOOZ       JSR   MENU
             LDA   FIRST,X
             STA   CHOICE,X
             JMP   CHOOZ
-*
-CHKKEY      EQU   *
-            JSR   KYESC
-            CMP   #$88        ;LEFT ARROW
-            BEQ   :RETCLR
-            CMP   #$8B        ;UP ARROW
-            BEQ   :RETCLR
-            CMP   #$95        ;RIGHT ARROW
-            BEQ   :RETSET
-            CMP   #$8A
-            RTS
-:RETCLR     CLC
-:RETSET     RTS
-*
 *
 * DISPLAY MENU
 MENU        LDA   #4
@@ -223,12 +183,6 @@ CHOPOS      LDA   #$12
             LDA   #$04
             JMP   VLEFT
 *
-VDINIT      JSR   INIT
-            JSR   SETNOR
-VDINT1      JSR   SETVID
-            JSR   DOC00F      ; [4am] set ALTCHARSET
-            JMP   SETKBD
-*
 *   SEE DISK INFO
 *
 CINFO       LDA   #$15
@@ -259,35 +213,34 @@ CINFO       LDA   #$15
             DB    $8D,0
             RTS
 *
-* CHANGE PRINTER SLOT
-*
-INFO        LDA   #$16
+* CLEAR SCREEN AND DISPLAY FUNCTION TITLE
+TOP1        JSR   HOME
+            LDA   #0
+            STA   WNDTOP
             JSR   TABV
-            LDA   #$21
-            STA   CH
-            LDA   #MSLOT
+            LDA   CHOICE      ;FUNCTION NAME
             JSR   PRINT
-            LDA   PSLOT
-            JSR   PHHEX
+            JSR   PRSPC
+            LDA   OPTCHS
+            BMI   :TOP1A
+            JSR   PRINT
+:TOP1A      RTS
 *
-            LDA   #$26
-            STA   CH
-:GETCHAR    JSR   KEYESC
-            CMP   #$8D        ;CR?
-            BEQ   :DEFAULT
-            SEC
-            SBC   #$B0        ;CONVERT TO #
-            CMP   #8
-            BCS   :ERR
-            STA   PSLOT
-            JMP   PHHEX       ;PRINT IT
 *
-:ERR        JSR   BELL        ;TRY AGAIN
-            JMP   :GETCHAR
+* Close MM if it appears to be open.
 *
-:DEFAULT    LDA   (BASL),Y    ;REMOVE FLASH
-            AND   #$3F
-            ORA   #$80        ;FROM EXISTING
-            STA   (BASL),Y    ;CHAR
+CLOSEMM     BIT   MMISOPEN
+            BPL   :CLOSMMQ
+            LDA   #MMCLOSE
+            STA   MMCMD
+            JSR   MM
+            LDA   #0
+            STA   MMISOPEN
+:CLOSMMQ    RTS
+*
+*
+CLOSE       JSR   MLI
+            DB    $CC
+            DW    :CLSLST
             RTS
-
+:CLSLST     DB    $1,$0

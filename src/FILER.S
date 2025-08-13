@@ -1,5 +1,5 @@
-            TYP   $06
-            DSK   ../build/OBJ.FILER
+            TYP   REL
+            DSK   ../build/FILER.O
             PUT   VARS
             PUT   ../build/MM.VARS
 *
@@ -8,6 +8,7 @@
             PUT   FILEACCESS
             PUT   FILELIST
             PUT   DIRTREE
+            PUT   FMTFIX
             PUT   LINEINPUT
             PUT   IO
             PUT   MESSAGES
@@ -25,6 +26,7 @@
             PUT   CHANGEBOOT
             PUT   UNDELETE
             PUT   MKDIR
+            PUT   PRINTER
             PUT   QUIT
             PUT   MENU
             DUM   *

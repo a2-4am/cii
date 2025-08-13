@@ -25,12 +25,13 @@ SRCDIR=src
 SOURCES=$(wildcard src/*.S)
 PRODOS=PRODOS
 CLOCK=CLOCK
-OBJMM=$(BUILDDIR)/OBJ.MM
-OBJMMX=$(OBJMM).X
+MMO=$(BUILDDIR)/MM.O
+MMX=$(BUILDDIR)/MM.X
 MMVARS=$(BUILDDIR)/MM.VARS.S
-OBJBOOTSEC=$(BUILDDIR)/OBJ.BOOTSEC
-OBJFILER=$(BUILDDIR)/OBJ.FILER
-OBJFILERX=$(OBJFILER).X
+DZX0TURBOO=$(BUILDDIR)/DZX0TURBO.O
+DZX0TURBOVARS=$(BUILDDIR)/DZX0TURBO.VARS.S
+FILERO=$(BUILDDIR)/FILER.O
+FILERX=$(BUILDDIR)/FILER.X
 FILERVARS=$(BUILDDIR)/FILER.VARS.S
 EXE=$(BUILDDIR)/$(SYSNAME)
 
@@ -39,7 +40,7 @@ EXE=$(BUILDDIR)/$(SYSNAME)
 $(BUILDDISK): $(PRODOS) $(CLOCK) $(EXE)
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
-$(EXE): $(OBJMMX) $(OBJFILERX) $(FILERVARS) $(BUILDDIR)
+$(EXE): $(MMX) $(FILERX) $(FILERVARS) $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/CII.S > "$(BUILDLOG)"
 	mv "$(SRCDIR)/UTIL.SYSTEM_S01_Segment1_Output.txt" "$(BUILDDIR)"/
 	mv "$(SRCDIR)/UTIL.SYSTEM_Symbols.txt" "$(BUILDDIR)"/
@@ -47,41 +48,46 @@ $(EXE): $(OBJMMX) $(OBJFILERX) $(FILERVARS) $(BUILDDIR)
 #
 # compressors
 #
-$(OBJMMX): $(OBJMM)
-	$(ZX0) "$(BUILDDIR)/OBJ.MM" "$@"
-
-$(OBJFILERX): $(OBJFILER)
-	$(ZX0) "$(BUILDDIR)/OBJ.FILER" "$@"
 
 #
-# Memory Manager module (self-contained)
+# Memory Manager module (self-contained)(compressed)
 #
-$(OBJMM): $(BUILDDIR)
+$(MMO): $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/MM.CII.S > "$(BUILDLOG)"
-	mv "$(SRCDIR)/OBJ.MM_S01_Segment1_Output.txt" "$(BUILDDIR)"/
-	mv "$(SRCDIR)/OBJ.MM_Symbols.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/MM.O_S01_Segment1_Output.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/MM.O_Symbols.txt" "$(BUILDDIR)"/
 
-$(MMVARS): $(OBJMM)
-	awk -F';' '/MM.CII/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/OBJ.MM_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
+$(MMX): $(MMO)
+	$(ZX0) "$(BUILDDIR)/MM.O" "$@"
 
-#
-# DOS 3.3 boot sector image (self-contained)
-#
-$(OBJBOOTSEC): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/BOOTSEC.33.S > "$(BUILDLOG)"
-	mv "$(SRCDIR)/OBJ.BOOTSEC_S01_Segment1_Output.txt" "$(BUILDDIR)"/
-	mv "$(SRCDIR)/OBJ.BOOTSEC_Symbols.txt" "$(BUILDDIR)"/
+$(MMVARS): $(MMO)
+	awk -F';' '/MM.CII/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/MM.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
 
 #
-# Filer (requires Memory Manager and boot sector image)
+# ZX0 unpacker module (self-contained)(not compressed)
 #
-$(OBJFILER): $(MMVARS)
+$(DZX0TURBOO): $(BUILDDIR)
+	$(MERLIN) "$(SRCDIR)"/DZX0TURBO.S > "$(BUILDLOG)"
+	mv "$(SRCDIR)/DZX0TURBO.O_S01_Segment1_Output.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/DZX0TURBO.O_Symbols.txt" "$(BUILDDIR)"/
+
+$(DZX0TURBOVARS): $(DZX0TURBOO)
+	awk -F';' '/DZX0TURBO/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/DZX0TURBO.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
+
+
+#
+# Filer (requires Memory Manager)(compressed)
+#
+$(FILERO): $(MMVARS)
 	$(MERLIN) "$(SRCDIR)"/FILER.S > "$(BUILDLOG)"
-	mv "$(SRCDIR)/OBJ.FILER_S01_Segment1_Output.txt" "$(BUILDDIR)"/
-	mv "$(SRCDIR)/OBJ.FILER_Symbols.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/FILER.O_S01_Segment1_Output.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/FILER.O_Symbols.txt" "$(BUILDDIR)"/
 
-$(FILERVARS): $(OBJFILER)
-	awk -F';' '!/VARS;/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/OBJ.FILER_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
+$(FILERVARS): $(FILERO)
+	awk -F';' '!/VARS;/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/FILER.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
+
+$(FILERX): $(FILERO)
+	$(ZX0) "$(BUILDDIR)/FILER.O" "$@"
 
 # things that go in the root directory
 $(PRODOS) $(CLOCK): $(BUILDDIR)

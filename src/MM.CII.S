@@ -1,5 +1,5 @@
-            TYP   $06
-            DSK   ../build/OBJ.MM
+            TYP   REL
+            DSK   ../build/MM.O
             PUT   VARS
             ORG   MMSPOT
 MMBEG

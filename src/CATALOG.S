@@ -242,36 +242,14 @@ CATLOG      LDX   #$01        ;SELECT OPTION
             RTS
 *
 :ALLDONE    JSR   CROUT
-            JSR   CSPACE
+            JSR   :CSPACE
             JSR   CROUT
             LDA   PRNTR?
             BEQ   :ALLDN1
             JSR   PROFF
 :ALLDN1     JMP   PRESS
 *
-*
-COL80       BIT   FLAG80
-            BPL   :OUT80
-            LDA   #$C3
-            STA   CSWL+1
-            LDA   #0
-            STA   CSWL
-            LDA   #$41
-            STA   SDCH
-            JSR   CROUT
-:OUT80      RTS
-*
-*
-COL40       LDA   #$19
-            STA   SDCH
-            BIT   FLAG80      ;(10/6/87)
-            BPL   :OUT40
-            LDA   #$15        ;
-            JSR   $C300       ;
-:OUT40      JMP   VDINIT
-*
-*
-CSPACE      LDA   #>VTOC1
+:CSPACE     LDA   #>VTOC1
             JSR   SPACE
             BIT   DOSNOW
             BPL   :DOS33

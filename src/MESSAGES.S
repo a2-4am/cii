@@ -4,11 +4,10 @@
 *                                 *
 ***********************************
 *
-*
 * (Menus 5 & 6 unused)
 *
             DUM   0
-* top-level menu items
+* top-level menu items (must be first)
 MCOPY       DS    1
 MCATALOG    DS    1
 MDELETE     DS    1
@@ -25,11 +24,14 @@ MMKDIR      DS    1
 MNEWINFO    DS    1
 MQUIT       DS    1
 *
+* FORMAT submenu
+*
+MPRODOS     DS    1           ;0F MENU 7
+MDOS33      DS    1
+*
 * COPY submenu
 *
-            DS    1           ;[4am] unused, was :BCPY525
-            DS    1           ;[4am] unused, was :BCPY35
-MCOPFILE    DS    1           ;11 MENU 0
+MCOPFILE    DS    1           ;11 MENU 8
 MCOPDISK    DS    1
 MDSKWFMT    DS    1
 MCOPDOS     DS    1
@@ -58,101 +60,59 @@ MDELFILE    DS    1           ;1E MENU 2
 MDELDISK    DS    1
 MDELDOS     DS    1
 *
-MTOOLONG    DS    1           ;21
+* RENAME submenu
 *
-* FORMAT submenu
+MFILES      DS    1           ;21 MENU 9
+MVOLUME     DS    1           ;22
 *
-MPRODOS     DS    1           ;22 MENU 7
-MDOS33      DS    1
-*
+MTOOLONG    DS    1           ;23
 MNOTSUB     DS    1           ;24
-*
 MREAD       DS    1           ;25
 MWRITE      DS    1           ;26
-*
 MBLANK4     DS    1           ;27
 MBLANK3     DS    1           ;28
-            DS    1           ;[4am] moved inline, was :CPYENT
+MTOOLNG0    DS    1           ;now 29
 MSLOT       DS    1           ;2A
 MPRESS1     DS    1           ;2B
 MFILE       DS    1           ;2C
 *
 MPSTATE0    DS    1           ;2D
-MPSTATE1    DS    1
+MPSTATE1    DS    1           ;2E
 MPSTATE2    DS    1           ;2F
 MPSTATE3    DS    1           ;30
 MPSTAT45    DS    1           ;31
-            DS    1
+            DS    1           ;32 (enumerated, also PSTAT45, do not remove)
 *
 MTRACK      DS    1           ;33
 MSECTOR     DS    1           ;34
 MCRESC      DS    1           ;35
 MNOFILES    DS    1           ;36
-            DS    1           ;[4am] unused, was :INIT
+MMTSUB      DS    1           ;now 37
 MINROOT     DS    1           ;38
-            DS    1           ;[4am] unused, was :IO
+MCRESC1     DS    1           ;now 39
 MERROR      DS    1           ;3A
-            DS    1           ;[4am] moved inline, was :QUITOPT
-            DS    1           ;[4am] moved inline, was :SPACE
-            DS    1           ;[4am] unused, was :COPYTP
+MDASHES     DS    1           ;now 3B
+MPRESS      DS    1           ;now 3C
+MMORE       DS    1           ;now 3D
 MHEADER     DS    1           ;3E
-            DS    1           ;[4am] unused, was :DRIVE
+MINSSRC     DS    1           ;now 3F
+MINSTGT     DS    1           ;now 40
 *
-* RENAME submenu
+* Enumerated error messages handled by OUCH/ERRMSG
 *
-MFILES      DS    1           ;40 MENU 9
-MVOLUME     DS    1           ;41
-*
-MDASHES     DS    1           ;42
-MPRESS      DS    1           ;43
-MMORE       DS    1           ;44
-*
-* Error messages handled by OUCH/ERRMSG
-*
-MERR2B      DS    1           ;45
-MERR44      DS    1
-MERR45      DS    1
+MERRENUM    DS    1           ;now 41
             DS    1
-MERR48      DS    1
-MERR49      DS    1
-MERR4E      DS    1
-MERR3F      DS    1
-MERR52      DS    1
-MERR47      DS    1
             DS    1
-MERR2F      DS    1
             DS    1
-*
-MCRESC1     DS    1           ;52
-MMTSUB      DS    1           ;now 53
-MTOOLNG0    DS    1           ;now 54
-*           DS    1           ;[4am] moved inline, was :SELFUNC
-*           DS    1           ;[4am] moved inline, was :SELOPT
-MINSSRC     DS    1           ;now 55
-MINSTGT     DS    1           ;now 56
-            DS    1           ;[4am] moved inline, was :PROHDR1
-            DS    1           ;[4am] moved inline, was :PROHDR2
-            DS    1           ;[4am] unused, was :MSG5B 'can't find file: '
-            DS    1           ;[4am] moved inline, was :ANOTHER
-            DS    1           ;[4am] unused, was :MSG5D 'enter file name: '
-            DS    1           ;[4am] moved inline, was :DIFSIZE
-            DS    1           ;[4am] moved inline, was :INSDSKS
-            DS    1           ;[4am] moved inline, was :DUPVOL
             DS    1
-            DS    1           ;[4am] moved inline, was :INS2FRM
-            DS    1           ;[4am] moved inline, was :RDY2FRM
-            DS    1           ;[4am] moved inline, was :FMTING
-            DS    1           ;[4am] moved inline, was :FMTDONE
-            DS    1           ;[4am] moved inline, was :DIRMADE
-            DS    1           ;[4am] moved inline, was :ASKLOCK
-            DS    1           ;[4am] moved inline, was :INSBLNK
-            DS    1           ;[4am] moved inline, was :BETWEEN
-            DS    1           ;[4am] moved inline, was :MAPGRID
-            DS    1           ;[4am] moved inline, was :MAPOTHR
-            DS    1           ;[4am] moved inline, was :NOBOOTP
-            DS    1           ;[4am] moved inline, was :NOTFL
-            DS    1           ;[4am] moved inline, was :NOTPRO
-            DS    1           ;[4am] moved inline, was :NOTDOS
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
             DEND
 
 MESSAG      DW    :COPY       ;0 MENU 0
@@ -171,8 +131,9 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :NEWINFO
             DW    :QUIT
 *
-            DW    0           ;[4am] unused, was :BCPY525
-            DW    0           ;[4am] unused, was :BCPY35
+            DW    :PRODOS     ;0F MENU 7
+            DW    :DOS33
+*
             DW    :FILES      ;11 MENU 0
             DW    :DISK
             DW    :DSKWFMT
@@ -194,17 +155,16 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :DISK
             DW    :DOS
 *
-            DW    :TOOLONG    ;21
+            DW    :FILES      ;21 MENU 9
+            DW    :VOLUME     ;22
 *
-            DW    :PRODOS     ;22 MENU 7
-            DW    :DOS33
-*
+            DW    :TOOLONG    ;23
             DW    :NOTSUB     ;24
             DW    :READ       ;25
             DW    :WRITE      ;26
             DW    :BLANK4     ;27
             DW    :BLANK3     ;28
-            DW    0           ;[4am] moved inline
+            DW    :TOOLNG0    ;now 29
             DW    :SLOT       ;2A
             DW    :PRESS1     ;2B
             DW    :FILE       ;2C
@@ -218,38 +178,30 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :SECTOR     ;34
             DW    :CRESC      ;35
             DW    :NOFILES    ;36
-            DW    0           ;[4am] unused, was :INIT
+            DW    :MTSUB      ;now 37
             DW    :INROOT     ;38
-            DW    0           ;[4am] unused, was :IO
+            DW    :CRESC1     ;now 39
             DW    :ERROR      ;3A
-            DW    0           ;[4am] moved inline
-            DW    0           ;[4am] moved inline
-            DW    0           ;[4am] unused, was :COPYTP
+            DW    :DASHES     ;now 3B
+            DW    :PRESS      ;now 3C
+            DW    :MORE       ;now 3D
             DW    :HEADER     ;3E
-            DW    0           ;[4am] unused, was :DRIVE
-            DW    :FILES      ;40 MENU 9
-            DW    :VOLUME     ;41
-            DW    :DASHES     ;42
-            DW    :PRESS      ;43
-            DW    :MORE       ;44
-            DW    :ERR2B      ;45
-            DW    :ERR44      ;46
-            DW    :ERR45      ;47
-            DW    :ERR44      ;48
-            DW    :ERR48      ;49
-            DW    :ERR49      ;4A
-            DW    :ERR4E      ;4B
-            DW    :ERR3F      ;4C
-            DW    :ERR52      ;4D
-            DW    :ERR47      ;4E
-            DW    :ERR52      ;4F
-            DW    :ERR2F      ;50
-            DW    :ERR2F      ;51
-            DW    :CRESC1     ;52
-            DW    :MTSUB      ;now 53
-            DW    :TOOLNG0    ;now 54
-            DW    :INSSRC     ;now 55
-            DW    :INSTGT     ;now 56
+            DW    :INSSRC     ;now 3F
+            DW    :INSTGT     ;now 40
+*
+            DW    :ERR2B      ;41
+            DW    :ERR44      ;42
+            DW    :ERR45      ;43
+            DW    :ERR44      ;44
+            DW    :ERR48      ;45
+            DW    :ERR49      ;46
+            DW    :ERR4E      ;47
+            DW    :ERR3F      ;48
+            DW    :ERR52      ;49
+            DW    :ERR47      ;4A
+            DW    :ERR52      ;4B
+            DW    :ERR2F      ;4C
+            DW    :ERR2F      ;4D
 *
 *
 *
@@ -438,4 +390,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :INSTGT     ASC   "Insert target disk"
             DB    $8D,$0
 *
+MONTH1      ASC   "JFMAMJJASOND"
+MONTH2      ASC   "AEAPAUUUECOE"
+MONTH3      ASC   "NBRRYNLGPTVC"
 

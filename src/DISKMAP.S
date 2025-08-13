@@ -3,7 +3,11 @@
 ************************************
 *
 TSMAP       JSR   COMHDR
-            JSR   DOC00E
+*DOC00E
+            BIT   A2E
+            BPL   :C00EQ
+            STA   $C00E
+:C00EQ
             JSR   DEVTYP
             BEQ   :DISKII
             JMP   FLONLY      ;NOT DISK II
