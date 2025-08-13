@@ -51,7 +51,7 @@ FILER       LDX   #$FF
             JSR   VLEFT       ; Put it back at the top before printing the...
             LDA   #MHEADER
             JSR   PRINT
-            JSR   CINFO       ;DISK INFO LINE
+            JSR   :CINFO      ;DISK INFO LINE
             LDX   #$00        ;MAIN MENU
             STX   PRNTR?
             STX   RADR
@@ -185,7 +185,7 @@ CHOPOS      LDA   #$12
 *
 *   SEE DISK INFO
 *
-CINFO       LDA   #$15
+:CINFO      LDA   #$15
             JSR   VLEFT
             LDA   #$21
             STA   CH
