@@ -7,7 +7,7 @@
             PUT   ../build/FILER.VARS
             ORG   $2000
             PUT   LOADER      ;This relocates & gets everything started.
-            PUT   DZX0        ;Unpack modules on startup
+            PUT   DZX0TURBO   ;Unpack modules on startup
             PUT   BOOTSEC.33  ;Copied to LCRAM
             PUTBIN ../build/OBJ.MM.X
 MMXEND
