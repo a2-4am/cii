@@ -8,7 +8,7 @@ RENAME      LDA   #$03
             LDX   #9
             JSR   CHOOZ1
             CMP   #0
-            BEQ   REN2         ;RENAME FILES
+            BEQ   REN2        ;RENAME FILES
             JSR   COMHDR
             BIT   DOSNOW
             BMI   RENVOL
@@ -26,7 +26,7 @@ REN2        JSR   COMTRE
 *
 * RENAME VOLUME
 *
-RENVOL      JSR   NEWVOL       ;GET NEW NAME
+RENVOL      JSR   NEWVOL      ;GET NEW NAME
             BCS   ALOUT
             JSR   RDBLK2
             LDY   #0
@@ -49,13 +49,14 @@ ASKLOK      JSR   PRHERE
             ASC   "[L]ock or [U]nlock? ",00
 :TRY        JSR   CASKEY
             CMP   #$9B
-            BEQ   ALOUT        ;C IS SET
+            BEQ   ALOUT       ;C IS SET
             LDX   #$FF
             CMP   #"L"
             BEQ   :DO
             CMP   #"U"
             BNE   :TRY
-            INX                ;FF --> 0
+            INX               ;FF --> 0
 :DO         JSR   PCOUT
             CLC
 ALOUT       RTS
+

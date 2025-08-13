@@ -19,7 +19,7 @@
 *
 *
 DOTREE      PHA
-            LDY   FLAG80          ;FF OR 0
+            LDY   FLAG80      ;FF OR 0
             INY
             LDA   :CHMAX,Y
             STA   CHMAX
@@ -37,11 +37,11 @@ DOTREE      PHA
             LDA   PFX
             STA   (PFXADR),Y
             SEC
-            BCS   :FAKERR         ;ALWAYS
+            BCS   :FAKERR     ;ALWAYS
 *
 :DOTREE0    LDA   RRTN
             CMP   #$52
-            BEQ   :FAKERR         ;C IS SET
+            BEQ   :FAKERR     ;C IS SET
             JSR   MKTREE
 :FAKERR     PLA
             PHP
@@ -54,7 +54,7 @@ DOTREE      PHA
             STA   YSTART
             LDX   CHOICE
             CPX   #1
-            BNE   :DOT1           ;NOT CATALOG
+            BNE   :DOT1       ;NOT CATALOG
             JSR   :HDR80
 :DOT1       PLP
             LDA   #0
@@ -66,11 +66,11 @@ DOTREE      PHA
             CPX   #1
             BEQ   :DOT2
             JSR   :HDR80
-:DOT2       LDA   CURR            ;IS CURR LARGER
-            CMP   CURMOM          ; THAN CURMOM?
-            BCC   :DOT3           ;NO
-:ZERCUR     LDA   #0              ;YES, ZERO CURR
-            BEQ   :DOT4           ;ALWAYS
+:DOT2       LDA   CURR        ;IS CURR LARGER
+            CMP   CURMOM      ; THAN CURMOM?
+            BCC   :DOT3       ;NO
+:ZERCUR     LDA   #0          ;YES, ZERO CURR
+            BEQ   :DOT4       ;ALWAYS
 *
 * CURR VALUE IS VALID, NOW CHECK
 * IF PREFIX GENERATED FROM CURR IS
@@ -82,7 +82,7 @@ DOTREE      PHA
             LDA   (PFXADR),Y
             AND   #$7F
             CMP   PFX
-            BNE   :ZERCUR         ;LENS DIFFER
+            BNE   :ZERCUR     ;LENS DIFFER
 :CMPLOOP    INY
             LDA   (PFXADR),Y
             CMP   PFX,Y
@@ -112,8 +112,8 @@ DOTREE      PHA
 :ERR        PHP
             PHA
             LDA   CHOICE
-            CMP   #1              ;CATALOG?
-            BEQ   :SKIP40         ;YES
+            CMP   #1          ;CATALOG?
+            BEQ   :SKIP40     ;YES
             JSR   COL40
 :SKIP40     JSR   HOME
             PLA
@@ -209,7 +209,7 @@ DOTREE      PHA
             CLC
             ADC   #>SDNAME
             STA   POINT2+1
-            LDA   (POINT2),Y      ;LEN
+            LDA   (POINT2),Y  ;LEN
             TAY
 :MK2        LDA   (POINT2),Y
             STA   PFX,X
@@ -259,3 +259,4 @@ DOTREE      PHA
 :CHMAX      DB    $4F,$27
 :DSPNUM     DB    $03,$01
 :KEYS       DB    $88,$95,$8B,$8A,$C1,$DA
+

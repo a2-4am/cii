@@ -32,7 +32,7 @@ UNDEL       JSR   COMTRE
             CMP   FILNUM
             BNE   :UNLOOP
 *
-            JSR   PATMOV       ;SQUISH LIST
+            JSR   PATMOV      ;SQUISH LIST
             STX   NACTIV
             LDA   MAYBE
             BEQ   :CKBAD
@@ -48,7 +48,7 @@ UNDEL       JSR   COMTRE
             LDX   CURR
             LDA   STATUS,X
             CMP   #$FE
-            BNE   :ISBAD       ;UNRECOVERABLE
+            BNE   :ISBAD      ;UNRECOVERABLE
 *
 * FIRST, RECREATE FILE NAME AND
 * STORAGE TYPE AND UNDELETE
@@ -67,8 +67,8 @@ UNDEL       JSR   COMTRE
             CMP   FILNUM
             BCC   :SMARTLP
 *
-:CKBAD      LDA   BADNUM       ;ANY LOST
-            BEQ   :OUT         ;FILES?
+:CKBAD      LDA   BADNUM      ;ANY LOST
+            BEQ   :OUT        ;FILES?
             JSR   HOME
             JSR   PATMOV
             LDA   #$03
@@ -78,17 +78,17 @@ UNDEL       JSR   COMTRE
             DB    $8D,$8D,$0
             LDA   #$00
             STA   CURR
-:PAGELP     LDA   #$0E         ;14 LINES/PAGE
+:PAGELP     LDA   #$0E        ;14 LINES/PAGE
             STA   :COUNT
 :BADLP      DEC   :COUNT
             JSR   CURPNT
-            JSR   CFILE        ;SEE FILE
+            JSR   CFILE       ;SEE FILE
             JSR   CROUT
             INC   CURR
             LDA   CURR
-            CMP   FILNUM       ;NO MORE?
+            CMP   FILNUM      ;NO MORE?
             BCS   :PRESS
-            LDA   :COUNT       ;LINE COUNT?
+            LDA   :COUNT      ;LINE COUNT?
             BNE   :BADLP
             LDA   #MCRESC1
             JSR   PRINT
@@ -104,13 +104,13 @@ UNDEL       JSR   COMTRE
             JMP   PUNDO
 *
 :DOS33      LDA   #>SRCTSL
-            STA   RPAGE        ;SET RWTS ADDR
+            STA   RPAGE       ;SET RWTS ADDR
             LDA   #$01
-            STA   RCMND        ;& COMMAND
+            STA   RCMND       ;& COMMAND
             JSR   CURPNT
-            LDY   #$20         ;FIX UP
-            LDA   (POINT),Y    ;CATALOG
-            STA   TRACK        ;ENTRY
+            LDY   #$20        ;FIX UP
+            LDA   (POINT),Y   ;CATALOG
+            STA   TRACK       ;ENTRY
             STA   RTRACK
             LDY   #$00
             STA   (POINT),Y
@@ -121,46 +121,46 @@ UNDEL       JSR   COMTRE
             LDY   #$20
             LDA   #" "
             STA   (POINT),Y
-:TSLLP      JSR   :USEIT       ;ALLOCATE
-            BCS   :CANT        ;TSLIST
+:TSLLP      JSR   :USEIT      ;ALLOCATE
+            BCS   :CANT       ;TSLIST
             JSR   DORWTS
             LDA   #$0C
             STA   STSP
 :PAIRLP     LDX   STSP
             LDA   SRCTSL,X
-            STA   TRACK        ;FOR VALID
+            STA   TRACK       ;FOR VALID
             ORA   SRCTSL+$1,X  ;TSPAIRS:
             BEQ   :NXTPAIR
             LDA   SRCTSL+$1,X  ;ALLOCATE
-            STA   SECTOR       ;SECTORS FROM
-            JSR   :USEIT       ;LIST
+            STA   SECTOR      ;SECTORS FROM
+            JSR   :USEIT      ;LIST
             BCS   :CANT
 :NXTPAIR    INC   STSP
             INC   STSP
             BNE   :PAIRLP
             LDA   SRCTSL+1
             STA   TRACK
-            STA   RTRACK       ;POINTER TO
-            ORA   SRCTSL+2     ;NEXT TSLIST?
+            STA   RTRACK      ;POINTER TO
+            ORA   SRCTSL+2    ;NEXT TSLIST?
             BEQ   :DID
-            LDA   SRCTSL+2     ;YES: LOOP
-            STA   SECTOR       ;BACK
+            LDA   SRCTSL+2    ;YES: LOOP
+            STA   SECTOR      ;BACK
             STA   RSECTR
             JMP   :TSLLP
-:DID        JSR   WRCAT1       ;WRITE FREED
-            LDA   #$00         ;CATALOG
-            BEQ   :MARKIT      ;ALWAYS
-:CANT       JSR   RDCAT1       ;RE-READ IF
-            INC   BADNUM       ;NO GOOD
+:DID        JSR   WRCAT1      ;WRITE FREED
+            LDA   #$00        ;CATALOG
+            BEQ   :MARKIT     ;ALWAYS
+:CANT       JSR   RDCAT1      ;RE-READ IF
+            INC   BADNUM      ;NO GOOD
             LDA   #$FF
-:MARKIT     LDX   CURR         ;MARK FILE
-            STA   STATUS,X     ;GOOD OR BAD
+:MARKIT     LDX   CURR        ;MARK FILE
+            STA   STATUS,X    ;GOOD OR BAD
             RTS
 *
 :USEIT      LDA   SECTOR
             JSR   DOMASK
-            LDA   TRACK        ;INDEX INTO
-            ASL                ;BITMAP
+            LDA   TRACK       ;INDEX INTO
+            ASL               ;BITMAP
             ASL
             ADC   #$38
             TAX
@@ -187,3 +187,4 @@ UNDEL       JSR   COMTRE
 :COUNT      DB    $0
 BADNUM      DB    $0
 MAYBE       DB    $0
+

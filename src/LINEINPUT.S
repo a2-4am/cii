@@ -2,7 +2,7 @@
 * LINE INPUT - LINE AT LOC $200
 *
 GETLN       LDX   #$00
-            BEQ   :GETLN1      ;ALWAYS
+            BEQ   :GETLN1     ;ALWAYS
 :BEEP       JSR   BELL
 :GETLN1     JSR   CASKEY
             CMP   #$88
@@ -14,7 +14,7 @@ GETLN       LDX   #$00
             CMP   #$9B
             BEQ   :ESC
             CMP   #$A0
-            BCC   :GETLN1      ;CTRL CHAR
+            BCC   :GETLN1     ;CTRL CHAR
 :GETLN2     CPX   LINLIM
             BCS   :GETLN1
             JSR   :CKLEGAL
@@ -40,7 +40,7 @@ GETLN       LDX   #$00
             PLA
             LDX   :TEMP
             SEC
-            BEQ   :ESC         ;CR ONLY
+            BEQ   :ESC        ;CR ONLY
             CLC
 :ESC        RTS
 *
@@ -52,27 +52,27 @@ GETLN       LDX   #$00
             RTS
 *
 :CKLEG1
-            CMP   #$AC         ;","
+            CMP   #$AC        ;","
             BNE   :NOTCOMA
             LDA   LINLIM
             CMP   #$24
             BNE   :NOTLEGL
-            LDA   #$AC         ;","
-            BNE   :ISLEGAL     ;ALWAYS
+            LDA   #$AC        ;","
+            BNE   :ISLEGAL    ;ALWAYS
 *
 :NOTCOMA
-            CMP   #$BD         ;"="
+            CMP   #$BD        ;"="
             BNE   :NOTEQL
             LDA   LINLIM
             CMP   #$24
             BNE   :NOTLEGL
-            LDA   #$BD         ;"="
-            BNE   :ISLEGAL     ;ALWAYS
+            LDA   #$BD        ;"="
+            BNE   :ISLEGAL    ;ALWAYS
 *
 :NOTEQL     BIT   DOSNOW
             BMI   :PRODOS
-            CPX   #0           ;1ST CHAR?
-            BEQ   :NOTLEGL     ;YES
+            CPX   #0          ;1ST CHAR?
+            BEQ   :NOTLEGL    ;YES
             BNE   :ISLEGAL
 *
 :PRODOS     CPX   #0
@@ -94,7 +94,7 @@ GETLN       LDX   #$00
             CMP   #$B0
             BCC   :CKLEG2
             CMP   #$BA
-            BCC   :ISLEGAL     ;DIGIT
+            BCC   :ISLEGAL    ;DIGIT
 :CKLEG2     CMP   #"/"
             BNE   :NOTLEGL
             LDA   LINLIM
@@ -104,8 +104,9 @@ GETLN       LDX   #$00
             LDA   LINEIN,X
             INX
             CMP   #"/"
-            BEQ   :NOTLEGL     ;TWO /'S
+            BEQ   :NOTLEGL    ;TWO /'S
             LDA   #"/"
-            BNE   :ISLEGAL     ;ALWAYS
+            BNE   :ISLEGAL    ;ALWAYS
 :TEMP       DB    $0
 *
+

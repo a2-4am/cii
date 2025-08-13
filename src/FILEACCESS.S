@@ -10,7 +10,7 @@
 *        =$00 FOR DELETED
 *
 RDACNT      BIT   DOSNOW
-            BPL   :ISDOS33     ;DOS 3.3 DISK
+            BPL   :ISDOS33    ;DOS 3.3 DISK
 *
 * IT'S A PRODOS DISK
 *
@@ -21,50 +21,50 @@ RDACNT      BIT   DOSNOW
             JMP   PRDCNT
 
 *
-:ISDOS33    LDA   #>DOSDAT     ;SET UP DATADR
+:ISDOS33    LDA   #>DOSDAT    ;SET UP DATADR
             STA   DATADR
             LDA   #>CAT1
-            JSR   CLRCAT       ;ZERO CATALOG
+            JSR   CLRCAT      ;ZERO CATALOG
             LDX   #$00
-            STX   NACTIV       ;NO FILES YET
+            STX   NACTIV      ;NO FILES YET
             INX
-            STX   RCMND        ;READ COMMAND
+            STX   RCMND       ;READ COMMAND
             LDX   #>VTOC1
-            JSR   DOVTOC       ;READ VTOC.
+            JSR   DOVTOC      ;READ VTOC.
 *
-:SECTLP     LDY   #$01         ;FIND PTR TO
-            LDA   (POINT),Y    ;NEXT SECTOR
-            BEQ   :OUT         ;NIL PTR?
+:SECTLP     LDY   #$01        ;FIND PTR TO
+            LDA   (POINT),Y   ;NEXT SECTOR
+            BEQ   :OUT        ;NIL PTR?
             CMP   #$28
             BCS   WDERR
-            STA   RTRACK       ;NO:SAVE TRACK
+            STA   RTRACK      ;NO:SAVE TRACK
             INY
-            LDA   (POINT),Y    ;& SECTOR
+            LDA   (POINT),Y   ;& SECTOR
             CMP   #$10
             BCS   WDERR
             STA   RSECTR
-            INC   RPAGE        ;NEXT PAGE
+            INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-            JSR   PHRWTS       ;READ CATALOG
-            BCS   :OUT         ;BAD SECTOR?
+            JSR   PHRWTS      ;READ CATALOG
+            BCS   :OUT        ;BAD SECTOR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
-            BEQ   :OUT         ;NO MORE FILES?
+            BEQ   :OUT        ;NO MORE FILES?
             AND   #$80
             EOR   DELFLG
-            BEQ   :NOTWANT     ;WANTED FILE?
+            BEQ   :NOTWANT    ;WANTED FILE?
             TYA
             LDX   NACTIV
-            STA   CBYTE,X      ;PUT INTO ARRAY
+            STA   CBYTE,X     ;PUT INTO ARRAY
             LDA   RPAGE
             STA   CSECTR,X
             INC   NACTIV
-:NOTWANT    TYA                ;NEXT FILE IN
-            CLC                ;SECTOR
+:NOTWANT    TYA               ;NEXT FILE IN
+            CLC               ;SECTOR
             ADC   #$23
             TAY
-            BNE   :POSNLP      ;DONE SECTOR?
-            DEC   COUNT        ;ROOM 4 MORE?
+            BNE   :POSNLP     ;DONE SECTOR?
+            DEC   COUNT       ;ROOM 4 MORE?
             BNE   :SECTLP
 :OUT        RTS
 *
@@ -106,40 +106,40 @@ DOCAT       STA   RCMND
             STX   DIRADR
             JMP   PDOCAT
 *
-:DOS33      JSR   DOVTOC       ;R/W VTOC.
-:SECTLP     LDY   #$01         ;FIND PTR TO
-            LDA   (POINT),Y    ;NEXT SECTOR
-            BEQ   :OUT         ;NIL PTR?
-            STA   RTRACK       ;NO:SAVE TRACK
+:DOS33      JSR   DOVTOC      ;R/W VTOC.
+:SECTLP     LDY   #$01        ;FIND PTR TO
+            LDA   (POINT),Y   ;NEXT SECTOR
+            BEQ   :OUT        ;NIL PTR?
+            STA   RTRACK      ;NO:SAVE TRACK
             INY
-            LDA   (POINT),Y    ;& SECTOR
+            LDA   (POINT),Y   ;& SECTOR
             STA   RSECTR
-            INC   RPAGE        ;NEXT PAGE
+            INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-            JSR   PHRWTS       ;R/W CATALOG
-            BCS   :OUT         ;ERROR?
+            JSR   PHRWTS      ;R/W CATALOG
+            BCS   :OUT        ;ERROR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
-            BEQ   :OUT         ;NO MORE FILES?
+            BEQ   :OUT        ;NO MORE FILES?
             TYA
             CLC
-            ADC   #$23         ;NEXT FILE
+            ADC   #$23        ;NEXT FILE
             TAY
-            BNE   :POSNLP      ;DONE SECTOR?
-            DEC   COUNT        ;ROOM 4 MORE?
+            BNE   :POSNLP     ;DONE SECTOR?
+            DEC   COUNT       ;ROOM 4 MORE?
             BNE   :SECTLP
 :OUT        RTS
 *
 * READ/WRITE VTOC, READY FOR CATALOG
 *
-DOVTOC      STX   RPAGE        ;SET PAGE
+DOVTOC      STX   RPAGE       ;SET PAGE
             STX   POINT+1
-            JSR   STVTOC       ;RETURNS A=0
+            JSR   STVTOC      ;RETURNS A=0
             STA   POINT
-            STA   RSECTR       ;SECTOR 0
-            LDA   #$0F         ;UP TO 15
-            STA   COUNT        ;CATALOG PAGES
-            JSR   DORWTS       ;R/W VTOC.
+            STA   RSECTR      ;SECTOR 0
+            LDA   #$0F        ;UP TO 15
+            STA   COUNT       ;CATALOG PAGES
+            JSR   DORWTS      ;R/W VTOC.
             LDY   #$35
             LDA   (POINT),Y
             CMP   #$10
@@ -160,18 +160,18 @@ CLRCAT      STA   POINT+1
             CPX   #$00
             BEQ   :NOLINK
             LDA   #$11
-:NOLINK     STA   (POINT),Y    ;TRACK LINK
+:NOLINK     STA   (POINT),Y   ;TRACK LINK
             INY
             TXA
-            STA   (POINT),Y    ;SECTOR LINK
+            STA   (POINT),Y   ;SECTOR LINK
             INY
             LDA   #$00
-:ZEROLP     STA   (POINT),Y    ;ZEROS
+:ZEROLP     STA   (POINT),Y   ;ZEROS
             INY
             BNE   :ZEROLP
             INC   POINT+1
             DEX
-            BPL   :NXTSECT     ;BACK FOR MORE
+            BPL   :NXTSECT    ;BACK FOR MORE
             RTS
 *
 *
@@ -181,30 +181,30 @@ CLRCAT      STA   POINT+1
 *
 SPACE       BIT   DOSNOW
             BPL   :DOS33
-            JMP   PSPACE       ;DO PRODOS
+            JMP   PSPACE      ;DO PRODOS
 *
 :DOS33      STA   POINT+1
-            LDA   #$38         ;BITMAP START
+            LDA   #$38        ;BITMAP START
             STA   POINT
-            LDA   #$00         ;CLEAR BUFFER
+            LDA   #$00        ;CLEAR BUFFER
             STA   FREEL
             STA   FREEH
-            LDY   #$8B         ;BITMAP LENGTH
+            LDY   #$8B        ;BITMAP LENGTH
 :NXTBYTE    LDA   (POINT),Y
             LDX   #$07
-:NEXTBIT    LSR                ;SHIFT BITS TO
-            BCC   :USED        ;FIND FREE
-            INC   FREEL        ;SECTORS
+:NEXTBIT    LSR               ;SHIFT BITS TO
+            BCC   :USED       ;FIND FREE
+            INC   FREEL       ;SECTORS
             BNE   :USED
             INC   FREEH
 :USED       DEX
             BPL   :NEXTBIT
             DEY
             BNE   :NXTBYTE
-            SEC                ;SUBTRACT FROM
-            LDA   #$30         ;TOTAL # OF
-            SBC   FREEL        ;SECTORS TO
-            STA   USEDL        ;GET # USED
+            SEC               ;SUBTRACT FROM
+            LDA   #$30        ;TOTAL # OF
+            SBC   FREEL       ;SECTORS TO
+            STA   USEDL       ;GET # USED
             LDA   #2
             SBC   FREEH
             STA   USEDH
@@ -219,27 +219,27 @@ FTOCR       LDY   #1
             CMP   #$10
             BCS   :PRODOS
 *
-:DOS33      LDX   #$1E         ;(NAME LENGTH)
+:DOS33      LDX   #$1E        ;(NAME LENGTH)
             LDY   #$00
-            LDA   (POINT),Y    ;DELETED?
+            LDA   (POINT),Y   ;DELETED?
             CMP   #$FF
             BNE   :LONG
-            DEX                ;DON'T USE
-:LONG       TXA                ;LAST CHAR
+            DEX               ;DON'T USE
+:LONG       TXA               ;LAST CHAR
             TAY
-            INC   POINT        ;POINT TO
-            INC   POINT        ;FILENAME
+            INC   POINT       ;POINT TO
+            INC   POINT       ;FILENAME
             INC   POINT
 :SPACE      DEY
-            LDA   (POINT),Y    ;LOOP TO IGNORE
-            CMP   #" "         ;LAST SPACES
+            LDA   (POINT),Y   ;LOOP TO IGNORE
+            CMP   #" "        ;LAST SPACES
             BEQ   :SPACE
-            STA   FILNAM,Y     ;SAVE LAST CHAR
-            LDA   #$8D         ;END WITH CR
+            STA   FILNAM,Y    ;SAVE LAST CHAR
+            LDA   #$8D        ;END WITH CR
             STA   FILNAM+$1,Y
             DEY
-:NEXTCHR    LDA   (POINT),Y    ;COPY THE REST
-            STA   FILNAM,Y     ;OF THE CHARS
+:NEXTCHR    LDA   (POINT),Y   ;COPY THE REST
+            STA   FILNAM,Y    ;OF THE CHARS
             DEY
             BPL   :NEXTCHR
             DEC   POINT
@@ -247,13 +247,13 @@ FTOCR       LDY   #1
             DEC   POINT
             RTS
 *
-:PRODOS     DEY                ;1 --> 0
+:PRODOS     DEY               ;1 --> 0
             LDA   (POINT),Y
-            AND   #$0F         ;NECESSARY?
+            AND   #$0F        ;NECESSARY?
             BNE   :PRO1
             LDA   #$0F
 :PRO1       TAX
-            INY                ;0 --> 1
+            INY               ;0 --> 1
 :PRO2       LDA   (POINT),Y
             BEQ   :PRO3
             ORA   #$80
@@ -277,20 +277,20 @@ PLACE       LDX   #0
             BNE   :CRLP
             BIT   DOSNOW
             BMI   :PRODOS
-            LDA   #" "         ;MOVE LINE TO
-            LDY   #$20         ;ENTRY:
-:SPACELP    STA   (POINT),Y    ;COPY SPACES
-            DEY                ;TO ENTRY
+            LDA   #" "        ;MOVE LINE TO
+            LDY   #$20        ;ENTRY:
+:SPACELP    STA   (POINT),Y   ;COPY SPACES
+            DEY               ;TO ENTRY
             CPY   #$03
             BPL   :SPACELP
             TXA
             TAY
-            DEX                ;BEFORE CR
-            INY                ;ENTRY OFFSET 3
-            INY                ;MORE
+            DEX               ;BEFORE CR
+            INY               ;ENTRY OFFSET 3
+            INY               ;MORE
             LDA   #$FF
 :PUTLP0     STA   :MASK
-:PUTLP      LDA   LINEIN,X     ;COPY CHARS
+:PUTLP      LDA   LINEIN,X    ;COPY CHARS
             AND   :MASK
             STA   (POINT),Y
             DEY
@@ -311,7 +311,7 @@ PLACE       LDX   #0
             TAY
             DEX
             LDA   #$7F
-            BNE   :PUTLP0      ;ALWAYS
+            BNE   :PUTLP0     ;ALWAYS
 *
 :MASK       DB    $0
 *
@@ -337,11 +337,11 @@ CFILE       BIT   DOSNOW
 :NXTCHAR    LDA   (POINT),Y
             JSR   CTRL?
             BCS   :DONT
-            CPY   #$20         ;LAST CHAR?
-            BNE   :DO          ;NOPE
-            CPX   #$FF         ;DELETED FILE?
-            BNE   :DO          ;NO: JUST COUT
-            LDA   #$A0         ;YES:USE SPACE
+            CPY   #$20        ;LAST CHAR?
+            BNE   :DO         ;NOPE
+            CPX   #$FF        ;DELETED FILE?
+            BNE   :DO         ;NO: JUST COUT
+            LDA   #$A0        ;YES:USE SPACE
 :DO         JSR   PCOUT
 :DONT       INY
             CPY   #$21
@@ -429,7 +429,7 @@ INSS        LDA   PDOS
             STA   CURDOS
 :INSS0      JSR   INSS1
             CMP   #1
-            BNE   :NOSWS       ;DIDN'T SWITCH
+            BNE   :NOSWS      ;DIDN'T SWITCH
             LDA   #>PPFX
             LDY   #PPFX
             LDX   #>VTOC1
@@ -437,16 +437,16 @@ INSS        LDA   PDOS
             BCS   :INSS0
 :NOSWS      JMP   SETP
 *
-INSS1       LDA   ONLY1        ;IF ONLY 1:
+INSS1       LDA   ONLY1       ;IF ONLY 1:
             BEQ   :SELECT
             LDA   SDFLG
             BPL   :SELECT
             LDA   #0
             STA   SDFLG
-            LDA   #MINSSRC     ;'INSERT SOURCE DISK'
+            LDA   #MINSSRC    ;'INSERT SOURCE DISK'
             JSR   LOWMES
-            JSR   INSCOM       ;WAIT FOR KEY
-            STA   PDOS         ;1
+            JSR   INSCOM      ;WAIT FOR KEY
+            STA   PDOS        ;1
 :SELECT     RTS
 *
 INSD        LDA   SDOS
@@ -467,10 +467,10 @@ INSD1       LDA   ONLY1
             BMI   :SELECT
             LDA   #$FF
             STA   SDFLG
-            LDA   #MINSTGT     ;'INSERT TARGET DISK'
+            LDA   #MINSTGT    ;'INSERT TARGET DISK'
             JSR   LOWMES
             JSR   INSCOM
-            STA   SDOS         ;1
+            STA   SDOS        ;1
 :SELECT     RTS
 *
 SDFLG       DB    $0
@@ -483,12 +483,12 @@ SWCK        STA   PFXADR+1
             CMP   #1
             BEQ   :SWCK0
             EOR   DOSNOW
-            BNE   :BADSWP      ;NOT SAME DOS
+            BNE   :BADSWP     ;NOT SAME DOS
 :SWCK0      LDA   DOSNOW
             BPL   :DOSCK
             LDY   #0
             LDA   (PFXADR),Y
-            BEQ   :SWCKOUT     ;DON'T CHECK
+            BEQ   :SWCKOUT    ;DON'T CHECK
             BMI   :SWCKOUT
             LDA   VOLNMS,X
             AND   #$0F
@@ -521,7 +521,7 @@ SWCK        STA   PFXADR+1
             STY   MESPNT
             INY
             LDA   (MESPNT),Y
-            BEQ   :SWCKOUT     ;DON'T CHECK
+            BEQ   :SWCKOUT    ;DON'T CHECK
             JSR   STVTOC
             LDA   #$01
             STA   RCMND
@@ -582,21 +582,21 @@ RDDATA      LDY   RELCNT
             STA   RCMND
             LDA   DATADR
             STA   RPAGE
-            LDA   STSP         ;TSLIST EMPTY?
+            LDA   STSP        ;TSLIST EMPTY?
             BNE   :RDMORE
-:NXTTSL     LDA   SRCTSL+1     ;POINT TO IT
+:NXTTSL     LDA   SRCTSL+1    ;POINT TO IT
             STA   RTRACK
             LDA   SRCTSL+2
             STA   RSECTR
-            JSR   RDTSL        ;READ IT
+            JSR   RDTSL       ;READ IT
 *
 :RDMORE     LDX   STSP
-            LDA   SRCTSL,X     ;NONZERO TS
-            STA   RTRACK       ;PAIR?
+            LDA   SRCTSL,X    ;NONZERO TS
+            STA   RTRACK      ;PAIR?
             ORA   SRCTSL+$1,X
             BEQ   :NEXTRD
             LDA   SRCTSL+$1,X  ;SET TRACK
-            STA   RSECTR       ;& SECTOR
+            STA   RSECTR      ;& SECTOR
 *
 * SET RBLKH = $7A*TSLCTR+(STSP-$C)/2
 *
@@ -636,21 +636,21 @@ RDDATA      LDY   RELCNT
             STA   RBLKH,Y
 *
             INC   RELCNT
-            JSR   PHRWTS       ;READ DATA
+            JSR   PHRWTS      ;READ DATA
             BCS   :ERROUT
-            INC   RPAGE        ;NEXT PAGE
-:NEXTRD     INC   STSP         ;NEXT TS PAIR
+            INC   RPAGE       ;NEXT PAGE
+:NEXTRD     INC   STSP        ;NEXT TS PAIR
             INC   STSP
-            BEQ   :EOTSL       ;END OF LIST?
+            BEQ   :EOTSL      ;END OF LIST?
             LDA   RPAGE
-            CMP   HIMEM        ;OUT OF MEMORY?
+            CMP   HIMEM       ;OUT OF MEMORY?
             BCC   :RDMORE
             RTS
-:EOTSL      LDA   SRCTSL+1     ;A NEXT TSLIST?
+:EOTSL      LDA   SRCTSL+1    ;A NEXT TSLIST?
             ORA   SRCTSL+2
             BEQ   :OUT
             JMP   :NXTTSL
-:OUT        DEC   EOF          ;NO: EOF
+:OUT        DEC   EOF         ;NO: EOF
             RTS
 :TEMP0      DB    $0
 :TEMP1      DB    $0
@@ -742,8 +742,8 @@ FNDBLK      JSR   FNBLK1
 :FND1       RTS
 ERR1        JMP   ERROUT
 *
-FNBLK1      LDA   STRTYP       ;IF SAPLING,
-            CMP   #$10         ; RETURN EOF
+FNBLK1      LDA   STRTYP      ;IF SAPLING,
+            CMP   #$10        ; RETURN EOF
             BEQ   :FNDEOF
             CMP   #$D0
             BEQ   :SUBDIR
@@ -753,7 +753,7 @@ FNBLK1      LDA   STRTYP       ;IF SAPLING,
             LDA   SIB,X
             STA   BLKNUM
             ORA   SIB+$100,X
-            BEQ   :CKINDX      ;NO ENTRY
+            BEQ   :CKINDX     ;NO ENTRY
             LDA   SIB+$100,X
             STA   BLKNUM+1
             CLC
@@ -763,7 +763,7 @@ FNBLK1      LDA   STRTYP       ;IF SAPLING,
 *
 :CKTREE     LDA   STRTYP
             CMP   #$30
-            BNE   :FNDEOF      ;NOT TREE
+            BNE   :FNDEOF     ;NOT TREE
 :CKMSTR     INC   MIBPTR
             LDX   MIBPTR
             BMI   :FNDEOF
@@ -795,7 +795,7 @@ FNBLK1      LDA   STRTYP       ;IF SAPLING,
             LDA   (RADR),Y
             STA   BLKNUM+1
             ORA   BLKNUM
-            BEQ   :FNDEOF      ;END OF SUBDIR
+            BEQ   :FNDEOF     ;END OF SUBDIR
 *
 * CARRY ALREADY CLEAR
 *
@@ -811,15 +811,15 @@ OPNSRC      JSR   OPNFIL
             BCS   ERR1
             RTS
 *
-OPNFIL      JSR   CURPNT       ;POINT TO FILE
+OPNFIL      JSR   CURPNT      ;POINT TO FILE
             BIT   DOSNOW
             BPL   :DOS33
 *
 :PRODOS     LDY   #$11
-            LDA   (POINT),Y    ;KEY BLK LO
+            LDA   (POINT),Y   ;KEY BLK LO
             STA   BLKNUM
             INY
-            LDA   (POINT),Y    ;KEY BLK HI
+            LDA   (POINT),Y   ;KEY BLK HI
             STA   BLKNUM+1
             LDY   #$0F
 :NAMELP     LDA   (POINT),Y
@@ -838,7 +838,7 @@ OPNFIL      JSR   CURPNT       ;POINT TO FILE
             CMP   #$20
             BEQ   :OPENIB
             CMP   #$30
-            BNE   :OPENDAT     ;SUBDIRECTORY
+            BNE   :OPENDAT    ;SUBDIRECTORY
 *
 :OPENMIB    LDA   #>SMIB
             STA   RPAGE
@@ -881,21 +881,21 @@ OPNFIL      JSR   CURPNT       ;POINT TO FILE
             CPY   #$21
             BCC   :DNMLP
             LDA   #$1E
-            STA   FILE         ;LENGTH
+            STA   FILE        ;LENGTH
             LDA   #$01
-            STA   RCMND        ;FALL THRU...
+            STA   RCMND       ;FALL THRU...
 *
 *
 RDTSL1      LDA   RPAGE
             PHA
-            LDA   #>SRCTSL     ;READ INTO
-            STA   RPAGE        ;TSLIST AREA
+            LDA   #>SRCTSL    ;READ INTO
+            STA   RPAGE       ;TSLIST AREA
             INC   TSLCTR
             BNE   :RDTS1
             INC   TSLCTR+1
-:RDTS1      JSR   PHRWTS       ;GET TSLIST
-            LDA   #$0C         ;RESET SOURCE
-            STA   STSP         ;TS POINTER
+:RDTS1      JSR   PHRWTS      ;GET TSLIST
+            LDA   #$0C        ;RESET SOURCE
+            STA   STSP        ;TS POINTER
             PLA
             STA   RPAGE
             RTS
@@ -968,7 +968,7 @@ CTREE       LDA   #>SDNAME
             LDA   XS,Y
             CMP   XPOS
             BNE   :NOTINVS
-            LDY   #$C0         ;INVERSE
+            LDY   #$C0        ;INVERSE
             STY   PINVFL
 :NOTINVS    LDY   #0
             LDA   (POINT2),Y
@@ -980,7 +980,7 @@ CTREE       LDA   #>SDNAME
             CPY   :LEN
             BCC   :CLP
             STY   :LEN
-            LDY   #0           ;NORMAL
+            LDY   #0          ;NORMAL
             STY   PINVFL
             LDY   :CURR
             LDA   KITTEN,Y
@@ -1036,7 +1036,7 @@ CTREE       LDA   #>SDNAME
             BCS   :FIN2C
             LDA   #"!"
             STA   (BASL),Y
-            BNE   :FIN2B       ;ALWAYS
+            BNE   :FIN2B      ;ALWAYS
 *
 :FIN2C      PLA
             STA   CV
@@ -1051,7 +1051,7 @@ CTREE       LDA   #>SDNAME
             BEQ   :FIN1A
             LDA   #"!"
             STA   (BASL),Y
-            BNE   :FIN3        ;ALWAYS
+            BNE   :FIN3       ;ALWAYS
 
 :LEN        DB    $0
 :CURR       DB    $0
@@ -1091,7 +1091,7 @@ MKTREE      LDA   #>FILBUF
 :SBDR00     LDA   #0
             STA   SISPTR
 :SBDR0      JSR   RDBLK
-            BCS   IP3          ;READ ERR
+            BCS   IP3         ;READ ERR
 :SBDR01     LDA   RPAGE
             STA   POINT+1
             LDA   FILBUF+2
@@ -1144,7 +1144,7 @@ MKTREE      LDA   #>FILBUF
             JSR   INCPT2
 *
             INC   CURR
-            BEQ   :DONE        ;3/29/86
+            BEQ   :DONE       ;3/29/86
             LDA   CURR
             CMP   #1
             BEQ   :DIRDNE
@@ -1155,7 +1155,7 @@ MKTREE      LDA   #>FILBUF
 :GOSBDR1    BCC   :SBDR1
             INC   POINT+1
             LDA   POINT+1
-            CMP   #$0E         ;<--
+            CMP   #$0E        ;<--
             BCC   :GOSBDR1
             LDA   BLKNUM
             ORA   BLKNUM+1
@@ -1216,3 +1216,4 @@ MKTREE      LDA   #>FILBUF
 *
 :ATROOT     CLC
             RTS
+

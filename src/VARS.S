@@ -1,7 +1,7 @@
 *
 * Constants:
 *
-CIIPVER     =     $85           ;version 8.5
+CIIPVER     =     $85         ;version 8.5
 *
 * Printer message constants:
 QCAT        =     $01
@@ -52,27 +52,27 @@ LINLIM      =     $00
 CURR        =     $01
 CURRV       =     $02
 LASTM       =     $03
-POINT2      =     $04           ;4-5
+POINT2      =     $04         ;4-5
 CURDOS      =     $06
 DOSNOW      =     $07
 GO          =     $08
 ONLY1       =     $09
 SHOW        =     $0A
-MESPNT      =     $0B           ;2
-POINT       =     $0D           ;2
+MESPNT      =     $0B         ;2
+POINT       =     $0D         ;2
 STATE       =     $0F
 NACTIV      =     $10
 DELFLG      =     $11
-HEXNUM      =     $12           ;3
+HEXNUM      =     $12         ;3
 PRNTR?      =     $15
 SECTOR      =     $16
-CPYDIG      =     $17           ;3 Insert-digits in COPY FILES display.
+CPYDIG      =     $17         ;3 Insert-digits in COPY FILES display.
 * RAMFactor incorrectly uses zp location $19 during Smartport
 *  status call. My MM code stuffs $19 to make it work. Make
 *  sure $19 remains a temporary location.
 FILNUM      =     $1A
 PSLOT       =     $1B
-BITMSK      =     $1C           ;2
+BITMSK      =     $1C         ;2
 TRACK       =     $1E
 *
 WNDLFT      =     $20
@@ -91,9 +91,9 @@ A2H         =     $3F
 A4L         =     $42
 A4H         =     $43
 *
-IRQSAV      =     $50           ;IN AUX ZP
+IRQSAV      =     $50         ;IN AUX ZP
 *
-FILELN      =     $50           ;50-52
+FILELN      =     $50         ;50-52
 ACCESS      =     $53
 DATADR      =     $54
 SP          =     $55
@@ -102,9 +102,9 @@ SP          =     $55
 FMT400K     =     $56
 * A Smartport call on GS clobbers locations $57 - $5A.
 *  Avoid 'em!
-SLOTPTR     =     $5B           ;2
-TEMPCNT     =     $5B           ;2 same as SLOTPTR
-HANDLE      =     $5D           ;4
+SLOTPTR     =     $5B         ;2
+TEMPCNT     =     $5B         ;2 same as SLOTPTR
+HANDLE      =     $5D         ;4
 GOTMM       =     $61
 MMISOPEN    =     $62
 *
@@ -113,10 +113,10 @@ USEDH       =     $68
 FREEL       =     $6A
 FREEH       =     $6C
 *
-DIGIT       =     $6F           ;6F - 76
+DIGIT       =     $6F         ;6F - 76
 *
 FLAG80      =     $77
-PFXADR      =     $78           ;2
+PFXADR      =     $78         ;2
 PINVFL      =     $7A
 *
 * 80 - 90 ALSO USED IN PHRWTS
@@ -144,17 +144,17 @@ FIRSTC      =     $AC
 *
 TEMP        =     $B3
 TEMP2       =     $B4
-DIRBLK      =     $B5           ;2
-DIRADR      =     $B7           ;1
-BM          =     $B8           ;1
-BLKNUM      =     $B9           ;2
-UNIT        =     $BB           ;1
+DIRBLK      =     $B5         ;2
+DIRADR      =     $B7         ;1
+BM          =     $B8         ;1
+BLKNUM      =     $B9         ;2
+UNIT        =     $BB         ;1
 BOOTDV      =     $BC
 CURDEV      =     $BD
 VOLFLG      =     $BE
 NUMDEV      =     $BF
-DVICES      =     $C0           ;C0 - CF
-PNADDR      =     $D0           ;D0 - D1
+DVICES      =     $C0         ;C0 - CF
+PNADDR      =     $D0         ;D0 - D1
 CURDVP      =     $D2
 CURDVS      =     $D3
 PUNIT       =     $D4
@@ -168,9 +168,9 @@ HIMEM       =     $DA
 MIBPTR      =     $DB
 RELCNT      =     $DC
 IBPTR       =     $DD
-TSLCTR      =     $DE           ;2
-MODDAT      =     $E0           ;2
-MODTIM      =     $E2           ;2
+TSLCTR      =     $DE         ;2
+MODDAT      =     $E0         ;2
+MODTIM      =     $E2         ;2
 EOF         =     $E4
 TOPDIF      =     $E5
 ACURR       =     $E6
@@ -198,15 +198,15 @@ HDRIVE      =     $F1
 LINEIN      =     $200
 IN20        =     $220
 *
-STACKX      =     $240          ;240-255
-STACKY      =     $256          ;256-26A
-CURSTK      =     $26B          ;26B-27F
-FILNAM      =     $280          ;280-29F
-FILE        =     $2A0          ;2A0-2BF
-PFX         =     $2C0          ;2C0-301
-PPFX        =     $302          ;302-343
-SPFX        =     $344          ;344-385
-APFX        =     $386          ;386-3C7
+STACKX      =     $240        ;240-255
+STACKY      =     $256        ;256-26A
+CURSTK      =     $26B        ;26B-27F
+FILNAM      =     $280        ;280-29F
+FILE        =     $2A0        ;2A0-2BF
+PFX         =     $2C0        ;2C0-301
+PPFX        =     $302        ;302-343
+SPFX        =     $344        ;344-385
+APFX        =     $386        ;386-3C7
 FTYPE       =     $3C8
 AUXTYP      =     $3C9
 CRTDAT      =     $3CB
@@ -225,14 +225,14 @@ STRTYP      =     $3CF
 SCREEN      =     $5A2
 *
             DUM   $800
-CVTOC       DS    $100          ;800
-STATUS      DS    $100          ;900
-CBYTE       DS    $100          ;A00
-CSECTR      DS    $100          ;B00
+CVTOC       DS    $100        ;800
+STATUS      DS    $100        ;900
+CBYTE       DS    $100        ;A00
+CSECTR      DS    $100        ;B00
 *
-FILBUF      =     *             ;C00
-DSTTSL      DS    $200          ;C00
-DESBUF      DS    $200          ;E00  used in DESTROY FILE
+FILBUF      =     *           ;C00
+DSTTSL      DS    $200        ;C00
+DESBUF      DS    $200        ;E00  used in DESTROY FILE
 SMIB        DS    $200
 RBLKL       =     SMIB+$0081
 RBLKH       =     SMIB+$0181
@@ -268,7 +268,7 @@ SDNAME      DS    $100
 *-------------------------------------
 * Working backwards from program itself::
 *
-CODEADR     =     $5C00         ;<----
+CODEADR     =     $5C00       ;<----
 *
 TOPMEM      =     CODEADR-$300  ;$300 for VOLNMS, PRIM, SECOND, etc.
 VOLNMS      =     TOPMEM
@@ -286,11 +286,11 @@ NSECTS      =     VTOC2+$35
 CAT2        DS    $F00
             DEND
 *
-MMIOBUF     =     TOP10         ;ProDOS buffer for MM
+MMIOBUF     =     TOP10       ;ProDOS buffer for MM
 MMSPOT      =     MMIOBUF+$400  ;MM code sits after MM ProDOS buffer
 *
 *-------------------
-AUXMM       =     $0800         ;MM's home in aux memory
+AUXMM       =     $0800       ;MM's home in aux memory
 *-------------------
 *
             DUM   CODEADR-$200
@@ -298,18 +298,18 @@ PRIM        DS    $100
 SECOND      DS    $57
 VOLNAM      DS    $10
 BTPFX       DS    $50
-ASYNC       DS    1             ;# OF SYNC TO WRITE
+ASYNC       DS    1           ;# OF SYNC TO WRITE
 *
-AINFO       DS    0             ;PHRWTS stuff:
+AINFO       DS    0           ;PHRWTS stuff:
 ADRCSUM     DS    1
 ADRSEC      DS    1
 ADRTRK      DS    1
 ADRVOL      DS    1
 *
 DSYNC       DS    1
-DRES        DS    1             ;Data checksum result
-AUXFLG      DS    1             ;Read/write aux mem?
-TRKFLG      DS    1             ;Check track
+DRES        DS    1           ;Data checksum result
+AUXFLG      DS    1           ;Read/write aux mem?
+TRKFLG      DS    1           ;Check track
 *
 SOFAR       DS    $10
 INTRLV      DS    $10
@@ -362,8 +362,9 @@ MMCLOSE     EQU   3
 MMCHECK     EQU   4
 *
 * Additional error numbers for MMERRNUM:
-OPENERR     EQU   $80           ;MM already open.
-SIZEERR     EQU   $81           ;Request exceeds end of memory.
-TRANSERR    EQU   $82           ;Not all requested bytes were transferred.
-HNDERR      EQU   $83           ;Handle in zero page invalid (overwritten!)
-NOMEMERR    EQU   $84           ;No memory found in OPEN call.
+OPENERR     EQU   $80         ;MM already open.
+SIZEERR     EQU   $81         ;Request exceeds end of memory.
+TRANSERR    EQU   $82         ;Not all requested bytes were transferred.
+HNDERR      EQU   $83         ;Handle in zero page invalid (overwritten!)
+NOMEMERR    EQU   $84         ;No memory found in OPEN call.
+

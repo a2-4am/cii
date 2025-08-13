@@ -2,7 +2,7 @@
 *          CATALOG DISK          *
 **********************************
 *
-CATLOG      LDX   #$01         ;SELECT OPTION
+CATLOG      LDX   #$01        ;SELECT OPTION
             JSR   CHOOZ1
             STA   :TYPE
             CMP   #$02
@@ -15,21 +15,21 @@ CATLOG      LDX   #$01         ;SELECT OPTION
             JSR   TREEA
             JSR   CT1
             JSR   PRVNM
-            JSR   ASKPR?       ;PRINTER ON?
+            JSR   ASKPR?      ;PRINTER ON?
             LDA   PSLOT
             BEQ   :SKIP2
             JSR   HOME
-:SKIP2      JSR   RDACNT       ;GET CATALOG
+:SKIP2      JSR   RDACNT      ;GET CATALOG
             LDA   #$80
-            STA   DELFLG       ;RESET DELETE
+            STA   DELFLG      ;RESET DELETE
             LDA   #0
-            STA   :COUNT       ;CR COUNTER
-            LDA   PRNTR?       ;YES PRINTER?
+            STA   :COUNT      ;CR COUNTER
+            LDA   PRNTR?      ;YES PRINTER?
             BEQ   :CHOOSE
             JSR   HOME
-            JSR   PRON         ;PRINTER ON
+            JSR   PRON        ;PRINTER ON
             JSR   :CROUNT
-:CHOOSE     JSR   TOP1         ;3/6/87 (WAS TOP1A)
+:CHOOSE     JSR   TOP1        ;3/6/87 (WAS TOP1A)
             JSR   PRVNM
             BIT   DOSNOW
             BPL   :VOL2
@@ -46,9 +46,9 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 *
 *
 :VOL2       JSR   :CROUNT
-            LDA   NACTIV       ;ANY FILES?
+            LDA   NACTIV      ;ANY FILES?
             BNE   :CONTINU
-            LDA   #MNOFILES    ;'NO FILES'
+            LDA   #MNOFILES   ;'NO FILES'
             JSR   PRINT
             JSR   :CROUNT
             JMP   :ALLDONE
@@ -56,7 +56,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 :CONTINU    LDA   #0
             STA   CH
             STA   SHOW
-            LDA   :TYPE        ;CHOOSE OPTION
+            LDA   :TYPE       ;CHOOSE OPTION
             BEQ   :NORMAL
             CMP   #$01
             BEQ   :LENGTHS
@@ -68,13 +68,13 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 :HID1       LDX   SHOW
             JSR   SETPNT
             BIT   DOSNOW
-            BMI   :SKIPHID     ;PRODOS
+            BMI   :SKIPHID    ;PRODOS
 *
             LDY   #$03
-:HID2       LDA   (POINT),Y    ;GET FILENAME
-            BPL   :HID3        ;CHAR
+:HID2       LDA   (POINT),Y   ;GET FILENAME
+            BPL   :HID3       ;CHAR
             CMP   #$A0
-            BCS   :HID3        ;IF CONTROL,
+            BCS   :HID3       ;IF CONTROL,
             BIT   PRNTR?
             BMI   :PRTHID
             AND   #$1F
@@ -82,11 +82,11 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 * BPL HIDPUT
 * ORA #$40
 * STA    $C00F            ;ALTCHARSET
-            BPL   :HIDPUT      ;ALWAYS
+            BPL   :HIDPUT     ;ALWAYS
 *
-:PRTHID     EOR   #$60         ;OR LOWERCASE
+:PRTHID     EOR   #$60        ;OR LOWERCASE
 :HIDPUT     STA   (POINT),Y
-:HID3       INY                ;NEXT...
+:HID3       INY               ;NEXT...
             CPY   #$21
             BCC   :HID2
 *
@@ -116,20 +116,20 @@ CATLOG      LDX   #$01         ;SELECT OPTION
             BNE   :NOTDEL1
             BEQ   :ISDEL1
 *
-:DELF33     LDA   (POINT),Y    ;CHECK DELETED
-            BPL   :NOTDEL1     ;STATUS
-:ISDEL1     LDX   #"D"         ;PRINT "D" OR
-:NOTDEL1    TXA                ;SPACE
+:DELF33     LDA   (POINT),Y   ;CHECK DELETED
+            BPL   :NOTDEL1    ;STATUS
+:ISDEL1     LDX   #"D"        ;PRINT "D" OR
+:NOTDEL1    TXA               ;SPACE
             JSR   PCOUT
             JSR   PRSPC
-            JSR   CATLN1       ;SEE LINE
+            JSR   CATLN1      ;SEE LINE
             JSR   :NEXTFIL
             BCC   :DELETED
             BCS   :GOALLD
 *
 * CATALOG W/ FILE LENGTHS
 :LENGTHS    BIT   DOSNOW
-            BMI   :NORMAL      ;PRODOS
+            BMI   :NORMAL     ;PRODOS
 *
             LDA   #$00
             STA   SHOW
@@ -146,7 +146,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
             STA   :FILTYPE
             BEQ   :NEXT2
 :SEEIT      JSR   OPNSRC
-            JSR   RDDATA       ;READ 1 PAGE
+            JSR   RDDATA      ;READ 1 PAGE
             BIT   FLAG80
             BMI   :SEEIT0
             JSR   :CROUNT
@@ -198,7 +198,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
 :FILTYPE    DB    $0
 *
 :COMMA
-            LDA   #$AC         ;","
+            LDA   #$AC        ;","
             JSR   PCOUT
             JSR   PRSPC
             INY
@@ -213,7 +213,7 @@ CATLOG      LDX   #$01         ;SELECT OPTION
             CMP   #1
             BNE   :NF1
             LDA   FLAG80
-            BMI   :NF1         ;80-COL
+            BMI   :NF1        ;80-COL
             INC   :COUNT
 :NF1        INC   SHOW
             LDA   PRNTR?
@@ -264,10 +264,10 @@ COL80       BIT   FLAG80
 *
 COL40       LDA   #$19
             STA   SDCH
-            BIT   FLAG80       ;(10/6/87)
+            BIT   FLAG80      ;(10/6/87)
             BPL   :OUT40
-            LDA   #$15         ;
-            JSR   $C300        ;
+            LDA   #$15        ;
+            JSR   $C300       ;
 :OUT40      JMP   VDINIT
 *
 *
@@ -313,3 +313,4 @@ CSPACE      LDA   #>VTOC1
             PLA
             JSR   HEXDC2
             JMP   PRT5LJ
+

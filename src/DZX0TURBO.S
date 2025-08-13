@@ -53,31 +53,31 @@ ZXUNPACK
             LDA   #$80
             STA   :TMPA
             LDY   #0
-            BEQ   :LITERALS ; ALWAYS
+            BEQ   :LITERALS   ; ALWAYS
 
 :DEC1_SRC
             DEC   ZXSRC+1
-            BNE   :NEW1_SRC ; ALWAYS
+            BNE   :NEW1_SRC   ; ALWAYS
 
 :INC1_OFFSET
             INC   :OFFSET+1
-            BNE   :NEW1_OFFSET ; ALWAYS
+            BNE   :NEW1_OFFSET  ; ALWAYS
 
 :INC_TMPB
             INC   :TMPB
-            BNE   :COPY ; ALWAYS
+            BNE   :COPY       ; ALWAYS
 
 :DEC_HL
             DEC   :HL+1
-            BNE   :COP1A ; ALWAYS
+            BNE   :COP1A      ; ALWAYS
 
 :DEC1_DST
             DEC   ZXDST+1
-            BNE   :COP1B ; ALWAYS
+            BNE   :COP1B      ; ALWAYS
 
 :DEC1_TMPB
             DEC   :TMPB
-            BNE   :COP1C ; ALWAYS
+            BNE   :COP1C      ; ALWAYS
 
 :EXIT
             RTS
@@ -114,7 +114,7 @@ ZXUNPACK
 
 :COPY
             LDA   ZXDST
-            ADC   :OFFSET  ; C=0 FROM GET_ELIAS
+            ADC   :OFFSET     ; C=0 FROM GET_ELIAS
             STA   :HL
             LDA   ZXDST+1
             ADC   :OFFSET+1
@@ -171,19 +171,19 @@ ZXUNPACK
             ASL   :TMPA
             BCC   :COPY
             JSR   :ELIAS
-            BCC   :COPY ; ALWAYS
+            BCC   :COPY       ; ALWAYS
 
 :DEC2_SRC
             DEC   ZXSRC+1
-            BNE   :COP0A ; ALWAYS
+            BNE   :COP0A      ; ALWAYS
 
 :DEC2_DST
             DEC   ZXDST+1
-            BNE   :COP0B ; ALWAYS
+            BNE   :COP0B      ; ALWAYS
 
 :DEC2_TMPB
             DEC   :TMPB
-            BNE   :COP0C ; ALWAYS
+            BNE   :COP0C      ; ALWAYS
 
 :ELIAS_LOOP
             ASL   :TMPA
@@ -207,7 +207,7 @@ ZXUNPACK
             RTS
 :DEC3_SRC
             DEC   ZXSRC+1
-            BNE   :ELIAS1 ; ALWAYS
+            BNE   :ELIAS1     ; ALWAYS
 
 :ELIAS2
             ASL   :TMPA
@@ -251,7 +251,7 @@ ZXUNPACK
             RTS
 :DEC4_SRC
             DEC   ZXSRC+1
-            BNE   :ELIAS5 ; ALWAYS
+            BNE   :ELIAS5     ; ALWAYS
 
 :ELIAS6
             ASL   :TMPA
@@ -280,3 +280,4 @@ ZXUNPACK
             ASL   :TMPA
             BCS   :ELIAS_RELOAD
             RTS
+

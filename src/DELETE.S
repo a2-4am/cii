@@ -3,8 +3,8 @@
 *******************************
 *
 DELETE      LDX   #$02
-            JSR   CHOOZ1         ;DOS, DISK,
-            STA   :TEMP          ;OR FILES?
+            JSR   CHOOZ1      ;DOS, DISK,
+            STA   :TEMP       ;OR FILES?
             CMP   #0
             BNE   :NOTFILZ
             JSR   COMTRE
@@ -21,8 +21,8 @@ DELETE      LDX   #$02
 
 :DELDSK     JSR   :READY?
             BNE   :DDOUT
-            JSR   DOSTYP         ;SETUP VOLNAM
-            BMI   :DELPRO        ;PRODOS
+            JSR   DOSTYP      ;SETUP VOLNAM
+            BMI   :DELPRO     ;PRODOS
 *
 * READ VTOC JUST TO MAKE SURE THAT
 * IT IS REALLY A DOS DISK
@@ -37,14 +37,14 @@ DELETE      LDX   #$02
 *
 :DELPRO     JSR   DEVTYP
             CMP   #1
-            BNE   :GODDSK        ;NOT /RAM
+            BNE   :GODDSK     ;NOT /RAM
 *
 *
 * DISCONNECT /RAM
 *
             LDA   #$FF
             STA   ISAUX
-            BNE   :DDDONE        ;ALWAYS
+            BNE   :DDDONE     ;ALWAYS
 *
 :DDOUT      RTS
 :GODDSK     JSR   DDISK
@@ -72,7 +72,7 @@ DELETE      LDX   #$02
             JSR   DORWTS
             LDA   #$FF
             JSR   SET1A2
-            JSR   ZIPDOS         ;WRITE NO-BOOT
+            JSR   ZIPDOS      ;WRITE NO-BOOT
             JSR   PRHERE
             DB    $8D,$8D
             ASC   "DOS"
@@ -104,26 +104,26 @@ DELETE      LDX   #$02
 *
 *********  DELETE FILES  ***********
 :DFILES     LDA   #$01
-            STA   STATE          ;STATE=1
-            JSR   CATDIS         ;DISPLAY
+            STA   STATE       ;STATE=1
+            JSR   CATDIS      ;DISPLAY
             JSR   PATMOV
-            LDA   FILNUM         ;ANY FILES?
+            LDA   FILNUM      ;ANY FILES?
             BNE   :GOTFILS
             JMP   NOSEL
-:GOTFILS    JSR   SWPCHK         ;SAME DISK?
+:GOTFILS    JSR   SWPCHK      ;SAME DISK?
             JSR   HOME
-            LDY   #$00           ;INIT COUNTER
+            LDY   #$00        ;INIT COUNTER
             STY   SP
             STY   CURR
 :DFILELP    JSR   FILEQ
             JSR   CURPNT
             BIT   DOSNOW
-            BPL   :SKIPCK        ;DOS 3.3
+            BPL   :SKIPCK     ;DOS 3.3
             LDY   #0
             LDA   (POINT),Y
             AND   #$F0
             CMP   #$D0
-            BNE   :SKIPCK        ;NOT SUBDIR
+            BNE   :SKIPCK     ;NOT SUBDIR
             JSR   DIVEIN
             CLC
             JSR   DIVECK
@@ -131,13 +131,13 @@ DELETE      LDX   #$02
             JSR   SETPFX
             LDX   #$FF
             STX   CURR
-            BNE   :DFIL1         ;ALWAYS
+            BNE   :DFIL1      ;ALWAYS
 *
 :SKIPCK     JSR   CURPNT
-            LDA   #>TOP10        ;2/16/87
-            JSR   SETHIM         ;2/16/87
-            LDA   #$00           ;SET CATALOG1
-            JSR   D1FILE         ;DELETE A FILE
+            LDA   #>TOP10     ;2/16/87
+            JSR   SETHIM      ;2/16/87
+            LDA   #$00        ;SET CATALOG1
+            JSR   D1FILE      ;DELETE A FILE
             LDA   $C000
             CMP   #$9B
             BEQ   :ABORT
@@ -161,8 +161,8 @@ DELETE      LDX   #$02
             JMP   :SKIPCK
 *
 :ABORT      BIT   DOSNOW
-            BMI   DOWAIT         ;PRODOS
-            JSR   WRCAT1         ;WRITE TRACK
+            BMI   DOWAIT      ;PRODOS
+            JSR   WRCAT1      ;WRITE TRACK
 DOWAIT      LDX   #$03
 :WAITLP     LDA   #$C4
             JSR   WAIT
@@ -175,7 +175,7 @@ D1OUT       RTS
 *
 D1FILE      STA   :TEMP
             LDY   #$00
-            LDA   (POINT),Y      ;MOVE TRACK #
+            LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW
             BMI   :PRODOS
             JMP   :DOS33
@@ -184,8 +184,8 @@ D1FILE      STA   :TEMP
             AND   #$F0
             STA   :TEMP
             PLA
-            AND   #$0F           ;NAME LEN
-            BEQ   D1OUT          ;ALREADY DEL'D
+            AND   #$0F        ;NAME LEN
+            BEQ   D1OUT       ;ALREADY DEL'D
             STA   (POINT),Y
             LDY   #$0F
 :D1LOOP     LDA   (POINT),Y
@@ -227,7 +227,7 @@ D1FILE      STA   :TEMP
             LDA   :TEMP
             AND   #$EF
             CMP   #$20
-            BNE   :RESOUT        ;NOT SAPLING OR TREE FILE
+            BNE   :RESOUT     ;NOT SAPLING OR TREE FILE
 *
 * COMPARE SAVED INDEX BLOCK TO INDEX BLOCK ON  DISK
 * TO SEE HOW IT CHANGED. IF THE HIGH PART AND LOW
@@ -242,11 +242,11 @@ D1FILE      STA   :TEMP
 * BLKNUM,+1 & RPAGE ARE STILL SET UP FOR INDEX BLOCK
 *
             LDY   #>DESBUF
-            JSR   SWAPIB         ;REVERSE IT
-            JSR   WTBLK          ;WRITE FIRST INDEX BLOCK
+            JSR   SWAPIB      ;REVERSE IT
+            JSR   WTBLK       ;WRITE FIRST INDEX BLOCK
             LDA   :TEMP
             CMP   #$30
-            BNE   :RESOUT        ;NOT TREE FILE
+            BNE   :RESOUT     ;NOT TREE FILE
 *
 * FIGURE OUT IF WE NEED TO REVERSE REST OF BLOCKS IN
 * TREE FILE
@@ -277,10 +277,10 @@ D1FILE      STA   :TEMP
 *
 :DOMORE     LDY   #>FILBUF
             STY   RPAGE
-            JSR   SWAPIB         ;REVERSE MIB
-            JSR   WTBLK          ;WRITE OUT REVERSED MIB
-            LDY   #1             ;START AT 1 SINCE WE ALREADY
-                                 ;REVERSED FIRST INDEX BLOCK
+            JSR   SWAPIB      ;REVERSE MIB
+            JSR   WTBLK       ;WRITE OUT REVERSED MIB
+            LDY   #1          ;START AT 1 SINCE WE ALREADY
+                              ;REVERSED FIRST INDEX BLOCK
             STY   :TEMP
 :DOMORE1    LDY   :TEMP
             LDA   FILBUF+$100,Y
@@ -288,7 +288,7 @@ D1FILE      STA   :TEMP
             LDA   FILBUF,Y
             STA   BLKNUM+1
             ORA   BLKNUM
-            BEQ   :DOMORE2       ;NULL ENTRY
+            BEQ   :DOMORE2    ;NULL ENTRY
             LDA   #>DESBUF
             STA   RPAGE
             JSR   RDBLK
@@ -303,37 +303,37 @@ D1FILE      STA   :TEMP
 *
 *
 *
-:DOS33      STA   TRACK          ;TO END OF
-            STA   RTRACK         ;FILENAME BUF
+:DOS33      STA   TRACK       ;TO END OF
+            STA   RTRACK      ;FILENAME BUF
             LDY   #$20
             STA   (POINT),Y
             LDY   #$00
-            LDA   #$FF           ;WRITE $FF AS
-            STA   (POINT),Y      ;TRACK #
+            LDA   #$FF        ;WRITE $FF AS
+            STA   (POINT),Y   ;TRACK #
             INY
             LDA   (POINT),Y
             STA   SECTOR
             STA   RSECTR
             LDX   :TEMP
-            LDA   :VTOCPAG,X     ;SET POINTERS
-            STA   POINT+1        ;TO PROPER
-            LDA   :TSLPAG,X      ;VTOC & TSLIST
+            LDA   :VTOCPAG,X  ;SET POINTERS
+            STA   POINT+1     ;TO PROPER
+            LDA   :TSLPAG,X   ;VTOC & TSLIST
             STA   POINT2+1
             STA   RPAGE
             LDY   #$00
             STY   POINT
             STY   POINT2
             INY
-            STY   RCMND          ;1
-            JSR   FREES          ;FREE TSLIST
-:NXTSECT    JSR   DORWTS         ;READ TSLIST
+            STY   RCMND       ;1
+            JSR   FREES       ;FREE TSLIST
+:NXTSECT    JSR   DORWTS      ;READ TSLIST
             LDY   #$0C
             STY   :COUNT
-:NXTPAIR    LDY   :COUNT         ;LOOP THROUGH
-            LDA   (POINT2),Y     ;NONZERO TS
-            STA   TRACK          ;PAIRS FREEING
+:NXTPAIR    LDY   :COUNT      ;LOOP THROUGH
+            LDA   (POINT2),Y  ;NONZERO TS
+            STA   TRACK       ;PAIRS FREEING
             INY
-            ORA   (POINT2),Y     ;SECTORS
+            ORA   (POINT2),Y  ;SECTORS
             BEQ   :NEXT
             LDA   (POINT2),Y
             STA   SECTOR
@@ -342,17 +342,17 @@ D1FILE      STA   :TEMP
             INC   :COUNT
             BNE   :NXTPAIR
             LDY   #$01
-            LDA   (POINT2),Y     ;GET POINTER
-            STA   TRACK          ;TO NEXT TSLIST
+            LDA   (POINT2),Y  ;GET POINTER
+            STA   TRACK       ;TO NEXT TSLIST
             STA   RTRACK
             INY
             ORA   (POINT2),Y
-            BEQ   :TSOUT         ;OUT IF ZERO
+            BEQ   :TSOUT      ;OUT IF ZERO
             LDA   (POINT2),Y
             STA   SECTOR
             STA   RSECTR
-            JSR   FREES          ;FREE NEXT LIST
-            JMP   :NXTSECT       ;BACK FOR MORE.
+            JSR   FREES       ;FREE NEXT LIST
+            JMP   :NXTSECT    ;BACK FOR MORE.
 :TSOUT      RTS
 :COUNT      DB    $0
 :TEMP       DB    $0
@@ -365,3 +365,4 @@ D1FILE      STA   :TEMP
             DB    #>VTOC2
 :TSLPAG     DB    #>SRCTSL
             DB    #>DSTTSL
+

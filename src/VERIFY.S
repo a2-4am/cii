@@ -3,16 +3,16 @@
 *************************************
 *
 VERIFY      LDX   #$03
-            JSR   CHOOZ1       ;SELECT VERIFY
-            STA   :TEMP        ;OPTION.
+            JSR   CHOOZ1      ;SELECT VERIFY
+            STA   :TEMP       ;OPTION.
             CMP   #1
             BNE   :NOTFIL
             JSR   COMTRE
             JMP   :VFILES
 *
 :NOTFIL     JSR   COMHDR
-            LDA   :TEMP        ;JUMP TO
-            BEQ   :VDISK       ;OPTION
+            LDA   :TEMP       ;JUMP TO
+            BEQ   :VDISK      ;OPTION
             JMP   SPEED1
 *
 *
@@ -27,7 +27,7 @@ VERIFY      LDX   #$03
             STA   :VERRORS
             STA   :VERRORS+1
             JSR   DEVTYP
-            BNE   :PRODOS      ;NOT FLOPPY
+            BNE   :PRODOS     ;NOT FLOPPY
             JMP   :DOS33
 *
 :PRODOS     LDA   #0
@@ -53,7 +53,7 @@ VERIFY      LDX   #$03
             LDA   BLKNUM
             CMP   :BLKSLO
             BCC   :BLKLP
-            JMP   :TOTAL       ;DONE!
+            JMP   :TOTAL      ;DONE!
 :BLKERR     INC   :VERRORS
             BNE   :BLKER1
             INC   :VERRORS+1
@@ -71,52 +71,52 @@ VERIFY      LDX   #$03
             JMP   :NXTBLK
 *
 *
-:DOS33      LDA   #MTRACK      ;'TRACK'
+:DOS33      LDA   #MTRACK     ;'TRACK'
             JSR   PRINT
-            LDA   #$40         ;RATCHET!
-            STA   RCMND        ;(SETS TRK 0)
+            LDA   #$40        ;RATCHET!
+            STA   RCMND       ;(SETS TRK 0)
             JSR   DORWTS
-            LDA   #$10         ;SET VERIFY
+            LDA   #$10        ;SET VERIFY
             STA   RCMND
 :TRACKLP    JSR   CKESC
             LDA   #$15
             JSR   TABV
-            LDA   #$11         ;PRINT TRACK
-            STA   CH           ;BEING
-            LDA   RTRACK       ;VERIFIED
+            LDA   #$11        ;PRINT TRACK
+            STA   CH          ;BEING
+            LDA   RTRACK      ;VERIFIED
             JSR   PHBYTE
-            JSR   PHRWTS       ;GO VERIFY
-            BCC   :OK          ;ANY ERRORS?
+            JSR   PHRWTS      ;GO VERIFY
+            BCC   :OK         ;ANY ERRORS?
 *
-            LDA   #$03         ;SET WINDOW
+            LDA   #$03        ;SET WINDOW
             STA   WNDTOP
             LDA   #$14
             STA   WNDBTM
             LDA   #$13
-            JSR   VLEFT        ;POSITION
+            JSR   VLEFT       ;POSITION
             JSR   CROUT2
-            LDA   #MERROR      ;'ERROR'
+            LDA   #MERROR     ;'ERROR'
             JSR   PRINT
             JSR   PRSPC
-            JSR   PRTTRK       ;'TRACK'
+            JSR   PRTTRK      ;'TRACK'
             JSR   CROUT
-            LDA   #MSECTOR     ;'SECTOR'
+            LDA   #MSECTOR    ;'SECTOR'
             JSR   PRINT
             LDY   #$00
-:BADLP      LDA   SOFAR,Y      ;GET SECTOR
-            BMI   :NEXTBAD     ;BAD?
+:BADLP      LDA   SOFAR,Y     ;GET SECTOR
+            BMI   :NEXTBAD    ;BAD?
             LDA   INTLV1,Y
-            JSR   PHHEX        ;PRINT NUMBER
+            JSR   PHHEX       ;PRINT NUMBER
             JSR   PRSPC
-            INC   :VERRORS     ;INC ERROR
-            BNE   :NEXTBAD     ;COUNT
+            INC   :VERRORS    ;INC ERROR
+            BNE   :NEXTBAD    ;COUNT
             INC   :VERRORS+1
-:NEXTBAD    INY                ;NEXT SECTOR
+:NEXTBAD    INY               ;NEXT SECTOR
             CPY   #$10
             BCC   :BADLP
             JSR   SETTXT
 *
-:OK         INC   RTRACK       ;NEXT TRACK
+:OK         INC   RTRACK      ;NEXT TRACK
             LDA   RTRACK
             CMP   #$23
             BCC   :TRACKLP
@@ -128,7 +128,7 @@ VERIFY      LDX   #$03
 ************  VERIFY FILES  ********
 :VFILES     LDA   #$01
             STA   STATE
-            JSR   CATDIS       ;SELECT FILES
+            JSR   CATDIS      ;SELECT FILES
             JSR   PATMOV
             LDA   FILNUM
             BNE   :GOTFILS
@@ -154,12 +154,12 @@ VERIFY      LDX   #$03
             JSR   HEXDC2
             JSR   PRT5LJ
             JSR   PRSPC
-            LDA   #MERROR      ;'ERROR'
+            LDA   #MERROR     ;'ERROR'
             JSR   PRINT
-            LDA   :VERRORS+1   ; LDA :VERRORS+1 <- The old
-            BNE   :NOTONE      ; ORA :VERRORS
-            LDX   :VERRORS     ; CMP #$01           doesn't work
-            DEX                ; It mistakenly takes $0101 same as $0001.
+            LDA   :VERRORS+1  ; LDA :VERRORS+1 <- The old
+            BNE   :NOTONE     ; ORA :VERRORS
+            LDX   :VERRORS    ; CMP #$01           doesn't work
+            DEX               ; It mistakenly takes $0101 same as $0001.
             BEQ   :ONE
 :NOTONE     LDA   #"s"
             JSR   PCOUT
@@ -239,12 +239,12 @@ VERIFY      LDX   #$03
 :KEY        JSR   KYESC
             PHA
             LDA   #$16
-            JSR   VLEFT        ;CLEAR PROMPT
-            JSR   PRHERE       ;(LEAVE ERROR)
+            JSR   VLEFT       ;CLEAR PROMPT
+            JSR   PRHERE      ;(LEAVE ERROR)
             DB    $2F,$8D,$2F,0
             PLA
             CMP   #" "
-            BEQ   :SET         ;IF EQUAL, CARRY WILL BE SET
+            BEQ   :SET        ;IF EQUAL, CARRY WILL BE SET
             CLC
 :SET        RTS
 *
@@ -269,52 +269,52 @@ SPEED1      JSR   CROUT
             JSR   PRINT
             JSR   KYESC
             JSR   HOME
-            LDA   #$40         ;RATCHET!
+            LDA   #$40        ;RATCHET!
             STA   RCMND
-            JSR   DORWTS       ;(This call will enforce UDC 5.25 mode)
+            JSR   DORWTS      ;(This call will enforce UDC 5.25 mode)
             LDA   #$22
             STA   RTRACK
             LDA   #$00
-            STA   RCMND        ;SEEK TRK $22
+            STA   RCMND       ;SEEK TRK $22
             JSR   DORWTS
 *LDX RSLOT
             LDX   HSLOT
-            LDA   $C089,X      ;MOTOR BACK ON
+            LDA   $C089,X     ;MOTOR BACK ON
             LDA   $C08D,X
-            LDA   $C08E,X      ;WP CHECK
+            LDA   $C08E,X     ;WP CHECK
             BPL   :OK2
-            LDA   $C08C,X      ;FAILED:
-            LDA   $C088,X      ;MOTOR OFF,
+            LDA   $C08C,X     ;FAILED:
+            LDA   $C088,X     ;MOTOR OFF,
             LDA   #$2B
             STA   RRTN
             JMP   OUCH
 *
-:OK2        JSR   CRIT1        ;ELSE WRITE
+:OK2        JSR   CRIT1       ;ELSE WRITE
             JSR   PRHERE
             DB    $8D,$8D,$8D
             ASC   "Drive speed should be between 198.0 ms.",8D
             ASC   "and 202.0 ms.",8D,8D
             ASC   "Drive speed is       ms.",8D,8D
             ASC   "([Esc]-Exit)",00
-:TEST       JSR   CRIT2        ;TIME IT.
+:TEST       JSR   CRIT2       ;TIME IT.
             ASL   HEXNUM
-            ROL   HEXNUM+1     ; * 2.
-            LDA   HEXNUM+1     ;TOO BIG?
-            BMI   :TEST        ;TRY AGAIN.
+            ROL   HEXNUM+1    ; * 2.
+            LDA   HEXNUM+1    ;TOO BIG?
+            BMI   :TEST       ;TRY AGAIN.
             STA   :SHIFTER+1
             LDA   HEXNUM
             STA   :SHIFTER
-            LDA   #$3E         ; / $1.053E
-            STA   :DIVER       ;=/  1.020477
+            LDA   #$3E        ; / $1.053E
+            STA   :DIVER      ;=/  1.020477
             LDA   #$05
             STA   :DIVER+1
             LDX   #$10
-:DIVLP      LSR   :SHIFTER+1   ;SHIFT DIVDEND
-            ROR   :SHIFTER     ;BIT SMALLER
-            ASL   :DIVER       ;DIVISOR BIT
-            ROL   :DIVER+1     ;TO KNOCK OFF?
-            BCC   :DIVNEXT     ;NO.
-            LDA   HEXNUM       ;YES:SUBTRACT.
+:DIVLP      LSR   :SHIFTER+1  ;SHIFT DIVDEND
+            ROR   :SHIFTER    ;BIT SMALLER
+            ASL   :DIVER      ;DIVISOR BIT
+            ROL   :DIVER+1    ;TO KNOCK OFF?
+            BCC   :DIVNEXT    ;NO.
+            LDA   HEXNUM      ;YES:SUBTRACT.
             SBC   :SHIFTER
             STA   HEXNUM
             LDA   HEXNUM+1
@@ -322,7 +322,7 @@ SPEED1      JSR   CROUT
             STA   HEXNUM+1
 :DIVNEXT    DEX
             BNE   :DIVLP
-            JSR   HEXDEC       ;-> 20,000
+            JSR   HEXDEC      ;-> 20,000
             LDA   #$09
             JSR   TABV
             LDA   #$0F
@@ -336,13 +336,13 @@ SPEED1      JSR   CROUT
             JSR   PCOUT
             LDA   DIGIT+1
             JSR   PHHEX
-            LDA   $C000        ;ESC?
+            LDA   $C000       ;ESC?
             CMP   #$9B
-            BNE   :TEST        ;NOT YET...
+            BNE   :TEST       ;NOT YET...
             STA   $C010
 *LDX RSLOT
             LDX   HSLOT
-            LDA   $C088,X      ;MOTOR OFF.
+            LDA   $C088,X     ;MOTOR OFF.
             RTS
 *
 *
@@ -350,3 +350,4 @@ SPEED1      JSR   CROUT
 :DIVER      DB    $3E,$05
 *
 *
+

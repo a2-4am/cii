@@ -155,7 +155,7 @@ MINSTGT     DS    1           ;now 56
             DS    1           ;[4am] moved inline, was :NOTDOS
             DEND
 
-MESSAG      DW    :COPY        ;0 MENU 0
+MESSAG      DW    :COPY       ;0 MENU 0
             DW    :CATALOG
             DW    :DELETE
             DW    :LOCK
@@ -163,7 +163,7 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :ALPHA
             DW    :FORMAT
             DW    :VERIFY
-            DW    :VIEW        ;8
+            DW    :VIEW       ;8
             DW    :TSMAP
             DW    :NEWBOOT
             DW    :UNDEL
@@ -171,85 +171,85 @@ MESSAG      DW    :COPY        ;0 MENU 0
             DW    :NEWINFO
             DW    :QUIT
 *
-            DW    0            ;[4am] unused, was :BCPY525
-            DW    0            ;[4am] unused, was :BCPY35
-            DW    :FILES       ;11 MENU 0
+            DW    0           ;[4am] unused, was :BCPY525
+            DW    0           ;[4am] unused, was :BCPY35
+            DW    :FILES      ;11 MENU 0
             DW    :DISK
             DW    :DSKWFMT
             DW    :DOS
 *
-            DW    :NORMAL      ;15 MENU 1
+            DW    :NORMAL     ;15 MENU 1
             DW    :WLENGTH
             DW    :WDELETE
             DW    :WHIDDEN
 *
-            DW    :DISK        ;19 MENU 3
+            DW    :DISK       ;19 MENU 3
             DW    :FILES
             DW    :SPEED
 *
-            DW    :VALUES      ;1C MENU 4
+            DW    :VALUES     ;1C MENU 4
             DW    :TEXT
 *
-            DW    :FILES       ;1E MENU 2
+            DW    :FILES      ;1E MENU 2
             DW    :DISK
             DW    :DOS
 *
-            DW    :TOOLONG     ;21
+            DW    :TOOLONG    ;21
 *
-            DW    :PRODOS      ;22 MENU 7
+            DW    :PRODOS     ;22 MENU 7
             DW    :DOS33
 *
-            DW    :NOTSUB      ;24
-            DW    :READ        ;25
-            DW    :WRITE       ;26
-            DW    :BLANK4      ;27
-            DW    :BLANK3      ;28
-            DW    0            ;[4am] moved inline
-            DW    :SLOT        ;2A
-            DW    :PRESS1      ;2B
-            DW    :FILE        ;2C
-            DW    :PSTATE0     ;2D
-            DW    :PSTATE1     ;2E
-            DW    :PSTATE2     ;2F
-            DW    :PSTATE3     ;30
-            DW    :PSTAT45     ;31
-            DW    :PSTAT45     ;32
-            DW    :TRACK       ;33
-            DW    :SECTOR      ;34
-            DW    :CRESC       ;35
-            DW    :NOFILES     ;36
-            DW    0            ;[4am] unused, was :INIT
-            DW    :INROOT      ;38
-            DW    0            ;[4am] unused, was :IO
-            DW    :ERROR       ;3A
-            DW    0            ;[4am] moved inline
-            DW    0            ;[4am] moved inline
-            DW    0            ;[4am] unused, was :COPYTP
-            DW    :HEADER      ;3E
-            DW    0            ;[4am] unused, was :DRIVE
-            DW    :FILES       ;40 MENU 9
-            DW    :VOLUME      ;41
-            DW    :DASHES      ;42
-            DW    :PRESS       ;43
-            DW    :MORE        ;44
-            DW    :ERR2B       ;45
-            DW    :ERR44       ;46
-            DW    :ERR45       ;47
-            DW    :ERR44       ;48
-            DW    :ERR48       ;49
-            DW    :ERR49       ;4A
-            DW    :ERR4E       ;4B
-            DW    :ERR3F       ;4C
-            DW    :ERR52       ;4D
-            DW    :ERR47       ;4E
-            DW    :ERR52       ;4F
-            DW    :ERR2F       ;50
-            DW    :ERR2F       ;51
-            DW    :CRESC1      ;52
-            DW    :MTSUB       ;now 53
-            DW    :TOOLNG0     ;now 54
-            DW    :INSSRC      ;now 55
-            DW    :INSTGT      ;now 56
+            DW    :NOTSUB     ;24
+            DW    :READ       ;25
+            DW    :WRITE      ;26
+            DW    :BLANK4     ;27
+            DW    :BLANK3     ;28
+            DW    0           ;[4am] moved inline
+            DW    :SLOT       ;2A
+            DW    :PRESS1     ;2B
+            DW    :FILE       ;2C
+            DW    :PSTATE0    ;2D
+            DW    :PSTATE1    ;2E
+            DW    :PSTATE2    ;2F
+            DW    :PSTATE3    ;30
+            DW    :PSTAT45    ;31
+            DW    :PSTAT45    ;32
+            DW    :TRACK      ;33
+            DW    :SECTOR     ;34
+            DW    :CRESC      ;35
+            DW    :NOFILES    ;36
+            DW    0           ;[4am] unused, was :INIT
+            DW    :INROOT     ;38
+            DW    0           ;[4am] unused, was :IO
+            DW    :ERROR      ;3A
+            DW    0           ;[4am] moved inline
+            DW    0           ;[4am] moved inline
+            DW    0           ;[4am] unused, was :COPYTP
+            DW    :HEADER     ;3E
+            DW    0           ;[4am] unused, was :DRIVE
+            DW    :FILES      ;40 MENU 9
+            DW    :VOLUME     ;41
+            DW    :DASHES     ;42
+            DW    :PRESS      ;43
+            DW    :MORE       ;44
+            DW    :ERR2B      ;45
+            DW    :ERR44      ;46
+            DW    :ERR45      ;47
+            DW    :ERR44      ;48
+            DW    :ERR48      ;49
+            DW    :ERR49      ;4A
+            DW    :ERR4E      ;4B
+            DW    :ERR3F      ;4C
+            DW    :ERR52      ;4D
+            DW    :ERR47      ;4E
+            DW    :ERR52      ;4F
+            DW    :ERR2F      ;50
+            DW    :ERR2F      ;51
+            DW    :CRESC1     ;52
+            DW    :MTSUB      ;now 53
+            DW    :TOOLNG0    ;now 54
+            DW    :INSSRC     ;now 55
+            DW    :INSTGT     ;now 56
 *
 *
 *
@@ -438,3 +438,4 @@ MESSAG      DW    :COPY        ;0 MENU 0
 :INSTGT     ASC   "Insert target disk"
             DB    $8D,$0
 *
+

@@ -3,7 +3,7 @@
 ********************************
 *
 FORMAT      LDX   #7
-            JSR   CHOOZ1         ;DOS OR PRODOS
+            JSR   CHOOZ1      ;DOS OR PRODOS
             CMP   #0
             BEQ   :PRODOS
             LDA   #$FF
@@ -15,7 +15,7 @@ FORMAT      LDX   #7
             LDA   UNIT
             JSR   SETSD
             JSR   DEVTYP
-            BEQ   :ISRMV         ;IT'S A DISK II
+            BEQ   :ISRMV      ;IT'S A DISK II
 *
 :NOTDII     BIT   :TEMP
             BMI   :PRO1
@@ -36,7 +36,7 @@ FORMAT      LDX   #7
 :COMRMV     JSR   PRHERE
             ASC   "Ready to format (Y/N) ? ",00
             JSR   CASKEY
-            CMP   #"Y"           ;YES
+            CMP   #"Y"        ;YES
             BNE   :GOFOUT
             JSR   HOME
 *
@@ -44,13 +44,13 @@ FORMAT      LDX   #7
 *
             JSR   DOSTYP
             STX   :XTEMP
-            BCS   :DOIT          ;UNREADABLE
+            BCS   :DOIT       ;UNREADABLE
             LDX   CURDEV
             LDY   DVICES,X
             CPY   #$BF
             BNE   :NOTRAM
             LDY   ISAUX
-            BMI   :DOIT          ;DISCONNECTED
+            BMI   :DOIT       ;DISCONNECTED
 *
 :NOTRAM     PHA
             JSR   PRHERE
@@ -58,7 +58,7 @@ FORMAT      LDX   #7
             ASC   "Destroy "
             DB    $0
             PLA
-            BMI   :CKIT1         ;PRODOS
+            BMI   :CKIT1      ;PRODOS
 :NONPRO     JSR   PRHERE
             ASC   "non-ProDOS volume? "
             DB    $0
@@ -66,7 +66,7 @@ FORMAT      LDX   #7
 *
 :CKIT1      LDX   :XTEMP
             LDA   VOLNMS,X
-            AND   #$0F           ;NAME LEN
+            AND   #$0F        ;NAME LEN
             BEQ   :NONPRO
             TAY
             LDA   #"/"
@@ -89,66 +89,66 @@ FORMAT      LDX   #7
 :DOIT       JSR   HOME
             LDA   :TEMP
             STA   DOSNOW
-            BPL   :DOITNOW       ;DOS 3.3
+            BPL   :DOITNOW    ;DOS 3.3
 *
 * PROMPT USER FOR VOLUME NAME, UNLESS
 * THE DEVICE IS /RAM
 *
             JSR   DEVTYP
-            CMP   #1             ;/RAM?
-            BEQ   :DOITNOW       ;YES
-            JSR   GETVOL         ;GET VOL NAME
-            BCS   :GOFOUT        ;ABORT
+            CMP   #1          ;/RAM?
+            BEQ   :DOITNOW    ;YES
+            JSR   GETVOL      ;GET VOL NAME
+            BCS   :GOFOUT     ;ABORT
 *
 *
 :DOITNOW    JSR   PRHERE
             DB    $8D,$8D,$8D
             ASC   "  Formatting disk",8D,8D,00
             JSR   DEVTYP
-            BEQ   :DODSK2        ;DISK II
+            BEQ   :DODSK2     ;DISK II
 *
 * NOT A DISK II DEVICE. DOES IT
 * SUPPORT FORMATTING?
 *
             TXA
-            AND   #8             ;SUPPORT FMT?
-            BEQ   :DVFMT1        ;NO: DONE
+            AND   #8          ;SUPPORT FMT?
+            BEQ   :DVFMT1     ;NO: DONE
 *
 *
 :DOSPCL     JSR   SPLFRM
-            BCS   :DVFMTX        ;ERROR
+            BCS   :DVFMTX     ;ERROR
             JSR   DEVTYP
-            CMP   #1             ;/RAM?
-            BNE   :DVFMT1        ;NOPE
-            STA   ISAUX          ;1-->*ISAUX
-            LDA   #0             ;Can't get MM anymore.
+            CMP   #1          ;/RAM?
+            BNE   :DVFMT1     ;NOPE
+            STA   ISAUX       ;1-->*ISAUX
+            LDA   #0          ;Can't get MM anymore.
             STA   GOTMM
 :DVFMT1     JMP   :FORMDN
 *
-:DVFMTX     JMP   ERROUT         ;FMT ERROR
+:DVFMTX     JMP   ERROUT      ;FMT ERROR
 *
 *
-:DODSK2     LDA   #$40           ;RATCHET!
-            STA   RCMND          ;(SETS TRK 0)
-            JSR   PHRWTS         ;DON'T CARE IF ERROR
-            LDA   #$04           ;FORMAT COMMAND
+:DODSK2     LDA   #$40        ;RATCHET!
+            STA   RCMND       ;(SETS TRK 0)
+            JSR   PHRWTS      ;DON'T CARE IF ERROR
+            LDA   #$04        ;FORMAT COMMAND
             STA   RCMND
-:FORMLP     JSR   PHRWTS         ;FORMAT TRK.
-            BCC   :FORMOK        ;ERROR?
-            LDA   RRTN           ;YES:
-            CMP   #$2B           ;WP?
+:FORMLP     JSR   PHRWTS      ;FORMAT TRK.
+            BCC   :FORMOK     ;ERROR?
+            LDA   RRTN        ;YES:
+            CMP   #$2B        ;WP?
             BNE   :NOTWP
             JMP   OUCH
-:NOTWP      LDA   #MERROR        ;NO:PRINT
-            JSR   LOWMES         ;ERROR
+:NOTWP      LDA   #MERROR     ;NO:PRINT
+            JSR   LOWMES      ;ERROR
             JSR   PRSPC
             JSR   PRTTRK
-            JMP   PRESS          ;GO AWAY.
+            JMP   PRESS       ;GO AWAY.
 :TEMP       DB    $0
 :XTEMP      DB    $0
 *
 :FORMOK     INC   RTRACK
-            LDA   RTRACK         ;NEXT TRK
+            LDA   RTRACK      ;NEXT TRK
             CMP   #$23
             BCC   :FORMLP
 *
@@ -176,7 +176,7 @@ SPLGO       LDA   GODEV+2
             LDA   $C08B
             LDA   $C08B
 :SKIP1      JSR   GODEV
-            STA   RRTN           ;4/5/86
+            STA   RRTN        ;4/5/86
             LDA   $C082
             RTS
 
@@ -209,7 +209,7 @@ GVCOM1      LDA   #$0F
             CPX   #$10
             BCC   :DOIT1
             LDA   VOLNAM
-            BEQ   :GVOUT         ;C IS SET
+            BEQ   :GVOUT      ;C IS SET
             LDA   #0
             STA   VOLNAM+$0F
             CLC
@@ -227,16 +227,16 @@ DDISK       BIT   DOSNOW
             JSR   CLRCAT
             LDA   #$00
             TAX
-:BLAHLP     STA   VTOC1,X        ;ZERO VTOC
+:BLAHLP     STA   VTOC1,X     ;ZERO VTOC
             INX
             BNE   :BLAHLP
-            LDX   #$11           ;SET NEEDED
-            STX   VTOC1+1        ;PARAMETERS
+            LDX   #$11        ;SET NEEDED
+            STX   VTOC1+1     ;PARAMETERS
             STX   VTOC1+$30
             STX   RTRACK
-            DEX                  ;10
+            DEX               ;10
             STX   VTOC1+$35
-            DEX                  ;F
+            DEX               ;F
             STX   RSECTR
             STX   VTOC1+2
             LDA   #$FE
@@ -246,29 +246,29 @@ DDISK       BIT   DOSNOW
             LDA   #$23
             STA   VTOC1+$34
             LDA   #$FF
-            LDX   #$3C           ;START AT TRK 1
-:FFLOOP     STA   VTOC1,X        ;WRITE PART
+            LDX   #$3C        ;START AT TRK 1
+:FFLOOP     STA   VTOC1,X     ;WRITE PART
             STA   VTOC1+$1,X
-            INX                  ;OF BITMAPS
+            INX               ;OF BITMAPS
             INX
             INX
             INX
             CPX   #$C4
             BCC   :FFLOOP
             LDX   #$00
-            STX   VTOC1+$7C      ;ZERO CATALOG
-            STX   VTOC1+$7D      ;BITMAP
-            INX                  ;1
+            STX   VTOC1+$7C   ;ZERO CATALOG
+            STX   VTOC1+$7D   ;BITMAP
+            INX               ;1
             STX   VTOC1+$31
             STX   VTOC1+$37
-            INX                  ;2
+            INX               ;2
             STX   RCMND
-            INX                  ;3
+            INX               ;3
             STX   VTOC1+3
             LDA   #>CAT1
             STA   RPAGE
-:LOOP       JSR   DORWTS         ;WRITE ENTIRE
-            INC   RPAGE          ;TRACK
+:LOOP       JSR   DORWTS      ;WRITE ENTIRE
+            INC   RPAGE       ;TRACK
             DEC   RSECTR
             BNE   :LOOP
             LDA   #>VTOC1
@@ -282,10 +282,11 @@ ZIPDOS      LDY   #$00
             INY
             BNE   :BOOTLP
             LDA   $C082
-            STY   RTRACK         ;0
+            STY   RTRACK      ;0
             STY   RSECTR
             INY
-            STY   DATA           ;1
+            STY   DATA        ;1
             LDA   #>DATA
             STA   RPAGE
             JMP   DORWTS
+

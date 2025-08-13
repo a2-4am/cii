@@ -15,9 +15,9 @@ FILER       LDX   #$FF
             CLD
             JSR   PNORML
             JSR   VDINIT
-            JSR   DOC00F         ;ALTCHARSET ON
+            JSR   DOC00F      ;ALTCHARSET ON
             JSR   GETDAT
-            JSR   CLOSEMM        ;Close MM in case of Reset.
+            JSR   CLOSEMM     ;Close MM in case of Reset.
 *
             JSR   FMTFIX
             LDA   #0
@@ -49,18 +49,18 @@ FILER       LDX   #$FF
             STA   HIMEM
             LDA   #$80
             STA   DELFLG
-            JSR   HOME           ;Clear screen before switching to 40 cols
-            JSR   COL40          ; so you don't see 80 switch in and out.
-            LDA   #0             ;But now CV is at bottom of screen.
-            JSR   VLEFT          ; Put it back at the top before printing the...
+            JSR   HOME        ;Clear screen before switching to 40 cols
+            JSR   COL40       ; so you don't see 80 switch in and out.
+            LDA   #0          ;But now CV is at bottom of screen.
+            JSR   VLEFT       ; Put it back at the top before printing the...
             LDA   #MHEADER
             JSR   PRINT
-            JSR   CINFO          ;DISK INFO LINE
-            LDX   #$00           ;MAIN MENU
+            JSR   CINFO       ;DISK INFO LINE
+            LDX   #$00        ;MAIN MENU
             STX   PRNTR?
             STX   RADR
             STX   TOPDIF
-            JSR   CHOOZ0         ;SELECT
+            JSR   CHOOZ0      ;SELECT
             ASL
             TAY
             LDA   :MENUTBL,Y
@@ -131,7 +131,7 @@ CHOOZ       JSR   MENU
             BCS   :RIGHTA
             BCC   :LEFTA
 *
-:NOTARO     CMP   #$8D           ;CR?
+:NOTARO     CMP   #$8D        ;CR?
             BNE   :LOOP1
 *
 :CR         SEC
@@ -164,11 +164,11 @@ CHOOZ       JSR   MENU
 *
 CHKKEY      EQU   *
             JSR   KYESC
-            CMP   #$88           ;LEFT ARROW
+            CMP   #$88        ;LEFT ARROW
             BEQ   :RETCLR
-            CMP   #$8B           ;UP ARROW
+            CMP   #$8B        ;UP ARROW
             BEQ   :RETCLR
-            CMP   #$95           ;RIGHT ARROW
+            CMP   #$95        ;RIGHT ARROW
             BEQ   :RETSET
             CMP   #$8A
             RTS
@@ -182,18 +182,18 @@ MENU        LDA   #4
             BEQ   :USE4
             ASL
 :USE4       JSR   VLEFT
-            LDA   FIRST,X        ;START AT ITS
-            STA   :OPTNUM        ;1ST OPTION
-:LOOP       CMP   CHOICE,X       ;CHOSEN ONE?
+            LDA   FIRST,X     ;START AT ITS
+            STA   :OPTNUM     ;1ST OPTION
+:LOOP       CMP   CHOICE,X    ;CHOSEN ONE?
             BNE   :SEEOPT
-            JSR   PINVRS         ; INVERSE IT
-:SEEOPT     JSR   PRINT          ;PRINT IT
+            JSR   PINVRS      ; INVERSE IT
+:SEEOPT     JSR   PRINT       ;PRINT IT
             JSR   PNORML
             JSR   CROUT
-            INC   :OPTNUM        ;NEXT OPTION
+            INC   :OPTNUM     ;NEXT OPTION
             LDA   :OPTNUM
-            CMP   LAST,X         ;LOOP BACK TIL
-            BNE   :LOOP          ;END OF MENU
+            CMP   LAST,X      ;LOOP BACK TIL
+            BNE   :LOOP       ;END OF MENU
             RTS
 :OPTNUM     DB    $0
 *
@@ -211,8 +211,8 @@ MENU        LDA   #4
 *
 *  Menu:          0       1          2         3        4       5   6   7        8         9
 LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,$00,$00,MDOS33+1,MCOPDOS+1,MVOLUME+1
-FIRST       DB    MCOPY,  MNORMAL,   MDELFILE, MVERDISK,MVALUES,$00,$00,MPRODOS, MCOPFILE, MFILES
-CHOICE      DB    MCOPY,  MNORMAL,   MDELFILE, MVERDISK,MVALUES,$00,$00,MPRODOS, MCOPFILE, MFILES
+FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,$00,$00,MPRODOS,MCOPFILE,MFILES
+CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,$00,$00,MPRODOS,MCOPFILE,MFILES
 *
 * POSITION FOR MAIN SCREEN CHOOSES
 *
@@ -226,7 +226,7 @@ CHOPOS      LDA   #$12
 VDINIT      JSR   INIT
             JSR   SETNOR
 VDINT1      JSR   SETVID
-            JSR   DOC00F         ; [4am] set ALTCHARSET
+            JSR   DOC00F      ; [4am] set ALTCHARSET
             JMP   SETKBD
 *
 *   SEE DISK INFO
@@ -273,20 +273,21 @@ INFO        LDA   #$16
             LDA   #$26
             STA   CH
 :GETCHAR    JSR   KEYESC
-            CMP   #$8D         ;CR?
+            CMP   #$8D        ;CR?
             BEQ   :DEFAULT
             SEC
-            SBC   #$B0         ;CONVERT TO #
+            SBC   #$B0        ;CONVERT TO #
             CMP   #8
             BCS   :ERR
             STA   PSLOT
-            JMP   PHHEX        ;PRINT IT
+            JMP   PHHEX       ;PRINT IT
 *
-:ERR        JSR   BELL         ;TRY AGAIN
+:ERR        JSR   BELL        ;TRY AGAIN
             JMP   :GETCHAR
 *
-:DEFAULT    LDA   (BASL),Y     ;REMOVE FLASH
+:DEFAULT    LDA   (BASL),Y    ;REMOVE FLASH
             AND   #$3F
-            ORA   #$80         ;FROM EXISTING
-            STA   (BASL),Y     ;CHAR
+            ORA   #$80        ;FROM EXISTING
+            STA   (BASL),Y    ;CHAR
             RTS
+

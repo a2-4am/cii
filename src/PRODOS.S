@@ -34,18 +34,18 @@ DOSTYP      LDA   #0
             BCC   :USEIT
             LDA   #0
             BEQ   :CHROK
-:USEIT      CMP   #$5B             ;'Z'+1
-            BCS   :ERR52           ;>Z
+:USEIT      CMP   #$5B        ;'Z'+1
+            BCS   :ERR52      ;>Z
             CMP   #$41
-            BCS   :CHROK           ;A-Z
+            BCS   :CHROK      ;A-Z
             CPY   #0
-            BEQ   :ERR52           ;IS 1ST
+            BEQ   :ERR52      ;IS 1ST
             CMP   #$2E
-            BEQ   :CHROK           ;.
+            BEQ   :CHROK      ;.
             CMP   #$30
-            BCC   :ERR52           ;<0
+            BCC   :ERR52      ;<0
             CMP   #$3A
-            BCS   :ERR52           ;>9
+            BCS   :ERR52      ;>9
 :CHROK      STA   VOLNAM,Y
             INX
             INY
@@ -75,18 +75,18 @@ DOSTYP      LDA   #0
 * RETURN C=0.
 *
             JSR   UNTDV0
-            LDX   #$52             ;RESTORE ERR
+            LDX   #$52        ;RESTORE ERR
             STX   RRTN
-            TAX                    ;RESTORE Z
+            TAX               ;RESTORE Z
             CLC
-            BCC   :CKUNIT          ;ALWAYS
+            BCC   :CKUNIT     ;ALWAYS
 *
 * IF ERR <> 52 AND ERR > 3F, RETURN
 * WITH C=0 SO FORMAT KNOWS THAT DISK
 * WAS READABLE.
 *
 :NOT52      CMP   #$40
-            BCS   :ISPRO           ;ERR # > $3F
+            BCS   :ISPRO      ;ERR # > $3F
 *
 * ERROR <$40, WHICH MEANS AN I/O ERR.
 * IF NON-FLOPPY, ASSUME PRODOS.
@@ -95,16 +95,16 @@ DOSTYP      LDA   #0
 *
             JSR   UNTDV0
             SEC
-:CKUNIT     BEQ   :COMDUN          ;A ALREADY 0
+:CKUNIT     BEQ   :COMDUN     ;A ALREADY 0
             BNE   :ISPRO0
 *
 :ISPRO      CLC
-:ISPRO0     LDA   #$FF             ;ASSUME PRODOS
+:ISPRO0     LDA   #$FF        ;ASSUME PRODOS
 *
 :COMDUN     STA   DOSNOW
             PHP
             CMP   #0
-            BNE   :SKIPFAK         ;NOT DOS
+            BNE   :SKIPFAK    ;NOT DOS
             LDA   #0
             JSR   FAKTRK
 :SKIPFAK    LDX   :BUFF
@@ -171,14 +171,14 @@ GTBLKS      JSR   DEVTYP
             RTS
 *
 ROMBLK      LDY   #$FC
-            LDA   (TMPPTR),Y       ;BLKS LO
+            LDA   (TMPPTR),Y  ;BLKS LO
             TAX
             INY
-            LDA   (TMPPTR),Y       ;BLKS HI
+            LDA   (TMPPTR),Y  ;BLKS HI
             TAY
-            BNE   GTBDON           ;BLKS VALID
+            BNE   GTBDON      ;BLKS VALID
             CPX   #0
-            BNE   GTBDON           ;BLKS VALID
+            BNE   GTBDON      ;BLKS VALID
 *
 * GET TOTAL BLOCKS THRU STATUS REQUEST
 *
@@ -204,7 +204,7 @@ PDDISK      JSR   GTBLKS
 *
             CPY   #0
             BEQ   :NADA
-            JMP   SPLFRM           ;FORMAT IT
+            JMP   SPLFRM      ;FORMAT IT
 :NADA       RTS
 *
 :PDD0       STX   :TOTBLK
@@ -274,7 +274,7 @@ PDDISK      JSR   GTBLKS
 *
             LDA   #2
             STA   VTOC1
-            ASL                    ;2 --> 4
+            ASL               ;2 --> 4
             STA   VTOC1+2
 :D4LP       LDY   VTOC1
             INY
@@ -311,7 +311,7 @@ PDDISK      JSR   GTBLKS
 *
 * WRITE OUT LAST BLOCK OF BITMAP
 *
-:BM2        JSR   PNTFIL0          ;RETURNS WITH Y=0
+:BM2        JSR   PNTFIL0     ;RETURNS WITH Y=0
 *LDY #0
 :BM2LP      LDA   :TOTBLK+1
             BEQ   :BM3
@@ -347,15 +347,15 @@ PDDISK      JSR   GTBLKS
 *
             LDA   BLKNUM
             CMP   #6
-            BEQ   :MARKDN          ;ONE BLK BM
+            BEQ   :MARKDN     ;ONE BLK BM
             STA   :TEMP
             LDA   #6
             STA   BLKNUM
             LDA   #>VTOC1
             STA   BM
             JSR   DORBLK
-:MARKIT     LDX   :TEMP            ;BLK LO
-            LDA   #0               ;BLK HI
+:MARKIT     LDX   :TEMP       ;BLK LO
+            LDA   #0          ;BLK HI
             JSR   MRKBLK
             DEC   :TEMP
             LDA   :TEMP
@@ -408,7 +408,7 @@ MRKBLK      STX   POINT
             STA   (POINT),Y
             PLA
             PHA
-            BEQ   :MRKOUT          ;DON'T INC
+            BEQ   :MRKOUT     ;DON'T INC
             INC   BLKCNT
             BNE   :MRKOUT
             INC   BLKCNT+1
@@ -468,7 +468,7 @@ SMART       JSR   CURPNT
 * END OF VOLUME FOR AVAILABILITY.
 *
             JSR   :DOSOME
-            BCS   :GOTEM           ;DONE
+            BCS   :GOTEM      ;DONE
 *
 * EXAMINE BLOCKS FROM START OF VOLUME
 * TO KEY BLOCK FOR AVAILIBILITY.
@@ -481,7 +481,7 @@ SMART       JSR   CURPNT
             LDA   :STRTBLK+1
             STA   :MAXBLK+1
             JSR   :DOSOME
-            BCC   :NOPE            ;UNRECOVERABLE
+            BCC   :NOPE       ;UNRECOVERABLE
 *
 * FILE SUCCESSFULLY UNDELETED
 * WRITE INDEX BLOCK AND MASTER BLOCK
@@ -497,7 +497,7 @@ SMART       JSR   CURPNT
             BCS   :NOPE
             LDA   STRTYP
             CMP   #$30
-            BNE   :GOTEM1          ;NOT TREE
+            BNE   :GOTEM1     ;NOT TREE
             LDA   :MIBBLK
             STA   BLKNUM
             LDA   :MIBBLK+1
@@ -518,7 +518,7 @@ SMART       JSR   CURPNT
             LDA   BLKNUM+1
             CMP   :MAXBLK+1
             CLC
-            BEQ   :MARKIT2         ;HIT MAX VALUE
+            BEQ   :MARKIT2    ;HIT MAX VALUE
 :SMART2     LDA   STRTYP
             CMP   #$30
             BNE   :SMART3
@@ -530,7 +530,7 @@ SMART       JSR   CURPNT
 :SMART3     LDA   BLKNUM+1
             LDX   BLKNUM
             JSR   MRKBLK
-            BEQ   :DOSOME          ;NO GOOD
+            BEQ   :DOSOME     ;NO GOOD
             JSR   :ADDBLK
             LDA   BLKCNT
             CMP   :BLKTOTL
@@ -581,11 +581,11 @@ PUNDO       JSR   PUNDO0
 * NOW GO THRU INDEX BLOCKS AND RESTORE THEM TO PROPER ORDER
 *
             JSR   SWAPEM
-            BCC   UNDOIT           ;GOOD SWAP
+            BCC   UNDOIT      ;GOOD SWAP
 *
 MRKBAD      INC   BADNUM
             LDA   #$FF
-            BNE   MRKCOM           ;ALWAYS
+            BNE   MRKCOM      ;ALWAYS
 *
 DOMAYBE     INC   MAYBE
             LDA   #$FE
@@ -598,8 +598,8 @@ MRKCOM      PHA
             TYA
             STA   (POINT),Y
             PLA
-MARKIT      LDX   CURR             ;MARK FILE
-            STA   STATUS,X         ;GOOD OR BAD
+MARKIT      LDX   CURR        ;MARK FILE
+            STA   STATUS,X    ;GOOD OR BAD
             RTS
 *
 UNDOIT      JSR   WRITBM
@@ -611,7 +611,7 @@ UNDOIT      JSR   WRITBM
             INC   SDIR+$26
 :UNDO1      JSR   WRCAT1
             LDA   #0
-            BEQ   MARKIT           ;ALWAYS
+            BEQ   MARKIT      ;ALWAYS
 *
 KEYBLK      DB    0,0
 *
@@ -646,7 +646,7 @@ SWAPEM      EQU   *
             LDY   #>SMIB
             STY   RPAGE
             JSR   SWAPIB
-            JSR   WTBLK            ;WRITE OUT MASTER IB
+            JSR   WTBLK       ;WRITE OUT MASTER IB
             BCS   :ERR1
             LDY   #0
             STY   MIBPTR
@@ -661,17 +661,17 @@ SWAPEM      EQU   *
             LDA   SMIB,Y
             STA   BLKNUM
             ORA   BLKNUM+1
-            BEQ   :NXTIBT          ;NULL ENTRY
+            BEQ   :NXTIBT     ;NULL ENTRY
             LDA   #>SIB
             STA   RPAGE
-            JSR   RDBLK            ;READ INDEX BLK
+            JSR   RDBLK       ;READ INDEX BLK
             BCS   :ERR
             LDY   #>SIB
-            JSR   SWAPIB           ;SWAP IT
-            JSR   WTBLK            ;WRITE IT BACK OUT
+            JSR   SWAPIB      ;SWAP IT
+            JSR   WTBLK       ;WRITE IT BACK OUT
             BCS   :ERR
 :NXTIBT     INC   MIBPTR
-            BPL   :MIBAGNT         ;MIBPTR < $80
+            BPL   :MIBAGNT    ;MIBPTR < $80
 :GOODSWP    CLC
 :ERR        RTS
 *
@@ -679,7 +679,7 @@ SWAPEM      EQU   *
 ********************************
 *
 PUNDO0      LDA   #>DATA
-            JSR   READBM           ;READ IN ENTIRE BITMAP
+            JSR   READBM      ;READ IN ENTIRE BITMAP
             JSR   CURPNT
 *
 * FIGURE OUT HOW LONG FILENAME IS
@@ -694,49 +694,49 @@ PUNDO0      LDA   #>DATA
             STY   MIBPTR
             STY   BLKCNT
             STY   BLKCNT+1
-            STA   (POINT),Y        ;NAME LEN
+            STA   (POINT),Y   ;NAME LEN
             LDY   #$10
-            LDA   (POINT),Y        ;FILE TYPE
+            LDA   (POINT),Y   ;FILE TYPE
             CMP   #$0F
             BNE   :NOTDIR
-            LDA   #$D0             ;IT'S A SUBDIR FILE
+            LDA   #$D0        ;IT'S A SUBDIR FILE
             BNE   :GOTSTR
 *
 :NOTDIR     LDY   #$17
-            LDA   (POINT),Y        ;EOF HI
+            LDA   (POINT),Y   ;EOF HI
             CMP   #2
             BCC   :NOTTREE
-            LDA   #$30             ;EOF SAYS IT'S A TREE FILE
+            LDA   #$30        ;EOF SAYS IT'S A TREE FILE
             BNE   :GOTSTR
 *
 :NOTTREE    CMP   #0
-            BNE   :ISSAP           ;EOF SAYS SAPLING
+            BNE   :ISSAP      ;EOF SAYS SAPLING
             DEY
             LDA   (POINT),Y
             CMP   #2
             BCS   :ISSAP
-            LDA   #$10             ;SEEDLING
+            LDA   #$10        ;SEEDLING
             BNE   :GOTSTR
 *
 :ISSAP      LDA   #$20
 :GOTSTR     STA   STRTYP
             LDY   #0
-            ORA   (POINT),Y        ;OR WITH FILENAME LENGTH
+            ORA   (POINT),Y   ;OR WITH FILENAME LENGTH
             STA   (POINT),Y
             LDY   #$11
-            LDA   (POINT),Y        ;KEY LO
+            LDA   (POINT),Y   ;KEY LO
             STA   BLKNUM
             STA   KEYBLK
             TAX
             INY
-            LDA   (POINT),Y        ;KEY HI
+            LDA   (POINT),Y   ;KEY HI
             STA   BLKNUM+1
             STA   KEYBLK+1
             JSR   MRKBLK
-            BEQ   :GOBAD           ;KEY BLOCK REALLOCATED
+            BEQ   :GOBAD      ;KEY BLOCK REALLOCATED
             LDA   STRTYP
-            CMP   #$10             ;SEEDLING FILE?
-            BEQ   :DID             ;YES: KEY BLOCK IS ALL
+            CMP   #$10        ;SEEDLING FILE?
+            BEQ   :DID        ;YES: KEY BLOCK IS ALL
             CMP   #$20
             BEQ   :DOSAP
             CMP   #$30
@@ -744,10 +744,10 @@ PUNDO0      LDA   #>DATA
             JMP   :DODIR
 :DOSAP      LDA   #>SIB
             STA   RPAGE
-            JSR   RDBLK            ;READ INDEX BLK INTO SIB
-            BCS   :GOBAD1          ;I/O ERROR
+            JSR   RDBLK       ;READ INDEX BLK INTO SIB
+            BCS   :GOBAD1     ;I/O ERROR
             JSR   :MRKIDXB
-            BCS   :GOBAD1          ;SOME BLOCK WAS REALLOCATED
+            BCS   :GOBAD1     ;SOME BLOCK WAS REALLOCATED
 :DID        CLC
             RTS
 *
@@ -755,8 +755,8 @@ PUNDO0      LDA   #>DATA
 *
 :DOTREE     LDA   #>SMIB
             STA   RPAGE
-            JSR   RDBLK            ;READ MASTER INDEX BLOCK
-            BCS   :GOBAD1          ;I/O ERROR
+            JSR   RDBLK       ;READ MASTER INDEX BLOCK
+            BCS   :GOBAD1     ;I/O ERROR
             LDY   #0
             STY   MIBPTR
 *
@@ -766,7 +766,7 @@ PUNDO0      LDA   #>DATA
 *
             LDA   SMIB
             BEQ   :MIBAGN
-            INY                    ;0 --> 1
+            INY               ;0 --> 1
 :MIBCHK     LDA   SMIB,Y
             BNE   :MIBAGN
             INY
@@ -786,16 +786,16 @@ PUNDO0      LDA   #>DATA
             BEQ   :NXTIB
             LDA   BLKNUM+1
             LDX   BLKNUM
-:MIBAGN1    JSR   MRKBLK           ;MARK INDEX BLK
-:GOBAD      BEQ   :BAD             ;INDEX BLOCK REALLOCATED
+:MIBAGN1    JSR   MRKBLK      ;MARK INDEX BLK
+:GOBAD      BEQ   :BAD        ;INDEX BLOCK REALLOCATED
             LDA   #>SIB
             STA   RPAGE
-            JSR   RDBLK            ;READ INDEX BLK
+            JSR   RDBLK       ;READ INDEX BLK
 :GOBAD1     BCS   :BAD
             JSR   :MRKIDXB
-            BCS   :BAD             ;SOME BLOCK REALLOCATED
+            BCS   :BAD        ;SOME BLOCK REALLOCATED
 :NXTIB      INC   MIBPTR
-            BPL   :MIBAGN          ;MIBPTR < $80
+            BPL   :MIBAGN     ;MIBPTR < $80
             BMI   :DID
 *
 
@@ -804,11 +804,11 @@ PUNDO0      LDA   #>DATA
             LDA   SIB+3
             STA   BLKNUM+1
             ORA   BLKNUM
-            BEQ   :DID             ;END OF SUBDIR
+            BEQ   :DID        ;END OF SUBDIR
             LDA   BLKNUM+1
             LDX   BLKNUM
             JSR   MRKBLK
-            BEQ   :BAD             ;SUBDIR BLOCK REALLOCATED
+            BEQ   :BAD        ;SUBDIR BLOCK REALLOCATED
 *
 * READ NEXT BLOCK OF SUBDIR INTO
 * SIB
@@ -821,7 +821,7 @@ PUNDO0      LDA   #>DATA
 :DODIR      LDA   #>SIB
             STA   RPAGE
             JSR   RDBLK
-            BCS   :BAD             ;I/O ERROR
+            BCS   :BAD        ;I/O ERROR
 *
 * THIS IS THE FIRST BLOCK OF THE
 * SUBDIRECTORY. UNDELETE THE SUBDIR
@@ -851,12 +851,12 @@ PUNDO0      LDA   #>DATA
 * NUMBER IS STORED IN CORRECT ORDER.
 *
             LDA   MIBPTR
-            BNE   :IBAGN           ;NOT 1ST INDEX BLOCK IN MIB
+            BNE   :IBAGN      ;NOT 1ST INDEX BLOCK IN MIB
             LDA   SIB
             BEQ   :IBAGN
-            INY                    ;0 --> 1
+            INY               ;0 --> 1
 :MRKCHK     LDA   SIB,Y
-            BNE   :IBAGN           ;MORE THAN ONE ENTRY
+            BNE   :IBAGN      ;MORE THAN ONE ENTRY
             INY
             BNE   :MRKCHK
             LDX   SIB
@@ -876,7 +876,7 @@ PUNDO0      LDA   #>DATA
             LDA   SIB+$100,Y
             STA   BLKNUM
             ORA   BLKNUM+1
-            BEQ   :NXTBLK          ;UNUSED (0,0) ENTRY
+            BEQ   :NXTBLK     ;UNUSED (0,0) ENTRY
             LDA   BLKNUM+1
             LDX   BLKNUM
             JSR   MRKBLK
@@ -981,7 +981,7 @@ PRDCNT      LDA   DIRBLK
             LDA   (POINT),Y
             DEY
             CMP   #0
-            BEQ   :SKIP            ;NEVER USED ENTRY
+            BEQ   :SKIP       ;NEVER USED ENTRY
             LDX   DELFLG
             LDA   (POINT),Y
             AND   #$0F
@@ -990,17 +990,17 @@ PRDCNT      LDA   DIRBLK
 * INACTIVE (DELETED) ENTRY, USE IT?
 *
             CPX   #$80
-            BEQ   :SKIP            ;WANT ACTIVE
-            BNE   :USEIT           ;ALWAYS
+            BEQ   :SKIP       ;WANT ACTIVE
+            BNE   :USEIT      ;ALWAYS
 *
 * ACTIVE ENTRY, USE IT?
 *
 :ACTIVE     CPX   #0
-            BEQ   :SKIP            ;WANT INACTIVE
+            BEQ   :SKIP       ;WANT INACTIVE
             LDA   (POINT),Y
             AND   #$F0
             CMP   #$E0
-            BCS   :SKIP            ;SUB HEADER
+            BCS   :SKIP       ;SUB HEADER
 *
 :USEIT      TYA
             LDX   NACTIV
@@ -1008,7 +1008,7 @@ PRDCNT      LDA   DIRBLK
             LDA   POINT+1
             STA   CSECTR,X
             INC   NACTIV
-            BEQ   :UHOH            ;OVERFLOW
+            BEQ   :UHOH       ;OVERFLOW
 :SKIP       TYA
             CLC
             ADC   #$27
@@ -1016,15 +1016,15 @@ PRDCNT      LDA   DIRBLK
             BCC   :RDRLP
             INC   POINT+1
             INC   RPAGE
-            BNE   :RDRLP           ;ALWAYS
+            BNE   :RDRLP      ;ALWAYS
 *
 :NEXT       INC   POINT+1
             INC   RPAGE
             LDA   BLKNUM
             ORA   BLKNUM+1
-            BEQ   :RDRDON          ;NO MORE BLOCKS
+            BEQ   :RDRDON     ;NO MORE BLOCKS
             DEC   COUNT
-            BNE   :RDDR2           ;READ NEXT BLK
+            BNE   :RDDR2      ;READ NEXT BLK
 *
 *
 *
@@ -1038,7 +1038,7 @@ PRDCNT      LDA   DIRBLK
 *
 :UHOH       DEC   NACTIV
             INC   RPAGE
-            BNE   :RDRDON          ;ALWAYS
+            BNE   :RDRDON     ;ALWAYS
 *
 *
 *
@@ -1210,7 +1210,7 @@ PRVCOM      STA   UNIT
             LDA   #0
             JSR   TABV
             LDA   CHOICE
-            BNE   :CONTIN          ;CMD NOT COPY
+            BNE   :CONTIN     ;CMD NOT COPY
             LDA   SDCH
             SEC
             SBC   #8
@@ -1241,7 +1241,7 @@ PRVCOM      STA   UNIT
             STY   HEXNUM+1
             LDA   (TMPPTR),Y
             STA   :PFXLEN
-            BMI   :BLNKLP          ;NO PFX
+            BMI   :BLNKLP     ;NO PFX
             BIT   DOSNOW
             BPL   :DOS33
             CMP   #0
@@ -1258,7 +1258,7 @@ PRVCOM      STA   UNIT
             JSR   HEXDEC
             JSR   PRTLZ
             LDY   #$14
-            BNE   :BLNKLP          ;ALWAYS
+            BNE   :BLNKLP     ;ALWAYS
 *
 :PRODOS     INY
             LDA   (TMPPTR),Y
@@ -1319,15 +1319,15 @@ PCFILE      LDY   #0
 :LENGTH     DB    $0
 *
 *
-PCATLN      STA   :TYPE            ;CAT DPLY TYPE
-            LDY   #$1E             ;ACCESS
+PCATLN      STA   :TYPE       ;CAT DPLY TYPE
+            LDY   #$1E        ;ACCESS
             LDA   (POINT),Y
             LDX   #"?"
             CMP   #$81
-            BEQ   :ISLOKD          ;'MAYBE' STATUS
+            BEQ   :ISLOKD     ;'MAYBE' STATUS
             LDX   #"*"
             AND   #$C2
-            BEQ   :ISLOKD          ;SAY LOCKED ONLY IF 3 BITS OFF
+            BEQ   :ISLOKD     ;SAY LOCKED ONLY IF 3 BITS OFF
             LDX   #" "
 :ISLOKD     TXA
             JSR   PCOUT
@@ -1528,7 +1528,7 @@ SHODAT      CMP   #0
             STX   :DATEMP
             AND   #$1F
             JSR   HEXDC1
-            JSR   PRT2DG           ;WAS PRT2RJ
+            JSR   PRT2DG      ;WAS PRT2RJ
             LDA   #"-"
             JSR   PCOUT
             PLA
@@ -1586,17 +1586,17 @@ GETTYP      BIT   DOSNOW
 SETLOK      BIT   DOSNOW
             BPL   :DOS33
             LDY   #$1E
-            LDX   #1               ;ANTICIPATE LOCKING
+            LDX   #1          ;ANTICIPATE LOCKING
             CMP   #$FF
-            BEQ   :SLK3            ;LOCK IT
+            BEQ   :SLK3       ;LOCK IT
             CMP   #$80
-            BNE   :SLK2            ;UNLOCK IT
+            BNE   :SLK2       ;UNLOCK IT
             LDA   (POINT),Y
             AND   #$C2
-            BNE   :SLK3            ;TOGGLE UNLOCKED --> LOCKED
+            BNE   :SLK3       ;TOGGLE UNLOCKED --> LOCKED
 :SLK2       LDX   #$C3
 :SLK3       LDA   (POINT),Y
-            AND   #$20             ;ISOLATE BACKUP BIT
+            AND   #$20        ;ISOLATE BACKUP BIT
             STA   (POINT),Y
             TXA
             ORA   (POINT),Y
@@ -1719,7 +1719,7 @@ DVTYPX      LDA   #0
             LDA   DEVADR+$1,Y
             STA   GODEV+2
             CMP   #$FF
-            BEQ   :RAM             ;MAYBE /RAM
+            BEQ   :RAM        ;MAYBE /RAM
             CMP   #$C8
             BCS   :RAMDRV
             CMP   #$C1
@@ -1735,7 +1735,7 @@ DVTYPX      LDA   #0
             CPX   #$18
             BNE   :ROMDRV1
             DEY
-            BEQ   :ISDSKII         ;ASSUME DISK II
+            BEQ   :ISDSKII    ;ASSUME DISK II
 :ROMDRV1    LDY   #$FE
             LDA   (TMPPTR),Y
             AND   #$88
@@ -1748,7 +1748,7 @@ DVTYPX      LDA   #0
             RTS
 *
 :RAM        LDA   GODEV+1
-            BNE   :RAMDRV          ;NOT /RAM
+            BNE   :RAMDRV     ;NOT /RAM
 *
 * DRIVER ADDRESS IS $FF00, NOW CHECK
 * IF ENTRY IN DEVICE TABLE IS $BF.
@@ -1764,7 +1764,7 @@ DVTYPX      LDA   #0
             LDA   #$09
             LDX   TEMP2
             CPX   #$BF
-            BEQ   :RAMOUT          ;IT IS /RAM
+            BEQ   :RAMOUT     ;IT IS /RAM
 *
 * IT IS SOME SORT OF /RAM DEVICE,
 * BUT NOT THE USUAL ONE
@@ -1822,7 +1822,7 @@ PDOCAT      LDA   RCMND
 :WTMORE     JSR   DOWBLK
             LDY   #2
             LDA   (POINT),Y
-            STA   BLKNUM           ;NEXT BLOCK
+            STA   BLKNUM      ;NEXT BLOCK
             INY
             LDA   (POINT),Y
             STA   BLKNUM+1
@@ -1977,12 +1977,12 @@ LASTOP      DB    $0
 *
 *
 MLIERR      LDA   RRTN
-            CMP   #$48             ;DISK FULL?
-            BNE   ERROUT           ;NOPE
+            CMP   #$48        ;DISK FULL?
+            BNE   ERROUT      ;NOPE
 *
 * DELETE INCOMPLETELY COPIED FILE
 *
-            JSR   CLOSE            ;CLOSE IT
+            JSR   CLOSE       ;CLOSE IT
             LDA   #>FILE
             STA   POINT+1
             LDA   #FILE
@@ -2054,7 +2054,7 @@ DODEV       STA   CURDEV
             LDA   #0
             STA   VOLFLG
             LDA   #$FF
-            STA   DOSNOW           ;ASSUME PRODOS
+            STA   DOSNOW      ;ASSUME PRODOS
             JSR   LOHERE
             ASC   "Press [?] to display volume names"
             DB    $0
@@ -2068,18 +2068,18 @@ DODEV       STA   CURDEV
             CMP   #"/"
             BEQ   :GETVOLS
             CMP   #$8D
-            BNE   :KEYORD          ;BAD KEY
+            BNE   :KEYORD     ;BAD KEY
 *
 :CHOOSE     LDX   CURDEV
             LDA   DVICES,X
             CMP   #$BF
 * AND #$F0
 * CMP #$B0                ;CHOOSE /RAM?
-            BNE   :CHOOS0          ;NO
-            LDA   ISAUX            ;/RAM ACTIVE?
-            BPL   :CHOOS0          ;YES
-            LDA   DEVFLG           ;CMD=FORMAT?
-            BMI   :CHOOS0          ;YES
+            BNE   :CHOOS0     ;NO
+            LDA   ISAUX       ;/RAM ACTIVE?
+            BPL   :CHOOS0     ;YES
+            LDA   DEVFLG      ;CMD=FORMAT?
+            BMI   :CHOOS0     ;YES
             JSR   BELL
             JMP   :DEVMNU
 *
@@ -2136,7 +2136,7 @@ DODEV       STA   CURDEV
             DW    :ONLINE
 :GETSKIP    DEX
             BPL   :GETVLP
-            STX   VOLFLG           ;FF
+            STX   VOLFLG      ;FF
             JMP   :DEVMNU
 :ONLINE     DB    $2
             DB    $0
@@ -2205,7 +2205,7 @@ DODEV       STA   CURDEV
             BNE   :SEEVOLQ
             LDX   :SHODEV
             JSR   DVTYPX
-            BEQ   :SEEDII          ;DISK II
+            BEQ   :SEEDII     ;DISK II
             JSR   PRHERE
             ASC   "non-ProDOS"
             DB    $0
@@ -2236,7 +2236,7 @@ TREEA       JSR   DOSTYP
             STA   PFXADR+1
             LDA   ACURR
             JSR   DOTREE
-            BCS   SETA             ;I/O ERROR
+            BCS   SETA        ;I/O ERROR
             STA   ACURR
             RTS
 SETA        JSR   DOSTYP
@@ -2348,7 +2348,7 @@ SETSD
             LDX   :UDCTBL1,Y
 :CKUDC2     LDA   $C500,X
             CMP   :UDCTBL2,Y
-            BNE   :SETSD9          ;Not a UDC
+            BNE   :SETSD9     ;Not a UDC
             DEY
             BPL   :CKUDC1
 *
@@ -2363,8 +2363,8 @@ SETSD
 :CKUDC3
             LDA   $CAD2-1,Y
             CMP   #2
-            BCS   :SETSD9          ;Never(?)
-            ADC   #1               ;C already clear
+            BCS   :SETSD9     ;Never(?)
+            ADC   #1          ;C already clear
             STA   HDRIVE
             LDX   :UDCSLOT
             STX   HSLOT
@@ -2381,3 +2381,4 @@ CLOSE       JSR   MLI
             DW    :CLSLST
             RTS
 :CLSLST     DB    $1,$0
+

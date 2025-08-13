@@ -6,13 +6,13 @@
 *
 * Time out from code for some LOCAL LABELS
 *
-            DUM   $80            ;zero page stuff
+            DUM   $80         ;zero page stuff
 :PTR        DB    0,0,0,0
 :TEMPZP     DB    0
 :SLOTZP     DB    0
 :ADRCNT     DB    0
 :ODD        DB    0
-:RPOINT     DB    0              ;2
+:RPOINT     DB    0           ;2
 :TEMP1      DB    0
 :TEMP2      DB    0
 :TEMP3      DB    0
@@ -23,14 +23,14 @@
             DEND
 *
             DUM   $5000
-:DEST       DB    0              ;MODIFY-POKED
+:DEST       DB    0           ;MODIFY-POKED
             DEND
 *
 *
 * GENERAL PURPOSE DELAY ROUTINE
 *
 :DELAY      LDX   #$11
-]SPOT = *
+]SPOT       =     *
 :DELAY2     DEX
             BNE   :DELAY2
             ERR   {*&$FF00}-{]SPOT&$FF00}
@@ -51,16 +51,16 @@
 *
 CRIT1       PHP
             SEI
-            LDA   #$1D           ;INIT HIBYTE
-            STA   TEMP           ;OF COUNTER.
-            LDA   #$FF           ;WP CHECK DONE
-            STA   $C08F,X        ;WRITE MODE.
+            LDA   #$1D        ;INIT HIBYTE
+            STA   TEMP        ;OF COUNTER.
+            LDA   #$FF        ;WP CHECK DONE
+            STA   $C08F,X     ;WRITE MODE.
             CMP   $C08C,X
             PHA
             PLA
             NOP
             LDA   #$FF
-]SPOT = *
+]SPOT       =     *
 :NOPAGE     PHA
             PLA
 :LOOP       JSR   :WRITE7
@@ -91,22 +91,22 @@ CRIT1       PHP
 *
 CRIT2       PHP
             SEI
-            LDY   #$00           ;INIT COUNT
+            LDY   #$00        ;INIT COUNT
             STY   HEXNUM+1
             LDX   HSLOT
-]SPOT = *
-:LOOPD5     LDA   $C08C,X        ;WAIT FOR 'D5'
+]SPOT       =     *
+:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
             BPL   :LOOPD5
             CMP   #$D5
             BNE   :LOOPD5
-:NOTD5      LDA   $C08C,X        ;WAIT FOR NOND5
+:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
             BPL   :NOTD5
             CMP   #$D5
             BEQ   :NOTD5
-:LOOP1      PHA                  ;20 U-SEC LOOP
+:LOOP1      PHA               ;20 U-SEC LOOP
             PLA
-:LOOP2      LDA   $C08C,X        ;20 U-SEC LOOP
-            CMP   #$D5           ;DONE COUNTING?
+:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
+            CMP   #$D5        ;DONE COUNTING?
             BEQ   :DONE
             INY
             BNE   :LOOP1
@@ -206,37 +206,37 @@ CRIT2       PHP
 *
 * READ DATA PROLOG
 *
-:RD62A      LDY   #$20           ;INIT ERROR count.
-:RDDPRO     DEY                  ;Too many?
-            BNE   :RDDPRO1       ;->Not yet.
-            JMP   :BADDTA        ;->Yep.
-:RDDPRO1    LDA   $C08C,X        ;READ 1ST BYTE
+:RD62A      LDY   #$20        ;INIT ERROR count.
+:RDDPRO     DEY               ;Too many?
+            BNE   :RDDPRO1    ;->Not yet.
+            JMP   :BADDTA     ;->Yep.
+:RDDPRO1    LDA   $C08C,X     ;READ 1ST BYTE
             BPL   :RDDPRO1
-:CKDPRO1    EOR   #$D5           ;MATCH WITH
-            BNE   :RDDPRO        ;PROLOG1?
+:CKDPRO1    EOR   #$D5        ;MATCH WITH
+            BNE   :RDDPRO     ;PROLOG1?
             NOP
-:RDDPRO2    LDA   $C08C,X        ;READ 2ND BYTE
+:RDDPRO2    LDA   $C08C,X     ;READ 2ND BYTE
             BPL   :RDDPRO2
-            CMP   #$AA           ;MATCH WITH
-            BNE   :CKDPRO1       ;PROLOG2?
+            CMP   #$AA        ;MATCH WITH
+            BNE   :CKDPRO1    ;PROLOG2?
             NOP
-:RDDPRO3    LDA   $C08C,X        ;READ 3RD BYTE
+:RDDPRO3    LDA   $C08C,X     ;READ 3RD BYTE
             BPL   :RDDPRO3
-            CMP   #$AD           ;MATCH WITH
-            BNE   :CKDPRO1       ;PROLOG3?
+            CMP   #$AD        ;MATCH WITH
+            BNE   :CKDPRO1    ;PROLOG3?
 *
 * READ SECONDARY BUFFER
 *
             LDY   #$AB
-            LDA   #0             ;CKSEED
-]SPOT = *
-:RDSEC2     LDX   $C0EC          ;GET BYTE
+            LDA   #0          ;CKSEED
+]SPOT       =     *
+:RDSEC2     LDX   $C0EC       ;GET BYTE
             BPL   :RDSEC2
             EOR   :RDTR62-$96,X  ;TRANSLATE,XOR
             TAX
             LSR
             LSR
-            STA   PRIM-1,Y       ;& SAVE
+            STA   PRIM-1,Y    ;& SAVE
             TXA
             INY
             BNE   :RDSEC2
@@ -252,14 +252,14 @@ CRIT2       PHP
 * READ 1ST THIRD OF PRIMARY
 *
             LDY   #$AA
-            BNE   :RDPRM1A       ;(ALWAYS)
-:RDPRIM1    STA   :DEST-$AB,Y    ;SAVE BYTE
-:RDPRM1A    LDX   $C0EC          ;GET BYTE
+            BNE   :RDPRM1A    ;(ALWAYS)
+:RDPRIM1    STA   :DEST-$AB,Y  ;SAVE BYTE
+:RDPRM1A    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRM1A
             EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
-            LDX   PRIM,Y         ;GET 2ND BYTE
+            LDX   PRIM,Y      ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX1ST,X      ;MIX IN 2 BITS
+            ORA   :MIX1ST,X   ;MIX IN 2 BITS
             INY
             BNE   :RDPRIM1
             PHA
@@ -267,13 +267,13 @@ CRIT2       PHP
 * READ 2ND THIRD OF PRIMARY
 *
             LDY   #$AA
-:RDPRIM2    LDX   $C0EC          ;GET BYTE
+:RDPRIM2    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRIM2
             EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
-            LDX   PRIM,Y         ;GET 2ND BYTE
+            LDX   PRIM,Y      ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX2ND,X      ;MIX IN 2 BITS
-:RDPRM2B    STA   :DEST-$54,Y    ;SAVE BYTE
+            ORA   :MIX2ND,X   ;MIX IN 2 BITS
+:RDPRM2B    STA   :DEST-$54,Y  ;SAVE BYTE
             INY
             BNE   :RDPRIM2
 :RDPRM2A    LDX   $C0EC
@@ -283,28 +283,28 @@ CRIT2       PHP
 *
             LDY   #$AC
 :RDPRIM3    EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
-            LDX   PRIM-2,Y       ;GET 2ND BYTE
+            LDX   PRIM-2,Y    ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX3RD,X      ;MIX IN 2 BITS
-:RDPRM3B    STA   :DEST,Y        ;SAVE BYTE
-:RDPRM3A    LDX   $C0EC          ;GET BYTE
+            ORA   :MIX3RD,X   ;MIX IN 2 BITS
+:RDPRM3B    STA   :DEST,Y     ;SAVE BYTE
+:RDPRM3A    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRM3A
             INY
             BNE   :RDPRIM3
             AND   #$FC
             EOR   :RDTR62-$96,X
-            TAY                  ;SAVE CKSM
+            TAY               ;SAVE CKSM
             PLA
 :RDPRM3C    STA   :DEST+$55
 *
 *
 :RDDEPI     LDX   :SLOTZP
-:RDDELP     LDA   $C08C,X        ;GET BYTE
+:RDDELP     LDA   $C08C,X     ;GET BYTE
             BPL   :RDDELP
             CMP   #$DE
             BNE   :BADDTA
             CPY   #0
-            BNE   :BADDTA        ;BAD CKSM
+            BNE   :BADDTA     ;BAD CKSM
 :RDDEP2     LDA   $C08C,X
             BPL   :RDDEP2
             ERR   {*&$FF00}-{]SPOT&$FF00}
@@ -353,18 +353,18 @@ PHRWTS      PHP
 * TELL RWTS WHAT TRACK IT'S ON
 *
 FAKTRK      JSR   :DRINDEX
-            STA   $478,X         ;STORE IN TABLE
+            STA   $478,X      ;STORE IN TABLE
             RTS
 *
 * CONVERT SLOT&DRIVE TO INDEX IN XREG
 *
 :DRINDEX    PHA
-            LDA   HSLOT          ;0SSS0000
-            LSR                  ;00SSS000
-            ORA   HDRIVE         ;00SSS021
-            LSR                  ;000SSS02->1
-            LSR                  ;0000SSS0->2
-            ROR                  ;20000SSS
+            LDA   HSLOT       ;0SSS0000
+            LSR               ;00SSS000
+            ORA   HDRIVE      ;00SSS021
+            LSR               ;000SSS02->1
+            LSR               ;0000SSS0->2
+            ROR               ;20000SSS
             TAX
             PLA
             RTS
@@ -378,12 +378,12 @@ FAKTRK      JSR   :DRINDEX
 *
 :WRTRAK     LDA   $C08D,X
             LDA   $C08E,X
-            ASL                  ;WP INTO CARRY
-            LDA   #$2B           ;(WP ERROR)
+            ASL               ;WP INTO CARRY
+            LDA   #$2B        ;(WP ERROR)
             BCS   :ANRTS
-            LDY   #$00           ;INIT SYNC CTR
-            STY   :SECTOR        ;& SECTOR #
-            STY   :PTR           ;& BUFFER PTR.
+            LDY   #$00        ;INIT SYNC CTR
+            STY   :SECTOR     ;& SECTOR #
+            STY   :PTR        ;& BUFFER PTR.
             LDA   RTRACK
             STA   :TRACK
 *
@@ -399,7 +399,7 @@ FAKTRK      JSR   :DRINDEX
 *
 * WRITE SYNC BYTES
 *
-]SPOT = *
+]SPOT       =     *
 :TRAKLP     NOP
             CMP   $00
             JSR   :WRITE9
@@ -415,7 +415,7 @@ FAKTRK      JSR   :DRINDEX
             LDA   ADRVOL
             EOR   :TRACK
             EOR   :SECTOR
-            PHA                  ;PUSH CKSM
+            PHA               ;PUSH CKSM
             NOP
 *
 *
@@ -436,7 +436,7 @@ FAKTRK      JSR   :DRINDEX
             JSR   :WRITWO
             LDA   :SECTOR
             JSR   :WRITWO
-            PLA                  ;CKSM
+            PLA               ;CKSM
             JSR   :WRITWO
 *
 * WRITE ADDRESS EPILOG
@@ -463,40 +463,40 @@ FAKTRK      JSR   :DRINDEX
 *
 * ADVANCE TO NEXT SECTOR & LOOP
 *
-            INC   :SECTOR        ;NEXT SECTOR
+            INC   :SECTOR     ;NEXT SECTOR
             LDA   :SECTOR
-            CMP   #$10           ;ALL DONE?
+            CMP   #$10        ;ALL DONE?
             NOP
-            NOP                  ;(IN CARRY)
+            NOP               ;(IN CARRY)
             PHA
             PLA
             LDA   #$FF
-            STA   $C08D,X        ;WRITE A SYNC
+            STA   $C08D,X     ;WRITE A SYNC
             ORA   $C08C,X
-]SPOT = *
-            BCS   :TRAKQ         ;QUIT IF DONE
-            LDY   ASYNC          ;ELSE GET # OF
-            NOP                  ;SYNC
-            JMP   :TRAKLP        ;BACK FOR MORE
+]SPOT       =     *
+            BCS   :TRAKQ      ;QUIT IF DONE
+            LDY   ASYNC       ;ELSE GET # OF
+            NOP               ;SYNC
+            JMP   :TRAKLP     ;BACK FOR MORE
 *
-:TRAKQ      LDA   $C08E,X        ;LEAVE WRITE
-            LDA   $C08C,X        ;MODE
+:TRAKQ      LDA   $C08E,X     ;LEAVE WRITE
+            LDA   $C08C,X     ;MODE
             LDA   ASYNC
             SEC
             SBC   #$04
             TAY
-:WAITSNC    JSR   :ANRTS         ;WAIT FOR MOST
-            JSR   :ANRTS         ;OF SYNC TO GO
-            CMP   $00            ;BY...
+:WAITSNC    JSR   :ANRTS      ;WAIT FOR MOST
+            JSR   :ANRTS      ;OF SYNC TO GO
+            CMP   $00         ;BY...
             DEY
             BNE   :WAITSNC
             ERR   {*&$FF00}-{]SPOT&$FF00}
-            JSR   :RDADDR        ;LOOK FOR
-            BCS   :WRTRKX        ;SECTOR 0
-            LDA   ADRSEC         ;1ST
+            JSR   :RDADDR     ;LOOK FOR
+            BCS   :WRTRKX     ;SECTOR 0
+            LDA   ADRSEC      ;1ST
             BNE   :WRTRKX
-            JMP   :VERTRK        ;VERIFY TRACK
-:WRTRKX     LDA   #$27           ;(I/O ERROR)
+            JMP   :VERTRK     ;VERIFY TRACK
+:WRTRKX     LDA   #$27        ;(I/O ERROR)
             SEC
             RTS
 :TRACK      DB    $0
@@ -506,20 +506,20 @@ FAKTRK      JSR   :DRINDEX
 * *********** WRITE DATA ************
 *
 :WRDATA     SEC
-            LDA   $C08D,X        ;CHECK WRITE-
-            LDA   $C08E,X        ;PROTECT
+            LDA   $C08D,X     ;CHECK WRITE-
+            LDA   $C08E,X     ;PROTECT
             BMI   :WRDATAQ
             LDA   #$FF
-            STA   $C08F,X        ;WRITE MODE
+            STA   $C08F,X     ;WRITE MODE
             ORA   $C08C,X
             NOP
             NOP
             NOP
-            LDA   #>PRIM         ;PASS BUF PAGE
-            JSR   :WRDATA2       ;WRITE DATA
-            CLC                  ;NO ERRORS
-:WRDATAQ    LDA   $C08E,X        ;LEAVE WRITE
-            LDA   $C08C,X        ;MODE
+            LDA   #>PRIM      ;PASS BUF PAGE
+            JSR   :WRDATA2    ;WRITE DATA
+            CLC               ;NO ERRORS
+:WRDATAQ    LDA   $C08E,X     ;LEAVE WRITE
+            LDA   $C08C,X     ;MODE
             RTS
 *
 * **** WRITE DATA (CORE ROUTINE) ****
@@ -531,19 +531,19 @@ FAKTRK      JSR   :DRINDEX
 * STAY IN SYNC WHILE DOING MODIFY-
 * POKES FOR WRITING DATA
 *
-:WRDATA2    STA   :WRPRIM+2      ;POKE PRIMARY
+:WRDATA2    STA   :WRPRIM+2   ;POKE PRIMARY
             STA   :PPRIM+2
             STA   :WR2ND+2
-            PHA                  ;(WAIT!..)
+            PHA               ;(WAIT!..)
             LDA   #$FF
-            STA   $C08D,X        ;WRITE SYNC
+            STA   $C08D,X     ;WRITE SYNC
             ORA   $C08C,X
-            PLA                  ;(...OKAY)
+            PLA               ;(...OKAY)
             CLC
             ADC   #$01
-            STA   :LP2ND+2       ;POKE SECOND
+            STA   :LP2ND+2    ;POKE SECOND
             STA   :GET2ND+2
-:GET2ND     LDA   SECOND         ;<-
+:GET2ND     LDA   SECOND      ;<-
             STA   :TEMPZP
             LDA   #$FF
             JSR   :WRITE0
@@ -552,10 +552,10 @@ FAKTRK      JSR   :DRINDEX
 *
 * WRITE SYNC
 *
-            LDY   DSYNC          ;HOW MANY SYNC
-]SPOT = *
+            LDY   DSYNC       ;HOW MANY SYNC
+]SPOT       =     *
 :WRDSNC     NOP
-            JSR   :WRITE9        ;WRITE SYNC
+            JSR   :WRITE9     ;WRITE SYNC
             CMP   $00
             DEY
             BNE   :WRDSNC
@@ -575,11 +575,11 @@ FAKTRK      JSR   :DRINDEX
 *
             TYA
             LDY   #$56
-]SPOT = *
+]SPOT       =     *
             BNE   :WR2ND
 *
-:LP2ND      LDA   SECOND,Y       ;<-
-:WR2ND      EOR   SECOND-1,Y     ;<-
+:LP2ND      LDA   SECOND,Y    ;<-
+:WR2ND      EOR   SECOND-1,Y  ;<-
             TAX
             LDA   :WRTRANS,X
             LDX   :SLOTZP
@@ -592,13 +592,13 @@ FAKTRK      JSR   :DRINDEX
 *
             LDA   :TEMPZP
             NOP
-:WRPRIM     EOR   PRIM,Y         ;<-
+:WRPRIM     EOR   PRIM,Y      ;<-
             TAX
             LDA   :WRTRANS,X
             LDX   :SLOTABS
             STA   $C08D,X
             LDA   $C08C,X
-:PPRIM      LDA   PRIM,Y         ;<-
+:PPRIM      LDA   PRIM,Y      ;<-
             INY
             BNE   :WRPRIM
             ERR   {*&$FF00}-{]SPOT&$FF00}
@@ -617,48 +617,48 @@ FAKTRK      JSR   :DRINDEX
             JSR   :WRITE9
             LDA   #$EB
             CMP   $00
-            JMP   :WRITE9        ;MUST BE JMP, NOT JSR!
+            JMP   :WRITE9     ;MUST BE JMP, NOT JSR!
 *
 * ********* READ ADDRESS ***********
 *
 * READ PROLOG
 *
-:RDADDR     LDY   #$FC           ;INIT ERROR
-            STY   :ADRCNT        ;COUNT (772)
+:RDADDR     LDY   #$FC        ;INIT ERROR
+            STY   :ADRCNT     ;COUNT (772)
 :RDADPRO    INY
-            BNE   :RDAPRO1       ;COUNT ERRORS
+            BNE   :RDAPRO1    ;COUNT ERRORS
             INC   :ADRCNT
-            BEQ   :BADADR        ;TOO MANY?
-:RDAPRO1    LDA   $C08C,X        ;READ 1ST BYTE
+            BEQ   :BADADR     ;TOO MANY?
+:RDAPRO1    LDA   $C08C,X     ;READ 1ST BYTE
             BPL   :RDAPRO1
-:CKAPRO1    CMP   #$D5           ;MATCH WITH
-            BNE   :RDADPRO       ;PROLOG1?
+:CKAPRO1    CMP   #$D5        ;MATCH WITH
+            BNE   :RDADPRO    ;PROLOG1?
             NOP
-:RDAPRO2    LDA   $C08C,X        ;READ 2ND BYTE
+:RDAPRO2    LDA   $C08C,X     ;READ 2ND BYTE
             BPL   :RDAPRO2
-            CMP   #$AA           ;MATCH WITH
-            BNE   :CKAPRO1       ;PROLOG2?
+            CMP   #$AA        ;MATCH WITH
+            BNE   :CKAPRO1    ;PROLOG2?
             NOP
-:RDAPRO3    LDA   $C08C,X        ;READ 3RD BYTE
+:RDAPRO3    LDA   $C08C,X     ;READ 3RD BYTE
             BPL   :RDAPRO3
-            CMP   #$96           ;MATCH WITH
-            BNE   :CKAPRO1       ;PROLOG3?
+            CMP   #$96        ;MATCH WITH
+            BNE   :CKAPRO1    ;PROLOG3?
 *
 * READ ADDRESS INFO
 *
             LDY   #$03
-            LDA   #$00           ;INIT CHKSUM
+            LDA   #$00        ;INIT CHKSUM
 :RDAINFO    STA   :TEMPZP
-:RDODD      LDA   $C08C,X        ;READ ODD BITS
+:RDODD      LDA   $C08C,X     ;READ ODD BITS
             BPL   :RDODD
-            ROL                  ;SHIFT TO ODD
-            STA   :ODD           ;& SET ASIDE.
-:RDEVEN     LDA   $C08C,X        ;READ EVEN
+            ROL               ;SHIFT TO ODD
+            STA   :ODD        ;& SET ASIDE.
+:RDEVEN     LDA   $C08C,X     ;READ EVEN
             BPL   :RDEVEN
-            AND   :ODD           ;MIX IN ODD
-            STA   AINFO,Y        ;SAVE IN TABLE
+            AND   :ODD        ;MIX IN ODD
+            STA   AINFO,Y     ;SAVE IN TABLE
             EOR   :TEMPZP
-            DEY                  ;NEXT..
+            DEY               ;NEXT..
             BPL   :RDAINFO
 *
 * CHECK CHECKSUM
@@ -682,8 +682,8 @@ FAKTRK      JSR   :DRINDEX
 * INIT SOFAR ARRAY FOR NO SECTORS
 * READ SO FAR
 *
-:INITFAR    LDY   #$0F           ;ZERO OUT 16
-            LDA   #$00           ;ITEMS
+:INITFAR    LDY   #$0F        ;ZERO OUT 16
+            LDA   #$00        ;ITEMS
 :INITF2     STA   SOFAR,Y
             DEY
             BPL   :INITF2
@@ -700,33 +700,33 @@ FAKTRK      JSR   :DRINDEX
 * HANDLING FOR VERIFY OR FOR COPY
 *
 :VERBAD     JMP   :BADDTA
-:VERTRK     JSR   :INITFAR       ;NO SECTORS
-            LDA   #$60           ;READ SO FAR
+:VERTRK     JSR   :INITFAR    ;NO SECTORS
+            LDA   #$60        ;READ SO FAR
             STA   :TRIES
-:VERTRK4    DEC   :TRIES         ;TRY (AGAIN).
-            BMI   :VERBAD        ;TOO LATE...
+:VERTRK4    DEC   :TRIES      ;TRY (AGAIN).
+            BMI   :VERBAD     ;TOO LATE...
 :VERTRK7    LDX   HSLOT
-            JSR   :RDADDR        ;READ ADDRESS
+            JSR   :RDADDR     ;READ ADDRESS
             BCS   :VERTRK4
-            LDA   ADRTRK         ;RIGHT TRACK?
+            LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
             AND   TRKFLG
             BNE   :VERTRK4
-            LDY   ADRSEC         ;HAVE WE READ
-            LDA   SOFAR,Y        ;THIS SECTOR
-            BMI   :VERTRK4       ;ALREADY?
+            LDY   ADRSEC      ;HAVE WE READ
+            LDA   SOFAR,Y     ;THIS SECTOR
+            BMI   :VERTRK4    ;ALREADY?
             LDY   #>TRKBUF
-            JSR   :READ62        ;CORRECT SIZE
+            JSR   :READ62     ;CORRECT SIZE
 :VERTRK9    BCS   :VERTRK4
-            LDY   ADRSEC         ;IF GOOD:
-            LDA   #$FF           ;MARK SECTOR
-            STA   SOFAR,Y        ;AS READ.
+            LDY   ADRSEC      ;IF GOOD:
+            LDA   #$FF        ;MARK SECTOR
+            STA   SOFAR,Y     ;AS READ.
             LDY   #$0F
-:VERALL     AND   SOFAR,Y        ;ANY SECTORS
-            DEY                  ;LEFT TO READ?
+:VERALL     AND   SOFAR,Y     ;ANY SECTORS
+            DEY               ;LEFT TO READ?
             BPL   :VERALL
-            TAY                  ;(TEST ACC)
-            BEQ   :VERTRK4       ;YES, GO BACK.
+            TAY               ;(TEST ACC)
+            BEQ   :VERTRK4    ;YES, GO BACK.
             CLC
             RTS
 *
@@ -734,14 +734,14 @@ FAKTRK      JSR   :DRINDEX
 *
 *********** READ TRACK ************
 *
-:READTRK    JSR   :INITFAR       ;NO SECTORS
-            LDA   #$01           ;READ SO FAR
+:READTRK    JSR   :INITFAR    ;NO SECTORS
+            LDA   #$01        ;READ SO FAR
             STA   :RECALS
 :RDTRK2     LDA   #$60
             STA   :TRIES
             LDA   #$04
             STA   :SEEKS
-:RDTRK4     DEC   :TRIES         ;TRY (AGAIN).
+:RDTRK4     DEC   :TRIES      ;TRY (AGAIN).
             BPL   :RDTRK7
 :RDTRK5     DEC   :RECALS
             BMI   :VERBAD
@@ -752,38 +752,38 @@ FAKTRK      JSR   :DRINDEX
             BMI   :RDTRK5
             JSR   :RESEEK
 :RDTRK7     LDX   HSLOT
-            JSR   :RDADDR        ;READ ADDRESS
+            JSR   :RDADDR     ;READ ADDRESS
             BCS   :RDTRK4
-            LDA   ADRTRK         ;RIGHT TRACK?
+            LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
             AND   TRKFLG
             BNE   :RDTRK4
-            LDY   ADRSEC         ;HAVE WE READ
-            LDA   SOFAR,Y        ;THIS SECTOR
-            BMI   :RDTRK4        ;ALREADY?
-            CLC                  ;NO:FIND PAGE
-            TYA                  ;NUM FOR THIS
-            ADC   RPAGE          ;SECTOR.
-            TAY                  ;(PASS PAGE #)
-            JSR   :READ62        ;READ 6&2.
+            LDY   ADRSEC      ;HAVE WE READ
+            LDA   SOFAR,Y     ;THIS SECTOR
+            BMI   :RDTRK4     ;ALREADY?
+            CLC               ;NO:FIND PAGE
+            TYA               ;NUM FOR THIS
+            ADC   RPAGE       ;SECTOR.
+            TAY               ;(PASS PAGE #)
+            JSR   :READ62     ;READ 6&2.
             BCS   :RDTRK4
-:RDTRK9     LDY   ADRSEC         ;IF GOOD:
-            LDA   #$FF           ;MARK SECTOR
-            STA   SOFAR,Y        ;AS READ.
+:RDTRK9     LDY   ADRSEC      ;IF GOOD:
+            LDA   #$FF        ;MARK SECTOR
+            STA   SOFAR,Y     ;AS READ.
             LDY   #$0F
-:RDALL      AND   SOFAR,Y        ;ANY SECTORS
-            DEY                  ;LEFT TO READ?
+:RDALL      AND   SOFAR,Y     ;ANY SECTORS
+            DEY               ;LEFT TO READ?
             BPL   :RDALL
-            TAY                  ;(TEST ACC)
-            BEQ   :RDTRK4        ;YES, GO BACK.
+            TAY               ;(TEST ACC)
+            BEQ   :RDTRK4     ;YES, GO BACK.
             CLC
             RTS
 *
 *
-:RESEEK     LDA   ADRTRK         ;SAY YOU'RE ON
-            ASL                  ;TRACK THE ADR
-            JSR   FAKTRK         ;FIELD THINKS,
-            LDA   RTRACK         ;THEN SEEK TO
+:RESEEK     LDA   ADRTRK      ;SAY YOU'RE ON
+            ASL               ;TRACK THE ADR
+            JSR   FAKTRK      ;FIELD THINKS,
+            LDA   RTRACK      ;THEN SEEK TO
 *
 * FALL INTO SEEK
 *
@@ -792,18 +792,18 @@ FAKTRK      JSR   :DRINDEX
 *
 * PASS IN ACC=DESIRED TRACK
 *
-:SEEK       ASL                  ;MAKE 1/2TRK
+:SEEK       ASL               ;MAKE 1/2TRK
             PHA
-            JSR   :ALLOFF        ;PHASES OFF
-            JSR   :DRINDEX       ;GET DRIVE IDX
-            LDA   $478,X         ;GET CURRENT
-            STA   :CURRTRK       ;1/2TRK
+            JSR   :ALLOFF     ;PHASES OFF
+            JSR   :DRINDEX    ;GET DRIVE IDX
+            LDA   $478,X      ;GET CURRENT
+            STA   :CURRTRK    ;1/2TRK
             PLA
-            STA   $478,X         ;SAVE NEW
-            JSR   :STEPTO        ;STEP TO IT
+            STA   $478,X      ;SAVE NEW
+            JSR   :STEPTO     ;STEP TO IT
 :ALLOFF     CLC
-            LDY   #$03           ;TURN ALL
-:OFFLP      TYA                  ;PHASES OFF.
+            LDY   #$03        ;TURN ALL
+:OFFLP      TYA               ;PHASES OFF.
             JSR   :KICKPH
             DEY
             BPL   :OFFLP
@@ -811,40 +811,40 @@ FAKTRK      JSR   :DRINDEX
 *
 * STEP TO TRACK
 *
-:STEPTO     STA   :WANTRK        ;SAVE WANTED.
-            CMP   :CURRTRK       ;ALREADY THERE?
-            BEQ   :KICKCUR       ;GO TICKLE IT.
+:STEPTO     STA   :WANTRK     ;SAVE WANTED.
+            CMP   :CURRTRK    ;ALREADY THERE?
+            BEQ   :KICKCUR    ;GO TICKLE IT.
             LDA   #$00
-            STA   :SPEED         ;START SLOW...
-:STEPLP     LDA   :CURRTRK       ;SAVE WHERE WE
-            STA   :LASTRK        ;BEEN.
+            STA   :SPEED      ;START SLOW...
+:STEPLP     LDA   :CURRTRK    ;SAVE WHERE WE
+            STA   :LASTRK     ;BEEN.
             SEC
-            SBC   :WANTRK        ;HOW FAR TO GO?
-            BEQ   :STEPQ         ;ZIP-OFF&QUIT.
-            BCS   :STEPDN        ;DOWN...
-            EOR   #$FF           ;UP:ABS VAL
-            INC   :CURRTRK       ;MOVE CURR UP.
-            BCC   :GRADUAL       ;(ALWAYS)
+            SBC   :WANTRK     ;HOW FAR TO GO?
+            BEQ   :STEPQ      ;ZIP-OFF&QUIT.
+            BCS   :STEPDN     ;DOWN...
+            EOR   #$FF        ;UP:ABS VAL
+            INC   :CURRTRK    ;MOVE CURR UP.
+            BCC   :GRADUAL    ;(ALWAYS)
 *
 :STEPDN     ADC   #$FE
-            DEC   :CURRTRK       ;MOVE CURR DOWN
-:GRADUAL    CMP   :SPEED         ;DISTANCE >
-            BCC   :SLOW          ; SPEED?
-            LDA   :SPEED         ;TAKE SMALLER
-:SLOW       CMP   #$08           ;& NO BIGGER
-            BCS   :KICKON        ;THAN 8.
+            DEC   :CURRTRK    ;MOVE CURR DOWN
+:GRADUAL    CMP   :SPEED      ;DISTANCE >
+            BCC   :SLOW       ; SPEED?
+            LDA   :SPEED      ;TAKE SMALLER
+:SLOW       CMP   #$08        ;& NO BIGGER
+            BCS   :KICKON     ;THAN 8.
             TAY
             SEC
-:KICKON     JSR   :KICKCUR       ;KICK NEW ON
-            LDA   :WAITBL1,Y     ;WAIT A BIT
+:KICKON     JSR   :KICKCUR    ;KICK NEW ON
+            LDA   :WAITBL1,Y  ;WAIT A BIT
             JSR   :DELAY
             LDA   :LASTRK
             CLC
-            JSR   :KICKPH        ;KICK OLD OFF
-            LDA   :WAITBL2,Y     ;WAIT A BIT
+            JSR   :KICKPH     ;KICK OLD OFF
+            LDA   :WAITBL2,Y  ;WAIT A BIT
             JSR   :DELAY
-            INC   :SPEED         ;TRY FASTER!
-            BNE   :STEPLP        ;(ALWAYS)
+            INC   :SPEED      ;TRY FASTER!
+            BNE   :STEPLP     ;(ALWAYS)
 *
 :STEPQ
             LDA   #100
@@ -854,12 +854,12 @@ FAKTRK      JSR   :DRINDEX
             LDA   #0
             JMP   :DELAY
 *
-:KICKCUR    LDA   :CURRTRK       ;KICK NEW OFF
-:KICKPH     AND   #$03           ;PHASE NUMBER
-            ROL                  ;ON OR OFF
+:KICKCUR    LDA   :CURRTRK    ;KICK NEW OFF
+:KICKPH     AND   #$03        ;PHASE NUMBER
+            ROL               ;ON OR OFF
             ORA   HSLOT
             TAX
-            LDA   $C080,X        ;KICK IT!
+            LDA   $C080,X     ;KICK IT!
             LDX   HSLOT
             RTS
 *
@@ -868,18 +868,18 @@ FAKTRK      JSR   :DRINDEX
 *
 * **** WAIT FOR OLD DRIVE TO STOP ****
 *
-:WAITOLD    EOR   RPSLOT         ;EXIT IF SAME
-            BEQ   :OLDQ          ;SLOT.
-            LDA   #$E8           ;NO:SET
-            STA   :COUNTH        ; COUNTER
-:OLDLP      LDX   RPSLOT         ;GET OLD SLOT
-            BEQ   :OLDQ          ;OLD SLOT = 0
-            JSR   :RUNTST2       ;IS IT RUNNING?
-            BEQ   :OLDQ          ;NO: EXIT.
-            LDA   #$01           ;YES:WAIT A
-            JSR   :DELAY         ;BIT & TRY
-            LDA   :COUNTH        ;AGAIN UNTIL
-            BNE   :OLDLP         ;VERY BORED.
+:WAITOLD    EOR   RPSLOT      ;EXIT IF SAME
+            BEQ   :OLDQ       ;SLOT.
+            LDA   #$E8        ;NO:SET
+            STA   :COUNTH     ; COUNTER
+:OLDLP      LDX   RPSLOT      ;GET OLD SLOT
+            BEQ   :OLDQ       ;OLD SLOT = 0
+            JSR   :RUNTST2    ;IS IT RUNNING?
+            BEQ   :OLDQ       ;NO: EXIT.
+            LDA   #$01        ;YES:WAIT A
+            JSR   :DELAY      ;BIT & TRY
+            LDA   :COUNTH     ;AGAIN UNTIL
+            BNE   :OLDLP      ;VERY BORED.
 :OLDQ       RTS
 *
 ********************************
@@ -890,30 +890,30 @@ FAKTRK      JSR   :DRINDEX
 *          NE -> RUNNING
 *
 :RUNTEST    LDX   HSLOT
-:RUNTST2    TXA                  ;SAVE SLOT
+:RUNTST2    TXA               ;SAVE SLOT
             PHA
             JSR   :DRINDEX
-            LDA   $478,X         ;CURRENT HFTRK
-            AND   #$03           ;CURRENT PHASE
+            LDA   $478,X      ;CURRENT HFTRK
+            AND   #$03        ;CURRENT PHASE
             ASL
-            ADC   HSLOT          ;GET OFFSET
+            ADC   HSLOT       ;GET OFFSET
             TAY
-            LDA   #$FB           ;INIT COUNTUP
+            LDA   #$FB        ;INIT COUNTUP
             STA   :RUNL
             STA   :RUNH
-            PLA                  ;RESTORE SLOT
+            PLA               ;RESTORE SLOT
             TAX
-:TESTLP     LDA   $C08C,X        ;READ BYTE
-            CMP   $C081,Y        ;KICK PHASE
-            CMP   $C080,Y        ;ON & OFF!
-            JSR   :ANRTS         ;WAIT MORE
-            EOR   $C08C,X        ;CHANGED?
-            BNE   :TESTQ         ;YES:EXIT
-            INC   :RUNL          ;NO:TRY AGAIN
+:TESTLP     LDA   $C08C,X     ;READ BYTE
+            CMP   $C081,Y     ;KICK PHASE
+            CMP   $C080,Y     ;ON & OFF!
+            JSR   :ANRTS      ;WAIT MORE
+            EOR   $C08C,X     ;CHANGED?
+            BNE   :TESTQ      ;YES:EXIT
+            INC   :RUNL       ;NO:TRY AGAIN
             BNE   :TESTLP
             INC   :RUNH
-            BNE   :TESTLP        ;UNTIL BORED.
-:TESTQ      TAY                  ;SET Y:EQ-NE
+            BNE   :TESTLP     ;UNTIL BORED.
+:TESTQ      TAY               ;SET Y:EQ-NE
             RTS
 *
 *
@@ -957,61 +957,61 @@ FAKTRK      JSR   :DRINDEX
 *
 :START
             LDX   HSLOT
-            LDA   $C08E,X        ;Change UDC mode to 5.25, in case it
-            LDA   #0             ; was left in 3.5 mode.
-            STA   $C08D,X        ; (shouldn't affect ordinary 5.25
-            LDA   $C08C,X        ; controllers at all)
-            STX   :SLOTZP        ;DIFFERENT
+            LDA   $C08E,X     ;Change UDC mode to 5.25, in case it
+            LDA   #0          ; was left in 3.5 mode.
+            STA   $C08D,X     ; (shouldn't affect ordinary 5.25
+            LDA   $C08C,X     ; controllers at all)
+            STX   :SLOTZP     ;DIFFERENT
             STX   :SLOTABS
-            CPX   RPSLOT         ;SLOT?
+            CPX   RPSLOT      ;SLOT?
             BEQ   :SAMESL
-            JSR   :WAITOLD       ;YES:LET IT
-            LDA   HSLOT          ;TURN OFF,
-            STA   RPSLOT         ;NEW->OLD.
-:SAMESL     JSR   :RUNTEST       ;DRIVE SPINS?
+            JSR   :WAITOLD    ;YES:LET IT
+            LDA   HSLOT       ;TURN OFF,
+            STA   RPSLOT      ;NEW->OLD.
+:SAMESL     JSR   :RUNTEST    ;DRIVE SPINS?
             STY   :RUNNING
             LDX   HSLOT
-            LDA   $C089,X        ;MOTOR ON.
-            LDA   HDRIVE         ;DIFFERENT
-            CMP   RPDRIV         ;DRIVE?
+            LDA   $C089,X     ;MOTOR ON.
+            LDA   HDRIVE      ;DIFFERENT
+            CMP   RPDRIV      ;DRIVE?
             BEQ   :SAMEDR
-            STA   RPDRIV         ;YES:NEW->OLD,
-            LDY   #$00           ;WRONG DRIVE
-            STY   :RUNNING       ;WAS SPINNING.
+            STA   RPDRIV      ;YES:NEW->OLD,
+            LDY   #$00        ;WRONG DRIVE
+            STY   :RUNNING    ;WAS SPINNING.
 :SAMEDR     CLC
-            ADC   HSLOT          ;MAKE OFFSET &
+            ADC   HSLOT       ;MAKE OFFSET &
             TAX
-            LDA   $C089,X        ;SELECT DRIVE.
-            LDA   #$E8           ;INIT DELAY CTR
-            STA   :COUNTH        ;FOR .6 SEC.
-            LDA   :RUNNING       ;IF DRIVE WAS
-            BNE   :GOSEEK        ;NOT SPINNING:
-            LDY   #$07           ;DELAY .17 SEC
-:CAPWAIT    JSR   :DELAY         ;SO MOTOR CAN
-            DEY                  ;REALLY TURN
-            BNE   :CAPWAIT       ;ON.
-:GOSEEK     LDA   RTRACK         ;SEEK TO TRACK
+            LDA   $C089,X     ;SELECT DRIVE.
+            LDA   #$E8        ;INIT DELAY CTR
+            STA   :COUNTH     ;FOR .6 SEC.
+            LDA   :RUNNING    ;IF DRIVE WAS
+            BNE   :GOSEEK     ;NOT SPINNING:
+            LDY   #$07        ;DELAY .17 SEC
+:CAPWAIT    JSR   :DELAY      ;SO MOTOR CAN
+            DEY               ;REALLY TURN
+            BNE   :CAPWAIT    ;ON.
+:GOSEEK     LDA   RTRACK      ;SEEK TO TRACK
             JSR   :SEEK
-            LDA   :RUNNING       ;IF DRIVE WAS
-            BNE   :STARTQ        ;NOT SPINNING:
-:ACCELLP    LDA   #$01           ;DELAY UNTIL
-            JSR   :DELAY         ;TOTAL DELAY
-            LDA   :COUNTH        ;TIME=.6 SEC
+            LDA   :RUNNING    ;IF DRIVE WAS
+            BNE   :STARTQ     ;NOT SPINNING:
+:ACCELLP    LDA   #$01        ;DELAY UNTIL
+            JSR   :DELAY      ;TOTAL DELAY
+            LDA   :COUNTH     ;TIME=.6 SEC
             BMI   :ACCELLP
-            JSR   :RUNTEST       ;CHECK IT.
+            JSR   :RUNTEST    ;CHECK IT.
 :STARTQ     RTS
 *
 * ERROR HANDLING SEEK ROUTINES
 *
-:RECAL      LDA   RTRACK         ;SAY THAT
-            PHA                  ;YOU'RE ON A
-            ASL                  ;HIGHER TRACK,
+:RECAL      LDA   RTRACK      ;SAY THAT
+            PHA               ;YOU'RE ON A
+            ASL               ;HIGHER TRACK,
             ADC   #$10
             JSR   FAKTRK
-            LDA   #$00           ;THEN SEEK 0
-            JSR   :SEEK          ;TO RATCHET.
+            LDA   #$00        ;THEN SEEK 0
+            JSR   :SEEK       ;TO RATCHET.
             PLA
-            JMP   :SEEK          ;RESEEK TO TRK
+            JMP   :SEEK       ;RESEEK TO TRK
 *
 *
 *
@@ -1035,37 +1035,37 @@ FAKTRK      JSR   :DRINDEX
             LDA   DOSNOW
             EOR   #$FE
             STA   ADRVOL
-            BNE   :GOTRAK        ;(ALWAYS)
+            BNE   :GOTRAK     ;(ALWAYS)
 *
 * ****** WRITE (COPY) A TRACK ******
 *
 * PRENIBBLIZE INTO TRKBUF FROM MEMORY
 * THEN WRITE TRACK
 *
-:COPY       LDA   RPAGE          ;RPOINT AT
-            STA   :RPOINT+1      ;CURRENT PAGE
+:COPY       LDA   RPAGE       ;RPOINT AT
+            STA   :RPOINT+1   ;CURRENT PAGE
             LDA   #$00
-            STA   COUNT          ;COUNT SECTORS
+            STA   COUNT       ;COUNT SECTORS
             STA   :RPOINT
-            STA   POINT          ;POINT AT PRIM
-            STA   POINT2         ;POINT2 SECOND
+            STA   POINT       ;POINT AT PRIM
+            STA   POINT2      ;POINT2 SECOND
 :PRECPLP    CLC
             ASL
             ADC   #>TRKBUF
             STA   POINT+1
             ADC   #$01
             STA   POINT2+1
-:PRE1SEC    JSR   :PRENIB        ;DO PRENIB.
+:PRE1SEC    JSR   :PRENIB     ;DO PRENIB.
             LDY   #$00
-:MOV2BUF    LDA   PRIM,Y         ;MOVE NIBBLIZED
-            STA   (POINT),Y      ;DATE INTO
-            LDA   SECOND,Y       ;TRKBUF
+:MOV2BUF    LDA   PRIM,Y      ;MOVE NIBBLIZED
+            STA   (POINT),Y   ;DATE INTO
+            LDA   SECOND,Y    ;TRKBUF
             STA   (POINT2),Y
             INY
             BNE   :MOV2BUF
-            INC   :RPOINT+1      ;NEXT SECTOR
+            INC   :RPOINT+1   ;NEXT SECTOR
             INC   COUNT
-            LDA   COUNT          ;GOT 'EM ALL?
+            LDA   COUNT       ;GOT 'EM ALL?
             CMP   #$10
             BNE   :PRECPLP
 :GOTRAK     LDX   HSLOT
@@ -1074,98 +1074,98 @@ FAKTRK      JSR   :DRINDEX
 *
 * ******** PHIL'S RWTS ***********
 *
-:OTHER      LSR                  ;SELECT OTHER
-            LSR                  ;RWTS OPTIONS
+:OTHER      LSR               ;SELECT OTHER
+            LSR               ;RWTS OPTIONS
             LSR
-            BCS   :FORMAT        ;04
+            BCS   :FORMAT     ;04
             LSR
-            BCS   :COPY          ;08
+            BCS   :COPY       ;08
             LSR
             BCC   :NOTVER
-            JMP   :VERTRK        ;10
+            JMP   :VERTRK     ;10
 :NOTVER     LSR
             BCC   :RATCHET
-            JMP   :READTRK       ;20
-:RATCHET    CLC                  ;40 NULL NOW.
+            JMP   :READTRK    ;20
+:RATCHET    CLC               ;40 NULL NOW.
             RTS
 *
 :RWTS       LDA   RCMND
-            CMP   #$40           ;IF RATCHET:
+            CMP   #$40        ;IF RATCHET:
             BNE   :GOSTART
             LDA   #$60
-            JSR   FAKTRK         ;SAY TRK 48
+            JSR   FAKTRK      ;SAY TRK 48
             LDA   #$00
-            STA   RTRACK         ;SET TRK 0
-:GOSTART    JSR   :START         ;START UP
+            STA   RTRACK      ;SET TRK 0
+:GOSTART    JSR   :START      ;START UP
 *
             PHP
-            LDA   #$28           ;(NO DEVICERR)
-            PLP                  ;DRIVE
+            LDA   #$28        ;(NO DEVICERR)
+            PLP               ;DRIVE
             BNE   :ISTHERE
             LDA   RCMND
-            CMP   #4             ;FORMAT COMMAND?
-            BNE   :ERROR         ;NO: GIVE ERROR
+            CMP   #4          ;FORMAT COMMAND?
+            BNE   :ERROR      ;NO: GIVE ERROR
 *
 :ISTHERE    LDA   #$00
             STA   :RPOINT
-            LDA   RPAGE          ;ZP PTR AT
-            STA   :RPOINT+1      ;RWTS PAGE.
-            LDA   RCMND          ;GET COMMAND.
-            BEQ   :GOODOUT       ;SEEK ONLY?
+            LDA   RPAGE       ;ZP PTR AT
+            STA   :RPOINT+1   ;RWTS PAGE.
+            LDA   RCMND       ;GET COMMAND.
+            BEQ   :GOODOUT    ;SEEK ONLY?
             CMP   #$02
-            BCC   :DOSECTR       ;READ?
-            BEQ   :DOWRITE       ;WRITE?
-            JSR   :OTHER         ;NO:DO OTHER
-            JMP   :OUT           ;THEN EXIT.
-:DOWRITE    JSR   :PRENIB        ;WRITE PRENIB
+            BCC   :DOSECTR    ;READ?
+            BEQ   :DOWRITE    ;WRITE?
+            JSR   :OTHER      ;NO:DO OTHER
+            JMP   :OUT        ;THEN EXIT.
+:DOWRITE    JSR   :PRENIB     ;WRITE PRENIB
 :DOSECTR    LDA   #$01
             STA   :RECALS
 :SETSEEK    LDA   #$04
             STA   :SEEKS
             LDY   #$30
             STY   :TRIES
-:BADSEC     DEC   :TRIES         ;COUNT TRIES
-            BPL   :LOOKADR       ;USED UP?
+:BADSEC     DEC   :TRIES      ;COUNT TRIES
+            BPL   :LOOKADR    ;USED UP?
 *
-:DORECAL    LDA   #$27           ;(DRIVE ERROR)
-            DEC   :RECALS        ;TRY 1 RECAL:
-            BMI   :ERROR         ;BEEN DONE?
+:DORECAL    LDA   #$27        ;(DRIVE ERROR)
+            DEC   :RECALS     ;TRY 1 RECAL:
+            BMI   :ERROR      ;BEEN DONE?
             JSR   :RECAL
-            JMP   :SETSEEK       ;& COUNT.
+            JMP   :SETSEEK    ;& COUNT.
 *
-:GOWRITE    JSR   :WRDATA        ;WRITE DATA
-            LDA   #$2B           ;MAYBE WPROT?
-            BCS   :ERROR         ;YES:ERROR OUT
-:GOODOUT    CLC                  ;EXIT NO ERROR
+:GOWRITE    JSR   :WRDATA     ;WRITE DATA
+            LDA   #$2B        ;MAYBE WPROT?
+            BCS   :ERROR      ;YES:ERROR OUT
+:GOODOUT    CLC               ;EXIT NO ERROR
             LDA   #$00
             DB    $D0
 :ERROR      SEC
 :OUT        STA   RRTN
             LDX   HSLOT
-            LDA   $C088,X        ;MOTOR OFF.
+            LDA   $C088,X     ;MOTOR OFF.
             RTS
 *
-:BADTRK     DEC   :SEEKS         ;COUNT SEEKS.
-            BMI   :DORECAL       ;USED UP?
+:BADTRK     DEC   :SEEKS      ;COUNT SEEKS.
+            BMI   :DORECAL    ;USED UP?
             JSR   :RESEEK
 :LOOKADR    LDX   HSLOT
-            JSR   :RDADDR        ;READ ADDRESS.
-            BCS   :BADSEC        ;BAD?
-            LDA   ADRTRK         ;RIGHT TRACK?
+            JSR   :RDADDR     ;READ ADDRESS.
+            BCS   :BADSEC     ;BAD?
+            LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
             AND   TRKFLG
-            BNE   :BADTRK        ;NO:RESEEK.
+            BNE   :BADTRK     ;NO:RESEEK.
             LDY   RSECTR
             LDA   INTRLV,Y
-:SECTCMP    CMP   ADRSEC         ;RIGHT SECTOR?
+:SECTCMP    CMP   ADRSEC      ;RIGHT SECTOR?
             BNE   :BADSEC
 *
-            LDA   RCMND          ;YES! WHAT
-            CMP   #$02           ;COMMAND?
+            LDA   RCMND       ;YES! WHAT
+            CMP   #$02        ;COMMAND?
             BEQ   :GOWRITE
-            LDY   RPAGE          ;PASS PAGE #
-            JSR   :READ62        ;DO CORRECT
-            BCS   :BADSEC        ;ROUTINE.
+            LDY   RPAGE       ;PASS PAGE #
+            JSR   :READ62     ;DO CORRECT
+            BCS   :BADSEC     ;ROUTINE.
             BCC   :GOODOUT
 *
 *
@@ -1189,16 +1189,16 @@ UNTPFX      LDA   UNIT
             STA   PFX
             LDA   PFX+2
             CMP   #$28
-            BEQ   :NOTDSK2       ;NO DRIVE
+            BEQ   :NOTDSK2    ;NO DRIVE
             BIT   DOSNOW
             BMI   :NOTDSK2
             LDA   HDRIVE
             CLC
             ADC   HSLOT
             TAX
-            LDA   $C089,X        ;SELECT DRIVE
+            LDA   $C089,X     ;SELECT DRIVE
             LDX   HSLOT
-            LDA   $C089,X        ;MOTOR ON
+            LDA   $C089,X     ;MOTOR ON
             JSR   :RDADDR
             LDA   $C088,X
 :NOTDSK2    LDA   ADRVOL
@@ -1215,7 +1215,7 @@ UNTPFX      LDA   UNIT
             TAY
             INY
             STY   PFX
-            LDA   #$2F           ;"/"
+            LDA   #$2F        ;"/"
             STA   PFX+1
             JSR   MLI
             DB    $C6
@@ -1225,3 +1225,4 @@ UNTPFX      LDA   UNIT
 *
 :SPLST      DB    $1
             DW    PFX
+

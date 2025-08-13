@@ -6,16 +6,16 @@ TSMAP       JSR   COMHDR
             JSR   DOC00E
             JSR   DEVTYP
             BEQ   :DISKII
-            JMP   FLONLY       ;NOT DISK II
+            JMP   FLONLY      ;NOT DISK II
 *
 :DISKII     JSR   CROUT2
-            JSR   RDACNT       ;READ CATALOG
-            LDA   NACTIV       ;ANY FILES?
+            JSR   RDACNT      ;READ CATALOG
+            LDA   NACTIV      ;ANY FILES?
             BNE   :GOTFILS
-            LDA   #MNOFILES    ;'NO FILES'
+            LDA   #MNOFILES   ;'NO FILES'
             JSR   PRINT
-            LDA   #MCRESC1     ;CRESC1
-            JSR   PRINT        ;CR OR ESC
+            LDA   #MCRESC1    ;CRESC1
+            JSR   PRINT       ;CR OR ESC
             JSR   KYESC
             JMP   :CBITMAP
 *
@@ -59,11 +59,11 @@ TSMAP       JSR   COMHDR
 *
 :DOS3       LDA   #$03
             STA   CH
-            LDY   #$00         ;TRACK INDEX
-:TRKLP      LDA   #$06         ;POSITION EACH
-            JSR   TABV         ;TRACK
+            LDY   #$00        ;TRACK INDEX
+:TRKLP      LDA   #$06        ;POSITION EACH
+            JSR   TABV        ;TRACK
             LDA   #$00
-            STA   SECTOR       ;SECTOR INDEX
+            STA   SECTOR      ;SECTOR INDEX
 :SECTLP     BIT   DOSNOW
             BPL   :BM33
 *
@@ -82,31 +82,31 @@ TSMAP       JSR   COMHDR
 *
 :BM33       JSR   DOMASK
             LDA   VTOC1+$38,Y  ;IS SECTOR
-            AND   BITMSK       ;FREE?
+            AND   BITMSK      ;FREE?
             STA   :TEMP
             LDA   VTOC1+$39,Y
             AND   BITMSK+1
             ORA   :TEMP
 :CKUSE      BNE   :NOTUSE
-:INUSE      LDA   #$2A         ;INVERSE *
+:INUSE      LDA   #$2A        ;INVERSE *
             JSR   PCOUT
             DEC   CH
 :NOTUSE     LDA   #$8A
             JSR   PCOUT
-            INC   SECTOR       ;NEXT SECTOR
+            INC   SECTOR      ;NEXT SECTOR
             LDA   SECTOR
             CMP   #$10
             BCC   :SECTLP
-            INC   CH           ;NEXT TRACK
+            INC   CH          ;NEXT TRACK
             INY
             INY
             INY
             INY
             CPY   #$8C
-            BCC   :TRKLP       ;DONE BITMAP
-            JSR   :PRSCRN      ;PRINT SCREEN?
-            LDA   #MCRESC      ;PROMPT TO
-            JSR   LINE24       ;CONTINUE
+            BCC   :TRKLP      ;DONE BITMAP
+            JSR   :PRSCRN     ;PRINT SCREEN?
+            LDA   #MCRESC     ;PROMPT TO
+            JSR   LINE24      ;CONTINUE
             JSR   KYESC
             LDA   NACTIV
             BNE   :CONTIN
@@ -134,7 +134,7 @@ TSMAP       JSR   COMHDR
             STX   :CHAR
             JSR   PRTFIL
 :DOLIST     LDA   RSECTR
-            JSR   :PLOPSEC     ;T&S LIST
+            JSR   :PLOPSEC    ;T&S LIST
             BCC   :PAIRIT
             JMP   :NXTFILE
 *
@@ -144,15 +144,15 @@ TSMAP       JSR   COMHDR
 :PAIRLP     LDA   SRCTSL,X
             STA   RTRACK
             LDA   SRCTSL+$1,X  ;& MARKING
-            JSR   :PLOPSEC     ;SECTORS ON
-            INX                ;USE MAP
+            JSR   :PLOPSEC    ;SECTORS ON
+            INX               ;USE MAP
             INX
             BNE   :PAIRLP
 *
             LDA   SRCTSL+1
             STA   RTRACK
-            ORA   SRCTSL+2     ;(MORE TSLIST?)
-            BEQ   :NXTFILE     ;NO
+            ORA   SRCTSL+2    ;(MORE TSLIST?)
+            BEQ   :NXTFILE    ;NO
             LDA   SRCTSL+2
             STA   RSECTR
             LDA   #>SRCTSL
@@ -166,16 +166,16 @@ TSMAP       JSR   COMHDR
 :PROMAP     JSR   PRTFIL
             JSR   CLREOL
 *
-            LDX   #$2A         ;INVERSE *
+            LDX   #$2A        ;INVERSE *
             JSR   DIR?
             BCS   :NOT
-            LDX   #$04         ;INVERSE D
+            LDX   #$04        ;INVERSE D
 :NOT        STX   :CHAR
             LDY   #$11
-            LDA   (POINT),Y    ;KEY LO
+            LDA   (POINT),Y   ;KEY LO
             PHA
             INY
-            LDA   (POINT),Y    ;KEY HI
+            LDA   (POINT),Y   ;KEY HI
             TAY
             PLA
             JSR   :PLOPBLK
@@ -212,7 +212,7 @@ TSMAP       JSR   COMHDR
             AND   #$EF
             CMP   #"."
             BEQ   :DO1
-            CMP   #$AC         ;","
+            CMP   #$AC        ;","
             BNE   :NXTFILE
 :DO2        JSR   DIVOUT
             BCS   :ERR1
@@ -234,12 +234,12 @@ TSMAP       JSR   COMHDR
             CMP   NACTIV
             BCC   :GOFILP
             DEC   CURR
-            BCS   :NXTFILE     ;ALWAYS
+            BCS   :NXTFILE    ;ALWAYS
 *
 :PRINT      JSR   :PRSCRN
             JMP   :NXTFILE
 *
-:MTSUB      LDA   #MMTSUB      ;EMPTY SUBDIR
+:MTSUB      LDA   #MMTSUB     ;EMPTY SUBDIR
             JSR   LINE24
             JSR   GETKEY
             JMP   :DO2
@@ -287,7 +287,7 @@ TSMAP       JSR   COMHDR
             ADC   #1
 *
 * PLOP FILE LETTER INTO SECTOR ON MAP
-:PLOPSEC    STX   :TEMPX       ;SAVE XREG
+:PLOPSEC    STX   :TEMPX      ;SAVE XREG
             STA   RSECTR
             ORA   RTRACK
             BEQ   :NOPLOP0
@@ -295,17 +295,17 @@ TSMAP       JSR   COMHDR
             CMP   #$10
             BCS   :INVALID
             ADC   #$06
-            JSR   TABV         ;FIND VTAB
+            JSR   TABV        ;FIND VTAB
             LDA   RTRACK
             CMP   #$23
             BCS   :INVALID
-            ADC   #$03         ;& HTAB
+            ADC   #$03        ;& HTAB
             STA   CH
             TAY
 :PLOP       LDA   :CHAR
-            STA   (BASL),Y     ;PUT ON SCREEN
+            STA   (BASL),Y    ;PUT ON SCREEN
 :NOPLOP0    CLC
-:NOPLOP1    LDX   :TEMPX       ;RESTORE XREG
+:NOPLOP1    LDX   :TEMPX      ;RESTORE XREG
 :NOPLOP     RTS
 :CHAR       DB    $0
 *
@@ -318,7 +318,7 @@ TSMAP       JSR   COMHDR
             DB    $2F,0
             BIT   DOSNOW
             BMI   :INVPRO
-            JSR   TSVALS       ;PRINT T&S
+            JSR   TSVALS      ;PRINT T&S
             SEC
             BCS   :INVCOM
 :INVPRO     JSR   PRTBLK
@@ -333,34 +333,34 @@ TSMAP       JSR   COMHDR
 :PRSCRN     LDA   PRNTR?
             BEQ   :PRSCRNQ
 * COPY SCREEN UP
-            LDA   #$16         ;STARTLASTLINE
+            LDA   #$16        ;STARTLASTLINE
             STA   :VCOUNT
 :UP         LDA   :VCOUNT
             JSR   :PRTAB
-            LDY   #$27         ;LAST CHAR
-:UP2        LDA   (BASL),Y     ;COPY UP
+            LDY   #$27        ;LAST CHAR
+:UP2        LDA   (BASL),Y    ;COPY UP
             STA   (POINT),Y
-            DEY                ;BACK UP
+            DEY               ;BACK UP
             BPL   :UP2
-            DEC   :VCOUNT      ;BACK UP
+            DEC   :VCOUNT     ;BACK UP
             BPL   :UP
 * PRINT SCREEN IMAGE
-            JSR   PRON         ;PRINTER ON
+            JSR   PRON        ;PRINTER ON
             JSR   CROUT
             LDA   #$00
             STA   :VCOUNT
-:PR         JSR   :PRTAB       ;DATA VTAB
+:PR         JSR   :PRTAB      ;DATA VTAB
             LDY   #$00
-:PR2        LDA   (POINT),Y    ;GET CHAR
-            CMP   #$20         ;INVERSE SPACE
+:PR2        LDA   (POINT),Y   ;GET CHAR
+            CMP   #$20        ;INVERSE SPACE
             BNE   :PR3
-            LDA   #"*"         ;-> '*'
-:PR3        JSR   PCOUT        ;PRINT CHAR
+            LDA   #"*"        ;-> '*'
+:PR3        JSR   PCOUT       ;PRINT CHAR
             INY
-            CPY   #$28         ;NEXT
+            CPY   #$28        ;NEXT
             BCC   :PR2
-            JSR   CROUT        ;PRINT CR
-            INC   :VCOUNT      ;NEXT LINE
+            JSR   CROUT       ;PRINT CR
+            INC   :VCOUNT     ;NEXT LINE
             LDA   :VCOUNT
             CMP   #$16
             BCC   :PR
@@ -383,7 +383,7 @@ TSMAP       JSR   COMHDR
             STA   POINT
             CLC
             LDA   BASL+1
-            ADC   #$38         ;<-
+            ADC   #$38        ;<-
             STA   POINT+1
             RTS
 *
@@ -417,10 +417,10 @@ PRTFIL      CLC
             LDA   #"/"
             JSR   PCOUT
 :PRO00      PLP
-            BCS   :PRO1        ;NO FILE NAME
+            BCS   :PRO1       ;NO FILE NAME
             JSR   CFILE
 :PRO1       LDA   PRNTR?
-            BNE   :DOS33A      ;DON'T CLREOL
+            BNE   :DOS33A     ;DON'T CLREOL
             JMP   CLREOL
 *
 :DOS33      LDA   #2
@@ -441,3 +441,4 @@ PRTBLK      JSR   PRHERE
             LDA   BLKNUM
             JSR   PHBYTE
             JMP   CROUT
+

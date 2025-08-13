@@ -6,22 +6,22 @@
 
 *
 * ASK  PRINTER OPTION QUESTION
-ASKPR?      LDX   PSLOT           ;PRINTER SLOT
-            BEQ   :OUT            ;NONZERO?
+ASKPR?      LDX   PSLOT       ;PRINTER SLOT
+            BEQ   :OUT        ;NONZERO?
             JSR   PRHERE
             DB    $8D,$8D,$8D,$8D
             ASC   "Do you want a printout (Y/N) ? "
             DB    $0
             JSR   KYESC
             LDX   #$FF
-            CMP   #"Y"            ;YES?
+            CMP   #"Y"        ;YES?
             BEQ   :SETIT
             LDX   #$00
             LDA   #"N"
 :SETIT      JSR   PCOUT
             STX   PRNTR?
             JMP   HOME
-:OUT        STX   PRNTR?          ;SET FLAG
+:OUT        STX   PRNTR?      ;SET FLAG
             RTS
 *
 * TURN ON PRINTER
@@ -96,8 +96,8 @@ GETKEY      BIT   KBDSTB
             JSR   CHKALT
             BCS   GETKEY
             BIT   KBDSTB
-LOW2UP      CMP   #$E0         ;CONVERT LOWER
-            BCC   :LOWQ        ;TO UPPER CASE
+LOW2UP      CMP   #$E0        ;CONVERT LOWER
+            BCC   :LOWQ       ;TO UPPER CASE
             SBC   #$20
 :LOWQ       RTS
 *
@@ -108,7 +108,7 @@ CKESC       LDA   $C000
 KYESC       JSR   GETKEY
             JMP   KEYES1
 *
-PRDKEY      BIT   $C010        ;NO TYPEAHEAD
+PRDKEY      BIT   $C010       ;NO TYPEAHEAD
             JSR   RDKEY
             JSR   CHKALT
             BCS   PRDKEY
@@ -117,18 +117,18 @@ PRDKEY      BIT   $C010        ;NO TYPEAHEAD
 * FOR KEYPRESSES, CHECK FOR CTRL-@
 * ALTCHARSET TOGGLE
 *
-CHKALT      CMP   #$80         ;CTRL-@?
+CHKALT      CMP   #$80        ;CTRL-@?
             BNE   :CHKQ
 *
 * CARRY SET NOW
 *
-            BIT   A2E          ;ON A //E?
-            BPL   :CHKQ        ;NO: CLC OUT.
-            LDA   $C01E        ;YES: WHAT'S
-            BPL   :ALTON       ;ALTCHARSET?
-            STA   $C00E        ;-: GO +
+            BIT   A2E         ;ON A //E?
+            BPL   :CHKQ       ;NO: CLC OUT.
+            LDA   $C01E       ;YES: WHAT'S
+            BPL   :ALTON      ;ALTCHARSET?
+            STA   $C00E       ;-: GO +
             RTS
-:ALTON      STA   $C00F        ;+: GO -
+:ALTON      STA   $C00F       ;+: GO -
             RTS
 :CHKQ       CLC
             RTS
@@ -191,8 +191,8 @@ HEXDC3      LDA   #$00
 * PRINT 3 DECIMAL DIGITS IN *DIGIT
 * LEADING ZEROS PRINTED
 PRTLZ       LDX   #$02
-:NEXTDIG    LDA   DIGIT,X      ;PRINT DECIMAL
-            JSR   MYHEX        ;DIGITS
+:NEXTDIG    LDA   DIGIT,X     ;PRINT DECIMAL
+            JSR   MYHEX       ;DIGITS
             DEX
             BPL   :NEXTDIG
             RTS
@@ -210,7 +210,7 @@ PRT2RJ      LDX   #1
             JSR   PRSPC
             DEX
             BNE   :PRTRJ
-            BEQ   PRTDIG       ;ALWAYS
+            BEQ   PRTDIG      ;ALWAYS
 *
 PRT8LJ      LDX   #7
             DB    $2C
@@ -234,14 +234,14 @@ TSVALS      JSR   PRTTRK
             ASC   ", "
             DB    $0
             LDA   #MSECTOR
-            JSR   PRINT        ;'SECTOR $'
-            LDA   RSECTR       ;SECTOR MORE
-            CMP   #$10         ;THAN 1 DIGIT?
-            BCS   PHBYTE       ;YES:PRINTBYTE
-            BCC   PHHEX        ;NO:PRINTDIGIT
+            JSR   PRINT       ;'SECTOR $'
+            LDA   RSECTR      ;SECTOR MORE
+            CMP   #$10        ;THAN 1 DIGIT?
+            BCS   PHBYTE      ;YES:PRINTBYTE
+            BCC   PHHEX       ;NO:PRINTDIGIT
 *
 PRTTRK      LDA   #MTRACK
-            JSR   PRINT        ;'TRACK $'
+            JSR   PRINT       ;'TRACK $'
             LDA   RTRACK
 * falls through to PHBYTE
 *
@@ -251,9 +251,9 @@ PHBYTE      PHA
             LSR
             LSR
             LSR
-            JSR   MYHEX           ;HIGH DIGIT
+            JSR   MYHEX       ;HIGH DIGIT
             PLA
-PHHEX       AND   #$0F            ;LOW DIGIT
+PHHEX       AND   #$0F        ;LOW DIGIT
 MYHEX       ORA   #$B0
             CMP   #$BA
             BCC   PCOUT
@@ -267,35 +267,35 @@ PRSPC       LDA   #" "
 * MY COUT ROUTINE
 *
 PCOUT       BIT   A2E
-            BMI   :CHKMASK     ;ON //E
+            BMI   :CHKMASK    ;ON //E
 *
 * ON A II PLUS: CONVERT LOWERCASE
 *
-            CMP   #$E0         ;LOWERCASE?
-            BCC   :NO80A       ;NO
-            SBC   #$20         ;MAKE UPPER.
-            BNE   :NO80A       ;ALWAYS
+            CMP   #$E0        ;LOWERCASE?
+            BCC   :NO80A      ;NO
+            SBC   #$20        ;MAKE UPPER.
+            BNE   :NO80A      ;ALWAYS
 *
-:CHKMASK    BIT   $C01F        ;80-COL?
-            BPL   :NO80A       ;NO
+:CHKMASK    BIT   $C01F       ;80-COL?
+            BPL   :NO80A      ;NO
 *
             CMP   #$20
-            BCC   :FLASH       ;MAKE $40-$5F
+            BCC   :FLASH      ;MAKE $40-$5F
 :NO80A      BIT   PINVFL
-            BPL   :CHKPRTR     ;IF MASKED,
-            BVC   :FLASH       ;IF INVERSE,
+            BPL   :CHKPRTR    ;IF MASKED,
+            BVC   :FLASH      ;IF INVERSE,
 *
 * IF II+: NO SPECIAL CHECK
 * IF //E: CHECK FOR ALTCHARSET
 *
-            BIT   A2E          ;//E OR II+?
-            BPL   :N2EALTL     ;II+
+            BIT   A2E         ;//E OR II+?
+            BPL   :N2EALTL    ;II+
 *
 *//E:
 *IF ALTSET: ALLOW INVERSE LOWER CASE
 *
-            BIT   $C01F        ;80-COL?
-            BPL   :NO80        ;NO
+            BIT   $C01F       ;80-COL?
+            BPL   :NO80       ;NO
 *
 * MUST DO SPECIAL CRAP FOR 80-COL
 * BECAUSE 80-COL FIRMWARE INTERPRETS
@@ -303,43 +303,43 @@ PCOUT       BIT   A2E
 * CONVERT TO $40-$5F.
 *
             CMP   #$20
-            BCS   :Y2EALTL     ;AND $7F
-            BCC   :FLASH       ;MAKE $40-$5F
+            BCS   :Y2EALTL    ;AND $7F
+            BCC   :FLASH      ;MAKE $40-$5F
 *
-:NO80       BIT   $C01E        ;ALTCHARSET?
-            BPL   :N2EALTL     ;NO
-            CMP   #$E0         ;IF NOT
-            BCS   :Y2EALTL     ;LOWERCASE
-:N2EALTL    AND   #$3F         ;MASK INVERSE
-:Y2EALTL    AND   #$7F         ;MASKALTINVLOW
+:NO80       BIT   $C01E       ;ALTCHARSET?
+            BPL   :N2EALTL    ;NO
+            CMP   #$E0        ;IF NOT
+            BCS   :Y2EALTL    ;LOWERCASE
+:N2EALTL    AND   #$3F        ;MASK INVERSE
+:Y2EALTL    AND   #$7F        ;MASKALTINVLOW
             BPL   :CHKPRTR
 *
-:FLASH      AND   #$3F         ;MAKE FLASH
+:FLASH      AND   #$3F        ;MAKE FLASH
             ORA   #$40
 *
-:CHKPRTR    CMP   #$80         ;IF FLASH OR
-            BCS   :GOCOUT      ;INVERSE:
-            PHA                ;SAVE CHAR...
+:CHKPRTR    CMP   #$80        ;IF FLASH OR
+            BCS   :GOCOUT     ;INVERSE:
+            PHA               ;SAVE CHAR...
             LDA   PSLOT
             ORA   #$C0
-            CMP   CSWL+1       ;PRINTING?
-            BNE   :NOTPRTR     ;NO
-            PLA                ;YES:
-            BIT   A2E          ;WATCHING OUT
-            BPL   :NLOWINV     ;FOR ALTCHR,
+            CMP   CSWL+1      ;PRINTING?
+            BNE   :NOTPRTR    ;NO
+            PLA               ;YES:
+            BIT   A2E         ;WATCHING OUT
+            BPL   :NLOWINV    ;FOR ALTCHR,
             BIT   $C01E
             BMI   :MAKNORM
 :NLOWINV    AND   #$3F
-:MAKNORM    ORA   #$80         ;CONVERT BACK
-            CMP   #$A0         ;TO PRINTING
+:MAKNORM    ORA   #$80        ;CONVERT BACK
+            CMP   #$A0        ;TO PRINTING
             BCS   :GOCOUT
             ORA   #$40
-            BNE   :GOCOUT      ;(ALWAYS)
+            BNE   :GOCOUT     ;(ALWAYS)
 *
 :NOTPRTR    PLA
-:GOCOUT     CMP   #$FF         ;SOME PRINTERS
-            BNE   :GOCOUT2     ;DELETE WITH
-            LDA   #$DF         ;FF'S
+:GOCOUT     CMP   #$FF        ;SOME PRINTERS
+            BNE   :GOCOUT2    ;DELETE WITH
+            LDA   #$DF        ;FF'S
 :GOCOUT2    JMP   COUT
 *
 * GIVE CATALOG DISPLAY FUNCTION TITLE
@@ -348,7 +348,7 @@ TOP1        JSR   HOME
 TOP1A       LDA   #0
             STA   WNDTOP
             JSR   TABV
-            LDA   CHOICE          ;FUNCTION NAME
+            LDA   CHOICE      ;FUNCTION NAME
             JSR   PRINT
             JSR   PRSPC
             LDA   OPTCHS
@@ -412,19 +412,19 @@ LOHERE      JSR   LOWSET
 *
 * PRINT TEXT THAT FOLLOWS THE JSR
 * AT CURRENT TEXT POSITION
-PRHERE      PLA                ;GET RETURN
-            CLC                ;ADDRESS
+PRHERE      PLA               ;GET RETURN
+            CLC               ;ADDRESS
             ADC   #$01
-            STA   MESPNT       ;POINT AT
-            PLA                ;FOLLOWING
-            ADC   #$00         ;BYTE
+            STA   MESPNT      ;POINT AT
+            PLA               ;FOLLOWING
+            ADC   #$00        ;BYTE
             STA   MESPNT+1
-            JSR   PRINT2       ;PRINT MESS.
-            LDA   MESPNT+1     ;RESTORE
-            PHA                ;RETURN ADDR.
+            JSR   PRINT2      ;PRINT MESS.
+            LDA   MESPNT+1    ;RESTORE
+            PHA               ;RETURN ADDR.
             LDA   MESPNT
             PHA
-            RTS                ;RETURN!
+            RTS               ;RETURN!
 *
 * PRINT MESSAGE BY ID
 * AT BOTTOM OF SCREEN
@@ -440,22 +440,22 @@ LINE24      PHA
 * MESSAGE PRINTER
 * MESSAGE # IN ACC ->
 *
-PRINT       ASL                ;LOOK-UP &
+PRINT       ASL               ;LOOK-UP &
             TAY
-            LDA   MESSAG,Y     ;POINT AT
-            STA   MESPNT       ;MESSAGE
+            LDA   MESSAG,Y    ;POINT AT
+            STA   MESPNT      ;MESSAGE
             LDA   MESSAG+$1,Y
             STA   MESPNT+1
 PRINT2      LDY   #$00
-            LDA   (MESPNT),Y   ;GET CHAR
+            LDA   (MESPNT),Y  ;GET CHAR
             BEQ   :OUT
             CMP   #$2F
             BEQ   :CLEAR
-            JSR   PCOUT        ;PRINT CHAR
-:NEXT       INC   MESPNT       ;2-BYTE INC.
+            JSR   PCOUT       ;PRINT CHAR
+:NEXT       INC   MESPNT      ;2-BYTE INC.
             BNE   PRINT2
             INC   MESPNT+1
-            BNE   PRINT2       ;(ALWAYS)
+            BNE   PRINT2      ;(ALWAYS)
 :OUT        RTS
 *
 :CLEAR      JSR   CLREOL
@@ -499,7 +499,7 @@ KEYES1      CMP   #$9B
 ERRMSG      LDA   RRTN
             LDY   #$0C
 :OUCHLP     CMP   :ERRNUM,Y
-            BEQ   :OUCH0       ;FOUND ERROR # IN TABLE
+            BEQ   :OUCH0      ;FOUND ERROR # IN TABLE
             DEY
             BPL   :OUCHLP
 *
@@ -522,7 +522,7 @@ ERRMSG      LDA   RRTN
             ASC   " $"
             DB    $0
             LDA   RRTN
-            BNE   :SKIP1       ;ALWAYS (BECAUSE RRTN >= $29)
+            BNE   :SKIP1      ;ALWAYS (BECAUSE RRTN >= $29)
 *
 * These are CII-specific error codes, some
 * of which happen to match ProDOS error codes.
@@ -571,3 +571,4 @@ OUCH        JSR   HOME
             LDA   #MPRESS
             JSR   PRINT
             JMP   GETKEY
+

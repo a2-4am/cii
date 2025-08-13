@@ -2,9 +2,9 @@
 *             COPY             *
 ********************************
 *
-COPY        EQU   *+3                  ;COPY starts after JMP :FMTFIX.
+COPY        EQU   *+3         ;COPY starts after JMP :FMTFIX.
 FMTFIX      JMP   :FMTFIX
-            LDX   #$08                 ;Which COPY option?
+            LDX   #$08        ;Which COPY option?
             JSR   CHOOZ1
             STA   :COPYOPT
             LDA   #>TOPMEM
@@ -13,7 +13,7 @@ FMTFIX      JMP   :FMTFIX
             STY   TOPDIF
             STY   VTOC2+1
             DEY
-            STY   SDFLG                ;FF
+            STY   SDFLG       ;FF
             JSR   DODVP1
             JSR   DODVS1
             LDA   PUNIT
@@ -26,7 +26,7 @@ FMTFIX      JMP   :FMTFIX
 *
             JSR   DEVTYP
             TXA
-            BMI   :ONEDRV              ;REMOVABLE
+            BMI   :ONEDRV     ;REMOVABLE
 :NOT1DRV    LDX   #0
             DB    $2C
 :ONEDRV     LDX   #$FF
@@ -35,8 +35,8 @@ FMTFIX      JMP   :FMTFIX
             LDA   #1
             STA   PDOS
             STA   SDOS
-            LDA   :COPYOPT             ;Chose option 0 - FILES?
-            BNE   :NOTFILZ             ;->No: it's DISK or DOS
+            LDA   :COPYOPT    ;Chose option 0 - FILES?
+            BNE   :NOTFILZ    ;->No: it's DISK or DOS
             JMP   :CPYFILS
 *
 *
@@ -47,12 +47,12 @@ FMTFIX      JMP   :FMTFIX
             STA   :BLKHI
             LDA   #$18
             STA   :BLKLO
-            LDA   #$19                 ;Fix for Smartport calls with
-            STA   $19                  ; AST Sprintdisk.
-            LDA   :COPYOPT             ;[4am] adjust -2 this and following COPYOPTs
-            CMP   #3                   ;Is it COPY DOS?
-            BNE   :ITSDISK             ;->No, it's DISK or DISK W/ FORMAT.
-            JMP   :ITSDOS              ;->It's COPY DOS.
+            LDA   #$19        ;Fix for Smartport calls with
+            STA   $19         ; AST Sprintdisk.
+            LDA   :COPYOPT    ;[4am] adjust -2 this and following COPYOPTs
+            CMP   #3          ;Is it COPY DOS?
+            BNE   :ITSDISK    ;->No, it's DISK or DISK W/ FORMAT.
+            JMP   :ITSDOS     ;->It's COPY DOS.
 *
 *
 :MISMAT     JSR   PRHERE
@@ -62,9 +62,9 @@ FMTFIX      JMP   :FMTFIX
 *
 * *** COPY DISK ***
 *
-:ITSDISK    LDA   #$12                 ;Set to say DISK (item $12), not DISK W/FORMAT
-            STA   OPTCHS               ; cuz DISK W/ FORMAT doesn't fit on screen.
-            JSR   COMH00               ;Say it.
+:ITSDISK    LDA   #$12        ;Set to say DISK (item $12), not DISK W/FORMAT
+            STA   OPTCHS      ; cuz DISK W/ FORMAT doesn't fit on screen.
+            JSR   COMH00      ;Say it.
             JSR   :INSDSK
             LDA   #0
             STA   :PASSNUM
@@ -88,7 +88,7 @@ FMTFIX      JMP   :FMTFIX
 *
 * GET TARGET DEVICE TYPE
 *
-            JSR   TARHDR               ;S&D ONLY
+            JSR   TARHDR      ;S&D ONLY
             LDA   SUNIT
             JSR   UNTDEV
             STA   :STYPE
@@ -98,49 +98,49 @@ FMTFIX      JMP   :FMTFIX
             JSR   GTBLKS
             STX   :SBLKSL
             STY   :SBLKSH
-            CPX   :PBLKSL              ;Are SOURCE and TARGET same size?
-            BNE   :CHK35               ; (according to last status call)
+            CPX   :PBLKSL     ;Are SOURCE and TARGET same size?
+            BNE   :CHK35      ; (according to last status call)
             CPY   :PBLKSH
             BEQ   :CHKMM
-:CHK35      LDA   PUNIT                ;No: But are they both 3.5-inch drives?
-            JSR   :SET35               ; (to allow for a single-sided disk in
-            BCS   :MISMAT              ; a double-sided drive; this does not
-            LDA   SUNIT                ; correctly check for a single-sided
-            JSR   :SET35               ; drive: no good way to check!)
-            BCS   :MISMAT              ;->No they're not, so VOLUME SIZE MISMATCH.
+:CHK35      LDA   PUNIT       ;No: But are they both 3.5-inch drives?
+            JSR   :SET35      ; (to allow for a single-sided disk in
+            BCS   :MISMAT     ; a double-sided drive; this does not
+            LDA   SUNIT       ; correctly check for a single-sided
+            JSR   :SET35      ; drive: no good way to check!)
+            BCS   :MISMAT     ;->No they're not, so VOLUME SIZE MISMATCH.
 *
 * Check for & set up MM for copy
 *
-:CHKMM      BIT   GOTMM                ;Do we have the MM to use?
-            BPL   :STRTCPY             ;->No: just go copy
+:CHKMM      BIT   GOTMM       ;Do we have the MM to use?
+            BPL   :STRTCPY    ;->No: just go copy
 *
-            LDA   #0                   ;Yes: Move MM into main memory.
+            LDA   #0          ;Yes: Move MM into main memory.
             STA   A1L
             STA   A4L
-            LDA   #>AUXMM              ;src
+            LDA   #>AUXMM     ;src
             STA   A1H
-            LDA   #>MMSPOT             ;dest
+            LDA   #>MMSPOT    ;dest
             STA   A4H
-            LDA   #AUXMM+MMEND-MMBEG   ;src end
+            LDA   #AUXMM+MMEND-MMBEG  ;src end
             STA   A2L
             LDA   #>AUXMM+MMEND-MMBEG
             STA   A2H
-            CLC                        ;aux -> main
-            JSR   AUXMOVE              ;Move it!
-            LDA   PUNIT                ;Is either the source disk
+            CLC               ;aux -> main
+            JSR   AUXMOVE     ;Move it!
+            LDA   PUNIT       ;Is either the source disk
             JSR   RAMDCHK
-            BCS   :STRTCPY             ;->
-            LDA   SUNIT                ; or the target disk a RAMdisk?
+            BCS   :STRTCPY    ;->
+            LDA   SUNIT       ; or the target disk a RAMdisk?
             JSR   RAMDCHK
-            BCS   :STRTCPY             ;->Yes: Don't use MM.
-            LDA   #0                   ;Neither disk is a RAMdisk:
-            STA   MMCMD                ;(OPEN command is a 0)
-            STA   MMBUFFER             ;(..while Acc=0....)
-            JSR   MM                   ;OPEN the MM.
-            BCS   :STRTCPY             ;->Error or no memory: don't use MM.
-            DEC   MMISOPEN             ;No error: Flag the MM as OPEN.
-            LDA   #>MMIOBUF            ;Store only 3 tracks in main memory, to
-            STA   HIMEM                ; protect MM and its ProDOS buffer.
+            BCS   :STRTCPY    ;->Yes: Don't use MM.
+            LDA   #0          ;Neither disk is a RAMdisk:
+            STA   MMCMD       ;(OPEN command is a 0)
+            STA   MMBUFFER    ;(..while Acc=0....)
+            JSR   MM          ;OPEN the MM.
+            BCS   :STRTCPY    ;->Error or no memory: don't use MM.
+            DEC   MMISOPEN    ;No error: Flag the MM as OPEN.
+            LDA   #>MMIOBUF   ;Store only 3 tracks in main memory, to
+            STA   HIMEM       ; protect MM and its ProDOS buffer.
             LDA   #$10
             STA   MMREQCNT
 *
@@ -174,22 +174,22 @@ FMTFIX      JMP   :FMTFIX
             JSR   :CKDONE
             BCC   :DISKPAS
 *
-            LDA   :PASSNUM             ;How many passes were needed?
-            CMP   #1                   ;Only 1?
-            BNE   :COPYQ               ;->No: all done.
-            JSR   LOHERE               ;Yes!: Ask
+            LDA   :PASSNUM    ;How many passes were needed?
+            CMP   #1          ;Only 1?
+            BNE   :COPYQ      ;->No: all done.
+            JSR   LOHERE      ;Yes!: Ask
             ASC   "Copy same onto another disk (Y/N) ? ",00
             JSR   CASKEY
-            JSR   PCOUT                ;(Show the character typed)
+            JSR   PCOUT       ;(Show the character typed)
             CMP   #"Y"
-            BNE   :COPYQ               ;->Not Y.
-            LDA   #MINSTGT             ;Y: Prompt to insert target disk
+            BNE   :COPYQ      ;->Not Y.
+            LDA   #MINSTGT    ;Y: Prompt to insert target disk
             JSR   LOWMES
-            JSR   INSCOM               ;Wait for keypress & clear message.
+            JSR   INSCOM      ;Wait for keypress & clear message.
             JSR   :ERRWND
             JSR   CROUT
             JSR   INIT
-            JMP   :DSKWRT              ;Go do another write pass.
+            JMP   :DSKWRT     ;Go do another write pass.
 *
 :COPYQ      LDA   #0
             STA   FMT400K
@@ -206,7 +206,7 @@ FMTFIX      JMP   :FMTFIX
 :PBLKSH     DB    $0
 :SBLKSL     DB    $0
 :SBLKSH     DB    $0
-:PASSNUM    DB    $0                   ;Number of passes used
+:PASSNUM    DB    $0          ;Number of passes used
 *
 *
 * *** COPY DOS ***
@@ -216,7 +216,7 @@ FMTFIX      JMP   :FMTFIX
 :NOPRO      JSR   HOME
             JMP   NOPRO
 *
-:ITSDOS     JSR   COMH00               ;COPY DOS  SLOT: s DRIVE: d
+:ITSDOS     JSR   COMH00      ;COPY DOS  SLOT: s DRIVE: d
             JSR   SRCHDR
             LDA   PUNIT
             JSR   UNTDEV
@@ -232,7 +232,7 @@ FMTFIX      JMP   :FMTFIX
             BNE   :GOFONLY
             JSR   :INSDSK
             BIT   DOSNOW
-            BMI   :NOPRO               ;SRC=PRODOS
+            BMI   :NOPRO      ;SRC=PRODOS
 *
 * VERIFY SOURCE DISK IS REALLY DOS
 *
@@ -255,7 +255,7 @@ FMTFIX      JMP   :FMTFIX
 *
             LDA   #>CVTOC
             STA   RPAGE
-            JSR   STVTOC               ;RETURNS A=0
+            JSR   STVTOC      ;RETURNS A=0
             JSR   SET1A2
             JMP   FILER
 *
@@ -265,7 +265,7 @@ FMTFIX      JMP   :FMTFIX
             STA   PPFX
             STA   PPFX+5
             JSR   SRCHDR
-            LDA   ONLY1                ;1 OR 2 DRIVES?
+            LDA   ONLY1       ;1 OR 2 DRIVES?
             BNE   :ONEDISK
             JSR   PRHERE
             DB    $8D,$8D,$8D
@@ -281,7 +281,7 @@ FMTFIX      JMP   :FMTFIX
             STA   UNIT
             JSR   DOSTYP
             STA   PDOS
-            JSR   UNTPFX               ;SETUP PFX
+            JSR   UNTPFX      ;SETUP PFX
             LDY   #$3F
 :IDLP       LDA   PFX,Y
             STA   PPFX,Y
@@ -300,28 +300,28 @@ FMTFIX      JMP   :FMTFIX
             DB    $2F,$0
             LDA   :PTYPE
             STA   :TYPE
-            LDA   #$20                 ;READ TRACK
-            STA   RCMND                ;COMMAND.
-            LDA   RTRACK               ;SAVE THIS TRK
+            LDA   #$20        ;READ TRACK
+            STA   RCMND       ;COMMAND.
+            LDA   RTRACK      ;SAVE THIS TRK
             STA   :SVTRK
             LDA   BLKNUM
             STA   :SVBLK
             LDA   BLKNUM+1
             STA   :SVBLK+1
-            JSR   :DOPASS              ;READ.
+            JSR   :DOPASS     ;READ.
 *
-            LDA   :COPYOPT             ;COPY DISK W/FORMAT?
+            LDA   :COPYOPT    ;COPY DISK W/FORMAT?
             CMP   #2
-            BNE   :RDPASSQ             ;->No.
-            LDA   :PASSNUM             ;Yes: first time through?
+            BNE   :RDPASSQ    ;->No.
+            LDA   :PASSNUM    ;Yes: first time through?
             CMP   #1
             BNE   :RDPASSQ
-            LDA   PUNIT                ;Yes: Is source disk a 3.5-inch disk?
+            LDA   PUNIT       ;Yes: Is source disk a 3.5-inch disk?
             JSR   :SET35
-            BCS   :RDPASSQ             ;->No.
-            LDA   :PBLKSH              ;Yes: 400K or 800K?
+            BCS   :RDPASSQ    ;->No.
+            LDA   :PBLKSH     ;Yes: 400K or 800K?
             CMP   #$06
-            BCS   :RDPASSQ             ;->800K.
+            BCS   :RDPASSQ    ;->800K.
             DEC   FMT400K
 *
 :RDPASSQ    RTS
@@ -330,32 +330,32 @@ FMTFIX      JMP   :FMTFIX
 *
 :WRPASS     LDA   #$15
             JSR   VLEFT
-            LDA   :COPYOPT             ;Is user's choice
-            CMP   #2                   ; COPY DISK W/ FORMAT?
-            BNE   :WRPASS1             ;->No.
-            LDA   :PASSNUM             ;Yes: 1st write pass?
+            LDA   :COPYOPT    ;Is user's choice
+            CMP   #2          ; COPY DISK W/ FORMAT?
+            BNE   :WRPASS1    ;->No.
+            LDA   :PASSNUM    ;Yes: 1st write pass?
             CMP   #1
-            BNE   :WRPASS1             ;->No.
-            JSR   DEVTYP               ;Yes: What device have we here?
-            BEQ   :WRPASS1             ;->Disk II, don't format ahead of time.
-            TXA                        ;Does it support formatting?
+            BNE   :WRPASS1    ;->No.
+            JSR   DEVTYP      ;Yes: What device have we here?
+            BEQ   :WRPASS1    ;->Disk II, don't format ahead of time.
+            TXA               ;Does it support formatting?
             AND   #$08
-            BEQ   :WRPASS1             ;->No!
-            JSR   PRHERE               ;Yup:  Announce yourself
+            BEQ   :WRPASS1    ;->No!
+            JSR   PRHERE      ;Yup:  Announce yourself
             ASC   "Formatting"
-            DB    $2F,0                ; (cleol)
+            DB    $2F,0       ; (cleol)
 *
-            LDA   FMT400K              ;Was source disk a 400K 3.5-inch disk?
-            BPL   :WRFMT               ;->No, just format.
-            LDA   SUNIT                ;Yes: Is this disk a 3.5-inch disk?
+            LDA   FMT400K     ;Was source disk a 400K 3.5-inch disk?
+            BPL   :WRFMT      ;->No, just format.
+            LDA   SUNIT       ;Yes: Is this disk a 3.5-inch disk?
             JSR   :SET35
             STA   :UNIFLG
-            BCS   :WRFMT               ;->No.
-            JSR   :SETSIDS             ;Yes: (CLC) set it for 400K format
-:WRFMT      JSR   SPLFRM               ; & format the sucker. (ignore errors)
+            BCS   :WRFMT      ;->No.
+            JSR   :SETSIDS    ;Yes: (CLC) set it for 400K format
+:WRFMT      JSR   SPLFRM      ; & format the sucker. (ignore errors)
             LDA   #0
             STA   CH
-            JSR   :FMTFIX              ;Fix it back to 800K format.
+            JSR   :FMTFIX     ;Fix it back to 800K format.
 *
 :WRPASS1    JSR   PRHERE
             ASC   "Writing"
@@ -366,19 +366,19 @@ FMTFIX      JMP   :FMTFIX
             STA   BLKNUM
             LDA   :SVBLK+1
             STA   BLKNUM+1
-            LDA   :SVTRK               ;RESTORE TRK
-            STA   RTRACK               ;IF 1ST TIME:
+            LDA   :SVTRK      ;RESTORE TRK
+            STA   RTRACK      ;IF 1ST TIME:
             BNE   :WRPASS2
             LDA   :COPYOPT
-            CMP   #3                   ;COPY DOS?
-            BEQ   :WRPASS2             ;->Yes.
+            CMP   #3          ;COPY DOS?
+            BEQ   :WRPASS2    ;->Yes.
             LDA   :TYPE
-            BNE   :WRPASS2             ;NOT DISK II
-            LDA   #$40                 ;RATCHET
-            STA   RCMND                ;DEST.
+            BNE   :WRPASS2    ;NOT DISK II
+            LDA   #$40        ;RATCHET
+            STA   RCMND       ;DEST.
             JSR   DORWTS
-:WRPASS2    LDA   #$08                 ;COPY TRACK
-            STA   RCMND                ;COMMAND.
+:WRPASS2    LDA   #$08        ;COPY TRACK
+            STA   RCMND       ;COMMAND.
 *
 * FALL INTO DOPASS
 *
@@ -387,18 +387,18 @@ FMTFIX      JMP   :FMTFIX
 * memory transfers of other tracks.
 *
 :DOPASS     BIT   MMISOPEN
-            BMI   :DOLCPAS             ;->MM open: don't access 1st buffer.
-            LDA   #>TOP40              ;Else (1B00-2AFF)
+            BMI   :DOLCPAS    ;->MM open: don't access 1st buffer.
+            LDA   #>TOP40     ;Else (1B00-2AFF)
             STA   RPAGE
-            JSR   :PASSINC             ; do 1 track in main mem.
+            JSR   :PASSINC    ; do 1 track in main mem.
             BCS   :PASSOUT
-:DOLCPAS    JSR   :LCPASS              ;Do aux mem.
+:DOLCPAS    JSR   :LCPASS     ;Do aux mem.
             BCS   :PASSOUT
-            JSR   :MMPASS              ;Do MM.
+            JSR   :MMPASS     ;Do MM.
             BCS   :PASSOUT
-            LDA   #>TOP30              ;2B00-5AFF
+            LDA   #>TOP30     ;2B00-5AFF
             STA   RPAGE
-:DPLOOP     JSR   :PASSINC             ;Do remaining main mem...
+:DPLOOP     JSR   :PASSINC    ;Do remaining main mem...
             BCS   :PASSOUT
             LDA   RPAGE
             ADC   #$10
@@ -429,49 +429,49 @@ FMTFIX      JMP   :FMTFIX
 *          NE if Apple 3.5 drive
 * Also sets up unit numbers in Smartport-call tables.
 *
-:SET35      LSR                        ;0dss s000
-            LSR                        ;00ds ss00
-            LSR                        ;000d sss0
+:SET35      LSR               ;0dss s000
+            LSR               ;00ds ss00
+            LSR               ;000d sss0
             TAX
-            LDA   DEVADR+1,X           ;Get driver address.
-            CMP   #$C1                 ;Is it in ROM?
+            LDA   DEVADR+1,X  ;Get driver address.
+            CMP   #$C1        ;Is it in ROM?
             BCC   :SET35NO
             CMP   #$C8
             BCS   :SET35NO
-            STA   SLOTPTR+1            ;Yes: Pt to ROM.
+            STA   SLOTPTR+1   ;Yes: Pt to ROM.
             LDA   #0
             STA   SLOTPTR
             LDY   #$07
-            LDA   (SLOTPTR),Y          ;Is it a Smartport card?
-            BNE   :SET35NO             ;->No.
-            LDY   #1                   ;Yes: Convert the ProDOS unitnum (index)
-            TXA                        ; into a Smartport unitnum.
-            CMP   #$10                 ; (check drive 1/drive 2)
+            LDA   (SLOTPTR),Y  ;Is it a Smartport card?
+            BNE   :SET35NO    ;->No.
+            LDY   #1          ;Yes: Convert the ProDOS unitnum (index)
+            TXA               ; into a Smartport unitnum.
+            CMP   #$10        ; (check drive 1/drive 2)
             BCC   :MKUNIT1
             INY
 :MKUNIT1    LSR
-            EOR   SLOTPTR+1            ; (ProDOS unitnum match real slot #?)
+            EOR   SLOTPTR+1   ; (ProDOS unitnum match real slot #?)
             AND   #$07
             BEQ   :MKUNIT2
-            INY                        ; (No: inc Smartport unitnum by 2.)
+            INY               ; (No: inc Smartport unitnum by 2.)
             INY
-:MKUNIT2    STY   :UNITNUM             ;Set up unitnum for all Smartport calls.
+:MKUNIT2    STY   :UNITNUM    ;Set up unitnum for all Smartport calls.
             STY   :AUNIT
             STY   :U1UNIT
             STY   :U2UNIT
-            LDA   DEVADR,X             ;Get the Smartport entry pt.
+            LDA   DEVADR,X    ;Get the Smartport entry pt.
             CLC
             ADC   #3
             STA   SLOTPTR
-            JSR   :JMPSLOT             ;Call to get the status for this device.
+            JSR   :JMPSLOT    ;Call to get the status for this device.
             DB    $00
             DW    :UNITLST
             BCS   :SET35NO
-            LDA   :STATLST+$15         ;Is it a 3.5 drive?
+            LDA   :STATLST+$15  ;Is it a 3.5 drive?
             CMP   #1
-            BNE   :SET35NO             ;->No.
-            LDA   :STATLST+$16         ;Yes: Unidisk 3.5 or Apple 3.5?
-            CLC                        ;(returns EQ/NE)
+            BNE   :SET35NO    ;->No.
+            LDA   :STATLST+$16  ;Yes: Unidisk 3.5 or Apple 3.5?
+            CLC               ;(returns EQ/NE)
             RTS
 :SET35NO    SEC
             RTS
@@ -479,20 +479,20 @@ FMTFIX      JMP   :FMTFIX
 :UNITLST    DB    3
 :UNITNUM    DS    1
             DW    :STATLST
-            DB    3                    ;return Device info block command
+            DB    3           ;return Device info block command
 *
-            DUM   $800                 ;(not used during copy)
+            DUM   $800        ;(not used during copy)
 :STATLST    DS    $19
             DEND
 *
 *
 * Called after the format, and at Reset time.
-:FMTFIX     LDA   FMT400K              ;Need to fix back to 800K format?
+:FMTFIX     LDA   FMT400K     ;Need to fix back to 800K format?
             BPL   :SETSIDQ
-            LDA   SUNIT                ;Yes: 3.5-inch drive?
+            LDA   SUNIT       ;Yes: 3.5-inch drive?
             JSR   :SET35
-            BCS   :SETSIDQ             ;->No: RTS.
-            SEC                        ;Yes:
+            BCS   :SETSIDQ    ;->No: RTS.
+            SEC               ;Yes:
 * fall through to :SETSIDS to reset 800K format.
 *
 *
@@ -501,21 +501,21 @@ FMTFIX      JMP   :FMTFIX
 *         CC = set 400K format
 *         CS = restore 800K format
 :SETSIDS    BEQ   :UNISIDE
-            LDA   #0                   ;Apple 3.5: Convert carry to 00 or 80
+            LDA   #0          ;Apple 3.5: Convert carry to 00 or 80
             ROR
-            STA   :ASIDES              ;Save in sides value in table
-            JSR   :JMPSLOT             ;Make the SetSides control call.
+            STA   :ASIDES     ;Save in sides value in table
+            JSR   :JMPSLOT    ;Make the SetSides control call.
             DB    $04
             DW    :ASIDLST
             RTS
-:UNISIDE    LDA   #0                   ;Unidisk: Convert carry to 00 or 80
+:UNISIDE    LDA   #0          ;Unidisk: Convert carry to 00 or 80
             ROR
             STA   :USIDES
-            JSR   :JMPSLOT             ;Make the SetAddress control call.
+            JSR   :JMPSLOT    ;Make the SetAddress control call.
             DB    $04
             DW    :SADRLST
             BCS   :SETSIDQ
-            JSR   :JMPSLOT             ;Make the Download control call.
+            JSR   :JMPSLOT    ;Make the Download control call.
             DB    $04
             DW    :DNLDLST
 :SETSIDQ    RTS
@@ -525,16 +525,16 @@ FMTFIX      JMP   :FMTFIX
 :ASIDLST    DB    3
 :AUNIT      DS    1
             DW    :SIDECTL
-            DB    9                    ;SetSides command
+            DB    9           ;SetSides command
 *
-:SIDECTL    DB    1                    ;<-not 4 as manual says....
+:SIDECTL    DB    1           ;<-not 4 as manual says....
             DB    00
 :ASIDES     DS    1
 *
 :SADRLST    DB    3
 :U1UNIT     DS    1
             DW    :SADRCTL
-            DB    6                    ;SetAddress command
+            DB    6           ;SetAddress command
 *
 :SADRCTL    DW    $0002
             DW    $0063
@@ -542,7 +542,7 @@ FMTFIX      JMP   :FMTFIX
 :DNLDLST    DB    3
 :U2UNIT     DS    1
             DW    :DNLDCTL
-            DB    7                    ;Download command
+            DB    7           ;Download command
 *
 :DNLDCTL    DW    $0001
 :USIDES     DS    1
@@ -551,10 +551,10 @@ FMTFIX      JMP   :FMTFIX
 *
 *
 :LCPASS     LDA   :COPYOPT
-            CMP   #3                   ;Option 5 - COPY DOS?
-            BEQ   :LCOUT               ;->Yes: Don't use auxmem.
-            LDA   ISAUX                ;No: Is there auxmem to use?
-            BPL   :LCOUT               ;->No: Don't try to use it!
+            CMP   #3          ;Option 5 - COPY DOS?
+            BEQ   :LCOUT      ;->Yes: Don't use auxmem.
+            LDA   ISAUX       ;No: Is there auxmem to use?
+            BPL   :LCOUT      ;->No: Don't try to use it!
 *
 * THE FOLLOWING TWO LINES COMMENTED OUT ON  3/21/87
 *
@@ -618,7 +618,7 @@ FMTFIX      JMP   :FMTFIX
             ADC   #$0F
             STA   :A2L+1
             PLP
-            STA   $C009                ;AUX ZP
+            STA   $C009       ;AUX ZP
             LDX   #7
 :AUXLP      LDA   :A1L,X
             STA   A1L,X
@@ -629,8 +629,8 @@ FMTFIX      JMP   :FMTFIX
             JSR   $C311
             LDA   A4L+1
             LDX   A1L+1
-            STA   $C008                ;MAIN ZP
-            CMP   $C082                ;ROM
+            STA   $C008       ;MAIN ZP
+            CMP   $C082       ;ROM
             PLP
             RTS
 *
@@ -644,59 +644,59 @@ FMTFIX      JMP   :FMTFIX
 *
 * Memory Manager pass
 *
-:MMPASS     LDA   MMISOPEN             ;Is it open?
-            BPL   :MMPASSQ             ;->Nah, forget this.
-            LDA   #0                   ;Yes: reset the mark.
+:MMPASS     LDA   MMISOPEN    ;Is it open?
+            BPL   :MMPASSQ    ;->Nah, forget this.
+            LDA   #0          ;Yes: reset the mark.
             STA   MMMARK
             STA   MMMARK+1
-            LDA   RCMND                ;Is this read or write pass?
-            CMP   #8                   ; (Command = copy (write) track?)
-            BEQ   :MMWRIT              ;->Write Pass.
-            LDA   #>TOP30              ;Read Pass:
-            STA   MMBUFFER+1           ;Set to access thru 2nd mainmem buffer.
-:MMRDLP     LDA   #MMCHECK             ;Check if there's room.
+            LDA   RCMND       ;Is this read or write pass?
+            CMP   #8          ; (Command = copy (write) track?)
+            BEQ   :MMWRIT     ;->Write Pass.
+            LDA   #>TOP30     ;Read Pass:
+            STA   MMBUFFER+1  ;Set to access thru 2nd mainmem buffer.
+:MMRDLP     LDA   #MMCHECK    ;Check if there's room.
             STA   MMCMD
             JSR   MM
-            BCS   :MMPASSQ             ;->There is not. Done with this pass.
-            JSR   :PASSINC             ;There is. Read a track from disk.
-            LDA   #MMWRITE             ;Write it into MM memory.
+            BCS   :MMPASSQ    ;->There is not. Done with this pass.
+            JSR   :PASSINC    ;There is. Read a track from disk.
+            LDA   #MMWRITE    ;Write it into MM memory.
             STA   MMCMD
-            ROR                        ;(Put carry from :PASSINC into Acc)
+            ROR               ;(Put carry from :PASSINC into Acc)
             JSR   MM
-            BCS   :BADMM               ;->MM error! Gag and exit.
-            ASL                        ;(:PASSINC result back into carry)
-            BCC   :MMRDLP              ;->Not done with disk: go back for more.
-            RTS                        ;Done with disk. Exit carry set.
+            BCS   :BADMM      ;->MM error! Gag and exit.
+            ASL               ;(:PASSINC result back into carry)
+            BCC   :MMRDLP     ;->Not done with disk: go back for more.
+            RTS               ;Done with disk. Exit carry set.
 *
-:MMWRIT     LDA   #>TOP40              ;Set to access thru 1st mainmem buffer.
+:MMWRIT     LDA   #>TOP40     ;Set to access thru 1st mainmem buffer.
             STA   MMBUFFER+1
-            LDA   #MMREAD              ;Set to do reads from MM memory.
+            LDA   #MMREAD     ;Set to do reads from MM memory.
             STA   MMCMD
-:MMWRLP     JSR   MM                   ;Read a track's worth from MM.
-            BCS   :MMWRQ               ;->Either no room left or terrible error.
-            JSR   :PASSINC             ;Write that track to disk.
-            BCC   :MMWRLP              ;->Not done with disk: go back for more.
-            RTS                        ;Done with disk. Exit carry set.
-:MMWRQ      LDA   MMERRNUM             ;Is there error for "just out of room"?
+:MMWRLP     JSR   MM          ;Read a track's worth from MM.
+            BCS   :MMWRQ      ;->Either no room left or terrible error.
+            JSR   :PASSINC    ;Write that track to disk.
+            BCC   :MMWRLP     ;->Not done with disk: go back for more.
+            RTS               ;Done with disk. Exit carry set.
+:MMWRQ      LDA   MMERRNUM    ;Is there error for "just out of room"?
             CMP   #SIZEERR
-            BNE   :BADMM               ;->No! Yecch. Go scream.
-:MMPASSQ    CLC                        ;Yes:Exit carry clear.
+            BNE   :BADMM      ;->No! Yecch. Go scream.
+:MMPASSQ    CLC               ;Yes:Exit carry clear.
             RTS
 *
-:BADMM      LDA   #0                   ;Nasty MM error! let's say that MM
-            STA   GOTMM                ; is no longer available.
-            JSR   LOHERE               ;Print a silly message for me
+:BADMM      LDA   #0          ;Nasty MM error! let's say that MM
+            STA   GOTMM       ; is no longer available.
+            JSR   LOHERE      ;Print a silly message for me
             ASC   "Internal memory handling error #"
             DB    0
-            LDA   MMERRNUM             ; with the error number!
+            LDA   MMERRNUM    ; with the error number!
             JSR   PHBYTE
-            JSR   PRHERE               ;Next copy (without MM) should work.
+            JSR   PRHERE      ;Next copy (without MM) should work.
             DB    $8D
             ASC   "Try copying again..."
             DB    0
             JSR   RDKEY
-            JSR   CLOSEMM              ;(Close the MM)
-            JMP   FILER                ;& abandon ship.
+            JSR   CLOSEMM     ;(Close the MM)
+            JMP   FILER       ;& abandon ship.
 *
 *
 *
@@ -712,11 +712,11 @@ FMTFIX      JMP   :FMTFIX
             JSR   CKESC
 *
 *
-:GORWTS0    LDA   RCMND                ;Write Track command?
+:GORWTS0    LDA   RCMND       ;Write Track command?
             CMP   #$08
-            BNE   :NOTWRT              ;->No.
-            LDA   :TYPE                ;Yes: track (floppy) or block device?
-            BEQ   :GTRKIO              ;->track (FLOPPY)
+            BNE   :NOTWRT     ;->No.
+            LDA   :TYPE       ;Yes: track (floppy) or block device?
+            BEQ   :GTRKIO     ;->track (FLOPPY)
 *
 * Write to a block device:
 * SPECIAL CHECK FOR /RAM!!!!!!!!
@@ -729,12 +729,12 @@ FMTFIX      JMP   :FMTFIX
             LDA   BLKNUM
             AND   #$FC
             CMP   #4
-            BEQ   :BLKLP0A             ;BLKS4-7
+            BEQ   :BLKLP0A    ;BLKS4-7
 :NOTRAM     JSR   WTBLK
 :ISRAM7     JMP   :BLKLP0
 *
 :NOTWRT     LDA   :TYPE
-:GTRKIO     BEQ   :TRKIO               ;FLOPPY
+:GTRKIO     BEQ   :TRKIO      ;FLOPPY
             JSR   RDBLK
 *
 * READ/WRITE UP TO 8 BLOCKS, WHICH
@@ -748,7 +748,7 @@ FMTFIX      JMP   :FMTFIX
             BNE   :BLKLP1
             INC   BLKNUM+1
 :BLKLP1     DEC   :COUNT
-            BEQ   :BLKLP3              ;WE'VE DONE 8
+            BEQ   :BLKLP3     ;WE'VE DONE 8
             JSR   :CKDONE
             BCC   :BLKLOOP
 :BLKLP3     LDA   :RPSAVE
@@ -764,27 +764,27 @@ FMTFIX      JMP   :FMTFIX
             BCC   :GORWTS1
             INC   BLKNUM+1
 *
-:GORWTS1    JSR   PHRWTS               ;GO RWTS.
-            BCC   :GORWTSQ             ;ERROR?
-:RWERR      LDA   RRTN                 ;YES: WRITE-
-            CMP   #$2B                 ;PROTECTED?
+:GORWTS1    JSR   PHRWTS      ;GO RWTS.
+            BCC   :GORWTSQ    ;ERROR?
+:RWERR      LDA   RRTN        ;YES: WRITE-
+            CMP   #$2B        ;PROTECTED?
             BNE   :NOTWP
             JMP   ERROUT
 *
-:NOTWP      JSR   :ERRWND              ;Set scrolling window area
-            LDX   #MREAD               ;SET 'READ'
+:NOTWP      JSR   :ERRWND     ;Set scrolling window area
+            LDX   #MREAD      ;SET 'READ'
             LDA   RCMND
             CMP   #$20
             BEQ   :SEERR
-            INX                        ;OR 'WRITE'
+            INX               ;OR 'WRITE'
 :SEERR      TXA
             JSR   PRINT
             JSR   PRSPC
-            LDA   #MERROR              ;'ERROR'
+            LDA   #MERROR     ;'ERROR'
             JSR   PRINT
             JSR   PRSPC
             JSR   :TRKBLK
-            JMP   INIT                 ;RESET WINDOW
+            JMP   INIT        ;RESET WINDOW
 *
 :SVTRK      DB    $0
 :SVBLK      DB    $0,$0
@@ -792,10 +792,10 @@ FMTFIX      JMP   :FMTFIX
 :COUNT      DB    $0
 *
 :ERRWND     LDA   #$03
-            STA   WNDTOP               ;SET WINDOW
+            STA   WNDTOP      ;SET WINDOW
             LDA   #$14
             STA   WNDBTM
-            LDA   #$13                 ;& VTAB.
+            LDA   #$13        ;& VTAB.
             JMP   VLEFT
 *
 :TRKBLK     LDX   :STYPE
@@ -805,8 +805,8 @@ FMTFIX      JMP   :FMTFIX
             LDX   :PTYPE
 :TB3        TXA
             BEQ   :PRTTRK
-            JMP   PRTBLK               ;Print BLOCK then the block #.
-:PRTTRK     JSR   PRTTRK               ;Print TRACK then the track #.
+            JMP   PRTBLK      ;Print BLOCK then the block #.
+:PRTTRK     JSR   PRTTRK      ;Print TRACK then the track #.
             JMP   CROUT
 *
 *
@@ -815,13 +815,13 @@ FMTFIX      JMP   :FMTFIX
 :NONE       JMP   NOSEL
 *
 :CPYFILS    LDA   #$00
-            STA   STATE                ;STATE=0
+            STA   STATE       ;STATE=0
             STA   SDFLG
             JSR   TREEP
             JSR   TOP1
             JSR   SRCHDR
             JSR   CT1
-            JSR   CATDIS               ;SELECT FILES
+            JSR   CATDIS      ;SELECT FILES
             LDA   FILNUM
             BEQ   :NONE
 *
@@ -838,10 +838,10 @@ FMTFIX      JMP   :FMTFIX
             LDA   PDOS
             AND   SDOS
             CMP   #$FF
-            BNE   :NOTDUPV             ;NOT BOTH PRO
+            BNE   :NOTDUPV    ;NOT BOTH PRO
 *
 *
-            LDY   PFX                  ;WAS *PPFX
+            LDY   PFX         ;WAS *PPFX
 :DVCK       LDA   PFX,Y
             CMP   PPFX,Y
             BNE   :NOTDUPV
@@ -858,7 +858,7 @@ FMTFIX      JMP   :FMTFIX
             BCS   :NOTDUPV
             LDA   PPFX+1,Y
             CMP   #'/'
-            BNE   :NOTDUPV             ;/ABC & /ABCD
+            BNE   :NOTDUPV    ;/ABC & /ABCD
 *
 * WE HAVE /ABC & /ABC/DE IF CODE FALLS THRU TO HERE
 *
@@ -869,8 +869,8 @@ FMTFIX      JMP   :FMTFIX
 * DISKETTE AND PRETEND LIKE MEDIA
 * IS NON-REMOVABLE.
 *
-:ISDUPV     LDA   PUNIT                ;SINGLE DRIVE
-            EOR   SUNIT                ; COPY?
+:ISDUPV     LDA   PUNIT       ;SINGLE DRIVE
+            EOR   SUNIT       ; COPY?
             BEQ   :NOTDUP
 *
 :DUPERR     JSR   HOME
@@ -890,10 +890,10 @@ FMTFIX      JMP   :FMTFIX
 * BEGIN THE COPY CYCLE
 *
 :GOTFILS    JSR   SWPCHK
-            JSR   :FILMOV              ;ARRANGE 'EM
+            JSR   :FILMOV     ;ARRANGE 'EM
             LDA   #$00
             STA   CURR
-            JSR   PATMOV               ;SQUISH LIST
+            JSR   PATMOV      ;SQUISH LIST
             JSR   HOME
 *
 * ANTICIPATE PRODOS --> DOS COPY
@@ -901,18 +901,18 @@ FMTFIX      JMP   :FMTFIX
             LDA   #>TOP11
             JSR   SETHIM
 *
-:CPYFILE    LDA   KBD                  ;CHECK FOR ESC
+:CPYFILE    LDA   KBD         ;CHECK FOR ESC
             CMP   #$9B
             BEQ   :LPOUT
             JSR   SRCHDR
             JSR   INSS
             JSR   SRCHDR
-            JSR   FILEQ                ;UPDATE FILEQ
-            JSR   OPNSRC               ;OPEN & READ
+            JSR   FILEQ       ;UPDATE FILEQ
+            JSR   OPNSRC      ;OPEN & READ
             BIT   PDOS
-            BPL   :CPF0                ;SRC = DOS
+            BPL   :CPF0       ;SRC = DOS
             BIT   SDOS
-            BMI   :CPF0                ;TAR = PRODOS
+            BMI   :CPF0       ;TAR = PRODOS
 *
 * *RADR IS SET TO 2 FOR BASIC FILES OR
 * 4 FOR BINARY FILES IF COPYING
@@ -920,17 +920,17 @@ FMTFIX      JMP   :FMTFIX
 *
             JSR   CURPNT
             LDY   #$10
-            LDA   (POINT),Y            ;FILE TYPE
+            LDA   (POINT),Y   ;FILE TYPE
             LDY   #0
             CMP   #4
-            BEQ   :CPF00               ;SRC = TXT
+            BEQ   :CPF00      ;SRC = TXT
             CMP   #$FE
-            BEQ   :CPF00               ;SRC = REL
+            BEQ   :CPF00      ;SRC = REL
             LDY   #2
             CMP   #$FA
-            BEQ   :CPF00               ;SRC = INT
+            BEQ   :CPF00      ;SRC = INT
             CMP   #$FC
-            BEQ   :CPF00               ;SRC = BAS
+            BEQ   :CPF00      ;SRC = BAS
             LDY   #4
 :CPF00      STY   RADR
 :CPF0       JSR   :GOREAD
@@ -938,8 +938,8 @@ FMTFIX      JMP   :FMTFIX
             JSR   TARHDR
             JSR   INSD
             JSR   TARHDR
-            JSR   :OPNDEST             ;OPEN & WRITE
-            BCS   :FINIS1              ;DON'T COPY
+            JSR   :OPNDEST    ;OPEN & WRITE
+            BCS   :FINIS1     ;DON'T COPY
             JSR   :PRFILE
             LDA   STRTYP
             CMP   #$D0
@@ -949,31 +949,31 @@ FMTFIX      JMP   :FMTFIX
 :LPOUT      RTS
 *
 :CPYLOOP    LDA   ONLY1
-            BPL   :NOCLS               ;2 DRIVES
-            JSR   GOCLS                ;CLOSE DEST
+            BPL   :NOCLS      ;2 DRIVES
+            JSR   GOCLS       ;CLOSE DEST
 :NOCLS      JSR   SRCHDR
             JSR   INSS
             JSR   SRCHDR
-            JSR   :GOREAD              ;NO:READ MORE
+            JSR   :GOREAD     ;NO:READ MORE
             JSR   TXTCNV
             JSR   TARHDR
             JSR   INSD
             JSR   TARHDR
             LDA   ONLY1
-            BPL   :CPYF1               ;2 DRIVES
+            BPL   :CPYF1      ;2 DRIVES
             JSR   REOPEN
-:CPYF1      JSR   :WRITDAT             ;WRITE MORE
-            LDA   EOF                  ;ALL DONE?
+:CPYF1      JSR   :WRITDAT    ;WRITE MORE
+            LDA   EOF         ;ALL DONE?
             BEQ   :CPYLOOP
-:FINISH     JSR   WRCAT2               ;WRITE CATALOG
+:FINISH     JSR   WRCAT2      ;WRITE CATALOG
 :FINIS1     JSR   LOHERE
             DB    $0
             LDA   STRTYP
             CMP   #$D0
-            BNE   :FIN2                ;NOT SUBDIR
+            BNE   :FIN2       ;NOT SUBDIR
             LDX   CURR
             LDA   STATUS,X
-            BEQ   :FIN2                ;DIDN'T COPY
+            BEQ   :FIN2       ;DIDN'T COPY
 *
 * JUST CREATED SUBDIRECTORY
 *
@@ -987,9 +987,9 @@ FMTFIX      JMP   :FMTFIX
             LDX   #$FF
             STX   CURR
 *
-:FIN2       INC   CURR                 ;NEXT FILE
+:FIN2       INC   CURR        ;NEXT FILE
             LDA   CURR
-            CMP   FILNUM               ;NO MORE?
+            CMP   FILNUM      ;NO MORE?
             BCS   :FIN3
             JMP   :CPYFILE
 *
@@ -998,11 +998,11 @@ FMTFIX      JMP   :FMTFIX
 * HIGHER DIRECTORY
 *
 :FIN3       BIT   PDOS
-            BPL   :INROOT              ;DOS 3.3
+            BPL   :INROOT     ;DOS 3.3
             JSR   SRCHDR
             JSR   INSS
             JSR   DIVOUT
-            BCS   :INROOT              ;IN ROOT
+            BCS   :INROOT     ;IN ROOT
             SEC
             JSR   DIVECK
             JSR   SRCHDR
@@ -1088,7 +1088,7 @@ FMTFIX      JMP   :FMTFIX
             ASC   "already exists"
             DB    $0
             PLA
-            BPL   :DUP1                ;NOT LOCKED
+            BPL   :DUP1       ;NOT LOCKED
 :DUPLOK     JSR   PRHERE
             ASC   " & is locked."
             DB    $0
@@ -1120,11 +1120,11 @@ FMTFIX      JMP   :FMTFIX
             LDX   :TARSTR
             CPX   #$0D
             BEQ   :DUP4
-            CMP   #"C"                 ;COPY OVER
+            CMP   #"C"        ;COPY OVER
             BEQ   :ANYWAY
-:DUP4       CMP   #"N"                 ;RENAME IT
+:DUP4       CMP   #"N"        ;RENAME IT
             BEQ   :NEWNAME
-            CMP   #"D"                 ;DON'T COPY
+            CMP   #"D"        ;DON'T COPY
             BEQ   :DONT
             JSR   BELL
 :GODUP2     JMP   :DUP2
@@ -1146,8 +1146,8 @@ FMTFIX      JMP   :FMTFIX
             BMI   :NEWPRO
             LDA   #$1E
 :NEWPRO     STA   LINLIM
-            JSR   GETLN                ;GET IT
-            BCS   :GODUP2              ;ESC ABORT
+            JSR   GETLN       ;GET IT
+            BCS   :GODUP2     ;ESC ABORT
             STX   FILE
             LDY   #0
 :NEWLOOP    LDA   LINEIN,Y
@@ -1163,7 +1163,7 @@ FMTFIX      JMP   :FMTFIX
             LDA   #$A0
             STA   FILE+$1,Y
             INY
-            BNE   :NEWLP1              ;ALWAYS
+            BNE   :NEWLP1     ;ALWAYS
 :NEWOUT     CLC
             BCC   :COMOUT
 *
@@ -1173,11 +1173,11 @@ FMTFIX      JMP   :FMTFIX
             BNE   :COMOUT0
 *
 :DONT       JSR   PCOUT
-            JSR   DODEL                ;UNMARK
+            JSR   DODEL       ;UNMARK
 :COMOUT0    SEC
 :COMOUT     PHA
             PHP
-            JSR   LOHERE               ;CLEAR BOTTOM
+            JSR   LOHERE      ;CLEAR BOTTOM
             DB    $0
             JSR   INIT
             PLP
@@ -1193,7 +1193,7 @@ FMTFIX      JMP   :FMTFIX
 * OPEN DEST. FILE FOR WRITING
 * (FIND 1ST DELETED CATALOG ENTRY )
 *
-:OPNDEST    JSR   :CNVNAM              ;CNVT FILE NAME
+:OPNDEST    JSR   :CNVNAM     ;CNVT FILE NAME
             LDA   DATADR
             STA   RPAGE
             LDY   #$FF
@@ -1211,10 +1211,10 @@ FMTFIX      JMP   :FMTFIX
 *
             JSR   CURPNT
             LDA   #0
-            STA   :WLEN                ;10/9/87, needs to be initialized!
+            STA   :WLEN       ;10/9/87, needs to be initialized!
             STA   :WBUFF
             BIT   PDOS
-            BPL   :D2P                 ;DOS-->PRODOS
+            BPL   :D2P        ;DOS-->PRODOS
 *
 * PRODOS --> PRODOS COPY
 *
@@ -1251,11 +1251,11 @@ FMTFIX      JMP   :FMTFIX
 *
 * DOS --> PRODOS COPY
 *
-:D2P        LDA   #1                   ;ANTICIPATE
-            STA   AUXTYP               ; BASIC
+:D2P        LDA   #1          ;ANTICIPATE
+            STA   AUXTYP      ; BASIC
             LDA   #8
             STA   AUXTYP+1
-            JSR   GETDAT               ;DATE & TIME
+            JSR   GETDAT      ;DATE & TIME
             LDY   #2
             LDX   #1
             LDA   (POINT),Y
@@ -1282,7 +1282,7 @@ FMTFIX      JMP   :FMTFIX
             BEQ   :DBAS
             CMP   #4
             BNE   :NOTDBIN
-            LDA   (RADR),Y             ;Y=0
+            LDA   (RADR),Y    ;Y=0
             STA   AUXTYP
             INY
             LDA   (RADR),Y
@@ -1326,14 +1326,14 @@ FMTFIX      JMP   :FMTFIX
             EOR   #$C2
             BEQ   :CRTERR1
             LDA   #$80
-:CRTERR1    LDX   INFLST+7             ;STORAGE TYPE
+:CRTERR1    LDX   INFLST+7    ;STORAGE TYPE
             JSR   :DUP
-            BCC   :DOCREAT             ;CHANGED NAME
+            BCC   :DOCREAT    ;CHANGED NAME
             BEQ   :NODO
-            JSR   PDSTRY               ;COPY ANYWAY
+            JSR   PDSTRY      ;COPY ANYWAY
             JMP   :DOCREAT
 *
-:OPNDES1    JSR   DOMLI                ;OPEN FILE
+:OPNDES1    JSR   DOMLI       ;OPEN FILE
             DB    $C8
             DW    :OPNLST
             LDA   :OPNLST+5
@@ -1355,8 +1355,8 @@ FMTFIX      JMP   :FMTFIX
 :DOS33      LDA   #>TOP10
             JSR   SETHIM
             BIT   PDOS
-            BPL   :DOS2DOS             ;DOS --> DOS
-            DEC   HIMEM                ;PRODOS -> DOS
+            BPL   :DOS2DOS    ;DOS --> DOS
+            DEC   HIMEM       ;PRODOS -> DOS
             DEC   HIMEM
 :DOS2DOS    JSR   RDCAT2
 *
@@ -1370,7 +1370,7 @@ FMTFIX      JMP   :FMTFIX
             LDA   (POINT),Y
             STA   FTYPE
             LDY   #0
-            BEQ   :TODOS               ;ALWAYS
+            BEQ   :TODOS      ;ALWAYS
 *
 * PRODOS --> DOS COPY
 *
@@ -1378,7 +1378,7 @@ FMTFIX      JMP   :FMTFIX
             LDA   STRTYP
             CMP   #$D0
             BNE   :P2DLPF
-            SEC                        ;SUBDIR
+            SEC               ;SUBDIR
             RTS
 *
 :P2DLPF     LDA   (POINT),Y
@@ -1410,20 +1410,20 @@ FMTFIX      JMP   :FMTFIX
             STA   FTYPE
             LDY   #0
             AND   #$7F
-            BEQ   :TODOS               ;TEXT FILE
+            BEQ   :TODOS      ;TEXT FILE
             CMP   #$10
-            BEQ   :TODOS               ;RTYPE
+            BEQ   :TODOS      ;RTYPE
             CMP   #3
-            BCC   :ISBAS               ;BASIC
+            BCC   :ISBAS      ;BASIC
 *
 * BINARY FILE
 *
             LDY   #$1F
-            LDA   (POINT),Y            ;AUXTYPE LO
+            LDA   (POINT),Y   ;AUXTYPE LO
             LDY   #0
             STA   (POINT2),Y
             LDY   #$20
-            LDA   (POINT),Y            ;AUXTYPE HI
+            LDA   (POINT),Y   ;AUXTYPE HI
             LDY   #1
             STA   (POINT2),Y
             INY
@@ -1458,18 +1458,18 @@ FMTFIX      JMP   :FMTFIX
 :TODOS2     LDA   #>CAT2
             STA   POINT2+1
 *
-:NXTSCT2    LDY   #$01                 ;SAVE LINK TO
-            STY   POINT2               ;NEXT CATALOG
-            DEY                        ;SECTOR
+:NXTSCT2    LDY   #$01        ;SAVE LINK TO
+            STY   POINT2      ;NEXT CATALOG
+            DEY               ;SECTOR
             LDA   (POINT2),Y
             STA   :ENDCAT
-            LDA   #$0B                 ;1ST ENTRY IN
-            STA   POINT2               ;SECTOR
+            LDA   #$0B        ;1ST ENTRY IN
+            STA   POINT2      ;SECTOR
 :DOPNT2     LDY   #0
-            LDA   (POINT2),Y           ;GET TRACK
-            BEQ   :FOUND               ;END OF CAT?
+            LDA   (POINT2),Y  ;GET TRACK
+            BEQ   :FOUND      ;END OF CAT?
             CMP   #$FF
-            BEQ   :FOUND               ;DELETED FILE?
+            BEQ   :FOUND      ;DELETED FILE?
 *
 * CHECK FOR DUPLICATE ENTRY
 *
@@ -1486,23 +1486,23 @@ FMTFIX      JMP   :FMTFIX
             LDX   #0
             JSR   :DUP
             BCS   :DUPCHK1
-            BCC   :TODOS2              ;NEW NAME
+            BCC   :TODOS2     ;NEW NAME
 *
-:NXTNAM     CLC                        ;NO: GO TO
-            LDA   POINT2               ;NEXT ENTRY
+:NXTNAM     CLC               ;NO: GO TO
+            LDA   POINT2      ;NEXT ENTRY
             ADC   #$23
             STA   POINT2
-            BNE   :DOPNT2              ;END SECTOR?
-            INC   POINT2+1             ;NEXT ONE
-            LDA   :ENDCAT              ;END CATALOG?
+            BNE   :DOPNT2     ;END SECTOR?
+            INC   POINT2+1    ;NEXT ONE
+            LDA   :ENDCAT     ;END CATALOG?
             BNE   :NXTSCT2
             LDA   :FNDFLG
-            BNE   :FOUNDOK             ;THERE'S ROOM
-            LDA   #$49                 ;CATALOG FULL
+            BNE   :FOUNDOK    ;THERE'S ROOM
+            LDA   #$49        ;CATALOG FULL
             JMP   :FULLERR
 *
 :DUPCHK1    CMP   #0
-            BEQ   :GOAWAY              ;DON'T COPY
+            BEQ   :GOAWAY     ;DON'T COPY
 *
 * COPY ANYWAY: DELETE FILE
 *
@@ -1532,47 +1532,47 @@ FMTFIX      JMP   :FMTFIX
             STA   :POINT2+1
             LDA   #$FF
             STA   :FNDFLG
-            BNE   :NXTNAM              ;ALWAYS
+            BNE   :NXTNAM     ;ALWAYS
 *
 :FOUNDOK    LDA   :POINT2
             STA   POINT2
             LDA   :POINT2+1
             STA   POINT2+1
-            JSR   CURPNT               ;FOUND DELETED
+            JSR   CURPNT      ;FOUND DELETED
             LDY   #2
             LDA   FTYPE
             STA   (POINT2),Y
-            INY                        ;ENTRY:
-:ENTRYLP    LDA   FILE-2,Y             ;COPY SOURCE
-            STA   (POINT2),Y           ;ENTRY TO DEST.
+            INY               ;ENTRY:
+:ENTRYLP    LDA   FILE-2,Y    ;COPY SOURCE
+            STA   (POINT2),Y  ;ENTRY TO DEST.
             INY
             CPY   #$23
             BCC   :ENTRYLP
-            LDA   NSECTS               ;SET NEXT
-            STA   SECTOR               ;AVAILABLE
-            LDA   VTRACK               ;T&S
+            LDA   NSECTS      ;SET NEXT
+            STA   SECTOR      ;AVAILABLE
+            LDA   VTRACK      ;T&S
             STA   TRACK
-            STA   :TRK1ST              ;DISK FULL TEST
-            LDX   #$FF                 ;SET DIRECTION
-            CMP   #$11                 ;BY CURRENT
-            BCC   :PUTDIR              ;TRACK
-            LDX   #$01                 ;ALLOCATED
+            STA   :TRK1ST     ;DISK FULL TEST
+            LDX   #$FF        ;SET DIRECTION
+            CMP   #$11        ;BY CURRENT
+            BCC   :PUTDIR     ;TRACK
+            LDX   #$01        ;ALLOCATED
 :PUTDIR     STX   VDIR
-            JSR   :ALLOC               ;ALLOCATE
-            LDY   #$00                 ;TSLIST & PUT
-            LDA   TRACK                ;INTO ENTRY &
-            STA   :TSTRK               ;SAVE FOR
-            STA   (POINT2),Y           ;EVENTUAL
-            INY                        ;DISK WRITE
+            JSR   :ALLOC      ;ALLOCATE
+            LDY   #$00        ;TSLIST & PUT
+            LDA   TRACK       ;INTO ENTRY &
+            STA   :TSTRK      ;SAVE FOR
+            STA   (POINT2),Y  ;EVENTUAL
+            INY               ;DISK WRITE
             LDA   SECTOR
             STA   :TSSECT
             STA   (POINT2),Y
-            LDA   #$00                 ;(1ST TSLIST)
+            LDA   #$00        ;(1ST TSLIST)
             STA   :OFFSET
             STA   :OFFSET+1
-            JSR   :NEWTSL              ;CLEAR TSLIST
-            LDA   #$0C                 ;RESET T/S
-            STA   :DTSP                ;POINTER
+            JSR   :NEWTSL     ;CLEAR TSLIST
+            LDA   #$0C        ;RESET T/S
+            STA   :DTSP       ;POINTER
             CLC
             RTS
 :POINT2     DB    $0,$0
@@ -1588,7 +1588,7 @@ FMTFIX      JMP   :FMTFIX
             STA   :EOFLST+1
             STA   :CLSLST+1
             LDA   DATADR
-            STA   RPAGE                ;SET ADDRESS
+            STA   RPAGE       ;SET ADDRESS
             STA   :WBUFF+1
             JSR   CURPNT
             LDX   #0
@@ -1615,9 +1615,9 @@ FMTFIX      JMP   :FMTFIX
             TAY
             LDA   RBLKH,X
             SBC   RBLKH-1,X
-            BNE   :D2P3                ;RANDOM
+            BNE   :D2P3       ;RANDOM
             CPY   #2
-            BCS   :D2P3                ;RANDOM
+            BCS   :D2P3       ;RANDOM
             INC   :WLEN+1
             INX
             JMP   :D2PWLP
@@ -1626,21 +1626,21 @@ FMTFIX      JMP   :FMTFIX
 :D2P3       STX   :INDEX
             LDA   :WLEN+1
             BNE   :NOTSPRS
-            JMP   :DOSPRSE             ;SPARSE
+            JMP   :DOSPRSE    ;SPARSE
 *
 :NOTSPRS    BIT   PDOS
-            BPL   :D2P4                ;DOS 3.3
+            BPL   :D2P4       ;DOS 3.3
 *
 * PRODOS --> PRODOS
 *
             ASL   :WLEN+1
             JSR   :WRTPRO
-            LDX   :INDEX               ;3/10
-            CPX   RELCNT               ;3/10
-            BCC   :D2P5C               ;3/10
-            LDA   #0                   ;3/10
-            STA   :WBUFF               ;3/10
-            BEQ   :D2P5C               ;3/10
+            LDX   :INDEX      ;3/10
+            CPX   RELCNT      ;3/10
+            BCC   :D2P5C      ;3/10
+            LDA   #0          ;3/10
+            STA   :WBUFF      ;3/10
+            BEQ   :D2P5C      ;3/10
 *
 *
 * DOS --> PRODOS
@@ -1649,11 +1649,11 @@ FMTFIX      JMP   :FMTFIX
             SEC
             SBC   :WBUFF
             STA   :WLEN
-            BCS   :D2P5                ;IF WBUFF = 0
+            BCS   :D2P5       ;IF WBUFF = 0
             DEC   :WLEN+1
 :D2P5       JSR   :WRTPRO
 :D2P5C      LDA   :WBUFF
-            CLC                        ;3/10
+            CLC               ;3/10
             ADC   :WLEN
             STA   :WBUFF
             LDA   :WBUFF+1
@@ -1666,27 +1666,27 @@ FMTFIX      JMP   :FMTFIX
 *
 * WRITTEN EVERYTHING UP TO RELCNT
 *
-:NOMOWT     LDA   EOF                  ;ALL DONE?
-            BNE   :NOMO1               ;YES
-            JMP   :D2P6                ;NO
+:NOMOWT     LDA   EOF         ;ALL DONE?
+            BNE   :NOMO1      ;YES
+            JMP   :D2P6       ;NO
 *
 :NOMO1      LDA   FTYPE
-            CMP   #4                   ;TEXT FILE?
-            BNE   :NOTTEXT             ;NO
+            CMP   #4          ;TEXT FILE?
+            BNE   :NOTTEXT    ;NO
             LDA   PDOS
-            BMI   :NOTTEXT             ;P-->P
+            BMI   :NOTTEXT    ;P-->P
 *
 * IF COPYING DOS --> PRODOS,
 * FOR TEXT FILES, MUST FIGURE OUT
 * EXACT EOF FROM LAST BIT OF FILE
 * WRITTEN
 *
-            JSR   DOMLI                ;GET EOF
+            JSR   DOMLI       ;GET EOF
             DB    $D1
             DW    :EOFLST
             LDY   :WBUFF+1
             DEY
-            STY   MESPNT+1             ;LAST PG
+            STY   MESPNT+1    ;LAST PG
             LDA   #0
             STA   MESPNT
             LDY   #$FF
@@ -1696,7 +1696,7 @@ FMTFIX      JMP   :FMTFIX
             CPY   #$FF
             BNE   :TEXTLP
             DEC   MESPNT+1
-            DEC   :FILELN+1            ;DEC BY 256
+            DEC   :FILELN+1   ;DEC BY 256
 :TEXTLP0    LDA   (MESPNT),Y
             BNE   :TEXTLP1
             DEY
@@ -1713,7 +1713,7 @@ FMTFIX      JMP   :FMTFIX
 :NOTTEXT    LDA   FILELN
             ORA   FILELN+1
             ORA   FILELN+2
-            BEQ   :SKIPEOF             ;SKIP SET EOF
+            BEQ   :SKIPEOF    ;SKIP SET EOF
             LDA   FILELN
             STA   :FILELN
             LDA   FILELN+1
@@ -1770,10 +1770,10 @@ FMTFIX      JMP   :FMTFIX
             LDA   :WPOS+2
             ADC   :SPARSE+1
             STA   :WPOS+2
-            JSR   DOMLI                ;SET EOF
+            JSR   DOMLI       ;SET EOF
             DB    $D0
             DW    :MRKLST
-            JSR   DOMLI                ;SET MARK
+            JSR   DOMLI       ;SET MARK
             DB    $CE
             DW    :MRKLST
             INC   :INDEX
@@ -1808,20 +1808,20 @@ FMTFIX      JMP   :FMTFIX
 * WRITING TO DOS 3.3 FILE
 *
 :WDOS33     LDA   #$02
-            STA   RCMND                ;CMD = WRITE
+            STA   RCMND       ;CMD = WRITE
             LDA   DATADR
             STA   RPAGE
             LDA   RELCNT
             BNE   :WRMORE
             JMP   :WDNOMO
 *
-:WRMORE     LDA   :DTSP                ;NEED NEW
-            BNE   :WRITE               ;TSLIST?
+:WRMORE     LDA   :DTSP       ;NEED NEW
+            BNE   :WRITE      ;TSLIST?
             JSR   :DOTSL
 *
 :WRITE      LDA   :INDEX
             BIT   PDOS
-            BPL   :NOSHFT              ;SRC = DOS
+            BPL   :NOSHFT     ;SRC = DOS
             LSR
 :NOSHFT     TAX
             LDA   RBLKL,X
@@ -1830,7 +1830,7 @@ FMTFIX      JMP   :FMTFIX
             TAY
             LDA   RBLKH,X
             SBC   RBLKH-1,X
-            BNE   :RANDOM              ;RANDOM
+            BNE   :RANDOM     ;RANDOM
             CPY   #2
             BCC   :NOTRND
 :RANDOM     DEY
@@ -1840,14 +1840,14 @@ FMTFIX      JMP   :FMTFIX
             SBC   #1
 :RAND00     STY   :RANDL
             BIT   PDOS
-            BPL   :RAND0               ;SRC = DOS
+            BPL   :RAND0      ;SRC = DOS
             ASL   :RANDL
             ROL
 :RAND0      STA   :RANDL+1
             LDA   #0
             STA   :RANDL+2
-            BIT   PDOS                 ;2/16/87
-            BPL   :RAND1               ;SRC = DOS  2/16/87
+            BIT   PDOS        ;2/16/87
+            BPL   :RAND1      ;SRC = DOS  2/16/87
             LDA   :INDEX
             AND   #1
             BNE   :NOTRND
@@ -1890,22 +1890,22 @@ FMTFIX      JMP   :FMTFIX
 :NOTRND     JSR   :ALLOC
             LDX   :DTSP
             LDA   TRACK
-            STA   DSTTSL,X             ;POKE TRACK
-            STA   RTRACK               ;& SECTOR INTO
-            LDA   SECTOR               ;TSLIST & RWTS
-            STA   DSTTSL+1,X           ;INFO
+            STA   DSTTSL,X    ;POKE TRACK
+            STA   RTRACK      ;& SECTOR INTO
+            LDA   SECTOR      ;TSLIST & RWTS
+            STA   DSTTSL+1,X  ;INFO
             STA   RSECTR
-            JSR   DORWTS               ;WRITE IT
+            JSR   DORWTS      ;WRITE IT
             INC   RPAGE
-:NEXTWR     INC   :DTSP                ;NEXT TS PAIR
+:NEXTWR     INC   :DTSP       ;NEXT TS PAIR
             INC   :DTSP
 :NXTWR2     LDA   FILELN+1
             BNE   :NXTWR0
             DEC   FILELN+2
-:NXTWR0     DEC   FILELN+1             ;DEC BY 256
+:NXTWR0     DEC   FILELN+1    ;DEC BY 256
             INC   :INDEX
             LDA   :INDEX
-            BIT   PDOS                 ;SRC = DOS
+            BIT   PDOS        ;SRC = DOS
             BPL   :NEXTWR1
             LSR
 :NEXTWR1    CMP   RELCNT
@@ -1919,12 +1919,12 @@ FMTFIX      JMP   :FMTFIX
 *
 * WRITTEN EVERTHING UP TO RELCNT
 *
-:WDNOMO     LDA   EOF                  ;END OF FILE?
+:WDNOMO     LDA   EOF         ;END OF FILE?
             BEQ   :WROUT
-:WREND      LDA   :TSTRK               ;WRITE FINAL
-            STA   RTRACK               ;T/S LIST
-            LDA   :TSSECT              ;SECTOR TO
-            STA   RSECTR               ;DISK
+:WREND      LDA   :TSTRK      ;WRITE FINAL
+            STA   RTRACK      ;T/S LIST
+            LDA   :TSSECT     ;SECTOR TO
+            STA   RSECTR      ;DISK
             LDA   #>DSTTSL
             STA   RPAGE
             JSR   DORWTS
@@ -1971,27 +1971,27 @@ FMTFIX      JMP   :FMTFIX
 :FSIZE      DB    $0,$0
 :RANDL      DB    $0,$0,$0
 *
-:DOTSL      LDA   :TSTRK               ;SET T&S TO
-            STA   RTRACK               ;WRITE OLD
-            LDA   :TSSECT              ;LIST
+:DOTSL      LDA   :TSTRK      ;SET T&S TO
+            STA   RTRACK      ;WRITE OLD
+            LDA   :TSSECT     ;LIST
             STA   RSECTR
-            JSR   :ALLOC               ;ALLOCATE NEW
-            LDA   TRACK                ;& PUT INTO
-            STA   DSTTSL+1             ;LINK TO NEXT
-            STA   :TSTRK               ;LIST & SAVE
+            JSR   :ALLOC      ;ALLOCATE NEW
+            LDA   TRACK       ;& PUT INTO
+            STA   DSTTSL+1    ;LINK TO NEXT
+            STA   :TSTRK      ;LIST & SAVE
             LDA   SECTOR
             STA   DSTTSL+2
             STA   :TSSECT
             LDA   RPAGE
             PHA
-            LDA   #>DSTTSL             ;SET ADDR
+            LDA   #>DSTTSL    ;SET ADDR
             STA   RPAGE
-            JSR   DORWTS               ;WRITE TSLIST
+            JSR   DORWTS      ;WRITE TSLIST
             PLA
-            STA   RPAGE                ;RESTORE RPAGE
-            JSR   :NEWTSL              ;ZERO TSLIST
-            LDA   #$0C                 ;RESET TS
-            STA   :DTSP                ;POINTER
+            STA   RPAGE       ;RESTORE RPAGE
+            JSR   :NEWTSL     ;ZERO TSLIST
+            LDA   #$0C        ;RESET TS
+            STA   :DTSP       ;POINTER
             RTS
 *
 * PREPARE NEW TSLIST SECTOR
@@ -2016,26 +2016,26 @@ FMTFIX      JMP   :FMTFIX
 :ALLOC      DEC   SECTOR
             BPL   :OK
             JSR   :NEWTRK
-:OK         LDA   SECTOR               ;MAKE BITMASK
+:OK         LDA   SECTOR      ;MAKE BITMASK
             JSR   DOMASK
-            LDA   TRACK                ;FIND TRACK
-            ASL                        ;BITMAP
+            LDA   TRACK       ;FIND TRACK
+            ASL               ;BITMAP
             ASL
-            ADC   #$38                 ;OFFSET IT?
+            ADC   #$38        ;OFFSET IT?
             TAX
-            LDA   VTOC2,X              ;MASK BITMAP
+            LDA   VTOC2,X     ;MASK BITMAP
             AND   BITMSK
             STA   :TEMP
             LDA   VTOC2+$1,X
             AND   BITMSK+1
-            ORA   :TEMP                ;SECTOR FREE?
+            ORA   :TEMP       ;SECTOR FREE?
             BEQ   :ALLOC
-            LDA   BITMSK               ;REVERSE MASK
-            EOR   #$FF                 ;FOR USED
-            AND   VTOC2,X              ;SECTOR AND
-            STA   VTOC2,X              ;WRITE INTO
-            LDA   BITMSK+1             ;VTOC TO
-            EOR   #$FF                 ;ALLOCATE IT
+            LDA   BITMSK      ;REVERSE MASK
+            EOR   #$FF        ;FOR USED
+            AND   VTOC2,X     ;SECTOR AND
+            STA   VTOC2,X     ;WRITE INTO
+            LDA   BITMSK+1    ;VTOC TO
+            EOR   #$FF        ;ALLOCATE IT
             AND   VTOC2+$1,X
             STA   VTOC2+$1,X
             INC   :FSIZE
@@ -2045,31 +2045,31 @@ FMTFIX      JMP   :FMTFIX
 *
 * ALLOCATE NEW TRACK FOR ALLOC
 :NEWTRK     CLC
-            LDA   VTRACK               ;NEXT TRACK TO
-            ADC   VDIR                 ;ALLOCATE.
-            BNE   :TRYOVER             ;AT TRACK 0?
-            LDA   #$01                 ;GO TRACK $12,
-            STA   VDIR                 ;FORWARD
+            LDA   VTRACK      ;NEXT TRACK TO
+            ADC   VDIR        ;ALLOCATE.
+            BNE   :TRYOVER    ;AT TRACK 0?
+            LDA   #$01        ;GO TRACK $12,
+            STA   VDIR        ;FORWARD
             LDA   #$11
             BNE   :FULLCHK
-:TRYOVER    CMP   #$23                 ;AT TRACK $23?
+:TRYOVER    CMP   #$23        ;AT TRACK $23?
             BCC   :FULLCHK
-            LDA   #$FF                 ;GO TRACK $10,
-            STA   VDIR                 ;BACKWARD
+            LDA   #$FF        ;GO TRACK $10,
+            STA   VDIR        ;BACKWARD
             LDA   #$10
 :FULLCHK    CMP   :TRK1ST
             BEQ   :DISKFUL
-            STA   VTRACK               ;SAVE TRACK
+            STA   VTRACK      ;SAVE TRACK
             STA   TRACK
-            ASL                        ;FIND BITMAP
+            ASL               ;FIND BITMAP
             ASL
             ADC   #$38
             TAX
-            LDA   VTOC2,X              ;ANY FREE
-            ORA   VTOC2+$1,X           ;SECTORS?
+            LDA   VTOC2,X     ;ANY FREE
+            ORA   VTOC2+$1,X  ;SECTORS?
             BEQ   :NEWTRK
-            LDA   NSECTS               ;RESET # OF
-            STA   SECTOR               ;SECTORS TO GO
+            LDA   NSECTS      ;RESET # OF
+            STA   SECTOR      ;SECTORS TO GO
             RTS
 *
 :DISKFUL    LDA   #$48
@@ -2107,8 +2107,8 @@ DIVECK      BCS   :GOOUT
             LDA   #4
             STA   TOPDIF
             JSR   :DVCK0
-            LDA   HIMEM                ;8/27/86
-            JSR   SETHIM               ;8/27/86
+            LDA   HIMEM       ;8/27/86
+            JSR   SETHIM      ;8/27/86
 :DVCK00     JMP   :DVINIT
 *
 :GOOUT      LDA   SP
@@ -2152,7 +2152,7 @@ DIVECK      BCS   :GOOUT
             LDA   NACTIV
             STA   FILNUM
             SEC
-            BEQ   :DVINT1              ;NO FILES
+            BEQ   :DVINT1     ;NO FILES
             LDX   #0
 :CFLP2      INX
             TXA
@@ -2172,7 +2172,7 @@ GOCLS       BIT   DOSNOW
             BPL   :DOS33
             LDA   REF
             STA   GCLST+1
-            JSR   DOMLI                ;GET MARK
+            JSR   DOMLI       ;GET MARK
             DB    $CF
             DW    GCLST
             JMP   CLOSE
@@ -2183,14 +2183,14 @@ GCLST       DB    $2,$0,$0,$0,$0
 
 *
 REOPEN      BIT   DOSNOW
-            BPL   :OUT                 ;DOS 3.3
-            JSR   DOMLI                ;OPEN
+            BPL   :OUT        ;DOS 3.3
+            JSR   DOMLI       ;OPEN
             DB    $C8
             DW    :ROLST
             LDA   :ROLST+5
             STA   REF
             STA   GCLST+1
-            JSR   DOMLI                ;SET MARK
+            JSR   DOMLI       ;SET MARK
             DB    $CE
             DW    GCLST
 :OUT        RTS
@@ -2208,7 +2208,7 @@ SETHIM      SEC
             CLC
             ADC   DATADR
             SEC
-            SBC   TOPDIF               ;0 OR 3
+            SBC   TOPDIF      ;0 OR 3
             STA   HIMEM
             RTS
 *
@@ -2229,7 +2229,7 @@ PRFILE      LDY   #0
 *
 TXTCNV      LDA   SDOS
             EOR   PDOS
-            BEQ   :NOTTXT              ;SAME DOS
+            BEQ   :NOTTXT     ;SAME DOS
             JSR   CURPNT
             BIT   PDOS
             BPL   :DOS33
@@ -2272,21 +2272,21 @@ TXTCNV      LDA   SDOS
 * PUT LIST OF FILES IN COPY ORDER
 *
 :FILMOV     LDX   #$01
-            STX   :ORDER       ;START WITH #1
-:NXTFIL2    DEX                ;POSITION -1
-            CPX   FILNUM       ;DONE ALL
-            BEQ   :MOUT        ;FILES?
+            STX   :ORDER      ;START WITH #1
+:NXTFIL2    DEX               ;POSITION -1
+            CPX   FILNUM      ;DONE ALL
+            BEQ   :MOUT       ;FILES?
             LDX   #$FF
 :NXTLOOK    INX
-            LDA   STATUS,X     ;LOOK FOR #
+            LDA   STATUS,X    ;LOOK FOR #
             CMP   :ORDER
             BNE   :NXTLOOK
-            LDY   :ORDER       ;FOUND IT:
+            LDY   :ORDER      ;FOUND IT:
             DEY
             PHA
-            LDA   STATUS,Y     ;SWAP ENTRIES
-            STA   STATUS,X     ;WITH CORRECT
-            PLA                ;POSITION
+            LDA   STATUS,Y    ;SWAP ENTRIES
+            STA   STATUS,X    ;WITH CORRECT
+            PLA               ;POSITION
             STA   STATUS,Y
             LDA   CBYTE,X
             PHA
@@ -2300,7 +2300,7 @@ TXTCNV      LDA   SDOS
             STA   CSECTR,X
             PLA
             STA   CSECTR,Y
-            INC   :ORDER       ;NEXT #
+            INC   :ORDER      ;NEXT #
             LDX   :ORDER
             BNE   :NXTFIL2
 :MOUT       RTS
@@ -2312,7 +2312,7 @@ TXTCNV      LDA   SDOS
 *
 :CNVNAM     LDA   DOSNOW
             EOR   PDOS
-            BPL   :NOCNV       ;NO CONVERT
+            BPL   :NOCNV      ;NO CONVERT
             BIT   DOSNOW
             BPL   :CNDOS33
 *
@@ -2342,11 +2342,11 @@ TXTCNV      LDA   SDOS
             STA   FILE,Y
             DEY
             BNE   :CNVLP1
-            LDA   FILE+1       ;1ST CHAR
-            CMP   #$2E         ;IS IT A DOT?
-            BNE   :NOCNV       ;NO
-            LDA   #$41         ;YES: CHANGE
-            STA   FILE+1       ; TO 'A'
+            LDA   FILE+1      ;1ST CHAR
+            CMP   #$2E        ;IS IT A DOT?
+            BNE   :NOCNV      ;NO
+            LDA   #$41        ;YES: CHANGE
+            STA   FILE+1      ; TO 'A'
 :NOCNV      RTS
 *
 * PRODOS --> DOS
@@ -2359,8 +2359,9 @@ TXTCNV      LDA   SDOS
             CPY   FILE
             BCC   :DSLP
 :DSLP1      INY
-            LDA   #$A0         ;BLANK FILL
+            LDA   #$A0        ;BLANK FILL
             STA   FILE,Y
             CPY   #$1E
             BCC   :DSLP1
             RTS
+

@@ -3,8 +3,8 @@
 *
 * FIGURE OUT SLOT NUMBER
 *
-            LDX   #1                  ;Mark the ProDOS global page as
-            STX   MEMTABL+$17         ; busy in the global page bitmap.
+            LDX   #1          ;Mark the ProDOS global page as
+            STX   MEMTABL+$17  ; busy in the global page bitmap.
             LDA   DEVNUM
             STA   BOOTDV
             BPL   :ISD1
@@ -25,7 +25,7 @@
             STA   ZXDST+1
             JSR   ZXUNPACK
 *
-            LDX   $FBB3               ;FOR LATER
+            LDX   $FBB3       ;FOR LATER
 *
 * MOVE NOBOOT TO $D000
 *
@@ -36,7 +36,7 @@
 :NBLP       LDA   BOOTBEG,Y
             CPY   #BOOTEND-BOOTBEG+1
             BCC   :NBLP1
-            LDA   #0                  ;FILL WITH 0'S FROM $A2(?) TO $FF
+            LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
 :NBLP1      STA   $D000,Y
             INY
             BNE   :NBLP
@@ -45,9 +45,9 @@
 * SAVE AUXMEM IRQ VECTOR.
 *
             CPX   #6
-            BNE   :SKIPIRQ            ;NOT //E
+            BNE   :SKIPIRQ    ;NOT //E
 *
-            STA   $C009               ;AUX LC
+            STA   $C009       ;AUX LC
             LDA   $FFFE
             STA   IRQSAV
             LDA   $FFFF
@@ -69,7 +69,7 @@
 * CLEAR OUT PRODOS MEMORY BITMAP
 *
             LDX   #$16
-            TYA                       ;0
+            TYA               ;0
 :CLRMAP     STA   MEMTABL,X
             DEX
             BNE   :CLRMAP
@@ -77,7 +77,7 @@
 * (no more minimum version at $BFFC?
 * ProDOS manual says it's a reserved location)
 *
-            STA   PINVFL              ;0
+            STA   PINVFL      ;0
             STA   PFX
             STA   PPFX
             STA   SPFX
@@ -131,7 +131,7 @@
             BMI   :NOCHNG
 :PFX0       LDA   $280,Y
             AND   #$7F
-            CMP   #$2F                ;'/'
+            CMP   #$2F        ;'/'
             BEQ   :GOTSLSH
             DEY
             BNE   :PFX0
@@ -140,7 +140,7 @@
 * NO '/' IN NAME AT $280, SO DON'T
 * CHANGE PREFIX.
 *
-            BEQ   :NOCHNG             ;ALWAYS
+            BEQ   :NOCHNG     ;ALWAYS
 *
 :GOTSLSH    DEY
             BMI   :NOCHNG
@@ -152,7 +152,7 @@
             DB    $C6
             DW    :PFXLST
 *
-:NOCHNG     JSR   MLI                 ;GET BOOT PFX
+:NOCHNG     JSR   MLI         ;GET BOOT PFX
             DB    $C7
             DW    :BTLST
 *
@@ -175,26 +175,26 @@
 * FF --> /RAM marked disconnected, or there's no S3,D2 device
 *        at all, so aux memory is available.
             LDX   #0
-            STX   FLAG80              ;ASSUME 40 COL
-            STX   A2E                 ;ASSUME NOT 2E
-            STX   GOTMM               ;Assume MM not available
-            STX   MMISOPEN            ; & of course not open.
+            STX   FLAG80      ;ASSUME 40 COL
+            STX   A2E         ;ASSUME NOT 2E
+            STX   GOTMM       ;Assume MM not available
+            STX   MMISOPEN    ; & of course not open.
             LDA   $FBB3
             CMP   #$06
-            BNE   :NO80COL            ;->NOT //E, so not 80 col, either.
-            DEC   A2E                 ;0-->FF
+            BNE   :NO80COL    ;->NOT //E, so not 80 col, either.
+            DEC   A2E         ;0-->FF
             LDY   MACHID
             TYA
             AND   #2
-            BEQ   :NO80COL            ;NO 80-COL
-            DEC   FLAG80              ;GOT 80-COL
+            BEQ   :NO80COL    ;NO 80-COL
+            DEC   FLAG80      ;GOT 80-COL
 :NO80COL    TYA
             AND   #$30
             CMP   #$30
-            BNE   :DUNCHK             ;->NOT 128K
+            BNE   :DUNCHK     ;->NOT 128K
             INX
             LDA   :RAMFLG
-            BMI   :DUNCHK             ;->/RAM ACTIVE
+            BMI   :DUNCHK     ;->/RAM ACTIVE
             LDX   #$FF
 :DUNCHK     STX   ISAUX
 *
@@ -202,11 +202,11 @@
 * IT HAVE ANY FILES
 *
             CPX   #1
-            BNE   :NORAM              ;NO /RAM
+            BNE   :NORAM      ;NO /RAM
 *
 * READ /RAM DIRECTORY
 *
-            JSR   MLI                 ;Read /RAM directory
+            JSR   MLI         ;Read /RAM directory
             DB    $80
             DW    :RBLST
             BCS   :NORAM
@@ -214,16 +214,16 @@
 * IF /RAM > $FF BLOCKS, MARK *ISAUX
 * AS USEABLE
 *
-            LDA   #$FE                ;(Value for big RAMdisk)
+            LDA   #$FE        ;(Value for big RAMdisk)
             LDY   SDIR+$2A
-            BNE   :DISCON             ;> $FF BLKS
-            LDA   SDIR+4              ;Is this a valid ProDOS device?
+            BNE   :DISCON     ;> $FF BLKS
+            LDA   SDIR+4      ;Is this a valid ProDOS device?
             AND   #$F0
-            CMP   #$F0                ; (Is this a volume key block?)
-            BNE   :NORAM              ;->No: don't give it up, whatever it is.
-            LDA   SDIR+$25            ;Any files on this ProDOS device?
+            CMP   #$F0        ; (Is this a volume key block?)
+            BNE   :NORAM      ;->No: don't give it up, whatever it is.
+            LDA   SDIR+$25    ;Any files on this ProDOS device?
             ORA   SDIR+$26
-            BNE   :NORAM              ;->Yes: can't use auxmem.
+            BNE   :NORAM      ;->Yes: can't use auxmem.
             LDA   #$FF
 *
 * /RAM EXISTS AND HAS NO FILES, SO
@@ -231,8 +231,8 @@
 *
 :DISCON     STA   ISAUX
 *
-:NORAM      LDA   ISAUX               ;After all that, do we have usable auxmem?
-            BPL   :SETMISC            ;->Nope.
+:NORAM      LDA   ISAUX       ;After all that, do we have usable auxmem?
+            BPL   :SETMISC    ;->Nope.
 *
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
@@ -245,48 +245,48 @@
             STA   ZXDST
             LDA   #>MMSPOT+MMEND-MMBEG
             STA   ZXDST+1
-            JSR   ZXUNPACK            ;unpack into main mem
-            LDA   #MMSPOT             ;source start.
+            JSR   ZXUNPACK    ;unpack into main mem
+            LDA   #MMSPOT     ;source start.
             STA   A1L
             LDA   #>MMSPOT
             STA   A1H
-            LDA   #MMSPOT+MMEND-MMBEG ;source end (+1, but oh well)
+            LDA   #MMSPOT+MMEND-MMBEG  ;source end (+1, but oh well)
             STA   A2L
             LDA   #>MMSPOT+MMEND-MMBEG
             STA   A2H
-            LDA   #AUXMM              ;destination
+            LDA   #AUXMM      ;destination
             STA   A4L
             LDA   #>AUXMM
             STA   A4H
-            SEC                       ;transfer from main to aux
+            SEC               ;transfer from main to aux
             JSR   AUXMOVE
-            DEC   GOTMM               ;Mark that we got Memory Manager.
+            DEC   GOTMM       ;Mark that we got Memory Manager.
 *
 * Continue with miscellaneous initialization stuff.
 *
 :SETMISC
             JSR   SETNOR
             JSR   INIT
-            JSR   HOME                ;Clear screen before SETVID might
-            JSR   SETVID              ; change 80 screen to 40.
+            JSR   HOME        ;Clear screen before SETVID might
+            JSR   SETVID      ; change 80 screen to 40.
             JSR   SETKBD
             STA   KBDSTB
             LDY   #0
             STY   DOSNOW
             STY   AUXFLG
-            STY   PSLOT               ;NO PRINTER.
+            STY   PSLOT       ;NO PRINTER.
             STY   FMT400K
-            DEY                       ;FF
+            DEY               ;FF
             STY   TRKFLG
             LDA   #$0A
             STA   ASYNC
-            LSR                       ;A-->5
+            LSR               ;A-->5
             STA   DSYNC
 *
 * Turn off 80 cols.
             BIT   FLAG80
             BPL   :AFTER80
-            LDA   #$15                ;(ProDOS Tech. Ref., 5.3.1.3, page 99)
+            LDA   #$15        ;(ProDOS Tech. Ref., 5.3.1.3, page 99)
             JSR   $C300
 *
 :AFTER80    LDA   #FILER
@@ -299,11 +299,11 @@
             LDA   #0
             JSR   VLEFT
 *
-            LDA   KVERSION            ;ProDOS version # is 1.3?
+            LDA   KVERSION    ;ProDOS version # is 1.3?
             CMP   #$03
             BNE   :CHKCLK
             JSR   :MAYBEHDR
-            JSR   PRHERE              ;Yes: warn 'em.
+            JSR   PRHERE      ;Yes: warn 'em.
             DB    $8D,$8D
             ASC   "ProDOS 1.3 has problems. We suggest you update. "
             DB    0
@@ -427,9 +427,9 @@
             CMP   MONTH3,Y
             BNE   :GETDT2
             LDA   :DAY
-            BEQ   :BADDAY             ;DAY=0
+            BEQ   :BADDAY     ;DAY=0
             CMP   :DAYS,Y
-:GBDDAY     BCS   :BADDAY             ;DAY TOO BIG
+:GBDDAY     BCS   :BADDAY     ;DAY TOO BIG
             INY
             STY   :MONTH
             LDA   LINEIN+7
@@ -440,9 +440,9 @@
             BEQ   :LEAP
             LDA   :MONTH
             CMP   #2
-            BNE   :LEAP               ;NOT FEB.
+            BNE   :LEAP       ;NOT FEB.
             LDA   :DAY
-            CMP   #$1D                ;29TH?
+            CMP   #$1D        ;29TH?
             BEQ   :BADDAY
 :LEAP       LDA   :MONTH
             ASL
@@ -466,7 +466,7 @@
 *
 :SKIPDAT    LDA   FLAG80
             BMI   :GOT80
-            JMP   :NO80               ;NO 80-COL PRES
+            JMP   :NO80       ;NO 80-COL PRES
 *
 * FIND OUT IF USER WANTS TO USE
 * 80-COLUMN CATALOG DISPLAYS
@@ -485,10 +485,10 @@
             XCE
             REP   $30
             MX    %00
-            PEA   $0000               ; -wordspace for result
-            PEA   $0019               ; -get 40/80 setting
-            LDX   #$0C03              ;_ReadBParam
-            DB    $22,0,0,$E1         ;JSL $E10000
+            PEA   $0000       ; -wordspace for result
+            PEA   $0019       ; -get 40/80 setting
+            LDX   #$0C03      ;_ReadBParam
+            DB    $22,0,0,$E1  ;JSL $E10000
             PLA
             SEP   $30
             MX    %11
@@ -503,7 +503,7 @@
 :NOTGS
             LDA   MACHID
             AND   #$C8
-            CMP   #$88                ;//C?
+            CMP   #$88        ;//C?
             BEQ   :IS2C
 *
 * NOT A //C, SO CHECK IF LASER BY
@@ -517,7 +517,7 @@
 * HAVE HAD MSB OFF.
 *
             LDA   $C060
-            BPL   :IS2C               ;ON LASER
+            BPL   :IS2C       ;ON LASER
 *
 :ASK80      JSR   :MAYBEHDR
             JSR   PRHERE
@@ -537,18 +537,18 @@
             EOR   #"N"
             BNE   :AGN80
             STA   FLAG80
-            BEQ   :NO80               ;ALWAYS
+            BEQ   :NO80       ;ALWAYS
 *
 :IS2C       LDX   #$FF
             LDA   $C060
-            BPL   :USER80             ;USERS SAYS 80
+            BPL   :USER80     ;USERS SAYS 80
             INX
 :USER80     STX   FLAG80
 *
 *
 *
 *
-:NO80       JMP   FILER               ;GO START
+:NO80       JMP   FILER       ;GO START
 *
 :PFXLST     DB    $1
             DW    $280
@@ -596,3 +596,4 @@
 *
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
+
