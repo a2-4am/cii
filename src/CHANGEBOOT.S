@@ -10,10 +10,10 @@ BOOTPG      JSR   COMHDR
             JMP   NOPRO
 *
 :DOS33      LDX   #9          ;CHECK T01S09
-            JSR   CHKWRAPR    ;FOR DOS
+            JSR   :CHKWRAPR   ;FOR DOS
             BCC   :GOTSECT
             LDX   #7          ;CHECK T01S07
-            JSR   CHKWRAPR    ;FOR PRONTO-DOS
+            JSR   :CHKWRAPR   ;FOR PRONTO-DOS
             BCS   :NODOS
 :GOTSECT    LDA   RSECTR      ;REAL DOS:
             STA   :NAMESEC
@@ -33,7 +33,7 @@ BOOTPG      JSR   COMHDR
             JSR   DORWTS      ;WRITE
             LDA   #0          ;RUN CMND
             STA   RTRACK      ;TRACK &
-            LDA   T0SECT      ;SECTOR
+            LDA   :T0SECT     ;SECTOR
             STA   RSECTR
             DEC   RCMND
             JSR   DORWTS      ;READ IT
@@ -56,7 +56,7 @@ BOOTPG      JSR   COMHDR
             JMP   PRESS
 *
 :NAMESEC    DB    $0
-T0SECT      DB    $0
+:T0SECT     DB    $0
 *
 PUTSEC      STX   RSECTR      ;SET SECTOR
             LDA   #>DATA
@@ -66,10 +66,10 @@ PUTSEC      STX   RSECTR      ;SET SECTOR
             STA   RCMND       ;SET COMMAND
             RTS
 *
-CHKWRAPR    TXA
+:CHKWRAPR   TXA
             CLC
             ADC   #4          ;9->D,7->B
-            STA   T0SECT
+            STA   :T0SECT
             JSR   PUTSEC      ;SET & READ
             JSR   DORWTS      ;DOS SECTOR
             LDX   #0

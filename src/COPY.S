@@ -804,7 +804,7 @@ COPY        LDX   #$08        ;Which COPY option?
             LDY   #4
 :CPF00      STY   RADR
 :CPF0       JSR   :GOREAD
-            JSR   TXTCNV
+            JSR   :TXTCNV
             JSR   TARHDR
             JSR   INSD
             JSR   TARHDR
@@ -820,18 +820,18 @@ COPY        LDX   #$08        ;Which COPY option?
 *
 :CPYLOOP    LDA   ONLY1
             BPL   :NOCLS      ;2 DRIVES
-            JSR   GOCLS       ;CLOSE DEST
+            JSR   :GOCLS      ;CLOSE DEST
 :NOCLS      JSR   SRCHDR
             JSR   INSS
             JSR   SRCHDR
             JSR   :GOREAD     ;NO:READ MORE
-            JSR   TXTCNV
+            JSR   :TXTCNV
             JSR   TARHDR
             JSR   INSD
             JSR   TARHDR
             LDA   ONLY1
             BPL   :CPYF1      ;2 DRIVES
-            JSR   REOPEN
+            JSR   :REOPEN
 :CPYF1      JSR   :WRITDAT    ;WRITE MORE
             LDA   EOF         ;ALL DONE?
             BEQ   :CPYLOOP
@@ -929,7 +929,7 @@ COPY        LDX   #$08        ;Which COPY option?
             JSR   PRHERE
             ASC   "Target: "
             DB    $0
-            JMP   PRFILE
+            JMP   :CPRFILE
 *
 *
 *
@@ -952,7 +952,7 @@ COPY        LDX   #$08        ;Which COPY option?
             JSR   PRHERE
             ASC   "File: "
             DB    $0
-            JSR   PRFILE
+            JSR   :CPRFILE
             JSR   PRHERE
             DB    $8D
             ASC   "already exists"
@@ -1207,7 +1207,7 @@ COPY        LDX   #$08        ;Which COPY option?
             DB    $C8
             DW    :OPNLST
             LDA   :OPNLST+5
-            STA   REF
+            STA   :REF
             CLC
 :NODO       RTS
 *
@@ -1452,7 +1452,7 @@ COPY        LDX   #$08        ;Which COPY option?
 *
 * WRITE DATA TO DEST. DISK
 *
-:WRITDAT    LDA   REF
+:WRITDAT    LDA   :REF
             STA   :WRTLST+1
             STA   :MRKLST+1
             STA   :EOFLST+1
@@ -2038,38 +2038,38 @@ DIVECK      BCS   :GOOUT
 * DOING DISK SWAPPING: CLOSE TARGET
 * FILE
 *
-GOCLS       BIT   DOSNOW
+:GOCLS      BIT   DOSNOW
             BPL   :DOS33
-            LDA   REF
-            STA   GCLST+1
+            LDA   :REF
+            STA   :GCLST+1
             JSR   DOMLI       ;GET MARK
             DB    $CF
-            DW    GCLST
+            DW    :GCLST
             JMP   CLOSE
 *
 :DOS33      JMP   WRCAT2
 *
-GCLST       DB    $2,$0,$0,$0,$0
+:GCLST       DB    $2,$0,$0,$0,$0
 
 *
-REOPEN      BIT   DOSNOW
+:REOPEN     BIT   DOSNOW
             BPL   :OUT        ;DOS 3.3
             JSR   DOMLI       ;OPEN
             DB    $C8
             DW    :ROLST
             LDA   :ROLST+5
-            STA   REF
-            STA   GCLST+1
+            STA   :REF
+            STA   :GCLST+1
             JSR   DOMLI       ;SET MARK
             DB    $CE
-            DW    GCLST
+            DW    :GCLST
 :OUT        RTS
 :ROLST      DB    $3
             DW    FILE
             DW    FILBUF
             DB    $0
 *
-REF         DB    $0
+:REF        DB    $0
 *
 *
 SETHIM      SEC
@@ -2082,13 +2082,13 @@ SETHIM      SEC
             STA   HIMEM
             RTS
 *
-PRFILE      LDY   #0
+:CPRFILE    LDY   #0
             LDA   FILE+$1,Y
             ORA   #$80
             JSR   PCOUT
             INY
             CPY   FILE
-            BCC   PRFILE+2
+            BCC   :CPRFILE+2
             RTS
 *
 *
@@ -2097,7 +2097,7 @@ PRFILE      LDY   #0
 * IF PDOS <> SDOS, THE TOGGLE MSB OF
 * NON-ZERO BYTES IN READ BUFFER
 *
-TXTCNV      LDA   SDOS
+:TXTCNV     LDA   SDOS
             EOR   PDOS
             BEQ   :NOTTXT     ;SAME DOS
             JSR   CURPNT

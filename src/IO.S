@@ -20,6 +20,7 @@
 * CROUT2    print 2 carriage returns
 * TSVALS    print current track and sector
 * PRTTRK    print current track
+* PRTBLK    print current block
 * SEEDEV    print slot and drive
 * LOWMES
 * LOWSET
@@ -68,11 +69,6 @@
 * COL40     set to 40 columns
 * VDINIT    initialize machine video
 *
-* CHKALT    modify video setting if ACC = Ctrl-@
-* LOW2UP    convert 1 character from lowercase to uppercase
-* MYHEX
-* PRINT2
-*
 COL40       LDA   #$19
             STA   SDCH
             BIT   FLAG80      ;(10/6/87)
@@ -120,17 +116,17 @@ DOLLAR      PHA
 *
 * RDKEY WITH CASE CONVERT
 CASKEY      JSR   PRDKEY
-            JMP   LOW2UP
+            JMP   :LOW2UP
 *
 * READS KEYBOARD WITHOUT CURSOR GAMES
 * -> CHARACTER IN ACC
 GETKEY      BIT   KBDSTB
 :LOOP       LDA   KBD
             BPL   :LOOP
-            JSR   CHKALT
+            JSR   :CHKALT
             BCS   GETKEY
             BIT   KBDSTB
-LOW2UP      CMP   #$E0        ;CONVERT LOWER
+:LOW2UP     CMP   #$E0        ;CONVERT LOWER
             BCC   :LOWQ       ;TO UPPER CASE
             SBC   #$20
 :LOWQ       RTS
@@ -155,13 +151,12 @@ KYESC       JSR   GETKEY
 *
 PRDKEY      BIT   $C010       ;NO TYPEAHEAD
             JSR   RDKEY
-            JSR   CHKALT
+            JSR   :CHKALT
             BCS   PRDKEY
             RTS
-*
 * FOR KEYPRESSES, CHECK FOR CTRL-@
 * ALTCHARSET TOGGLE
-CHKALT      CMP   #$80        ;CTRL-@?
+:CHKALT     CMP   #$80        ;CTRL-@?
             BNE   :CHKQ
 *
 * CARRY SET NOW
@@ -233,7 +228,7 @@ HEXDC3      LDA   #$00
 * LEADING ZEROS PRINTED
 PRTLZ       LDX   #$02
 :NEXTDIG    LDA   DIGIT,X     ;PRINT DECIMAL
-            JSR   MYHEX       ;DIGITS
+            JSR   :MYHEX      ;DIGITS
             DEX
             BPL   :NEXTDIG
             RTS
@@ -263,10 +258,11 @@ PRT5LJ      LDX   #4
             BEQ   PRTDIG
 PRT2DG      LDX   #1
 PRTDIG      LDA   DIGIT,X
-            JSR   MYHEX
+            JSR   :MYHEX
             DEX
             BPL   PRTDIG
             RTS
+*
 *
 * PRINT TRACK & SECTOR #'S
 TSVALS      JSR   PRTTRK
@@ -291,10 +287,10 @@ PHBYTE      PHA
             LSR
             LSR
             LSR
-            JSR   MYHEX       ;HIGH DIGIT
+            JSR   :MYHEX      ;HIGH DIGIT
             PLA
 PHHEX       AND   #$0F        ;LOW DIGIT
-MYHEX       ORA   #$B0
+:MYHEX      ORA   #$B0
             CMP   #$BA
             BCC   PCOUT
             ADC   #$06
@@ -446,7 +442,7 @@ PRHERE      PLA               ;GET RETURN
             PLA               ;FOLLOWING
             ADC   #$00        ;BYTE
             STA   MESPNT+1
-            JSR   PRINT2      ;PRINT MESS.
+            JSR   :PRINT2     ;PRINT MESS.
             LDA   MESPNT+1    ;RESTORE
             PHA               ;RETURN ADDR.
             LDA   MESPNT
@@ -473,16 +469,16 @@ PRINT       ASL               ;LOOK-UP &
             STA   MESPNT      ;MESSAGE
             LDA   MESSAG+$1,Y
             STA   MESPNT+1
-PRINT2      LDY   #$00
+:PRINT2     LDY   #$00
             LDA   (MESPNT),Y  ;GET CHAR
             BEQ   :OUT
             CMP   #$2F
             BEQ   :CLEAR
             JSR   PCOUT       ;PRINT CHAR
 :NEXT       INC   MESPNT      ;2-BYTE INC.
-            BNE   PRINT2
+            BNE   :PRINT2
             INC   MESPNT+1
-            BNE   PRINT2      ;(ALWAYS)
+            BNE   :PRINT2     ;(ALWAYS)
 :OUT        RTS
 *
 :CLEAR      JSR   CLREOL
@@ -596,4 +592,4 @@ OUCH        JSR   HOME
             LDA   #MPRESS
             JSR   PRINT
             JMP   GETKEY
-
+*

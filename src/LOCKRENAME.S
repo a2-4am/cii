@@ -27,7 +27,7 @@ REN2        JSR   COMTRE
 * RENAME VOLUME
 *
 RENVOL      JSR   NEWVOL      ;GET NEW NAME
-            BCS   ALOUT
+            BCS   :ALOUT
             JSR   RDBLK2
             LDY   #0
 :RNLOOP     LDA   VOLNAM,Y
@@ -41,15 +41,12 @@ RENVOL      JSR   NEWVOL      ;GET NEW NAME
             STA   VTOC1+4
             JMP   DOWBLK
 *
-*
-*
-*
 ASKLOK      JSR   PRHERE
             DB    $8D
             ASC   "[L]ock or [U]nlock? ",00
 :TRY        JSR   CASKEY
             CMP   #$9B
-            BEQ   ALOUT       ;C IS SET
+            BEQ   :ALOUT      ;C IS SET
             LDX   #$FF
             CMP   #"L"
             BEQ   :DO
@@ -58,5 +55,4 @@ ASKLOK      JSR   PRHERE
             INX               ;FF --> 0
 :DO         JSR   PCOUT
             CLC
-ALOUT       RTS
-
+:ALOUT      RTS

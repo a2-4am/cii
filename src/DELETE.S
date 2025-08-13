@@ -168,7 +168,7 @@ DOWAIT      LDX   #$03
             JSR   WAIT
             DEX
             BNE   :WAITLP
-D1OUT       RTS
+:D1OUT      RTS
 *
 *
 * DELETE A FILE
@@ -185,7 +185,7 @@ D1FILE      STA   :TEMP
             STA   :TEMP
             PLA
             AND   #$0F        ;NAME LEN
-            BEQ   D1OUT       ;ALREADY DEL'D
+            BEQ   :D1OUT      ;ALREADY DEL'D
             STA   (POINT),Y
             LDY   #$0F
 :D1LOOP     LDA   (POINT),Y

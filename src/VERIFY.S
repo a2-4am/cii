@@ -13,7 +13,7 @@ VERIFY      LDX   #$03
 :NOTFIL     JSR   COMHDR
             LDA   :TEMP       ;JUMP TO
             BEQ   :VDISK      ;OPTION
-            JMP   SPEED1
+            JMP   :SPEED1
 *
 *
 **********  VERIFY DISK  **********
@@ -254,7 +254,7 @@ VERIFY      LDX   #$03
 *
 **********  DISK SPEED  *************
 *
-SPEED1      JSR   CROUT
+:SPEED1     JSR   CROUT
             JSR   DEVTYP
             BEQ   :DOSPEED
             JMP   FLONLY
