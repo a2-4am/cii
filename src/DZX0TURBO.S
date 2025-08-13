@@ -47,7 +47,7 @@
 * because 800+4=804).
 *
 ZXUNPACK
-                              ;STA   :SAVEACC
+            STA   :SAVEACC
             PLA
             STA   :PARAM
             CLC
@@ -101,7 +101,7 @@ ZXUNPACK
             BNE   :COP1C      ; ALWAYS
 
 :EXIT
-                              ;LDA   :SAVEACC ; RESTORE ACC ON EXIT
+            LDA   :SAVEACC    ; RESTORE ACC ON EXIT
             RTS
 
 :NEW_OFFSET
