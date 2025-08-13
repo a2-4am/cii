@@ -46,7 +46,14 @@ QUIT        JSR   TOP1
             LDA   GODEV+2     ;Did we actually find /RAM to format?
             BEQ   :QUIT2      ;No->don't call
             JSR   SPLFRM
-:QUIT2      JSR   MOVPFX
+:QUIT2
+*MOVPFX
+            LDY   #$40
+:MLOOP      LDA   BTPFX-1,Y
+            STA   PFX-1,Y
+            DEY
+            BNE   :MLOOP
+            STY   $280
             JSR   SETBUT
             INC   $3F4
             LDA   #0          ;Fix cursor position in Quit code(?).
@@ -57,11 +64,3 @@ QUIT        JSR   TOP1
 :QUTLST     DB    $4
             DB    $0,$00,$00,$0,$00,$00
 *
-MOVPFX      LDY   #$40
-:MLOOP      LDA   BTPFX-1,Y
-            STA   PFX-1,Y
-            DEY
-            BNE   :MLOOP
-            STY   $280
-            RTS
-
