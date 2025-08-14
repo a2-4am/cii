@@ -21,6 +21,10 @@
 * TSVALS    print current track and sector
 * PRTTRK    print current track
 * PRTBLK    print current block
+* PRTFL1    print current prefix
+* PRTFIL    print current prefix + filename
+* CFILE     print current filename
+* PCFILE    print current filename (ProDOS)
 * SEEDEV    print slot and drive
 * LOWMES
 * LOWSET
@@ -49,6 +53,7 @@
 * CKESC     check if Esc has been pressed [non-blocking]
 * CHKKEY
 *
+* CHOPOS    set VTAB/HTAB for main menu
 * VLEFT     set VTAB to ACC, then set HTAB to 0
 * SETCH     set HTAB
 *
@@ -118,19 +123,6 @@ DOLLAR      PHA
 CASKEY      JSR   PRDKEY
             JMP   :LOW2UP
 *
-* READS KEYBOARD WITHOUT CURSOR GAMES
-* -> CHARACTER IN ACC
-GETKEY      BIT   KBDSTB
-:LOOP       LDA   KBD
-            BPL   :LOOP
-            JSR   :CHKALT
-            BCS   GETKEY
-            BIT   KBDSTB
-:LOW2UP     CMP   #$E0        ;CONVERT LOWER
-            BCC   :LOWQ       ;TO UPPER CASE
-            SBC   #$20
-:LOWQ       RTS
-*
 CHKKEY      JSR   KYESC
             CMP   #$88        ;LEFT ARROW
             BEQ   :RETCLR
@@ -171,6 +163,15 @@ PRDKEY      BIT   $C010       ;NO TYPEAHEAD
             RTS
 :CHKQ       CLC
             RTS
+*
+* POSITION FOR MAIN SCREEN CHOOSES
+*
+CHOPOS      LDA   #$12
+            STA   WNDWTH
+            LDA   #$16
+            STA   WNDLFT
+            LDA   #$04
+* fall through to VLEFT
 *
 * DO VTAB, & HTAB 0
 VLEFT       JSR   TABV
@@ -263,6 +264,93 @@ PRTDIG      LDA   DIGIT,X
             BPL   PRTDIG
             RTS
 *
+PRTFL1      SEC
+            DB    $90
+PRTFIL      CLC
+            PHP
+            BIT   DOSNOW
+            BPL   :DOS33
+            LDA   #1
+            JSR   VLEFT
+            LDY   #0
+:PRO0       LDA   PFX+$1,Y
+            ORA   #$80
+            PHA
+            JSR   PCOUT
+            PLA
+            INY
+            CPY   PFX
+            BCC   :PRO0
+            CMP   #"/"
+            BEQ   :PRO00
+            LDA   #"/"
+            JSR   PCOUT
+:PRO00      PLP
+            BCS   :PRO1       ;NO FILE NAME
+            JSR   CFILE
+:PRO1       LDA   PRNTR?
+            BNE   :CFILEQ     ;DON'T CLREOL
+            JMP   CLREOL
+*
+:DOS33      LDA   #2
+            JSR   VLEFT
+            JSR   PRHERE
+            ASC   "File: "
+            DB    $2F,0
+            PLP
+            BCS   :CFILEQ
+* fall through to CFILE
+*
+* PRINT FILENAME AT *POINT
+*
+CFILE       BIT   DOSNOW
+            BMI   PCFILE
+            LDY   #$00
+            LDA   (POINT),Y
+            TAX
+            LDY   #$03
+:NXTCHAR    LDA   (POINT),Y
+            JSR   CTRL?
+            BCS   :DONT
+            CPY   #$20        ;LAST CHAR?
+            BNE   :DO         ;NOPE
+            CPX   #$FF        ;DELETED FILE?
+            BNE   :DO         ;NO: JUST COUT
+            LDA   #$A0        ;YES:USE SPACE
+:DO         JSR   PCOUT
+:DONT       INY
+            CPY   #$21
+            BCC   :NXTCHAR
+:CFILEQ     RTS
+:LENGTH     DB    $21
+*
+PCFILE      LDY   #0
+            LDA   (POINT),Y
+            AND   #$0F
+            BNE   :PCFL1
+            LDA   #$0F
+:PCFL1      STA   :LENGTH
+            LDY   #1
+:PCFL2      LDA   (POINT),Y
+            BEQ   :PCFL3
+            ORA   #$80
+            JSR   PCOUT
+            INY
+            CPY   :LENGTH
+            BCC   :PCFL2
+            BEQ   :PCFL2
+:PCFL3      RTS
+:LENGTH     DB    $0
+*
+PRTBLK      JSR   PRHERE
+            ASC   "Block $"
+            DB    $0
+            LDA   BLKNUM+1
+            JSR   PHBYTE
+            LDA   BLKNUM
+            JSR   PHBYTE
+            JMP   CROUT
+*
 *
 * PRINT TRACK & SECTOR #'S
 TSVALS      JSR   PRTTRK
@@ -294,7 +382,7 @@ PHHEX       AND   #$0F        ;LOW DIGIT
             CMP   #$BA
             BCC   PCOUT
             ADC   #$06
-            JMP   PCOUT
+            BNE   PCOUT       ;ALWAYS
 *
 *
 PRSPC       LDA   #" "
@@ -591,5 +679,19 @@ OUCH        JSR   HOME
 *STA LEVEL
             LDA   #MPRESS
             JSR   PRINT
-            JMP   GETKEY
+*           JMP   GETKEY
+* falls through to GETKEY
+*
+* READS KEYBOARD WITHOUT CURSOR GAMES
+* -> CHARACTER IN ACC
+GETKEY      BIT   KBDSTB
+:LOOP       LDA   KBD
+            BPL   :LOOP
+            JSR   :CHKALT
+            BCS   GETKEY
+            BIT   KBDSTB
+:LOW2UP     CMP   #$E0        ;CONVERT LOWER
+            BCC   :LOWQ       ;TO UPPER CASE
+            SBC   #$20
+:LOWQ       RTS
 *

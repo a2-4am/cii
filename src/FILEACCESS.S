@@ -210,61 +210,6 @@ SPACE       BIT   DOSNOW
             STA   USEDH
             RTS
 *
-* CONVERT FILENAME TO CR FORMAT
-* CAN'T USE DOSNOW TO DETERMINE
-* FILENAME FORMAT
-*
-FTOCR       LDY   #1
-            LDA   (POINT),Y
-            CMP   #$10
-            BCS   :PRODOS
-*
-:DOS33      LDX   #$1E        ;(NAME LENGTH)
-            LDY   #$00
-            LDA   (POINT),Y   ;DELETED?
-            CMP   #$FF
-            BNE   :LONG
-            DEX               ;DON'T USE
-:LONG       TXA               ;LAST CHAR
-            TAY
-            INC   POINT       ;POINT TO
-            INC   POINT       ;FILENAME
-            INC   POINT
-:SPACE      DEY
-            LDA   (POINT),Y   ;LOOP TO IGNORE
-            CMP   #" "        ;LAST SPACES
-            BEQ   :SPACE
-            STA   FILNAM,Y    ;SAVE LAST CHAR
-            LDA   #$8D        ;END WITH CR
-            STA   FILNAM+$1,Y
-            DEY
-:NEXTCHR    LDA   (POINT),Y   ;COPY THE REST
-            STA   FILNAM,Y    ;OF THE CHARS
-            DEY
-            BPL   :NEXTCHR
-            DEC   POINT
-            DEC   POINT
-            DEC   POINT
-            RTS
-*
-:PRODOS     DEY               ;1 --> 0
-            LDA   (POINT),Y
-            AND   #$0F        ;NECESSARY?
-            BNE   :PRO1
-            LDA   #$0F
-:PRO1       TAX
-            INY               ;0 --> 1
-:PRO2       LDA   (POINT),Y
-            BEQ   :PRO3
-            ORA   #$80
-            STA   FILNAM-1,Y
-            INY
-            DEX
-            BNE   :PRO2
-:PRO3       LDA   #$8D
-            STA   FILNAM-1,Y
-            RTS
-*
 *
 *
 * PLACE INPUT FILE INTO ENTRY
@@ -324,31 +269,6 @@ SETPNT      LDA   CBYTE,X
             STA   POINT+1
             RTS
 *
-* PRINT FILENAME AT *POINT
-*
-CFILE       BIT   DOSNOW
-            BPL   :CFL33
-            JMP   PCFILE
-*
-:CFL33      LDY   #$00
-            LDA   (POINT),Y
-            TAX
-            LDY   #$03
-:NXTCHAR    LDA   (POINT),Y
-            JSR   CTRL?
-            BCS   :DONT
-            CPY   #$20        ;LAST CHAR?
-            BNE   :DO         ;NOPE
-            CPX   #$FF        ;DELETED FILE?
-            BNE   :DO         ;NO: JUST COUT
-            LDA   #$A0        ;YES:USE SPACE
-:DO         JSR   PCOUT
-:DONT       INY
-            CPY   #$21
-            BCC   :NXTCHAR
-:OUT        RTS
-:LENGTH     DB    $21
-*
 *
 * FREE A SECTOR ON *POINT - VTOC
 * T&S IN *TRACK & *SECTOR
@@ -405,22 +325,6 @@ DOS?        LDX   #0
             ASC   "No DOS on disk"
             DB    $8D,$0
             JMP   PRESS
-*
-*
-*
-* FIND FILETYPE
-*
-FILTYP      LDX   #$08
-            LDY   #$02
-            LDA   (POINT),Y
-            AND   #$7F
-:LOOP       CMP   TYPBYT,X
-            BEQ   :OUT
-            DEX
-            BNE   :LOOP
-:OUT        RTS
-TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
-TYPCHR      ASC   "?BARSBAIT"
 *
 * INSERT SOURCE OR DESTINATION DISKS
 *

@@ -1298,26 +1298,6 @@ PRVNMS      LDA   SDOS
             JMP   PRVCOM
 *
 *
-*
-PCFILE      LDY   #0
-            LDA   (POINT),Y
-            AND   #$0F
-            BNE   :PCFL1
-            LDA   #$0F
-:PCFL1      STA   :LENGTH
-            LDY   #1
-:PCFL2      LDA   (POINT),Y
-            BEQ   :PCFL3
-            ORA   #$80
-            JSR   PCOUT
-            INY
-            CPY   :LENGTH
-            BCC   :PCFL2
-            BEQ   :PCFL2
-:PCFL3      RTS
-:LENGTH     DB    $0
-*
-*
 PCATLN      STA   :TYPE       ;CAT DPLY TYPE
             LDY   #$1E        ;ACCESS
             LDA   (POINT),Y

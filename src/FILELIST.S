@@ -573,7 +573,23 @@ LOKAST      JSR   CURPNT
 *
 LOKPAT      JSR   GETPAT      ;GET PATTERN
             BCS   :OUT
-            JSR   ASKLOK
+*           JSR   ASKLOK
+*ASKLOK
+            JSR   PRHERE
+            DB    $8D
+            ASC   "[L]ock or [U]nlock? ",00
+:ALTRY      JSR   CASKEY
+            CMP   #$9B
+            BEQ   :ALOUT      ;C IS SET
+            LDX   #$FF
+            CMP   #"L"
+            BEQ   :ALDO
+            CMP   #"U"
+            BNE   :ALTRY
+            INX               ;FF --> 0
+:ALDO       JSR   PCOUT
+            CLC
+:ALOUT
             BCS   :OUT
             STX   :LOCK
             LDA   #$00
@@ -805,6 +821,21 @@ CATLN2      BIT   DOSNOW
 :LENGTH     DB    $0
 *
 *
+* FIND FILETYPE
+*
+FILTYP      LDX   #$08
+            LDY   #$02
+            LDA   (POINT),Y
+            AND   #$7F
+:LOOP       CMP   TYPBYT,X
+            BEQ   :OUT
+            DEX
+            BNE   :LOOP
+:OUT        RTS
+TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
+TYPCHR      ASC   "?BARSBAIT"
+*
+*
 * CALL THE PATTERN MATCHER HERE
 *
 MATCH       JSR   CURPNT
@@ -929,6 +960,61 @@ MATCH       JSR   CURPNT
 :CAMAFLG    DB    $0
 :SP         DB    $0
 :XSAVE      DB    $0
+*
+* CONVERT FILENAME TO CR FORMAT
+* CAN'T USE DOSNOW TO DETERMINE
+* FILENAME FORMAT
+*
+FTOCR       LDY   #1
+            LDA   (POINT),Y
+            CMP   #$10
+            BCS   :PRODOS
+*
+:DOS33      LDX   #$1E        ;(NAME LENGTH)
+            LDY   #$00
+            LDA   (POINT),Y   ;DELETED?
+            CMP   #$FF
+            BNE   :LONG
+            DEX               ;DON'T USE
+:LONG       TXA               ;LAST CHAR
+            TAY
+            INC   POINT       ;POINT TO
+            INC   POINT       ;FILENAME
+            INC   POINT
+:SPACE      DEY
+            LDA   (POINT),Y   ;LOOP TO IGNORE
+            CMP   #" "        ;LAST SPACES
+            BEQ   :SPACE
+            STA   FILNAM,Y    ;SAVE LAST CHAR
+            LDA   #$8D        ;END WITH CR
+            STA   FILNAM+$1,Y
+            DEY
+:NEXTCHR    LDA   (POINT),Y   ;COPY THE REST
+            STA   FILNAM,Y    ;OF THE CHARS
+            DEY
+            BPL   :NEXTCHR
+            DEC   POINT
+            DEC   POINT
+            DEC   POINT
+            RTS
+*
+:PRODOS     DEY               ;1 --> 0
+            LDA   (POINT),Y
+            AND   #$0F        ;NECESSARY?
+            BNE   :PRO1
+            LDA   #$0F
+:PRO1       TAX
+            INY               ;0 --> 1
+:PRO2       LDA   (POINT),Y
+            BEQ   :PRO3
+            ORA   #$80
+            STA   FILNAM-1,Y
+            INY
+            DEX
+            BNE   :PRO2
+:PRO3       LDA   #$8D
+            STA   FILNAM-1,Y
+            RTS
 *
 * SLIDE SELECTED FILES TO TOP OF
 * STATUS ARRAY (ARROW FLAGGED)
