@@ -1,5 +1,11 @@
             CLD
             CLI
+            JSR   SETNOR
+            JSR   INIT
+            JSR   HOME        ;Clear screen before SETVID might
+            JSR   SETVID      ; change 80 screen to 40.
+            JSR   SETKBD
+            STA   KBDSTB
 *
 * FIGURE OUT SLOT NUMBER
 *
@@ -13,7 +19,7 @@
 * AND #$70
 * STA *RPSLOT
 *
-* Move MAIN portion of program into place
+* Unpack MAIN portion of program into place
 *
             JSR   ZXUNPACK
             DA    MAINXEND
@@ -23,10 +29,9 @@
 *
 * MOVE NOBOOT TO $D000
 *
-* Y ALREADY ZERO
-*
             LDA   $C083
             LDA   $C083
+            LDY   #0
 :NBLP       LDA   BOOTBEG,Y
             CPY   #BOOTEND-BOOTBEG+1
             BCC   :NBLP1
@@ -253,12 +258,6 @@
 * Continue with miscellaneous initialization stuff.
 *
 :SETMISC
-            JSR   SETNOR
-            JSR   INIT
-            JSR   HOME        ;Clear screen before SETVID might
-            JSR   SETVID      ; change 80 screen to 40.
-            JSR   SETKBD
-            STA   KBDSTB
             LDY   #0
             STY   DOSNOW
             STY   AUXFLG
@@ -452,91 +451,8 @@
             JSR   PCOUT
             JMP   :NXTINX
 *
-:SKIPDAT    LDA   FLAG80
-            BMI   :GOT80
-            JMP   :NO80       ;NO 80-COL PRES
-*
-* FIND OUT IF USER WANTS TO USE
-* 80-COLUMN CATALOG DISPLAYS
-*
-* FIRST, FIND OUT IF ON //GS
-*
-:GOT80
-            SEC
-            JSR   $FE1F
-            BCS   :NOTGS
-*
-* WE ARE ON AN APPLE //GS. MAKE A TOOL CALL TO READ
-* THE 40/80 COLUMN SETTING FROM BRAM.
-*
-            CLC
-            XCE
-            REP   $30
-            MX    %00
-            PEA   $0000       ; -wordspace for result
-            PEA   $0019       ; -get 40/80 setting
-            LDX   #$0C03      ;_ReadBParam
-            DB    $22,0,0,$E1  ;JSL $E10000
-            PLA
-            SEP   $30
-            MX    %11
-            SEC
-            XCE
-            LDX   #$FF
-            CMP   #1
-            BNE   :ASK80
-            BEQ   :USER80
-
-*
-:NOTGS
-            LDA   MACHID
-            AND   #$C8
-            CMP   #$88        ;//C?
-            BEQ   :IS2C
-*
-* NOT A //C, SO CHECK IF LASER BY
-* READING CASSETTE PORT ($C060). ON AN
-* APPLE THIS LOCATION ALWAYS HAS MSB=1
-* (IF NO CASSETTE PLUGGED IN).
-*
-* AT THIS POINT, IF WE ARE ON A LASER
-* THE MSB MUST BE ZERO (80 COL) BECAUSE
-* IF IT WERE 1 (40 COL) *FLAG80 WOULD
-* HAVE HAD MSB OFF.
-*
-            LDA   $C060
-            BPL   :IS2C       ;ON LASER
-*
-:ASK80      JSR   :MAYBEHDR
-            JSR   PRHERE
-            DB    $8D,$8D
-            ASC   "Do you want 80-column catalog"
-            DB    $8D
-            ASC   "displays (Y/N) ? Y"
-            DB    $0
-            DEC   CH
-:AGN80      JSR   CASKEY
-            CMP   #$9B
-            BEQ   :NO80
-            CMP   #"Y"
-            BEQ   :NO80
-            CMP   #$8D
-            BEQ   :NO80
-            EOR   #"N"
-            BNE   :AGN80
-            STA   FLAG80
-            BEQ   :NO80       ;ALWAYS
-*
-:IS2C       LDX   #$FF
-            LDA   $C060
-            BPL   :USER80     ;USERS SAYS 80
-            INX
-:USER80     STX   FLAG80
-*
-*
-*
-*
-:NO80       JMP   FILER       ;GO START
+:SKIPDAT
+            JMP   FILER       ;GO START
 *
 :PFXLST     DB    $1
             DW    $280
