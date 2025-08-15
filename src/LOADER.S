@@ -1,4 +1,16 @@
-            CLD
+COPYADDR    MAC
+            LDA   #]1
+            STA   ]2
+            LDA   #>]1
+            STA   ]2+1
+            <<<
+UNPACK      MAC
+            >>>   COPYADDR,]1;ZXSRC
+            >>>   COPYADDR,]2;ZXDST
+            JSR   ZXUNPACK
+            <<<
+*
+:LOCATE     CLD
             CLI
             JSR   SETNOR
             JSR   INIT
@@ -21,9 +33,7 @@
 *
 * Unpack MAIN portion of program into place
 *
-            JSR   ZXUNPACK
-            DA    MAINXEND
-            DA    MAINEND
+            >>>   UNPACK,MAINXEND;MAINEND
 *
             LDX   $FBB3       ;FOR LATER
 *
@@ -225,9 +235,7 @@
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
-            JSR   ZXUNPACK    ;unpack into main mem
-            DA    MMXEND
-            DA    MMSPOT+MMEND-MMBEG
+            >>>   UNPACK,MMXEND;MMSPOT+MMEND-MMBEG
             LDA   #MMSPOT     ;source start.
             STA   A1L
             LDA   #>MMSPOT
@@ -279,9 +287,7 @@
             LSR
             BCS   :SKIPDAT
 *
-            JSR   ZXUNPACK
-            DA    CLKXEND
-            DA    $800+CLKEND-CLKBEG
+            >>>   UNPACK,CLKXEND;$800+CLKEND-CLKBEG
             JSR   $800
 *
 :SKIPDAT
