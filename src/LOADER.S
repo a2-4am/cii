@@ -55,16 +55,6 @@
 *
 :SKIPIRQ    LDA   $C082
 *
-*
-* MOVE INTERLEAVE TABLES
-*
-            LDY   #$30
-:ILMOV      LDA   :INTRLV-1,Y
-            STA   INTRLV-1,Y
-            DEY
-            BNE   :ILMOV
-*
-*
 * CLEAR OUT PRODOS MEMORY BITMAP
 *
             LDX   #$16
@@ -311,12 +301,3 @@
 *
 :RAMFLG     DB    $0
 *
-:INTRLV     DB    $0,$D,$B,$9,$7,$5,$3,$1
-            DB    $E,$C,$A,$8,$6,$4,$2,$F
-*
-            DB    $0,$7,$E,$6,$D,$5,$C,$4
-            DB    $B,$3,$A,$2,$9,$1,$8,$F
-*
-            DB    $0,$E,$D,$C,$B,$A,$9,$8
-            DB    $7,$6,$5,$4,$3,$2,$1,$F
-
