@@ -33,6 +33,9 @@ DZX0TURBOVARS=$(BUILDDIR)/DZX0TURBO.VARS.S
 FILERO=$(BUILDDIR)/FILER.O
 FILERX=$(BUILDDIR)/FILER.X
 FILERVARS=$(BUILDDIR)/FILER.VARS.S
+SETCLOCKO=$(BUILDDIR)/SETCLOCK.O
+SETCLOCKX=$(BUILDDIR)/SETCLOCK.X
+SETCLOCKVARS=$(BUILDDIR)/SETCLOCK.VARS.S
 EXE=$(BUILDDIR)/$(SYSNAME)
 
 .PHONY: clean mount all
@@ -40,14 +43,10 @@ EXE=$(BUILDDIR)/$(SYSNAME)
 $(BUILDDISK): $(PRODOS) $(CLOCK) $(EXE)
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
-$(EXE): $(MMX) $(FILERX) $(FILERVARS) $(BUILDDIR)
+$(EXE): $(MMX) $(FILERX) $(SETCLOCKX) $(MMVARS) $(FILERVARS) $(SETCLOCKVARS) $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/CII.S > "$(BUILDLOG)"
 	mv "$(SRCDIR)/UTIL.SYSTEM_S01_Segment1_Output.txt" "$(BUILDDIR)"/
 	mv "$(SRCDIR)/UTIL.SYSTEM_Symbols.txt" "$(BUILDDIR)"/
-
-#
-# compressors
-#
 
 #
 # Memory Manager module (self-contained)(compressed)
@@ -74,7 +73,6 @@ $(DZX0TURBOO): $(BUILDDIR)
 $(DZX0TURBOVARS): $(DZX0TURBOO)
 	awk -F';' '/DZX0TURBO/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/DZX0TURBO.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
 
-
 #
 # Filer (requires Memory Manager)(compressed)
 #
@@ -88,6 +86,20 @@ $(FILERVARS): $(FILERO)
 
 $(FILERX): $(FILERO)
 	$(ZX0) "$(BUILDDIR)/FILER.O" "$@"
+
+#
+# Set Clock (requires Filer)(compressed)(no vars)
+#
+$(SETCLOCKO): $(FILERVARS)
+	$(MERLIN) "$(SRCDIR)"/SETCLOCK.S > "$(BUILDLOG)"
+	mv "$(SRCDIR)/SETCLOCK.O_S01_Segment1_Output.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/SETCLOCK.O_Symbols.txt" "$(BUILDDIR)"/
+
+$(SETCLOCKX): $(SETCLOCKO)
+	$(ZX0) "$(BUILDDIR)/SETCLOCK.O" "$@"
+
+$(SETCLOCKVARS): $(SETCLOCKO)
+	awk -F';' '/SETCLOCK/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/SETCLOCK.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
 
 # things that go in the root directory
 $(PRODOS) $(CLOCK): $(BUILDDIR)

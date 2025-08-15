@@ -3,12 +3,15 @@
             TR    ON          ;Truncate object code printout
             PUT   REVS        ;revision info -- comments only
             PUT   VARS        ;assorted equates for everybody
+            PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
             ORG   $2000
             PUT   LOADER      ;This relocates & gets everything started.
             PUT   DZX0TURBO   ;Unpack modules on startup
             PUT   BOOTSEC.33  ;Copied to LCRAM
+            PUTBIN  ../build/SETCLOCK.X
+CLKXEND
             PUTBIN  ../build/MM.X
 MMXEND
             PUTBIN  ../build/FILER.X
