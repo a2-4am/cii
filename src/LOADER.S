@@ -75,7 +75,6 @@
             STA   PCURR
             STA   SCURR
             STA   RPSLOT
-            STA   :RAMFLG
 *
 * PUT VERSION NUMBER AT $BFFD
 *
