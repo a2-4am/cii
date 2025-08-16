@@ -15,7 +15,41 @@ ZXDST       DS    2
 :HL         DS    2
 :TMPA       DS    1
 :TMPB       DS    1
+:SAVEACC    DS    1
             DEND
+*label in VARS
+*ZXMODULE
+            STA   :SAVEACC
+            SEC
+            PLA
+            SBC   #2
+            STA   :TMPA
+            PLA
+            SBC   #0
+            STA   :TMPB
+            LDY   #3
+]PARMLOOP
+            LDA   (:TMPA), Y
+            STA   ZXSRC-3, Y
+            INY
+            CPY   #7
+            BNE   ]PARMLOOP
+            DEY
+]B7LOOP
+            LDA   (ZXSRC), Y
+            STA   (:TMPA), Y
+            DEY
+            BPL   ]B7LOOP
+            JSR   ZXUNPACK
+            LDY   #2
+            LDA   #$EA
+]NOPLOOP
+            STA   (ZXSRC),Y
+            DEY
+            BPL   ]NOPLOOP
+            LDA   :SAVEACC
+            JMP   (ZXSRC)
+            ERR   *-ZXMODULE-ZXMODSZ
 *
 * ZXUNPACK - entry point for ZX0 turbo unpacker
 * in:  ZXSRC [2 bytes] address following packed data
@@ -41,7 +75,8 @@ ZXDST       DS    2
 * is required. (In the example above, the offset is 4 bytes
 * because 800+4=804).
 *
-ZXUNPACK
+*label in VARS
+*ZXUNPACK
             LDX   #0
             STX   :TMPB
             STX   :OFFSET+1
@@ -259,3 +294,4 @@ ZXUNPACK
             BCS   :DZX0T_ELIAS_RELOAD
             TAX
             RTS
+            ERR   *-ZXUNPACK-ZXUNPSZ

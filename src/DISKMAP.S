@@ -1,8 +1,16 @@
+            TYP   BIN
+            DSK   ../build/DISKMAP.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            ORG   MAINEND
+TSMAP
+            ORG   *+3
+
 ************************************
 *            DISK MAP              *
 ************************************
 *
-TSMAP       JSR   COMHDR
+            JSR   COMHDR
 *DOC00E
             BIT   A2E
             BPL   :C00EQ
@@ -399,3 +407,4 @@ TSMAP       JSR   COMHDR
 :TEMP       DB    $0
 :VCOUNT     DB    $0
 *
+TSMAPEND

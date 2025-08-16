@@ -33,6 +33,9 @@ DZX0TURBOVARS=$(BUILDDIR)/DZX0TURBO.VARS.S
 FILERO=$(BUILDDIR)/FILER.O
 FILERX=$(BUILDDIR)/FILER.X
 FILERVARS=$(BUILDDIR)/FILER.VARS.S
+DISKMAPO=$(BUILDDIR)/DISKMAP.O
+DISKMAPX7=$(BUILDDIR)/DISKMAP.X7
+DISKMAPVARS=$(BUILDDIR)/DISKMAP.VARS.S
 SETCLOCKO=$(BUILDDIR)/SETCLOCK.O
 SETCLOCKX=$(BUILDDIR)/SETCLOCK.X
 SETCLOCKVARS=$(BUILDDIR)/SETCLOCK.VARS.S
@@ -43,7 +46,7 @@ EXE=$(BUILDDIR)/$(SYSNAME)
 $(BUILDDISK): $(PRODOS) $(CLOCK) $(EXE)
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
-$(EXE): $(MMX) $(FILERX) $(SETCLOCKX) $(MMVARS) $(FILERVARS) $(SETCLOCKVARS) $(BUILDDIR)
+$(EXE): $(MMX) $(FILERX) $(DISKMAPX7) $(SETCLOCKX) $(MMVARS) $(FILERVARS) $(DISKMAPVARS) $(SETCLOCKVARS) $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/CII.S > "$(BUILDLOG)"
 	mv "$(SRCDIR)/UTIL.SYSTEM_S01_Segment1_Output.txt" "$(BUILDDIR)"/
 	mv "$(SRCDIR)/UTIL.SYSTEM_Symbols.txt" "$(BUILDDIR)"/
@@ -57,7 +60,7 @@ $(MMO): $(BUILDDIR)
 	mv "$(SRCDIR)/MM.O_Symbols.txt" "$(BUILDDIR)"/
 
 $(MMX): $(MMO)
-	$(ZX0) "$(BUILDDIR)/MM.O" "$@"
+	$(ZX0) "$(MMO)" "$@"
 
 $(MMVARS): $(MMO)
 	awk -F';' '/MM.CII/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/MM.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
@@ -85,7 +88,24 @@ $(FILERVARS): $(FILERO)
 	awk -F';' '!/VARS;/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/FILER.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
 
 $(FILERX): $(FILERO)
-	$(ZX0) "$(BUILDDIR)/FILER.O" "$@"
+	$(ZX0) "$(FILERO)" "$@"
+
+#
+# Disk Map module (requires Filer)(compressed)(self-decompressing)
+#
+$(DISKMAPO): $(FILERVARS)
+	$(MERLIN) "$(SRCDIR)"/DISKMAP.S > "$(BUILDLOG)"
+	mv "$(SRCDIR)/DISKMAP.O_S01_Segment1_Output.txt" "$(BUILDDIR)"/
+	mv "$(SRCDIR)/DISKMAP.O_Symbols.txt" "$(BUILDDIR)"/
+
+$(DISKMAPVARS): $(DISKMAPO)
+	awk -F';' '/DISKMAP/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/DISKMAP.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"
+
+$(DISKMAPX7): $(DISKMAPO)
+	$(ZX0) "$(DISKMAPO)" "$(BUILDDIR)/DISKMAP.X"
+	dd if="$(BUILDDIR)/DISKMAP.X" of="$(BUILDDIR)/DISKMAP.X.HEAD" bs=1 count=7
+	dd if="$(BUILDDIR)/DISKMAP.X" of="$(BUILDDIR)/DISKMAP.X.TAIL" bs=1 skip=7
+	cat "$(BUILDDIR)/DISKMAP.X.TAIL" "$(BUILDDIR)/DISKMAP.X.HEAD" > "$@"
 
 #
 # Set Clock (requires Filer)(compressed)(no vars)
@@ -96,7 +116,7 @@ $(SETCLOCKO): $(FILERVARS)
 	mv "$(SRCDIR)/SETCLOCK.O_Symbols.txt" "$(BUILDDIR)"/
 
 $(SETCLOCKX): $(SETCLOCKO)
-	$(ZX0) "$(BUILDDIR)/SETCLOCK.O" "$@"
+	$(ZX0) "$(SETCLOCKO)" "$@"
 
 $(SETCLOCKVARS): $(SETCLOCKO)
 	awk -F';' '/SETCLOCK/ { printf "%s EQU %s\n", $$6, $$5 }' < "$(BUILDDIR)"/SETCLOCK.O_Symbols.txt | grep -v "_" | sed -e "s/00\//\$$/g" > "$@"

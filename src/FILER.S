@@ -29,7 +29,7 @@
             PUT   FORMAT
             PUT   VERIFY
             PUT   VIEW
-            PUT   DISKMAP
+*            PUT   DISKMAP
             PUT   CHANGEBOOT
             PUT   UNDELETE
             PUT   MKDIR

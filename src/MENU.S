@@ -70,29 +70,12 @@ FILER       LDX   #$FF
 *
             ASL
             TAY
-            LDA   :MENUTBL,Y
+            LDA   MENUTBL,Y
             STA   :JUMP+1
-            LDA   :MENUTBL+$1,Y
+            LDA   MENUTBL+1,Y
             STA   :JUMP+2
 :JUMP       JSR   $1000
             JMP   FILER
-*
-:MENUTBL    DW    COPY
-            DW    CATLOG
-            DW    DELETE
-            DW    LOCK
-            DW    RENAME
-            DW    ALPHA
-            DW    FORMAT
-            DW    VERIFY
-*
-            DW    VIEW
-            DW    TSMAP
-            DW    BOOTPG
-            DW    UNDEL
-            DW    MAKEDR
-            DW    SETPRINT
-            DW    QUIT
 *
 CHOOZ1      JSR   CHOPOS
             JSR   PRHERE

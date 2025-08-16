@@ -6,14 +6,36 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DISKMAP.VARS
             ORG   $2000
+*
             PUT   LOADER      ;This relocates & gets everything started.
-            PUT   DZX0TURBO   ;Unpack modules on startup
-            PUT   BOOTSEC.33  ;Copied to LCRAM
+            PUT   BOOTSEC.33
+*
             PUTBIN  ../build/SETCLOCK.X
 CLKXEND
+*
             PUTBIN  ../build/MM.X
 MMXEND
+*
             PUTBIN  ../build/FILER.X
 MAINXEND
-
+*
+TSMAPX7BEG
+            ORG   TSMAP
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    TSMAPEND
+            PUTBIN  ../build/DISKMAP.X7
+:X7END
+            ORG
+TSMAPX7END
+*
+DZX0BEG
+            ORG   ZXMODULE
+            PUT   DZX0TURBO
+            PUT   MENUTBL
+            ERR   *-$BF00
+            ORG
+DZX0END
+*

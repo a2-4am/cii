@@ -367,4 +367,17 @@ SIZEERR     EQU   $81         ;Request exceeds end of memory.
 TRANSERR    EQU   $82         ;Not all requested bytes were transferred.
 HNDERR      EQU   $83         ;Handle in zero page invalid (overwritten!)
 NOMEMERR    EQU   $84         ;No memory found in OPEN call.
-
+*
+* Things that live at the top of main memory,
+* just below ProDOS.
+* Defined here because *dependencies*.
+* There are assembler guards to verify the
+* sizes, so you'll need to adjust them if you
+* make changes to the main menu dispatch table
+* or the unpacker routines.
+MENUTSZ     EQU   $1E
+ZXMODSZ     EQU   $32
+ZXUNPSZ     EQU   $13B
+MENUTBL     EQU   MLI-MENUTSZ
+ZXUNPACK    EQU   MENUTBL-ZXUNPSZ
+ZXMODULE    EQU   ZXUNPACK-ZXMODSZ

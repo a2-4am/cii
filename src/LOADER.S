@@ -19,17 +19,21 @@ UNPACK      MAC
             JSR   SETKBD
             STA   KBDSTB
 *
-* FIGURE OUT SLOT NUMBER
+* Move menu dispatch table and unpacker into place
 *
-            LDX   #1          ;Mark the ProDOS global page as
-            STX   MEMTABL+$17  ; busy in the global page bitmap.
-            LDA   DEVNUM
-            STA   BOOTDV
-            BPL   :ISD1
-            INX
-:ISD1       STX   RPDRIV
-* AND #$70
-* STA *RPSLOT
+            JSR   :MOVEIT
+            DB    ZXMODULE&$FF
+            DB    {DZX0END-DZX0BEG+$FF}/$100
+            DA    DZX0BEG-{ZXMODULE&$FF}
+            DA    ZXMODULE&$FF00
+*
+* Move Disk Map module into place
+*
+            JSR   :MOVEIT
+            DB    TSMAP&$FF
+            DB    {TSMAPX7END-TSMAPX7BEG+$FF}/$100
+            DA    TSMAPX7BEG-{TSMAP&$FF}
+            DA    TSMAP&$FF00
 *
 * Unpack MAIN portion of program into place
 *
@@ -64,6 +68,18 @@ UNPACK      MAC
             STA   $C008
 *
 :SKIPIRQ    LDA   $C082
+*
+* FIGURE OUT SLOT NUMBER
+*
+            LDX   #1          ;Mark the ProDOS global page as
+            STX   MEMTABL+$17  ; busy in the global page bitmap.
+            LDA   DEVNUM
+            STA   BOOTDV
+            BPL   :ISD1
+            INX
+:ISD1       STX   RPDRIV
+* AND #$70
+* STA *RPSLOT
 *
 * CLEAR OUT PRODOS MEMORY BITMAP
 *
@@ -306,3 +322,36 @@ UNPACK      MAC
 *
 :RAMFLG     DB    $0
 *
+:MOVEIT
+            DUM   $F0
+:STACK      DS    2
+:PAGES      DS    1
+:SRC        DS    2
+:DST        DS    2
+            DEND
+            PLA
+            STA   :STACK
+            CLC
+            ADC   #6
+            TAY
+            PLA
+            STA   :STACK+1
+            ADC   #0
+            PHA
+            TYA
+            PHA
+            LDY   #6
+]PARMLOOP   LDA   (:STACK),Y
+            STA   :STACK,Y
+            DEY
+            BNE   ]PARMLOOP
+            TAY
+]COPYLOOP   LDA   (:SRC),Y
+            STA   (:DST),Y
+            INY
+            BNE   ]COPYLOOP
+            INC   :SRC+1
+            INC   :DST+1
+            DEC   :PAGES
+            BNE   ]COPYLOOP
+            RTS
