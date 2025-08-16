@@ -1,8 +1,3 @@
-            DS    $12
-*
-* 
-*
-
 *
 * Time out from code for some LOCAL LABELS
 *
@@ -42,7 +37,26 @@
             BNE   :DELAY
             RTS
 :COUNTL     DB    $00
-:COUNTH     DB    $00
+*
+*
+* TELL RWTS WHAT TRACK IT'S ON
+*
+FAKTRK      JSR   :DRINDEX
+            STA   $478,X      ;STORE IN TABLE
+            RTS
+*
+* CONVERT SLOT&DRIVE TO INDEX IN XREG
+*
+:DRINDEX    PHA
+            LDA   HSLOT       ;0SSS0000
+            LSR               ;00SSS000
+            ORA   HDRIVE      ;00SSS021
+            LSR               ;000SSS02->1
+            LSR               ;0000SSS0->2
+            ROR               ;20000SSS
+            TAX
+            PLA
+            RTS
 *
 *
 ************************************
@@ -137,6 +151,7 @@ CRIT2       PHP
             DB    $FF,$E4,$E8,$EC,$F0,$F4,$F8,$FC
 *
 *
+]SPOT       =     *
 :MIX1ST     DB    0,2,1,3
             DB    0,2,1,3
             DB    0,2,1,3
@@ -153,19 +168,25 @@ CRIT2       PHP
             DB    0,2,1,3
             DB    0,2,1,3
             DB    0,2,1,3
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
+]SPOT       =     *
 :MIX2ND     DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
             DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
             DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
             DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
+]SPOT       =     *
 :MIX3RD     DS    16,0
             DS    16,2
             DS    16,1
             DS    16,3
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 * WRITE TRANSLATE
 *
+            ERR   {*&$FF}-$C0
 :WRTRANS    DB    $96,$97,$9A,$9B,$9D,$9E,$9F,$A6
             DB    $A7,$AB,$AC,$AD,$AE,$AF,$B2,$B3
             DB    $B4,$B5,$B6,$B7,$B9,$BA,$BB,$BC
@@ -175,7 +196,9 @@ CRIT2       PHP
             DB    $ED,$EE,$EF,$F2,$F3,$F4,$F5,$F6
             DB    $F7,$F9,$FA,$FB,$FC,$FD,$FE,$FF
 *
+]SPOT       =     *
 :WAITBL1    DB    $01,$30,$28,$24,$20,$1E,$1D,$1C
+            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 *
 * ***** READ & POST-NIBBLIZE DATA *****
@@ -350,26 +373,6 @@ PHRWTS      PHP
 :SLOTABS    DB    $0
 *
 *
-* TELL RWTS WHAT TRACK IT'S ON
-*
-FAKTRK      JSR   :DRINDEX
-            STA   $478,X      ;STORE IN TABLE
-            RTS
-*
-* CONVERT SLOT&DRIVE TO INDEX IN XREG
-*
-:DRINDEX    PHA
-            LDA   HSLOT       ;0SSS0000
-            LSR               ;00SSS000
-            ORA   HDRIVE      ;00SSS021
-            LSR               ;000SSS02->1
-            LSR               ;0000SSS0->2
-            ROR               ;20000SSS
-            TAX
-            PLA
-            RTS
-*
-*
 * ********** WRITE TRACK ************
 *
 :ANRTS      RTS
@@ -491,7 +494,7 @@ FAKTRK      JSR   :DRINDEX
             DEY
             BNE   :WAITSNC
             ERR   {*&$FF00}-{]SPOT&$FF00}
-            JSR   :RDADDR     ;LOOK FOR
+            JSR   RDADDR      ;LOOK FOR
             BCS   :WRTRKX     ;SECTOR 0
             LDA   ADRSEC      ;1ST
             BNE   :WRTRKX
@@ -623,7 +626,7 @@ FAKTRK      JSR   :DRINDEX
 *
 * READ PROLOG
 *
-:RDADDR     LDY   #$FC        ;INIT ERROR
+RDADDR      LDY   #$FC        ;INIT ERROR
             STY   :ADRCNT     ;COUNT (772)
 :RDADPRO    INY
             BNE   :RDAPRO1    ;COUNT ERRORS
@@ -706,7 +709,7 @@ FAKTRK      JSR   :DRINDEX
 :VERTRK4    DEC   :TRIES      ;TRY (AGAIN).
             BMI   :VERBAD     ;TOO LATE...
 :VERTRK7    LDX   HSLOT
-            JSR   :RDADDR     ;READ ADDRESS
+            JSR   RDADDR      ;READ ADDRESS
             BCS   :VERTRK4
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
@@ -752,7 +755,7 @@ FAKTRK      JSR   :DRINDEX
             BMI   :RDTRK5
             JSR   :RESEEK
 :RDTRK7     LDX   HSLOT
-            JSR   :RDADDR     ;READ ADDRESS
+            JSR   RDADDR      ;READ ADDRESS
             BCS   :RDTRK4
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
@@ -1149,7 +1152,7 @@ FAKTRK      JSR   :DRINDEX
             BMI   :DORECAL    ;USED UP?
             JSR   :RESEEK
 :LOOKADR    LDX   HSLOT
-            JSR   :RDADDR     ;READ ADDRESS.
+            JSR   RDADDR      ;READ ADDRESS.
             BCS   :BADSEC     ;BAD?
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
@@ -1167,3 +1170,5 @@ FAKTRK      JSR   :DRINDEX
             JSR   :READ62     ;DO CORRECT
             BCS   :BADSEC     ;ROUTINE.
             BCC   :GOODOUT
+*
+:COUNTH     DB    $00

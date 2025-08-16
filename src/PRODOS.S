@@ -2251,7 +2251,7 @@ UNTPFX
             LDA   $C089,X     ;SELECT DRIVE
             LDX   HSLOT
             LDA   $C089,X     ;MOTOR ON
-            JSR   :RDADDR
+            JSR   RDADDR
             LDA   $C088,X
 :NOTDSK2    LDA   ADRVOL
             STA   PFX+5
