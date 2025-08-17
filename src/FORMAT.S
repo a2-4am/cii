@@ -170,7 +170,7 @@ SPLGO1      STA   $42
             STA   $44
             LDA   #>FILBUF
             STA   $45
-SPLGO       LDA   GODEV+2
+            LDA   GODEV+2
             CMP   #$D0
             BCC   :SKIP1
             LDA   $C08B
