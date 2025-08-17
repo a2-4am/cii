@@ -12,6 +12,7 @@
             PUT   ../build/VERIFY.VARS
             PUT   ../build/VIEW.VARS
             PUT   ../build/DISKMAP.VARS
+            PUT   ../build/UNDELETE.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
 *
@@ -93,6 +94,16 @@ TSMAPX7BEG
 :X7END
             ORG
 TSMAPX7END
+*
+UNDELETEX7BEG
+            ORG   UNDEL
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    UNDELEND
+            PUTBIN  ../build/UNDELETE.X7
+:X7END
+            ORG
+UNDELETEX7END
 *
 QUITX7BEG
             ORG   QUIT

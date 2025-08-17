@@ -35,6 +35,7 @@ MEMCPY      MAC
             >>>   MEMCPY,VERIFYX7BEG;VERIFYX7END;VERIFY
             >>>   MEMCPY,VIEWX7BEG;VIEWX7END;VIEW
             >>>   MEMCPY,TSMAPX7BEG;TSMAPX7END;TSMAP
+            >>>   MEMCPY,UNDELETEX7BEG;UNDELETEX7END;UNDEL
             >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
 *
 * Move unpacker (and menu dispatch table) into place

@@ -2503,3 +2503,5 @@ SETHIM      SEC
             STA   HIMEM
             RTS
 *
+BADNUM      DB    $0
+MAYBE       DB    $0

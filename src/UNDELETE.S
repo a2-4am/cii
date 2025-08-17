@@ -1,8 +1,17 @@
+            TYP   BIN
+            DSK   ../build/UNDELETE.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/DISKMAP.VARS
+            ORG   TSMAPEND
+UNDEL       
+            ORG   *+3
+
 ************************************
 *        UNDELETE FILES            *
 ************************************
 *
-UNDEL       JSR   COMTRE
+            JSR   COMTRE
             LDY   #0
             STY   DELFLG
             INY
@@ -185,6 +194,5 @@ UNDEL       JSR   COMTRE
 *
 :TEMP       DB    $0
 :COUNT      DB    $0
-BADNUM      DB    $0
-MAYBE       DB    $0
-
+*
+UNDELEND

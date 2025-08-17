@@ -2,8 +2,8 @@
             DSK   ../build/QUIT.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/DISKMAP.VARS
-            ORG   TSMAPEND
+            PUT   ../build/UNDELETE.VARS
+            ORG   UNDELEND
 QUIT        
             ORG   *+3
 

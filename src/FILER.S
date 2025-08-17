@@ -32,7 +32,7 @@
 *            PUT   VIEW
 *            PUT   DISKMAP
             PUT   CHANGEBOOT
-            PUT   UNDELETE
+*            PUT   UNDELETE
             PUT   MKDIR
             PUT   PRINTER
 *            PUT   QUIT
