@@ -1276,3 +1276,149 @@ ZIPDOS      LDY   #$00
             LDA   #>DATA
             STA   RPAGE
             JMP   DORWTS
+*
+*
+*
+*
+* *FIXSUB IS CALLED BY LOCK/UNLOCK,
+* RENAME AND ALPHABETIZE TO MAKE
+* THE NEEDED CHANGES TO THE SUBDIR
+* HEADER. HEADER NAME, ACCESS AND
+* PARENT POINTERS ARE UPDATED.
+*
+FIXSUB      JSR   SWPCHK
+            BIT   DOSNOW
+            BPL   :FXSB1      ;NOT PRODOS
+*
+            LDA   #0
+            STA   CURR
+:FXLOOP     JSR   CURPNT
+            JSR   :FIXSUB
+            INC   CURR
+            LDA   CURR
+            CMP   NACTIV
+            BNE   :FXLOOP
+*
+:FXSB1      JMP   WRCAT1
+*
+:OUT        RTS
+:FIXSUB     JSR   DIR?
+            BCS   :OUT        ;NOT SUBDIR
+            LDA   #>DATA      ;TEMP BUFFER
+            STA   POINT2+1
+            STA   RPAGE
+            LDA   #4
+            STA   POINT2
+*
+* READ 1ST BLOCK OF SUBDIR
+*
+            LDY   #$11
+            LDA   (POINT),Y
+            STA   BLKNUM
+            INY
+            LDA   (POINT),Y
+            STA   BLKNUM+1
+            JSR   RDBLK
+            BCS   :OUT
+*
+* COPY FILENAME TO HEADER NAME
+*
+            LDY   #$0F
+:FSLP1      LDA   (POINT),Y
+            STA   (POINT2),Y
+            DEY
+            BNE   :FSLP1
+            LDA   (POINT),Y
+            AND   #$0F
+            ORA   #$E0
+            STA   (POINT2),Y
+*
+* DON'T NEED TO CHANGE ACCESS BYTE
+* BECAUSE PRODOS DOESN'T.
+*
+* LDY #$1E
+* LDA (*POINT),Y
+* STA (*POINT2),Y
+*
+* SET UP PARENT POINTERS
+*
+            LDA   POINT+1
+            AND   #$FE
+            CMP   #>SDIR      ;14
+            BNE   :FS2        ;NOT 1ST
+            LDA   DIRBLK
+            LDX   DIRBLK+1
+            JMP   :FS3
+*
+:FS2        SEC
+            SBC   #$2
+            STA   TEMP+1
+            LDA   #0
+            STA   TEMP
+            LDY   #3
+            LDA   (TEMP),Y    ;PARENT BLK HI
+            TAX
+            DEY
+            LDA   (TEMP),Y    ;PARENT BLK LO
+:FS3        LDY   #$23
+            STA   (POINT2),Y
+            INY
+            TXA
+            STA   (POINT2),Y
+*
+* FIGURE OUT PARENT ENTRY NUMBER
+*
+            LDY   #$26
+            LDA   (POINT2),Y  ;ENTRY LENGTH
+            STA   TEMP
+*
+            LDA   POINT
+            LDX   #1
+:FS4        CMP   #4
+            BEQ   :FS5
+            SEC
+            SBC   TEMP
+            INX
+            BNE   :FS4        ;ALWAYS
+*
+:FS5        TXA
+            DEY
+            STA   (POINT2),Y
+*
+* WRITE SUBDIR BLOCK BACK
+*
+            JMP   WTBLK
+*
+*
+COMTRE      JSR   DODEVP
+            JSR   TREEA
+            JSR   COMH00
+CT1         BIT   DOSNOW
+            BPL   CTOUT       ;DOS 3.3
+            LDA   RRTN
+            BEQ   CTOUT       ;NO ERROR
+            CMP   #$52
+            BEQ   CTERR1
+            CMP   #$40
+            BCC   CTERR       ;I/O ERROR
+CTOUT       RTS
+*
+* BLOCK 2 ERROR
+*
+CTERR       JMP   BLK2ER
+*
+* NOT A DOS OR PRODOS DISK
+*
+CTERR1      JMP   WDERR
+*
+COMHDR      JSR   DODEVP
+            JSR   SETA
+            JSR   COMH00
+            LDA   CHOICE
+            CMP   #MVERIFY    ;VERIFY DISK?
+            BNE   CT1         ;NO
+            RTS
+
+COMH00      JSR   TOP1
+            JMP   PRVNM
+OPTCHS      DB    $0

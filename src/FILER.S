@@ -26,7 +26,7 @@
 *            PUT   CATALOG
 *            PUT   DELETE
             PUT   LOCKRENAME
-            PUT   ALPHABETIZE
+*            PUT   ALPHABETIZE
 *            PUT   FORMAT
 *            PUT   VERIFY
 *            PUT   VIEW
