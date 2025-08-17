@@ -2,8 +2,8 @@
             DSK   ../build/DISKMAP.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/VERIFY.VARS
-            ORG   VERIFYEND
+            PUT   ../build/VIEW.VARS
+            ORG   VIEWEND
 TSMAP
             ORG   *+3
 

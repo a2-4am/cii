@@ -28,7 +28,7 @@
             PUT   ALPHABETIZE
             PUT   FORMAT
 *            PUT   VERIFY
-            PUT   VIEW
+*            PUT   VIEW
 *            PUT   DISKMAP
             PUT   CHANGEBOOT
             PUT   UNDELETE

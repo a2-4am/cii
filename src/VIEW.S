@@ -1,8 +1,17 @@
+            TYP   BIN
+            DSK   ../build/VIEW.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/VERIFY.VARS
+            ORG   VERIFYEND
+VIEW        
+            ORG   *+3
+
 ************************************
 *           VIEW FILES             *
 ************************************
 *
-VIEW        LDX   #$04        ;VALUES OR TEXT
+            LDX   #$04        ;VALUES OR TEXT
             JSR   CHOOZ1
             STA   :T1V0
             JSR   COMTRE
@@ -238,4 +247,5 @@ VIEW        LDX   #$04        ;VALUES OR TEXT
 :TEMPV      DB    $0
 :DONE       DB    $0
 :RDFLAG     DB    $0
-
+*
+VIEWEND
