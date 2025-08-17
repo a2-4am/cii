@@ -1,9 +1,18 @@
+            TYP   BIN
+            DSK   ../build/QUIT.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/DISKMAP.VARS
+            ORG   TSMAPEND
+QUIT        
+            ORG   *+3
+
 ***********************************
 *            QUIT                 *
 ***********************************
 *
 *
-QUIT        JSR   TOP1
+            JSR   TOP1
 *
             LDY   #0
             TYA
@@ -64,3 +73,5 @@ QUIT        JSR   TOP1
 :QUTLST     DB    $4
             DB    $0,$00,$00,$0,$00,$00
 *
+QUITEND
+            ORG

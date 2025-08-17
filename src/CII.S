@@ -7,6 +7,7 @@
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DISKMAP.VARS
+            PUT   ../build/QUIT.VARS
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
@@ -30,6 +31,16 @@ TSMAPX7BEG
 :X7END
             ORG
 TSMAPX7END
+*
+QUITX7BEG
+            ORG   QUIT
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    QUITEND
+            PUTBIN  ../build/QUIT.X7
+:X7END
+            ORG
+QUITX7END
 *
 DZX0BEG
             ORG   ZXMODULE

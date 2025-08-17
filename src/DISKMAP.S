@@ -408,3 +408,4 @@ TSMAP
 :VCOUNT     DB    $0
 *
 TSMAPEND
+            ORG

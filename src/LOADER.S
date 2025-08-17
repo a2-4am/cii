@@ -9,6 +9,13 @@ UNPACK      MAC
             >>>   COPYADDR,]2;ZXDST
             JSR   ZXUNPACK
             <<<
+MEMCPY      MAC
+            JSR   DOMEMCPY
+            DB    $100-{{]2-]1}&$FF}
+            DB    {]2-]1+$FF}/$100
+            DA    ]1-{$100-{{]2-]1}&$FF}}
+            DA    ]3-{$100-{{]2-]1}&$FF}}
+            <<<
 *
 :LOCATE     CLD
             CLI
@@ -19,21 +26,18 @@ UNPACK      MAC
             JSR   SETKBD
             STA   KBDSTB
 *
-* Move menu dispatch table and unpacker into place
-*
-            JSR   :MOVEIT
-            DB    ZXMODULE&$FF
-            DB    {DZX0END-DZX0BEG+$FF}/$100
-            DA    DZX0BEG-{ZXMODULE&$FF}
-            DA    ZXMODULE&$FF00
 *
 * Move Disk Map module into place
 *
-            JSR   :MOVEIT
-            DB    TSMAP&$FF
-            DB    {TSMAPX7END-TSMAPX7BEG+$FF}/$100
-            DA    TSMAPX7BEG-{TSMAP&$FF}
-            DA    TSMAP&$FF00
+            >>>   MEMCPY,TSMAPX7BEG;TSMAPX7END;TSMAP
+*
+* Move Quit module into place
+*
+            >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
+*
+* Move unpacker (and menu dispatch table) into place
+*
+            >>>   MEMCPY,DZX0BEG;DZX0END;ZXMODULE
 *
 * Unpack MAIN portion of program into place
 *
@@ -322,7 +326,7 @@ UNPACK      MAC
 *
 :RAMFLG     DB    $0
 *
-:MOVEIT
+DOMEMCPY
             DUM   $F0
 :STACK      DS    2
 :PAGES      DS    1

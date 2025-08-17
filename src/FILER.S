@@ -34,7 +34,7 @@
             PUT   UNDELETE
             PUT   MKDIR
             PUT   PRINTER
-            PUT   QUIT
+*            PUT   QUIT
             PUT   MENU
             DUM   *
 MAINEND     DB    0           ;where image of main program ends
