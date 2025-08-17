@@ -27,7 +27,7 @@
             PUT   LOCKRENAME
             PUT   ALPHABETIZE
             PUT   FORMAT
-            PUT   VERIFY
+*            PUT   VERIFY
             PUT   VIEW
 *            PUT   DISKMAP
             PUT   CHANGEBOOT

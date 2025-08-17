@@ -1,8 +1,17 @@
+            TYP   BIN
+            DSK   ../build/VERIFY.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/CATALOG.VARS
+            ORG   CATALOGEND
+VERIFY
+            ORG   *+3
+
 *************************************
 *           VERIFY OPTIONS          *
 *************************************
 *
-VERIFY      LDX   #$03
+            LDX   #$03
             JSR   CHOOZ1      ;SELECT VERIFY
             STA   :TEMP       ;OPTION.
             CMP   #1
@@ -350,4 +359,4 @@ VERIFY      LDX   #$03
 :DIVER      DB    $3E,$05
 *
 *
-
+VERIFYEND

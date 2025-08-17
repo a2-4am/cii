@@ -8,6 +8,7 @@
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
+            PUT   ../build/VERIFY.VARS
             PUT   ../build/DISKMAP.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
@@ -50,6 +51,16 @@ CATALOGX7BEG
 :X7END
             ORG
 CATALOGX7END
+*
+VERIFYX7BEG
+            ORG   VERIFY
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    VERIFYEND
+            PUTBIN  ../build/VERIFY.X7
+:X7END
+            ORG
+VERIFYX7END
 *
 TSMAPX7BEG
             ORG   TSMAP
