@@ -8,6 +8,7 @@
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
+            PUT   ../build/DELETE.VARS
             PUT   ../build/VERIFY.VARS
             PUT   ../build/VIEW.VARS
             PUT   ../build/DISKMAP.VARS
@@ -52,6 +53,16 @@ CATALOGX7BEG
 :X7END
             ORG
 CATALOGX7END
+*
+DELETEX7BEG
+            ORG   DELETE
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DELETEEND
+            PUTBIN  ../build/DELETE.X7
+:X7END
+            ORG
+DELETEX7END
 *
 VERIFYX7BEG
             ORG   VERIFY

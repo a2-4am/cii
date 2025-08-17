@@ -2,8 +2,8 @@
             DSK   ../build/VERIFY.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/CATALOG.VARS
-            ORG   CATALOGEND
+            PUT   ../build/DELETE.VARS
+            ORG   DELETEEND
 VERIFY
             ORG   *+3
 

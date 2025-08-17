@@ -15,6 +15,7 @@
             PUT   FILEACCESS
             PUT   FILELIST
             PUT   DIRTREE
+            PUT   D1FILE
             PUT   FMTFIX
             PUT   LINEINPUT
             PUT   IO
@@ -23,7 +24,7 @@
             PUT   BOOTSEC.PRO
 *            PUT   COPY
 *            PUT   CATALOG
-            PUT   DELETE
+*            PUT   DELETE
             PUT   LOCKRENAME
             PUT   ALPHABETIZE
             PUT   FORMAT

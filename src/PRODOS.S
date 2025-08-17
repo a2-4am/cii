@@ -2027,6 +2027,13 @@ DODVS1      JSR   HOME
             STX   CURDVS
             RTS
 *
+DOWAIT      LDX   #$03
+:WAITLP     LDA   #$C4
+            JSR   WAIT
+            DEX
+            BNE   :WAITLP
+            RTS
+*
 *
 *
 DODEV       STA   CURDEV
