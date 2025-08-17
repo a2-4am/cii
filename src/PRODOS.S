@@ -2221,7 +2221,7 @@ TREEA       JSR   DOSTYP
             LDA   #>APFX
             STA   PFXADR+1
             LDA   ACURR
-            JSR   DOTREE
+            JSR   JDOTREE
             BCS   SETA        ;I/O ERROR
             STA   ACURR
             RTS
@@ -2298,7 +2298,7 @@ TREEP       LDA   #0
             LDA   #>PPFX
             STA   PFXADR+1
             LDA   PCURR
-            JSR   DOTREE
+            JSR   JDOTREE
             BCS   SETP
             STA   PCURR
             RTS
@@ -2328,7 +2328,7 @@ TREES       LDA   #$FF
             LDA   #>SPFX
             STA   PFXADR+1
             LDA   SCURR
-            JSR   DOTREE
+            JSR   JDOTREE
             BCS   SETS
             STA   SCURR
             RTS

@@ -3,7 +3,8 @@
             PUT   VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/MM.VARS
-            ORG   MAINEND
+            PUT   ../build/DOTREE.VARS
+            ORG   DOTREEEND
 COPY
             ORG   *+3
 *

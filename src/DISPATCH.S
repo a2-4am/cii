@@ -1,7 +1,11 @@
 *
 * Dispatch table for main menu
+* and jump vectors for other
+* modularized entry points
 *
-*label in VARS
+*labels in VARS
+*JDOTREE
+            JMP   DOTREE
 *MENUTBL
             DW    COPY
             DW    CATALOG

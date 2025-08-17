@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DOTREE.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELETE.VARS
@@ -38,6 +39,16 @@ MMXEND
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
+*
+DOTREEX7BEG
+            ORG   DOTREE
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DOTREEEND
+            PUTBIN  ../build/DOTREE.X7
+:X7END
+            ORG
+DOTREEX7END
 *
 COPYX7BEG
             ORG   COPY
@@ -162,7 +173,7 @@ QUITX7END
 DZX0BEG
             ORG   ZXMODULE
             PUT   DZX0TURBO
-            PUT   MENUTBL
+            PUT   DISPATCH
             ERR   *-$BF00
             ORG
 DZX0END

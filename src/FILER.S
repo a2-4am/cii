@@ -14,7 +14,7 @@
             PUT   PHRWTS      ;Page-aligned, timing-critical disk code
             PUT   FILEACCESS
             PUT   FILELIST
-            PUT   DIRTREE
+*            PUT   DOTREE
             PUT   D1FILE
             PUT   FMTFIX
             PUT   LINEINPUT
