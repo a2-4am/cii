@@ -288,9 +288,6 @@ MEMCPY      MAC
             STA   $3F3
             EOR   #$A5
             STA   $3F4
-            JSR   INIT
-            LDA   #0
-            JSR   VLEFT
 *
             LDA   MACHID
             LSR
