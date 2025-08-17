@@ -11,7 +11,7 @@
             DB    $B,$3,$A,$2,$9,$1,$8,$F
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
-            PUT   DISKACCESS  ;Page-aligned, timing-critical disk code
+            PUT   PHRWTS      ;Page-aligned, timing-critical disk code
             PUT   FILEACCESS
             PUT   FILELIST
             PUT   DIRTREE
