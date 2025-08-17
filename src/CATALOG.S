@@ -1,8 +1,17 @@
+            TYP   BIN
+            DSK   ../build/CATALOG.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/COPY.VARS
+            ORG   COPYEND
+CATALOG
+            ORG   *+3
+
 **********************************
 *          CATALOG DISK          *
 **********************************
 *
-CATLOG      LDX   #$01        ;SELECT OPTION
+            LDX   #$01        ;SELECT OPTION
             JSR   CHOOZ1
             STA   :TYPE
             CMP   #$02
@@ -291,4 +300,4 @@ CATLOG      LDX   #$01        ;SELECT OPTION
             PLA
             JSR   HEXDC2
             JMP   PRT5LJ
-
+CATALOGEND

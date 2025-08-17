@@ -7,6 +7,7 @@
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
+            PUT   ../build/CATALOG.VARS
             PUT   ../build/DISKMAP.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
@@ -39,6 +40,16 @@ COPYX7BEG
 :X7END
             ORG
 COPYX7END
+*
+CATALOGX7BEG
+            ORG   CATALOG
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    CATALOGEND
+            PUTBIN  ../build/CATALOG.X7
+:X7END
+            ORG
+CATALOGX7END
 *
 TSMAPX7BEG
             ORG   TSMAP

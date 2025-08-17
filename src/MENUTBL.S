@@ -4,7 +4,7 @@
 *label in VARS
 *MENUTBL
             DW    COPY
-            DW    CATLOG
+            DW    CATALOG
             DW    DELETE
             DW    LOCK
             DW    RENAME

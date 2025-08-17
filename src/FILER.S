@@ -22,7 +22,7 @@
             PUT   PRODOS
             PUT   BOOTSEC.PRO
 *            PUT   COPY
-            PUT   CATALOG
+*            PUT   CATALOG
             PUT   DELETE
             PUT   LOCKRENAME
             PUT   ALPHABETIZE

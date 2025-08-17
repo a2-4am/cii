@@ -2,8 +2,8 @@
             DSK   ../build/DISKMAP.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/COPY.VARS
-            ORG   COPYEND
+            PUT   ../build/CATALOG.VARS
+            ORG   CATALOGEND
 TSMAP
             ORG   *+3
 
