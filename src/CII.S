@@ -15,6 +15,7 @@
             PUT   ../build/DISKMAP.VARS
             PUT   ../build/CHANGEBOOT.VARS
             PUT   ../build/UNDELETE.VARS
+            PUT   ../build/MAKESUB.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
 *
@@ -126,6 +127,16 @@ UNDELETEX7BEG
 :X7END
             ORG
 UNDELETEX7END
+*
+MAKESUBX7BEG
+            ORG   MAKESUB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    MAKESUBEND
+            PUTBIN  ../build/MAKESUB.X7
+:X7END
+            ORG
+MAKESUBX7END
 *
 QUITX7BEG
             ORG   QUIT

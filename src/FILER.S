@@ -33,7 +33,7 @@
 *            PUT   DISKMAP
 *            PUT   CHANGEBOOT
 *            PUT   UNDELETE
-            PUT   MKDIR
+*            PUT   MKDIR
             PUT   PRINTER
 *            PUT   QUIT
             PUT   MENU

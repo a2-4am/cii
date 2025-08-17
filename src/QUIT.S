@@ -2,8 +2,8 @@
             DSK   ../build/QUIT.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/UNDELETE.VARS
-            ORG   UNDELEND
+            PUT   ../build/MAKESUB.VARS
+            ORG   MAKESUBEND
 QUIT        
             ORG   *+3
 

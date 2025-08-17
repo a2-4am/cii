@@ -1,8 +1,17 @@
+            TYP   BIN
+            DSK   ../build/MAKESUB.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/UNDELETE.VARS
+            ORG   UNDELEND
+MAKESUB
+            ORG   *+3
+
 ************************************
 *           MAKE DIRECTORY         *
 ************************************
 *
-MAKEDR      JSR   COMTRE
+            JSR   COMTRE
             BIT   DOSNOW
             BMI   :MK0
             JMP   NODOS3
@@ -36,4 +45,5 @@ MAKEDR      JSR   COMTRE
             JMP   PRESS
 :OUT        RTS
 :ERROUT     JMP   ERROUT
-
+*
+MAKESUBEND

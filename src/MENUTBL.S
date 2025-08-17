@@ -15,7 +15,7 @@
             DW    TSMAP
             DW    BOOTPG
             DW    UNDEL
-            DW    MAKEDR
+            DW    MAKESUB
             DW    SETPRINT
             DW    QUIT
             ERR   *-MENUTBL-MENUTSZ
