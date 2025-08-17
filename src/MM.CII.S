@@ -1,8 +1,10 @@
-            TYP   REL
+            TYP   BIN
             DSK   ../build/MM.O
             PUT   VARS
             ORG   MMSPOT
 MMBEG
+RAMDCHK
+            ORG   *+3
 *
 JSLOP       EQU   $22         ;JSL opcode
 BCSOP       EQU   $B0         ;BCS opcode
@@ -34,8 +36,8 @@ BCSOP       EQU   $B0         ;BCS opcode
 *
 * C2+ MM entry points & parameters:
 *
+            JMP   RAMDCHK2    ;Jump to RAMdisk check
 MM          JMP   MM2         ;Jump to memory manager
-RAMDCHK     JMP   RAMDCHK2    ;Jump to RAMdisk check
 *
 MMCMD       DS    1           ;0Open,1Read,2Write,3Close,4Check
 MMREQCNT    DS    1           ;# of PAGES requested to read or write
@@ -807,7 +809,5 @@ RAMDCHK2    STX   :XTEMP2
 :XTEMP2     DS    1
 :YTEMP2     DS    1
 *
-            DUM   *
-MMEND       DB    0
-            DEND
-
+MMEND
+            ORG

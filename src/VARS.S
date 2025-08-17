@@ -177,6 +177,7 @@ ACURR       =     $E6
 PCURR       =     $E7
 SCURR       =     $E8
 TMPPTR      =     $E9
+* ZXMODULE uses $EA,$EB,$EC,$ED,$EE,$EF
 *
 * RWTS PARAMETERS
 *
@@ -190,6 +191,7 @@ RCMND       =     $F6
 RRTN        =     $F7
 RPSLOT      =     $F8
 RPDRIV      =     $F9
+* ZXMODULE uses $FA,$FB,$FC,$FD,$FE
 HSLOT       =     $F0
 HDRIVE      =     $F1
 *

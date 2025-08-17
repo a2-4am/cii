@@ -253,14 +253,13 @@ MEMCPY      MAC
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
-            >>>   UNPACK,MMXEND;MMSPOT+MMEND-MMBEG
-            LDA   #MMSPOT     ;source start.
+            LDA   #MMXBEG     ;source start.
             STA   A1L
-            LDA   #>MMSPOT
+            LDA   #>MMXBEG
             STA   A1H
-            LDA   #MMSPOT+MMEND-MMBEG  ;source end (+1, but oh well)
+            LDA   #MMXEND     ;source end (+1, but oh well)
             STA   A2L
-            LDA   #>MMSPOT+MMEND-MMBEG
+            LDA   #>MMXEND
             STA   A2H
             LDA   #AUXMM      ;destination
             STA   A4L

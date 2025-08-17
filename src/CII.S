@@ -17,7 +17,14 @@
             PUTBIN  ../build/SETCLOCK.X
 CLKXEND
 *
-            PUTBIN  ../build/MM.X
+MMXBEG
+            ORG   MMSPOT
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    MMEND
+            PUTBIN  ../build/MM.X7
+:X7END
+            ORG
 MMXEND
 *
             PUTBIN  ../build/FILER.X

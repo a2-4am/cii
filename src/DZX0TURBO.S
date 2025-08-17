@@ -8,10 +8,12 @@
 *
 * More on ZX0 format: https://github.com/einar-saukas/ZX0
 *
-            DUM   $F0
+            DUM   $EA
 ZXSRC       DS    2
 ZXDST       DS    2
 :OFFSET     DS    2
+            DEND
+            DUM   $FA
 :HL         DS    2
 :TMPA       DS    1
 :TMPB       DS    1
