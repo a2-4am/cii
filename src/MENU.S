@@ -140,22 +140,20 @@ MENU        LDA   #4
             RTS
 :OPTNUM     DB    $0
 *
-* Menus: (USE THE NAMED IDS LISTED IN VARS)
+* Menus: (USE THE NAMED IDS LISTED IN MESSAGES)
 *  0 Main
 *  1 Catalog
 *  2 Delete
 *  3 Verify
 *  4 View
-*  5 (unused)
-*  6 (unused)
-*  7 Format
-*  8 Copy
-*  9 Rename
+*  5 Format
+*  6 Copy
+*  7 Rename
 *
-*  Menu:          0       1          2         3        4       5   6   7        8         9
-LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,$00,$00,MDOS33+1,MCOPDOS+1,MVOLUME+1
-FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,$00,$00,MPRODOS,MCOPFILE,MFILES
-CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,$00,$00,MPRODOS,MCOPFILE,MFILES
+*  Menu:          0       1          2         3        4       5        6         7
+LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS+1,MVOLUME+1
+FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,MPRODOS,MCOPFILE,MFILES
+CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,MPRODOS,MCOPFILE,MFILES
 *
 *   SEE DISK INFO
 *

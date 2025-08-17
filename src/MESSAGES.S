@@ -4,10 +4,25 @@
 *                                 *
 ***********************************
 *
-* (Menus 5 & 6 unused)
+* Menu IDs
 *
             DUM   0
-* top-level menu items (must be first)
+UMAIN       DS    1
+UCATALOG    DS    1
+UDELETE     DS    1
+UVERIFY     DS    1
+UVIEW       DS    1
+UFORMAT     DS    1
+UCOPY       DS    1
+URENAME     DS    1
+            DEND
+*
+* Message IDs
+* Some are opaque, others are enumerated.
+* Read the comments!
+*
+            DUM   0
+* message IDs for top-level menu items (must be first)
 MCOPY       DS    1
 MCATALOG    DS    1
 MDELETE     DS    1
@@ -24,14 +39,19 @@ MMKDIR      DS    1
 MNEWINFO    DS    1
 MQUIT       DS    1
 *
+* Message IDs used by each submenu are listed in
+* the LAST, FIRST, and CHOICE tables in MENUS.
+* Each submenu's messages are enumerated within
+* the submenu. Only reorder them as a group.
+*
 * FORMAT submenu
 *
-MPRODOS     DS    1           ;0F MENU 7
+MPRODOS     DS    1           ;0F MENU 5 (was 7)
 MDOS33      DS    1
 *
 * COPY submenu
 *
-MCOPFILE    DS    1           ;11 MENU 8
+MCOPFILE    DS    1           ;11 MENU 6 (was 8)
 MCOPDISK    DS    1
 MDSKWFMT    DS    1
 MCOPDOS     DS    1
@@ -62,13 +82,16 @@ MDELDOS     DS    1
 *
 * RENAME submenu
 *
-MFILES      DS    1           ;21 MENU 9
+MFILES      DS    1           ;21 MENU 7 (was 9)
 MVOLUME     DS    1           ;22
 *
 MTOOLONG    DS    1           ;23
 MNOTSUB     DS    1           ;24
+* READ and WRITE messages are enumerated
+* (WRITE must be READ+1)
 MREAD       DS    1           ;25
 MWRITE      DS    1           ;26
+*
 MBLANK4     DS    1           ;27
 MBLANK3     DS    1           ;28
 MTOOLNG0    DS    1           ;now 29
@@ -76,6 +99,7 @@ MSLOT       DS    1           ;2A
 MPRESS1     DS    1           ;2B
 MFILE       DS    1           ;2C
 *
+* PSTATE messages are enumerated
 MPSTATE0    DS    1           ;2D
 MPSTATE1    DS    1           ;2E
 MPSTATE2    DS    1           ;2F
@@ -114,7 +138,10 @@ MERRENUM    DS    1           ;now 41
             DS    1
             DS    1
             DEND
-
+*
+* String pointers. Keep this in sync
+* with the message IDs listed above.
+*
 MESSAG      DW    :COPY       ;0 MENU 0
             DW    :CATALOG
             DW    :DELETE
@@ -131,10 +158,10 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :NEWINFO
             DW    :QUIT
 *
-            DW    :PRODOS     ;0F MENU 7
+            DW    :PRODOS     ;0F MENU 5 (was 7)
             DW    :DOS33
 *
-            DW    :FILES      ;11 MENU 0
+            DW    :FILES      ;11 MENU 6 (was 8)
             DW    :DISK
             DW    :DSKWFMT
             DW    :DOS
@@ -155,7 +182,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :DISK
             DW    :DOS
 *
-            DW    :FILES      ;21 MENU 9
+            DW    :FILES      ;21 MENU 7 (was 9)
             DW    :VOLUME     ;22
 *
             DW    :TOOLONG    ;23
