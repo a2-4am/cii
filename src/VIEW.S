@@ -11,7 +11,7 @@ VIEW
 *           VIEW FILES             *
 ************************************
 *
-            LDX   #$04        ;VALUES OR TEXT
+            LDX   #UVIEW      ;VALUES OR TEXT
             JSR   CHOOZ1
             STA   :T1V0
             JSR   COMTRE

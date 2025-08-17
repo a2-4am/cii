@@ -11,7 +11,7 @@ CATALOG
 *          CATALOG DISK          *
 **********************************
 *
-            LDX   #$01        ;SELECT OPTION
+            LDX   #UCATALOG   ;SELECT OPTION
             JSR   CHOOZ1
             STA   :TYPE
             CMP   #$02

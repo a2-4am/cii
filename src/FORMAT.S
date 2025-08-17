@@ -2,7 +2,7 @@
 *          FORMAT DISK         *
 ********************************
 *
-FORMAT      LDX   #7
+FORMAT      LDX   #UFORMAT
             JSR   CHOOZ1      ;DOS OR PRODOS
             CMP   #0
             BEQ   :FPRODOS

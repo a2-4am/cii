@@ -140,7 +140,7 @@ MENU        LDA   #4
             RTS
 :OPTNUM     DB    $0
 *
-* Menus:
+* Menus: (USE THE NAMED IDS LISTED IN VARS)
 *  0 Main
 *  1 Catalog
 *  2 Delete

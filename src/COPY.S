@@ -11,7 +11,7 @@ COPY
 *             COPY             *
 ********************************
 *
-            LDX   #$08        ;Which COPY option?
+            LDX   #UCOPY      ;Which COPY option?
             JSR   CHOOZ1
             STA   :COPYOPT
             LDA   #>TOPMEM

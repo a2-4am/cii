@@ -5,7 +5,7 @@
 *
 RENAME      LDA   #$03
             STA   STATE
-            LDX   #9
+            LDX   #URENAME
             JSR   CHOOZ1
             CMP   #0
             BEQ   REN2        ;RENAME FILES

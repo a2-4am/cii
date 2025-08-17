@@ -370,6 +370,20 @@ TRANSERR    EQU   $82         ;Not all requested bytes were transferred.
 HNDERR      EQU   $83         ;Handle in zero page invalid (overwritten!)
 NOMEMERR    EQU   $84         ;No memory found in OPEN call.
 *
+* Menu IDs
+            DUM   0
+UMAIN       DS    1
+UCATALOG    DS    1
+UDELETE     DS    1
+UVERIFY     DS    1
+UVIEW       DS    1
+            DS    1
+            DS    1
+UFORMAT     DS    1
+UCOPY       DS    1
+URENAME     DS    1
+            DEND
+*
 * Things that live at the top of main memory,
 * just below ProDOS.
 * Defined here because *dependencies*.

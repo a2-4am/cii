@@ -2,7 +2,7 @@
 *         DELETE              *
 *******************************
 *
-DELETE      LDX   #$02
+DELETE      LDX   #UDELETE
             JSR   CHOOZ1      ;DOS, DISK,
             STA   :TEMP       ;OR FILES?
             CMP   #0

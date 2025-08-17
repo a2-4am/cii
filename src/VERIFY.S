@@ -11,7 +11,7 @@ VERIFY
 *           VERIFY OPTIONS          *
 *************************************
 *
-            LDX   #$03
+            LDX   #UVERIFY
             JSR   CHOOZ1      ;SELECT VERIFY
             STA   :TEMP       ;OPTION.
             CMP   #1
