@@ -31,7 +31,7 @@
 *            PUT   VERIFY
 *            PUT   VIEW
 *            PUT   DISKMAP
-            PUT   CHANGEBOOT
+*            PUT   CHANGEBOOT
 *            PUT   UNDELETE
             PUT   MKDIR
             PUT   PRINTER

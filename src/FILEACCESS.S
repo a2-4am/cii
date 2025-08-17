@@ -326,6 +326,29 @@ DOS?        LDX   #0
             DB    $8D,$0
             JMP   PRESS
 *
+CHKDOS      LDA   #2
+            STA   TEMP
+:CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
+            CMP   :DOSPAT,X   ;TO VERIFY
+            SEC
+            BNE   :NO         ;DOS IS THERE
+            INX
+            INY
+            DEC   TEMP
+            BPL   :CHECKLP
+            CLC
+:NO         RTS
+*
+:DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
+*
+PUTSEC      STX   RSECTR      ;SET SECTOR
+            LDA   #>DATA
+            STA   RPAGE       ;SET ADDR
+            LDA   #$01
+            STA   RTRACK      ;SET TRACK
+            STA   RCMND       ;SET COMMAND
+            RTS
+*
 * INSERT SOURCE OR DESTINATION DISKS
 *
 *

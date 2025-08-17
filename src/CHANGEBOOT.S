@@ -1,8 +1,17 @@
-************************************
+            TYP   BIN
+            DSK   ../build/CHANGEBOOT.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/DISKMAP.VARS
+            ORG   TSMAPEND
+BOOTPG      
+            ORG   *+3
+
+***********************************
 *     CHANGE BOOTING PROGRAM       *
 ************************************
 *
-BOOTPG      JSR   COMHDR
+            JSR   COMHDR
             LDA   #$04
             STA   STATE
             BIT   DOSNOW
@@ -58,14 +67,6 @@ BOOTPG      JSR   COMHDR
 :NAMESEC    DB    $0
 :T0SECT     DB    $0
 *
-PUTSEC      STX   RSECTR      ;SET SECTOR
-            LDA   #>DATA
-            STA   RPAGE       ;SET ADDR
-            LDA   #$01
-            STA   RTRACK      ;SET TRACK
-            STA   RCMND       ;SET COMMAND
-            RTS
-*
 :CHKWRAPR   TXA
             CLC
             ADC   #4          ;9->D,7->B
@@ -74,19 +75,6 @@ PUTSEC      STX   RSECTR      ;SET SECTOR
             JSR   DORWTS      ;DOS SECTOR
             LDX   #0
             LDY   #$FD
-CHKDOS      LDA   #2
-            STA   TEMP
-:CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
-            CMP   :DOSPAT,X   ;TO VERIFY
-            SEC
-            BNE   :NO         ;DOS IS THERE
-            INX
-            INY
-            DEC   TEMP
-            BPL   :CHECKLP
-            CLC
-:NO         RTS
+            JMP   CHKDOS
 *
-:DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
-*
-
+BOOTPGEND
