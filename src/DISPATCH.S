@@ -4,6 +4,8 @@
 * modularized entry points
 *
 *labels in VARS
+*JD1FILE
+            JMP   D1FILE
 *JDOTREE
             JMP   DOTREE
 *MENUTBL

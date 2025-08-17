@@ -15,7 +15,7 @@
             PUT   FILEACCESS
             PUT   FILELIST
 *            PUT   DOTREE
-            PUT   D1FILE
+*            PUT   D1FILE
             PUT   FMTFIX
             PUT   LINEINPUT
             PUT   IO

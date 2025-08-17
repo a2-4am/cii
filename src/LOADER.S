@@ -29,6 +29,7 @@ MEMCPY      MAC
 *
 * Move self-decompressing modules into place
 *
+            >>>   MEMCPY,D1FILEX7BEG;D1FILEX7END;D1FILE
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
             >>>   MEMCPY,COPYX7BEG;COPYX7END;COPY
             >>>   MEMCPY,CATALOGX7BEG;CATALOGX7END;CATALOG

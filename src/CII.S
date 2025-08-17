@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/D1FILE.VARS
             PUT   ../build/DOTREE.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
@@ -39,6 +40,16 @@ MMXEND
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
+*
+D1FILEX7BEG
+            ORG   D1FILE
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    D1FILEEND
+            PUTBIN  ../build/D1FILE.X7
+:X7END
+            ORG
+D1FILEX7END
 *
 DOTREEX7BEG
             ORG   DOTREE

@@ -1967,7 +1967,7 @@ MLIERR      LDA   RRTN
             LDA   #FILE
             STA   POINT
             LDA   #1
-            JSR   D1FILE
+            JSR   JD1FILE
             JSR   WRCAT2
             LDA   #$48
 ERROU1      STA   RRTN

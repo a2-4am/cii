@@ -146,7 +146,7 @@ DELETE
             LDA   #>TOP10     ;2/16/87
             JSR   SETHIM      ;2/16/87
             LDA   #$00        ;SET CATALOG1
-            JSR   D1FILE      ;DELETE A FILE
+            JSR   JD1FILE     ;DELETE A FILE
             LDA   $C000
             CMP   #$9B
             BEQ   :ABORT

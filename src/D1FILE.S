@@ -1,9 +1,16 @@
+            TYP   BIN
+            DSK   ../build/D1FILE.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            ORG   MAINEND
+D1FILE
+            ORG   *+3
 *
 * DELETE 1 FILE
 * called by Delete operation
 * and after failed Copy File operation
 *
-D1FILE      STA   :TEMP
+            STA   :TEMP
             LDY   #$00
             LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW
@@ -196,3 +203,5 @@ D1FILE      STA   :TEMP
             DB    #>VTOC2
 :TSLPAG     DB    #>SRCTSL
             DB    #>DSTTSL
+*
+D1FILEEND
