@@ -254,20 +254,9 @@ MEMCPY      MAC
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
 *
-            LDA   #MMXBEG     ;source start.
-            STA   A1L
-            LDA   #>MMXBEG
-            STA   A1H
-            LDA   #MMXEND     ;source end (+1, but oh well)
-            STA   A2L
-            LDA   #>MMXEND
-            STA   A2H
-            LDA   #AUXMM      ;destination
-            STA   A4L
-            LDA   #>AUXMM
-            STA   A4H
-            SEC               ;transfer from main to aux
-            JSR   AUXMOVE
+            STA   $C005       ;transfer from main to aux
+            >>>   MEMCPY,MMXBEG;MMXEND;AUXMM
+            STA   $C004
             DEC   GOTMM       ;Mark that we got Memory Manager.
 *
 * Continue with miscellaneous initialization stuff.
