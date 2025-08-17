@@ -27,7 +27,7 @@
 *            PUT   DELETE
             PUT   LOCKRENAME
             PUT   ALPHABETIZE
-            PUT   FORMAT
+*            PUT   FORMAT
 *            PUT   VERIFY
 *            PUT   VIEW
 *            PUT   DISKMAP

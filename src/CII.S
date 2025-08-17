@@ -9,6 +9,7 @@
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELETE.VARS
+            PUT   ../build/FORMAT.VARS
             PUT   ../build/VERIFY.VARS
             PUT   ../build/VIEW.VARS
             PUT   ../build/DISKMAP.VARS
@@ -65,6 +66,16 @@ DELETEX7BEG
 :X7END
             ORG
 DELETEX7END
+*
+FORMATX7BEG
+            ORG   FORMAT
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    FORMATEND
+            PUTBIN  ../build/FORMAT.X7
+:X7END
+            ORG
+FORMATX7END
 *
 VERIFYX7BEG
             ORG   VERIFY
