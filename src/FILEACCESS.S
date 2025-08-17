@@ -69,13 +69,6 @@ RDACNT      BIT   DOSNOW
 :OUT        RTS
 *
 *
-RDVTOC      LDA   #1
-            STA   RCMND
-            JSR   DOVTOC
-            LDA   #0
-            STA   RTRACK
-            RTS
-*
 RDCAT1      LDA   #>CAT1
             JSR   CLRCAT
             LDX   #>VTOC1
@@ -1087,22 +1080,22 @@ COMTRE      JSR   DODEVP
             JSR   TREEA
             JSR   COMH00
 CT1         BIT   DOSNOW
-            BPL   CTOUT       ;DOS 3.3
+            BPL   :CTOUT      ;DOS 3.3
             LDA   RRTN
-            BEQ   CTOUT       ;NO ERROR
+            BEQ   :CTOUT      ;NO ERROR
             CMP   #$52
-            BEQ   CTERR1
+            BEQ   :CTERR1
             CMP   #$40
-            BCC   CTERR       ;I/O ERROR
-CTOUT       RTS
+            BCC   :CTERR      ;I/O ERROR
+:CTOUT      RTS
 *
 * BLOCK 2 ERROR
 *
-CTERR       JMP   BLK2ER
+:CTERR      JMP   BLK2ER
 *
 * NOT A DOS OR PRODOS DISK
 *
-CTERR1      JMP   WDERR
+:CTERR1     JMP   WDERR
 *
 COMHDR      JSR   DODEVP
             JSR   SETA

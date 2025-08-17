@@ -29,7 +29,7 @@ CATDS2      LDA   NACTIV
             CMP   #$04
             BEQ   :BOOTMES
             JSR   ST8MSG
-            JMP   DOKEY
+            JMP   CDDOKEY
 *
 :BOOTMES    LDA   #MFILE
             JSR   LOWMES
@@ -48,7 +48,7 @@ CATDS2      LDA   NACTIV
             DB    $8D,$0
             LDA   #MPSTAT45
             JSR   PRINT
-            JMP   DOKEY
+            JMP   CDDOKEY
 *
 :NOFILES    JSR   CROUT
             LDA   #MNOFILES
@@ -78,7 +78,7 @@ SCROLF      LDX   CURR        ;IF BEFORE
 *        CATALOG DISPLAY
 *   KEYPRESS FUNCTION HANDLER
 *
-DOKEY       JSR   SEECAT
+CDDOKEY     JSR   SEECAT
             JSR   CHKKEY      ;GET CHARACTER
             STA   :TEMP
             BNE   :NOTARO
@@ -94,13 +94,13 @@ DOKEY       JSR   SEECAT
             BNE   :DOLOOK     ;ALWAYS
 *
 :BSCROL     LDX   CURR        ;BACKWARD
-            BEQ   DOKEY       ;SCROLL
+            BEQ   CDDOKEY     ;SCROLL
             DEX
             STX   CURR
-            JMP   DOKEY
+            JMP   CDDOKEY
 *
 :FSCROL     JSR   SCROLF      ;FORWARD
-            JMP   DOKEY       ;SCROLL
+            JMP   CDDOKEY     ;SCROLL
 *
 :LOOKUP     LDA   :TEMP
             CMP   #"G"
@@ -119,7 +119,7 @@ DOKEY       JSR   SEECAT
             DEX
             BPL   :NXTCHAR
             CMP   #"D"
-            BNE   DOKEY       ;NOT FOUND
+            BNE   CDDOKEY     ;NOT FOUND
             LDX   #3          ;ALLOW D=U
 *
 :INDEX      CPX   #6
@@ -146,7 +146,7 @@ DOKEY       JSR   SEECAT
             LDA   (POINT),Y
             STA   :JUMP+2
 :JUMP       JSR   $1000
-            BCC   DOKEY
+            BCC   CDDOKEY
             CMP   #$FF
             BNE   :OUT
             JMP   CATDS1      ;DIR CHANGE
@@ -191,7 +191,7 @@ DOKEY       JSR   SEECAT
             DW    DO2
 * STATE 4
 * CHANGE BOOT PROGRAM
-            DW    DOKEY
+            DW    CDDOKEY
             DW    NIL
             DW    NOPATT
             DW    NIL

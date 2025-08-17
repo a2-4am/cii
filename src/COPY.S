@@ -245,7 +245,7 @@ COPY
 * VERIFY SOURCE DISK IS REALLY DOS
 *
             LDX   #>VTOC1
-            JSR   RDVTOC
+            JSR   :RDVTOC
             JSR   DOS?
             JSR   :RDPASS
             JSR   TARHDR
@@ -256,7 +256,7 @@ COPY
             BIT   DOSNOW
             BMI   :NOPRO
             LDX   #>CVTOC
-            JSR   RDVTOC
+            JSR   :RDVTOC
             JSR   :WRPASS
 *
 * MARK TRACKS 1 & 2 AS USED IN BITMAP
@@ -266,6 +266,13 @@ COPY
             JSR   STVTOC      ;RETURNS A=0
             JSR   SET1A2
             JMP   FILER
+*
+:RDVTOC     LDA   #1
+            STA   RCMND
+            JSR   DOVTOC
+            LDA   #0
+            STA   RTRACK
+            RTS
 *
 *
 *
@@ -2157,5 +2164,6 @@ COPY
             CPY   #$1E
             BCC   :DSLP1
             RTS
+*
 COPYEND
             ORG

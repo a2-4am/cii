@@ -29,7 +29,7 @@ VIEW
             JSR   HOME
             LDA   #MPSTAT45
             JSR   LOWMES
-            JSR   DOKEY       ;CAT DISPLAY
+            JSR   CDDOKEY     ;CAT DISPLAY
             JSR   HOME        ;VIEW FILES
 *
             LDA   #4
