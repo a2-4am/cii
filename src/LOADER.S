@@ -27,12 +27,10 @@ MEMCPY      MAC
             STA   KBDSTB
 *
 *
-* Move Disk Map module into place
+* Move self-decompressing modules into place
 *
+            >>>   MEMCPY,COPYX7BEG;COPYX7END;COPY
             >>>   MEMCPY,TSMAPX7BEG;TSMAPX7END;TSMAP
-*
-* Move Quit module into place
-*
             >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
 *
 * Move unpacker (and menu dispatch table) into place

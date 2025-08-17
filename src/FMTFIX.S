@@ -7,14 +7,14 @@ FMTFIX      LDA   FMT400K     ;Need to fix back to 800K format?
             JSR   SET35
             BCS   :SETSIDQ    ;->No: RTS.
             SEC               ;Yes:
-* fall through to :SETSIDS to reset 800K format.
+* fall through to SETSIDS to reset 800K format.
 *
 *
 * Pass in EQ = Unidisk 3.5
 *         NE = Apple 3.5 drive
 *         CC = set 400K format
 *         CS = restore 800K format
-:SETSIDS    BEQ   :UNISIDE
+SETSIDS     BEQ   :UNISIDE
             LDA   #0          ;Apple 3.5: Convert carry to 00 or 80
             ROR
             STA   :ASIDES     ;Save in sides value in table
@@ -61,7 +61,7 @@ FMTFIX      LDA   FMT400K     ;Need to fix back to 800K format?
 :DNLDCTL    DW    $0001
 :USIDES     DS    1
 *
-:UNIFLG     DS    1
+UNIFLG      DS    1
 *
 *
 *

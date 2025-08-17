@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/COPY.VARS
             PUT   ../build/DISKMAP.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
@@ -21,6 +22,16 @@ MMXEND
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
+*
+COPYX7BEG
+            ORG   COPY
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    COPYEND
+            PUTBIN  ../build/COPY.X7
+:X7END
+            ORG
+COPYX7END
 *
 TSMAPX7BEG
             ORG   TSMAP

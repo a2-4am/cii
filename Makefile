@@ -38,6 +38,9 @@ DZX0TURBOVARS=$(BUILDDIR)/DZX0TURBO.VARS.S
 FILERO=$(BUILDDIR)/FILER.O
 FILERX=$(BUILDDIR)/FILER.X
 FILERVARS=$(BUILDDIR)/FILER.VARS.S
+COPYO=$(BUILDDIR)/COPY.O
+COPYX7=$(BUILDDIR)/COPY.X7
+COPYVARS=$(BUILDDIR)/COPY.VARS.S
 DISKMAPO=$(BUILDDIR)/DISKMAP.O
 DISKMAPX7=$(BUILDDIR)/DISKMAP.X7
 DISKMAPVARS=$(BUILDDIR)/DISKMAP.VARS.S
@@ -55,7 +58,7 @@ VARS = (awk -F';' '$1 { printf "%s EQU %s\n", $$6, $$5 }' < "$2_Symbols.txt" | g
 $(BUILDDISK): $(PRODOS) $(CLOCK) $(EXE)
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
 
-$(EXE): $(MMX) $(FILERX) $(DISKMAPX7) $(QUITX7) $(SETCLOCKX) $(MMVARS) $(FILERVARS) $(DISKMAPVARS) $(QUITVARS) $(SETCLOCKVARS) $(BUILDDIR)
+$(EXE): $(MMX) $(FILERX) $(COPYX7) $(DISKMAPX7) $(QUITX7) $(SETCLOCKX) $(MMVARS) $(FILERVARS) $(COPYVARS) $(DISKMAPVARS) $(QUITVARS) $(SETCLOCKVARS) $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/CII.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -70,7 +73,7 @@ $(MMX): $(MMO)
 	$(ZX0) "$(MMO)" "$@"
 
 $(MMVARS): $(MMO)
-	$(call VARS,/MM.CII/,$(MMO))
+	$(call VARS,/;MM.CII.S;/,$(MMO))
 
 #
 # ZX0 unpacker module (self-contained)(not compressed)
@@ -80,7 +83,7 @@ $(DZX0TURBOO): $(BUILDDIR)
 	$(call POSTMERLIN)
 
 $(DZX0TURBOVARS): $(DZX0TURBOO)
-	$(call VARS,/DZX0TURBO/,$(DZX0TURBOO))
+	$(call VARS,/;DZX0TURBO.S;/,$(DZX0TURBOO))
 
 #
 # Filer (requires Memory Manager)(compressed)
@@ -96,14 +99,28 @@ $(FILERX): $(FILERO)
 	$(ZX0) "$(FILERO)" "$@"
 
 #
+# Copy module (requires Filer)(compressed)(self-decompressing)
+#
+$(COPYO): $(FILERVARS)
+	$(MERLIN) "$(SRCDIR)"/COPY.S > "$(BUILDLOG)"
+	$(call POSTMERLIN)
+
+$(COPYVARS): $(COPYO)
+	$(call VARS,/;COPY.S;/,$(COPYO))
+
+$(COPYX7): $(COPYO)
+	$(call X7,$(COPYO))
+
+
+#
 # Disk Map module (requires Filer)(compressed)(self-decompressing)
 #
-$(DISKMAPO): $(FILERVARS)
+$(DISKMAPO): $(FILERVARS) $(COPYVARS)
 	$(MERLIN) "$(SRCDIR)"/DISKMAP.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
 $(DISKMAPVARS): $(DISKMAPO)
-	$(call VARS,/DISKMAP/,$(DISKMAPO))
+	$(call VARS,/;DISKMAP.S;/,$(DISKMAPO))
 
 $(DISKMAPX7): $(DISKMAPO)
 	$(call X7,$(DISKMAPO))
@@ -116,7 +133,7 @@ $(QUITO): $(FILERVARS) $(DISKMAPVARS)
 	$(call POSTMERLIN)
 
 $(QUITVARS): $(QUITO)
-	$(call VARS,/QUIT/,$(QUITO))
+	$(call VARS,/;QUIT.S;/,$(QUITO))
 
 $(QUITX7): $(QUITO)
 	$(call X7,$(QUITO))
@@ -132,7 +149,7 @@ $(SETCLOCKX): $(SETCLOCKO)
 	$(ZX0) "$(SETCLOCKO)" "$@"
 
 $(SETCLOCKVARS): $(SETCLOCKO)
-	$(call VARS,/SETCLOCK/,$(SETCLOCKO))
+	$(call VARS,/;SETCLOCK.S;/,$(SETCLOCKO))
 
 # things that go in the root directory
 $(PRODOS) $(CLOCK): $(BUILDDIR)

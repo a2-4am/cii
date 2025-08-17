@@ -21,7 +21,7 @@
             PUT   MESSAGES
             PUT   PRODOS
             PUT   BOOTSEC.PRO
-            PUT   COPY
+*            PUT   COPY
             PUT   CATALOG
             PUT   DELETE
             PUT   LOCKRENAME

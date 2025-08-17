@@ -1,9 +1,17 @@
+            TYP   BIN
+            DSK   ../build/COPY.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/MM.VARS
+            ORG   MAINEND
+COPY
+            ORG   *+3
 *
 ********************************
 *             COPY             *
 ********************************
 *
-COPY        LDX   #$08        ;Which COPY option?
+            LDX   #$08        ;Which COPY option?
             JSR   CHOOZ1
             STA   :COPYOPT
             LDA   #>TOPMEM
@@ -348,9 +356,9 @@ COPY        LDX   #$08        ;Which COPY option?
             BPL   :WRFMT      ;->No, just format.
             LDA   SUNIT       ;Yes: Is this disk a 3.5-inch disk?
             JSR   SET35
-            STA   :UNIFLG
+            STA   UNIFLG
             BCS   :WRFMT      ;->No.
-            JSR   :SETSIDS    ;Yes: (CLC) set it for 400K format
+            JSR   SETSIDS     ;Yes: (CLC) set it for 400K format
 :WRFMT      JSR   SPLFRM      ; & format the sucker. (ignore errors)
             LDA   #0
             STA   CH
@@ -1074,7 +1082,7 @@ COPY        LDX   #$08        ;Which COPY option?
             STY   :FSIZE+1
             BIT   DOSNOW
             BMI   :PRODOS
-            JMP   :DOS33
+            JMP   :ODOS33
 *
 :PRODOS     LDA   #>TOPMEM
             JSR   SETHIM
@@ -1222,7 +1230,7 @@ COPY        LDX   #$08        ;Which COPY option?
             DW    FILBUF
             DB    $0
 *
-:DOS33      LDA   #>TOP10
+:ODOS33     LDA   #>TOP10
             JSR   SETHIM
             BIT   PDOS
             BPL   :DOS2DOS    ;DOS --> DOS
@@ -1957,89 +1965,13 @@ COPY        LDX   #$08        ;Which COPY option?
 *
 *
 *
-* CHECK IF WE ARE DIVING IN TO OR OUT
-* OF THE STARTING DIRECTORY. IF SO,
-* RESTORE OR SAVE *STATUS, *CBYTE,
-* *CSECTR,*FILNUM
-*
-DIVECK      BCS   :GOOUT
-            LDA   SP
-            CMP   #1
-            BNE   :DVCK00
-            LDX   #>STATUS
-            LDY   HIMEM
-            DEY
-            DEY
-            DEY
-            STY   :MYHI
-            LDA   FILNUM
-            STA   :SAVE1
-            LDA   #4
-            STA   TOPDIF
-            JSR   :DVCK0
-            LDA   HIMEM       ;8/27/86
-            JSR   SETHIM      ;8/27/86
-:DVCK00     JMP   :DVINIT
-*
-:GOOUT      LDA   SP
-            BNE   :DVINIT
-            JSR   :DVINIT
-            LDX   :MYHI
-            LDY   #>STATUS
-            LDA   :SAVE1
-            STA   FILNUM
-            LDA   #0
-            STA   TOPDIF
-*
-:DVCK0      STX   POINT+1
-            STY   MESPNT+1
-            LDY   #0
-            STY   MESPNT
-            STY   POINT
-            LDX   #3
-:DCKLP      LDA   (POINT),Y
-            STA   (MESPNT),Y
-            INY
-            BNE   :DCKLP
-            INC   POINT+1
-            INC   MESPNT+1
-            DEX
-            BNE   :DCKLP
-            RTS
-:SAVE1      DB    $0
-:MYHI       DB    $0
-*
-*
-* INITIALIZE THINGS AFTER DIVING IN TO
-* OR OUT OF A SUBDIRECTORY
-*
-:DVINIT     LDA   CURR
-            PHA
-            JSR   INITCD
-            PLA
-            STA   CURR
-            JSR   RDACNT
-            LDA   NACTIV
-            STA   FILNUM
-            SEC
-            BEQ   :DVINT1     ;NO FILES
-            LDX   #0
-:CFLP2      INX
-            TXA
-            STA   STATUS-1,X
-            CPX   NACTIV
-            BCC   :CFLP2
-            CLC
-:DVINT1     RTS
-*
-*
 *
 *
 * DOING DISK SWAPPING: CLOSE TARGET
 * FILE
 *
 :GOCLS      BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :GDOS33
             LDA   :REF
             STA   :GCLST+1
             JSR   DOMLI       ;GET MARK
@@ -2047,7 +1979,7 @@ DIVECK      BCS   :GOOUT
             DW    :GCLST
             JMP   CLOSE
 *
-:DOS33      JMP   WRCAT2
+:GDOS33     JMP   WRCAT2
 *
 :GCLST       DB    $2,$0,$0,$0,$0
 
@@ -2072,16 +2004,6 @@ DIVECK      BCS   :GOOUT
 :REF        DB    $0
 *
 *
-SETHIM      SEC
-            SBC   DATADR
-            AND   #$FE
-            CLC
-            ADC   DATADR
-            SEC
-            SBC   TOPDIF      ;0 OR 3
-            STA   HIMEM
-            RTS
-*
 :CPRFILE    LDY   #0
             LDA   FILE+$1,Y
             ORA   #$80
@@ -2102,13 +2024,13 @@ SETHIM      SEC
             BEQ   :NOTTXT     ;SAME DOS
             JSR   CURPNT
             BIT   PDOS
-            BPL   :DOS33
+            BPL   :TDOS33
             LDY   #$10
             LDA   (POINT),Y
             CMP   #$04
             JMP   :CKTXT
 *
-:DOS33      LDY   #2
+:TDOS33     LDY   #2
             LDA   (POINT),Y
             AND   #$7F
 :CKTXT      BNE   :NOTTXT
@@ -2234,4 +2156,5 @@ SETHIM      SEC
             CPY   #$1E
             BCC   :DSLP1
             RTS
-
+COPYEND
+            ORG
