@@ -27,10 +27,10 @@ VERIFY      LDX   #$03
             STA   :VERRORS
             STA   :VERRORS+1
             JSR   DEVTYP
-            BNE   :PRODOS     ;NOT FLOPPY
-            JMP   :DOS33
+            BNE   :VPRODOS    ;NOT FLOPPY
+            JMP   :VDOS33
 *
-:PRODOS     LDA   #0
+:VPRODOS    LDA   #0
             STA   BLKNUM
             STA   BLKNUM+1
             JSR   GTBLKS
@@ -71,7 +71,7 @@ VERIFY      LDX   #$03
             JMP   :NXTBLK
 *
 *
-:DOS33      LDA   #MTRACK     ;'TRACK'
+:VDOS33     LDA   #MTRACK     ;'TRACK'
             JSR   PRINT
             LDA   #$40        ;RATCHET!
             STA   RCMND       ;(SETS TRK 0)

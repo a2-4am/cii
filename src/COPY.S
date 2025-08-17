@@ -1081,10 +1081,10 @@ COPY
             STY   :FSIZE
             STY   :FSIZE+1
             BIT   DOSNOW
-            BMI   :PRODOS
+            BMI   :OPRODOS
             JMP   :ODOS33
 *
-:PRODOS     LDA   #>TOPMEM
+:OPRODOS    LDA   #>TOPMEM
             JSR   SETHIM
 *
             JSR   CURPNT

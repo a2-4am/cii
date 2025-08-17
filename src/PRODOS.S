@@ -1243,12 +1243,12 @@ PRVCOM      STA   UNIT
             STA   :PFXLEN
             BMI   :BLNKLP     ;NO PFX
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :SDDOS33
             CMP   #0
             BEQ   :BLNKLP
-            BNE   :PRODOS
+            BNE   :SDPRODOS
 *
-:DOS33      LDY   #5
+:SDDOS33    LDY   #5
             LDA   (TMPPTR),Y
             BEQ   :BLNKLP
             STA   HEXNUM
@@ -1260,12 +1260,12 @@ PRVCOM      STA   UNIT
             LDY   #$14
             BNE   :BLNKLP     ;ALWAYS
 *
-:PRODOS     INY
+:SDPRODOS   INY
             LDA   (TMPPTR),Y
             ORA   #$80
             JSR   PCOUT
             CPY   :PFXLEN
-            BCC   :PRODOS
+            BCC   :SDPRODOS
 :BLNKLP     INY
             LDA   #$A0
             JSR   PCOUT

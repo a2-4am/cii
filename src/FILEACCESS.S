@@ -221,7 +221,7 @@ PLACE       LDX   #0
             CMP   #$8D
             BNE   :CRLP
             BIT   DOSNOW
-            BMI   :PRODOS
+            BMI   :PIPRODOS
             LDA   #" "        ;MOVE LINE TO
             LDY   #$20        ;ENTRY:
 :SPACELP    STA   (POINT),Y   ;COPY SPACES
@@ -243,7 +243,7 @@ PLACE       LDX   #0
             BPL   :PUTLP
             CLC
             RTS
-:PRODOS     LDY   #0
+:PIPRODOS   LDY   #0
             LDA   (POINT),Y
             AND   #$F0
             STA   (POINT),Y
@@ -479,10 +479,10 @@ RDDATA      LDY   RELCNT
             STA   RELCNT
             STA   EOF
             BIT   DOSNOW
-            BPL   :DOS33
-            JMP   :PRODOS
+            BPL   :RDDOS33
+            JMP   :RDPRODOS
 *
-:DOS33      LDA   #$01
+:RDDOS33    LDA   #$01
             STA   RCMND
             LDA   DATADR
             STA   RPAGE
@@ -562,7 +562,7 @@ RDDATA      LDY   RELCNT
 :SUM        DB    $0,$0
 :ERROUT     JMP   ERROUT
 *
-:PRODOS     LDA   DATADR
+:RDPRODOS   LDA   DATADR
             STA   :TEMP
             LDA   BLKNUM
             ORA   BLKNUM+1

@@ -177,10 +177,10 @@ D1FILE      STA   :TEMP
             LDY   #$00
             LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW
-            BMI   :PRODOS
-            JMP   :DOS33
+            BMI   :DPRODOS
+            JMP   :DDOS33
 *
-:PRODOS     PHA
+:DPRODOS    PHA
             AND   #$F0
             STA   :TEMP
             PLA
@@ -303,7 +303,7 @@ D1FILE      STA   :TEMP
 *
 *
 *
-:DOS33      STA   TRACK       ;TO END OF
+:DDOS33     STA   TRACK       ;TO END OF
             STA   RTRACK      ;FILENAME BUF
             LDY   #$20
             STA   (POINT),Y

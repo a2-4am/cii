@@ -70,12 +70,12 @@ GETLN       LDX   #$00
             BNE   :ISLEGAL    ;ALWAYS
 *
 :NOTEQL     BIT   DOSNOW
-            BMI   :PRODOS
+            BMI   :LIPRODOS
             CPX   #0          ;1ST CHAR?
             BEQ   :NOTLEGL    ;YES
             BNE   :ISLEGAL
 *
-:PRODOS     CPX   #0
+:LIPRODOS   CPX   #0
             BNE   :NOT1ST
             CMP   #"/"
             BEQ   :ISLEGAL

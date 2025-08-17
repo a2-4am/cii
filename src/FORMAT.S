@@ -5,9 +5,9 @@
 FORMAT      LDX   #7
             JSR   CHOOZ1      ;DOS OR PRODOS
             CMP   #0
-            BEQ   :PRODOS
+            BEQ   :FPRODOS
             LDA   #$FF
-:PRODOS     EOR   #$FF
+:FPRODOS    EOR   #$FF
             STA   :TEMP
             STA   DOSNOW
             JSR   DODEVF
@@ -220,10 +220,10 @@ GVCOM1      LDA   #$0F
 *
 *
 DDISK       BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :DDDOS33
             JMP   PDDISK
 *
-:DOS33      LDA   #>CAT1
+:DDDOS33    LDA   #>CAT1
             JSR   CLRCAT
             LDA   #$00
             TAX

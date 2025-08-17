@@ -968,9 +968,9 @@ MATCH       JSR   CURPNT
 FTOCR       LDY   #1
             LDA   (POINT),Y
             CMP   #$10
-            BCS   :PRODOS
+            BCS   :FTPRODOS
 *
-:DOS33      LDX   #$1E        ;(NAME LENGTH)
+:FTDOS33    LDX   #$1E        ;(NAME LENGTH)
             LDY   #$00
             LDA   (POINT),Y   ;DELETED?
             CMP   #$FF
@@ -998,7 +998,7 @@ FTOCR       LDY   #1
             DEC   POINT
             RTS
 *
-:PRODOS     DEY               ;1 --> 0
+:FTPRODOS   DEY               ;1 --> 0
             LDA   (POINT),Y
             AND   #$0F        ;NECESSARY?
             BNE   :PRO1
