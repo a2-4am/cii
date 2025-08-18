@@ -27,10 +27,11 @@ CATALOG
             JSR   COMH00
             JSR   CT1
 *
-* If 80 columns are available and
-* TREEA displayed a directory tree,
-* then we are currently in 80-column mode.
-* Figure out if we want to stay that way.
+* Only CATALOG W/FILE LENGTHS uses 80-column
+* mode now. Other catalogs are 40-column, but
+* if TREEA displayed a directory tree, then
+* we are currently in 80-column mode, so
+* switch back to 40.
 :MAYBE80    LDA   :TYPE
             CMP   #$01        ;w/file lengths
             BEQ   :TRY80

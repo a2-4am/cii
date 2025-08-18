@@ -60,21 +60,36 @@ DOTREE
             STA   YPOS
             STA   XSTART
             STA   YSTART
+*
+* Previously this checked if we were called while doing
+* a catalog and switched to 80-column mode if available.
+* Now only some catalogs are displayed in 80-column mode,
+* others in 40-column. We don't want to switch to 80-column
+* unconditionally here, because if (1) we don't need to
+* display a directory tree and (2) the catalog type won't
+* need 80-column mode, then then we can skip the switch
+* altogether.
 *            LDX   CHOICE
 *            CPX   #1
 *            BNE   :DOT1       ;NOT CATALOG
 *            JSR   :HDR80
-:DOT1       PLP
+*:DOT1
+            PLP
             LDA   #0
             BCS   :ERR
             LDA   CURMOM
             EOR   #1
             BEQ   :ONLY1
+*
+* There's a directory tree to display, so get in
+* 80-column mode if available. Previously this had to
+* work around the earlier logic.
 *            LDX   CHOICE
 *            CPX   #1
 *            BEQ   :DOT2
             JSR   :HDR80
-:DOT2       LDA   CURR        ;IS CURR LARGER
+*:DOT2
+            LDA   CURR        ;IS CURR LARGER
             CMP   CURMOM      ; THAN CURMOM?
             BCC   :DOT3       ;NO
 :ZERCUR     LDA   #0          ;YES, ZERO CURR
