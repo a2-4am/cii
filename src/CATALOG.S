@@ -22,7 +22,22 @@ CATALOG
             STA   OPTCHS
             JSR   DODEVP
             JSR   TREEA
+            LDA   RRTN
+            BEQ   :MAYBE80
+            JSR   COMH00
             JSR   CT1
+*
+* If 80 columns are available and
+* TREEA displayed a directory tree,
+* then we are currently in 80-column mode.
+* Figure out if we want to stay that way.
+:MAYBE80    LDA   :TYPE
+            CMP   #$01        ;w/file lengths
+            BEQ   :TRY80
+            JSR   COL40
+            JMP   :CATCONT
+:TRY80      JSR   COL80
+:CATCONT    JSR   TOP1
             JSR   PRVNM
             JSR   ASKPR?      ;PRINTER ON?
             LDA   PSLOT

@@ -60,19 +60,19 @@ DOTREE
             STA   YPOS
             STA   XSTART
             STA   YSTART
-            LDX   CHOICE
-            CPX   #1
-            BNE   :DOT1       ;NOT CATALOG
-            JSR   :HDR80
+*            LDX   CHOICE
+*            CPX   #1
+*            BNE   :DOT1       ;NOT CATALOG
+*            JSR   :HDR80
 :DOT1       PLP
             LDA   #0
             BCS   :ERR
             LDA   CURMOM
             EOR   #1
             BEQ   :ONLY1
-            LDX   CHOICE
-            CPX   #1
-            BEQ   :DOT2
+*            LDX   CHOICE
+*            CPX   #1
+*            BEQ   :DOT2
             JSR   :HDR80
 :DOT2       LDA   CURR        ;IS CURR LARGER
             CMP   CURMOM      ; THAN CURMOM?
@@ -259,18 +259,7 @@ DOTREE
             LDA   #MTOOLONG
             JMP   PRTPRS
 *
-:HDR80
-*COL80
-            BIT   FLAG80
-            BPL   :OUT80
-            LDA   #$C3
-            STA   CSWL+1
-            LDA   #0
-            STA   CSWL
-            LDA   #$41
-            STA   SDCH
-            JSR   CROUT
-:OUT80
+:HDR80      JSR   COL80
             JMP   COMH00
 *
 :ERRFLG     DB    $0

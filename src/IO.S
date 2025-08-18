@@ -72,6 +72,7 @@
 * PRTDIG    print 1 DIGIT
 *
 * COL40     set to 40 columns
+* COL80     set to 80 columns
 * VDINIT    initialize machine video
 *
 COL40       LDA   #$19
@@ -93,6 +94,16 @@ VDINIT      JSR   INIT
             STA   $C00F
 :C00FQ      RTS
 SDCH        DB    $19
+*
+COL80       BIT   FLAG80
+            BPL   :C00FQ
+            LDA   #$C3
+            STA   CSWL+1
+            LDA   #0
+            STA   CSWL
+            LDA   #$41
+            STA   SDCH
+            JMP   CROUT
 *
 *
 * MY OWN INVERSE FLAG...
