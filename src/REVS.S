@@ -141,15 +141,46 @@
 *  Use lowercase for most strings, if available.
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.
-*  Add more recognized filetypes, mostly IIgs-related.
-*  Change "[D]elete" to "[U]nmark" in copy file.
+*  Add more recognized filetypes in catalog displays and
+*    file lists, mostly IIgs-related.
+*      $16  PFS  PFS Document
+*      $2E  P8C  ProDOS 8 Code Module
+*      $42  FTD  File Type Definitions
+*      $50  GWP  Apple IIgs Word Processing
+*      $51  GSS  Apple IIgs Spreadsheet
+*      $52  GDB  Apple IIgs Database
+*      $53  DRW  Object Oriented Graphics
+*      $54  GDP  Apple IIgs Desktop Publishing
+*      $55  HMD  HyperMedia
+*      $58  HLP  Help File
+*      $5A  CFG  Configuration
+*      $AD  BDF  Apple IIgs BASIC Data
+*      $BC  LDF  Apple IIgs Generic Load File
+*      $BD  FST  Apple IIgs File System Translator
+*      $C2  ANI  PaintWorks Animation
+*      $C3  PAL  PaintWorks Palette
+*      $C5  OOG  Object-Oriented Graphics
+*      $C7  CDV  Apple IIgs Control Panel
+*      $D5  MUS  Music sequence
+*      $D6  INS  Instrument
+*      $D7  MDI  MIDI
+*      $D8  SND  Apple IIgs Audio
+*      $E0  LBR  Archive
+*  Change "[D]elete" to "[U]nmark" in Copy File list.
 *    [D] still works.
-*  Change "[Q]" to "[Return]" in quit options.
+*  Change "[Q]" to "[Return]" in Quit options.
 *    [Q] still works.
-*  Add "[M] to enter monitor" in quit options. This was
+*  Add "[M] to enter monitor" in Quit options. This was
 *    first implemented in v6.0 but never displayed.
 *  If there were no prompts at program startup, the header
-*    was briefly displayed then cleared. This has been fixed.
+*    was briefly displayed then cleared then displayed again.
+*    This has been fixed. Startup should be flicker-free in
+*    all cases.
+*  No longer ask on startup if you want 80-column catalog
+*    displays. Catalog w/file lengths still uses 80 columns
+*    if available. Other catalog displays now use 40 columns.
+*  No longer warn on startup about ProDOS 1.3. You should
+*    still upgrade ProDOS though. That is a very old version!
 *  Distributed on a self-booting disk image with
 *    ProDOS 2.4.3 from <https://prodos8.com/>
 *    and the universal ("jumbo") clock driver from
