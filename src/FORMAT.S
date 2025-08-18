@@ -2,6 +2,7 @@
             DSK   ../build/FORMAT.O
             PUT   VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DDISK.VARS
             PUT   ../build/ALPHABETIZE.VARS
             ORG   ALPHAEND
 FORMAT      

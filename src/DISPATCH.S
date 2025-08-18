@@ -4,6 +4,8 @@
 * modularized entry points
 *
 *labels in VARS
+*JDDISK
+            JMP   DDISK
 *JD1FILE
             JMP   D1FILE
 *JDOTREE

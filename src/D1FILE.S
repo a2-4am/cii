@@ -2,7 +2,8 @@
             DSK   ../build/D1FILE.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/DDISK.VARS
+            ORG   DDISKEND
 D1FILE
             ORG   *+3
 *

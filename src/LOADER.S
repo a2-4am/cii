@@ -19,16 +19,14 @@ MEMCPY      MAC
 *
 :LOCATE     CLD
             CLI
-            JSR   SETNOR
-            JSR   INIT
-            JSR   HOME        ;Clear screen before SETVID might
-            JSR   SETVID      ; change 80 screen to 40.
-            JSR   SETKBD
-            STA   KBDSTB
 *
+* Move unpacker (and menu dispatch table) into place
+*
+            >>>   MEMCPY,DZX0BEG;DZX0END;ZXMODULE
 *
 * Move self-decompressing modules into place
 *
+            >>>   MEMCPY,DDISKX7BEG;DDISKX7END;DDISK
             >>>   MEMCPY,D1FILEX7BEG;D1FILEX7END;D1FILE
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
             >>>   MEMCPY,COPYX7BEG;COPYX7END;COPY
@@ -43,14 +41,6 @@ MEMCPY      MAC
             >>>   MEMCPY,UNDELETEX7BEG;UNDELETEX7END;UNDEL
             >>>   MEMCPY,MAKESUBX7BEG;MAKESUBX7END;MAKESUB
             >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
-*
-* Move unpacker (and menu dispatch table) into place
-*
-            >>>   MEMCPY,DZX0BEG;DZX0END;ZXMODULE
-*
-* Unpack MAIN portion of program into place
-*
-            >>>   UNPACK,MAINXEND;MAINEND
 *
             LDX   $FBB3       ;FOR LATER
 *
@@ -272,6 +262,12 @@ MEMCPY      MAC
 * Continue with miscellaneous initialization stuff.
 *
 :SETMISC
+            JSR   SETNOR
+            JSR   INIT
+            JSR   HOME        ;Clear screen before SETVID might
+            JSR   SETVID      ; change 80 screen to 40.
+            JSR   SETKBD
+            STA   KBDSTB
             LDY   #0
             STY   DOSNOW
             STY   AUXFLG
@@ -290,7 +286,15 @@ MEMCPY      MAC
             LDA   #$15        ;(ProDOS Tech. Ref., 5.3.1.3, page 99)
             JSR   $C300
 *
-:AFTER80    LDA   #FILER
+:AFTER80
+*
+* Unpack MAIN portion of program into place
+*
+            >>>   UNPACK,MAINXEND;MAINEND
+*
+* Set reset vector now that we have somewhere to point to
+*
+            LDA   #FILER
             STA   $3F2
             LDA   #>FILER
             STA   $3F3

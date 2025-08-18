@@ -888,66 +888,6 @@ GVCOM1      LDA   #$0F
             CLC
 :GVOUT      RTS
 *
-*
-*
-*
-*
-DDISK       BIT   DOSNOW
-            BPL   :DDDOS33
-            JMP   PDDISK
-*
-:DDDOS33    LDA   #>CAT1
-            JSR   CLRCAT
-            LDA   #$00
-            TAX
-:BLAHLP     STA   VTOC1,X     ;ZERO VTOC
-            INX
-            BNE   :BLAHLP
-            LDX   #$11        ;SET NEEDED
-            STX   VTOC1+1     ;PARAMETERS
-            STX   VTOC1+$30
-            STX   RTRACK
-            DEX               ;10
-            STX   VTOC1+$35
-            DEX               ;F
-            STX   RSECTR
-            STX   VTOC1+2
-            LDA   #$FE
-            STA   VTOC1+6
-            LDA   #$7A
-            STA   VTOC1+$27
-            LDA   #$23
-            STA   VTOC1+$34
-            LDA   #$FF
-            LDX   #$3C        ;START AT TRK 1
-:FFLOOP     STA   VTOC1,X     ;WRITE PART
-            STA   VTOC1+$1,X
-            INX               ;OF BITMAPS
-            INX
-            INX
-            INX
-            CPX   #$C4
-            BCC   :FFLOOP
-            LDX   #$00
-            STX   VTOC1+$7C   ;ZERO CATALOG
-            STX   VTOC1+$7D   ;BITMAP
-            INX               ;1
-            STX   VTOC1+$31
-            STX   VTOC1+$37
-            INX               ;2
-            STX   RCMND
-            INX               ;3
-            STX   VTOC1+3
-            LDA   #>CAT1
-            STA   RPAGE
-:LOOP       JSR   DORWTS      ;WRITE ENTIRE
-            INC   RPAGE       ;TRACK
-            DEC   RSECTR
-            BNE   :LOOP
-            LDA   #>VTOC1
-            STA   RPAGE
-            JSR   DORWTS
-*
 ZIPDOS      LDY   #$00
             LDA   $C083
 :BOOTLP     LDA   $D000,Y

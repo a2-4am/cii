@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DDISK.VARS
             PUT   ../build/D1FILE.VARS
             PUT   ../build/DOTREE.VARS
             PUT   ../build/COPY.VARS
@@ -40,6 +41,17 @@ MMXEND
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
+            ERR   MAINXEND>BTPFX  ;BTPFX clobbered before FILER is unpacked
+*
+DDISKX7BEG
+            ORG   DDISK
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DDISKEND
+            PUTBIN  ../build/DDISK.X7
+:X7END
+            ORG
+DDISKX7END
 *
 D1FILEX7BEG
             ORG   D1FILE

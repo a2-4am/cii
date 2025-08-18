@@ -2,6 +2,7 @@
             DSK   ../build/DELETE.O
             PUT   VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DDISK.VARS
             PUT   ../build/CATALOG.VARS
             ORG   CATALOGEND
 DELETE      
