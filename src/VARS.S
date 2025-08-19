@@ -320,14 +320,15 @@ TRKFLG      DS    1           ;Check track
 SOFAR       DS    $10
 INTRLV      DS    $10
 INTLV1      DS    $10
-SECS        DS    $10
+*SECS        DS    $10        ;now in PHRWTS
 ZXMODULE    DS    ZXMODSZ
 ZXUNPACK    DS    ZXUNPSZ
 MENUTBL     DS    MENUTSZ
 JDDISK      DS    3
 JD1FILE     DS    3
 JDOTREE     DS    3
-            DS    2           ;free space here
+JDODEV      DS    3
+            DS    $0F         ;free space here
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40

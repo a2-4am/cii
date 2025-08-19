@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DODEV.VARS
             PUT   ../build/DDISK.VARS
             PUT   ../build/D1FILE.VARS
             PUT   ../build/DOTREE.VARS
@@ -41,6 +42,16 @@ MMXEND
             PUTBIN  ../build/FILER.X
 MAINXEND
             ERR   MAINXEND>BTPFX  ;BTPFX clobbered before FILER is unpacked
+*
+DODEVX7BEG
+            ORG   DODEV
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DODEVEND
+            PUTBIN  ../build/DODEV.X7
+:X7END
+            ORG
+DODEVX7END
 *
 DDISKX7BEG
             ORG   DDISK
@@ -200,9 +211,6 @@ DZX0BEG
 *INTLV1
             DB    $0,$7,$E,$6,$D,$5,$C,$4
             DB    $B,$3,$A,$2,$9,$1,$8,$F
-*SECS
-            DB    $0,$E,$D,$C,$B,$A,$9,$8
-            DB    $7,$6,$5,$4,$3,$2,$1,$F
             PUT   DZX0TURBO
             PUT   DISPATCH
             ORG

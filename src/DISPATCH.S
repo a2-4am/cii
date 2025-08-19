@@ -28,3 +28,5 @@
             JMP   D1FILE
 *JDOTREE
             JMP   DOTREE
+*JDODEV
+            JMP   DODEV

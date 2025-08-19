@@ -37,6 +37,7 @@ MEMCPY      MAC
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
             >>>   MEMCPY,D1FILEX7BEG;D1FILEX7END;D1FILE
             >>>   MEMCPY,DDISKX7BEG;DDISKX7END;DDISK
+            >>>   MEMCPY,DODEVX7BEG;DODEVX7END;DODEV
 *
 * Move interleave tables, unpacker, menu dispatch table,
 * and other global jump vectors into place

@@ -1173,3 +1173,7 @@ CRIT2       PHP
 :DONE       STY   HEXNUM
             PLP
             RTS
+*
+SECS
+            DB    $0,$E,$D,$C,$B,$A,$9,$8
+            DB    $7,$6,$5,$4,$3,$2,$1,$F
