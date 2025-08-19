@@ -64,6 +64,7 @@ DDISK
             LDA   #>VTOC1
             STA   RPAGE
             JSR   DORWTS
+            JMP   ZIPDOS
 *
 * DELETE PRODOS DISK
 *
