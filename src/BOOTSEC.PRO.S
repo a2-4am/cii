@@ -1,7 +1,7 @@
-            DUM   *
-PBOOT       DB    0           ;Marker to copy ProDOS boot sector
-            DEND
-PROBEG      ORG   $800
+            TYP   BIN
+            DSK   ../build/BOOTSEC.PRO.O
+            PUT   VARS
+            ORG   $800
 *
             DB    $01
             SEC
@@ -250,6 +250,3 @@ PROBEG      ORG   $800
 :RDWAIT     LDA   $C08C,X
             BPL   :RDWAIT
             DB    $0,$0,$0,$0,$0,$0,$0,$0,$0
-*
-            ORG
-

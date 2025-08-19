@@ -37,6 +37,8 @@ DZX0TURBOO=$(BUILDDIR)/DZX0TURBO.O
 DZX0TURBOVARS=$(BUILDDIR)/DZX0TURBO.VARS.S
 BOOTSEC33O=$(BUILDDIR)/BOOTSEC.33.O
 BOOTSEC33VARS=$(BUILDDIR)/BOOTSEC.33.VARS.S
+BOOTSECPROO=$(BUILDDIR)/BOOTSEC.PRO.O
+BOOTSECPROVARS=$(BUILDDIR)/BOOTSEC.PRO.VARS.S
 FILERO=$(BUILDDIR)/FILER.O
 FILERX=$(BUILDDIR)/FILER.X
 FILERVARS=$(BUILDDIR)/FILER.VARS.S
@@ -124,7 +126,7 @@ $(DZX0TURBOVARS): $(DZX0TURBOO)
 	$(call VARS,/;DZX0TURBO.S;/,$(DZX0TURBOO))
 
 #
-# Boot Sector module
+# DOS 3.3 Boot Sector module
 #
 $(BOOTSEC33O): $(BUILDDIR)
 	$(MERLIN) "$(SRCDIR)"/BOOTSEC.33.S > "$(BUILDLOG)"
@@ -134,7 +136,17 @@ $(BOOTSEC33VARS): $(BOOTSEC33O)
 	$(call VARS,/;BOOTSEC.33.S;/,$(BOOTSEC33O))
 
 #
-# Filer (requires Memory Manager, Boot Sector)(compressed)
+# ProDOS Boot Sector module
+#
+$(BOOTSECPROO): $(BUILDDIR)
+	$(MERLIN) "$(SRCDIR)"/BOOTSEC.PRO.S > "$(BUILDLOG)"
+	$(call POSTMERLIN)
+
+$(BOOTSECPROVARS): $(BOOTSECPROO)
+	$(call VARS,/;BOOTSEC.PRO.S;/,$(BOOTSECPROO))
+
+#
+# Filer (requires Memory Manager, DOS 3.3 Boot Sector)(compressed)
 #
 $(FILERO): $(MMVARS) $(BOOTSEC33VARS)
 	$(MERLIN) "$(SRCDIR)"/FILER.S > "$(BUILDLOG)"
@@ -147,9 +159,9 @@ $(FILERX): $(FILERO)
 	$(ZX0) "$(FILERO)" "$@"
 
 #
-# DDisk module (requires Filer)(compressed)(self-decompressing)
+# DDisk module (requires Filer, ProDOS Boot Sector)(compressed)(self-decompressing)
 #
-$(DDISKO): $(FILERVARS)
+$(DDISKO): $(FILERVARS) $(BOOTSECPROVARS)
 	$(MERLIN) "$(SRCDIR)"/DDISK.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 

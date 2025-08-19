@@ -16,7 +16,6 @@ BOOTEND
             PUT   IO
             PUT   MESSAGES
             PUT   PRODOS
-            PUT   BOOTSEC.PRO
             PUT   LOCKRENAME
             PUT   PRINTER
             PUT   MENU

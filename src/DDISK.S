@@ -254,4 +254,6 @@ DDISK
 :TEMP       DB    $0
 :BITS       DB    $00,$80,$C0,$E0,$F0,$F8,$FC,$FE
 *
+PBOOT       PUTBIN  ../build/BOOTSEC.PRO.O
+*
 DDISKEND
