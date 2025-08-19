@@ -21,180 +21,71 @@
 :DEST       DB    0           ;MODIFY-POKED
             DEND
 *
-*
-* GENERAL PURPOSE DELAY ROUTINE
-*
-:DELAY      LDX   #$11
-]SPOT       =     *
-:DELAY2     DEX
-            BNE   :DELAY2
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-            INC   :COUNTL
-            BNE   :DELAY3
-            INC   :COUNTH
-:DELAY3     SEC
-            SBC   #$01
-            BNE   :DELAY
-            RTS
-:COUNTL     DB    $00
-*
-*
-* TELL RWTS WHAT TRACK IT'S ON
-*
-FAKTRK      JSR   :DRINDEX
-            STA   $478,X      ;STORE IN TABLE
-            RTS
-*
-* CONVERT SLOT&DRIVE TO INDEX IN XREG
-*
-:DRINDEX    PHA
-            LDA   HSLOT       ;0SSS0000
-            LSR               ;00SSS000
-            ORA   HDRIVE      ;00SSS021
-            LSR               ;000SSS02->1
-            LSR               ;0000SSS0->2
-            ROR               ;20000SSS
-            TAX
-            PLA
-            RTS
-*
-*
-************************************
-*    DISK SPEED CRITICAL CODE      *
-************************************
-*
-CRIT1       PHP
-            SEI
-            LDA   #$1D        ;INIT HIBYTE
-            STA   TEMP        ;OF COUNTER.
-            LDA   #$FF        ;WP CHECK DONE
-            STA   $C08F,X     ;WRITE MODE.
-            CMP   $C08C,X
-            PHA
-            PLA
-            NOP
-            LDA   #$FF
-]SPOT       =     *
-:NOPAGE     PHA
-            PLA
-:LOOP       JSR   :WRITE7
-            DEY
-            BNE   :NOPAGE
-            DEC   TEMP
-            BNE   :LOOP
-            CMP   $00
-            JSR   :WRITE5
-            PHA
-            PLA
-            NOP
-            NOP
-            LDY   #5
-:D5LOOP     LDA   #$D5
-            NOP
-            NOP
-            JSR   :WRITE0
-            DEY
-            BNE   :D5LOOP
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-            LDA   #$FF
-            JSR   :WRITE5
-            LDA   $C08E,X
-            LDA   $C08C,X
-            PLP
-:WRTS       RTS
-*
-CRIT2       PHP
-            SEI
-            LDY   #$00        ;INIT COUNT
-            STY   HEXNUM+1
-            LDX   HSLOT
-]SPOT       =     *
-:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
-            BPL   :LOOPD5
-            CMP   #$D5
-            BNE   :LOOPD5
-:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
-            BPL   :NOTD5
-            CMP   #$D5
-            BEQ   :NOTD5
-:LOOP1      PHA               ;20 U-SEC LOOP
-            PLA
-:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
-            CMP   #$D5        ;DONE COUNTING?
-            BEQ   :DONE
-            INY
-            BNE   :LOOP1
-            INC   HEXNUM+1
-            BNE   :LOOP2
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-:DONE       STY   HEXNUM
-            PLP
-            RTS
-*
+* These tables are now built dynamically on startup.
+* Labels are defined in VARS
 *
 * READ 62 TRANSLATE TABLE, ORG=xx96
 *
-            ERR   {*&$FF}-$96
-:RDTR62     DB    $00,$04
-            DB    $FF,$FF,$08,$0C,$FF,$10,$14,$18
-            DB    $FF,$FF,$FF,$FF,$FF,$FF,$1C,$20
-            DB    $FF,$FF,$FF,$24,$28,$2C,$30,$34
-            DB    $FF,$FF,$38,$3C,$40,$44,$48,$4C
-            DB    $FF,$50,$54,$58,$5C,$60,$64,$68
-:WAITBL2    DB    $70,$2C,$26,$22,$1F,$1E,$1D,$1C
-            DB    $FF,$FF,$FF,$6C,$FF,$70,$74,$78
-            DB    $FF,$FF,$FF,$7C,$FF,$FF,$80,$84
-            DB    $FF,$88,$8C,$90,$94,$98,$9C,$A0
-            DB    $FF,$FF,$FF,$FF,$FF,$A4,$A8,$AC
-            DB    $FF,$B0,$B4,$B8,$BC,$C0,$C4,$C8
-            DB    $FF,$FF,$CC,$D0,$D4,$D8,$DC,$E0
-            DB    $FF,$E4,$E8,$EC,$F0,$F4,$F8,$FC
+*            ERR   {*&$FF}-$96
+*RDTR62      DB    $00,$04
+*            DB    $FF,$FF,$08,$0C,$FF,$10,$14,$18
+*            DB    $FF,$FF,$FF,$FF,$FF,$FF,$1C,$20
+*            DB    $FF,$FF,$FF,$24,$28,$2C,$30,$34
+*            DB    $FF,$FF,$38,$3C,$40,$44,$48,$4C
+*            DB    $FF,$50,$54,$58,$5C,$60,$64,$68
+*WAITBL2     DB    $70,$2C,$26,$22,$1F,$1E,$1D,$1C
+*            DB    $FF,$FF,$FF,$6C,$FF,$70,$74,$78
+*            DB    $FF,$FF,$FF,$7C,$FF,$FF,$80,$84
+*            DB    $FF,$88,$8C,$90,$94,$98,$9C,$A0
+*            DB    $FF,$FF,$FF,$FF,$FF,$A4,$A8,$AC
+*            DB    $FF,$B0,$B4,$B8,$BC,$C0,$C4,$C8
+*            DB    $FF,$FF,$CC,$D0,$D4,$D8,$DC,$E0
+*            DB    $FF,$E4,$E8,$EC,$F0,$F4,$F8,$FC
 *
+*]SPOT       =     *
+*MIX1ST      DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            DB    0,2,1,3
+*            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
-]SPOT       =     *
-:MIX1ST     DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            DB    0,2,1,3
-            ERR   {*&$FF00}-{]SPOT&$FF00}
+*]SPOT       =     *
+*MIX2ND      DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
+*            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
+*            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
+*            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
+*            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
-]SPOT       =     *
-:MIX2ND     DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
-            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
-            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
-            DB    0,0,0,0,2,2,2,2,1,1,1,1,3,3,3,3
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-*
-]SPOT       =     *
-:MIX3RD     DS    16,0
-            DS    16,2
-            DS    16,1
-            DS    16,3
-            ERR   {*&$FF00}-{]SPOT&$FF00}
+*]SPOT       =     *
+*MIX3RD      DS    16,0
+*            DS    16,2
+*            DS    16,1
+*            DS    16,3
+*            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 * WRITE TRANSLATE
 *
-            ERR   {*&$FF}-$C0
-:WRTRANS    DB    $96,$97,$9A,$9B,$9D,$9E,$9F,$A6
-            DB    $A7,$AB,$AC,$AD,$AE,$AF,$B2,$B3
-            DB    $B4,$B5,$B6,$B7,$B9,$BA,$BB,$BC
-            DB    $BD,$BE,$BF,$CB,$CD,$CE,$CF,$D3
-            DB    $D6,$D7,$D9,$DA,$DB,$DC,$DD,$DE
-            DB    $DF,$E5,$E6,$E7,$E9,$EA,$EB,$EC
-            DB    $ED,$EE,$EF,$F2,$F3,$F4,$F5,$F6
-            DB    $F7,$F9,$FA,$FB,$FC,$FD,$FE,$FF
+*            ERR   {*&$FF}-$C0
+*WRTRANS     DB    $96,$97,$9A,$9B,$9D,$9E,$9F,$A6
+*            DB    $A7,$AB,$AC,$AD,$AE,$AF,$B2,$B3
+*            DB    $B4,$B5,$B6,$B7,$B9,$BA,$BB,$BC
+*            DB    $BD,$BE,$BF,$CB,$CD,$CE,$CF,$D3
+*            DB    $D6,$D7,$D9,$DA,$DB,$DC,$DD,$DE
+*            DB    $DF,$E5,$E6,$E7,$E9,$EA,$EB,$EC
+*            DB    $ED,$EE,$EF,$F2,$F3,$F4,$F5,$F6
+*            DB    $F7,$F9,$FA,$FB,$FC,$FD,$FE,$FF
 *
 ]SPOT       =     *
 :WAITBL1    DB    $01,$30,$28,$24,$20,$1E,$1D,$1C
@@ -255,7 +146,7 @@ CRIT2       PHP
 ]SPOT       =     *
 :RDSEC2     LDX   $C0EC       ;GET BYTE
             BPL   :RDSEC2
-            EOR   :RDTR62-$96,X  ;TRANSLATE,XOR
+            EOR   RDTR62-$96,X  ;TRANSLATE,XOR
             TAX
             LSR
             LSR
@@ -265,7 +156,7 @@ CRIT2       PHP
             BNE   :RDSEC2
 :RDSEC2A    LDX   $C0EC
             BPL   :RDSEC2A
-            EOR   :RDTR62-$96,X
+            EOR   RDTR62-$96,X
             TAX
             LSR
             LSR
@@ -279,10 +170,10 @@ CRIT2       PHP
 :RDPRIM1    STA   :DEST-$AB,Y  ;SAVE BYTE
 :RDPRM1A    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRM1A
-            EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
+            EOR   RDTR62-$96,X  ;TRANSLATE&EOR
             LDX   PRIM,Y      ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX1ST,X   ;MIX IN 2 BITS
+            ORA   MIX1ST,X    ;MIX IN 2 BITS
             INY
             BNE   :RDPRIM1
             PHA
@@ -292,10 +183,10 @@ CRIT2       PHP
             LDY   #$AA
 :RDPRIM2    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRIM2
-            EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
+            EOR   RDTR62-$96,X  ;TRANSLATE&EOR
             LDX   PRIM,Y      ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX2ND,X   ;MIX IN 2 BITS
+            ORA   MIX2ND,X    ;MIX IN 2 BITS
 :RDPRM2B    STA   :DEST-$54,Y  ;SAVE BYTE
             INY
             BNE   :RDPRIM2
@@ -305,17 +196,17 @@ CRIT2       PHP
 * READ 3RD THIRD OF PRIMARY
 *
             LDY   #$AC
-:RDPRIM3    EOR   :RDTR62-$96,X  ;TRANSLATE&EOR
+:RDPRIM3    EOR   RDTR62-$96,X  ;TRANSLATE&EOR
             LDX   PRIM-2,Y    ;GET 2ND BYTE
             AND   #$FC
-            ORA   :MIX3RD,X   ;MIX IN 2 BITS
+            ORA   MIX3RD,X    ;MIX IN 2 BITS
 :RDPRM3B    STA   :DEST,Y     ;SAVE BYTE
 :RDPRM3A    LDX   $C0EC       ;GET BYTE
             BPL   :RDPRM3A
             INY
             BNE   :RDPRIM3
             AND   #$FC
-            EOR   :RDTR62-$96,X
+            EOR   RDTR62-$96,X
             TAY               ;SAVE CKSM
             PLA
 :RDPRM3C    STA   :DEST+$55
@@ -584,7 +475,7 @@ PHRWTS      PHP
 :LP2ND      LDA   SECOND,Y    ;<-
 :WR2ND      EOR   SECOND-1,Y  ;<-
             TAX
-            LDA   :WRTRANS,X
+            LDA   WRTRANS,X
             LDX   :SLOTZP
             STA   $C08D,X
             LDA   $C08C,X
@@ -597,7 +488,7 @@ PHRWTS      PHP
             NOP
 :WRPRIM     EOR   PRIM,Y      ;<-
             TAX
-            LDA   :WRTRANS,X
+            LDA   WRTRANS,X
             LDX   :SLOTABS
             STA   $C08D,X
             LDA   $C08C,X
@@ -609,7 +500,7 @@ PHRWTS      PHP
 * WRITE CHECKSUM
 *
             TAY
-            LDA   :WRTRANS,Y
+            LDA   WRTRANS,Y
             JSR   :WRITE3
 *
 * WRITE DATA EPILOG
@@ -844,7 +735,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             LDA   :LASTRK
             CLC
             JSR   :KICKPH     ;KICK OLD OFF
-            LDA   :WAITBL2,Y  ;WAIT A BIT
+            LDA   WAITBL2,Y   ;WAIT A BIT
             JSR   :DELAY
             INC   :SPEED      ;TRY FASTER!
             BNE   :STEPLP     ;(ALWAYS)
@@ -1171,4 +1062,114 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             BCS   :BADSEC     ;ROUTINE.
             BCC   :GOODOUT
 *
+*
+*
+* GENERAL PURPOSE DELAY ROUTINE
+*
+:DELAY      LDX   #$11
+]SPOT       =     *
+:DELAY2     DEX
+            BNE   :DELAY2
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+            INC   :COUNTL
+            BNE   :DELAY3
+            INC   :COUNTH
+:DELAY3     SEC
+            SBC   #$01
+            BNE   :DELAY
+            RTS
+:COUNTL     DB    $00
 :COUNTH     DB    $00
+*
+*
+* TELL RWTS WHAT TRACK IT'S ON
+*
+FAKTRK      JSR   :DRINDEX
+            STA   $478,X      ;STORE IN TABLE
+            RTS
+*
+* CONVERT SLOT&DRIVE TO INDEX IN XREG
+*
+:DRINDEX    PHA
+            LDA   HSLOT       ;0SSS0000
+            LSR               ;00SSS000
+            ORA   HDRIVE      ;00SSS021
+            LSR               ;000SSS02->1
+            LSR               ;0000SSS0->2
+            ROR               ;20000SSS
+            TAX
+            PLA
+            RTS
+*
+*
+************************************
+*    DISK SPEED CRITICAL CODE      *
+************************************
+*
+CRIT1       PHP
+            SEI
+            LDA   #$1D        ;INIT HIBYTE
+            STA   TEMP        ;OF COUNTER.
+            LDA   #$FF        ;WP CHECK DONE
+            STA   $C08F,X     ;WRITE MODE.
+            CMP   $C08C,X
+            PHA
+            PLA
+            NOP
+            LDA   #$FF
+]SPOT       =     *
+:NOPAGE     PHA
+            PLA
+:LOOP       JSR   :WRITE7
+            DEY
+            BNE   :NOPAGE
+            DEC   TEMP
+            BNE   :LOOP
+            CMP   $00
+            JSR   :WRITE5
+            PHA
+            PLA
+            NOP
+            NOP
+            LDY   #5
+:D5LOOP     LDA   #$D5
+            NOP
+            NOP
+            JSR   :WRITE0
+            DEY
+            BNE   :D5LOOP
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+            LDA   #$FF
+            JSR   :WRITE5
+            LDA   $C08E,X
+            LDA   $C08C,X
+            PLP
+:WRTS       RTS
+*
+CRIT2       PHP
+            SEI
+            LDY   #$00        ;INIT COUNT
+            STY   HEXNUM+1
+            LDX   HSLOT
+]SPOT       =     *
+:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
+            BPL   :LOOPD5
+            CMP   #$D5
+            BNE   :LOOPD5
+:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
+            BPL   :NOTD5
+            CMP   #$D5
+            BEQ   :NOTD5
+:LOOP1      PHA               ;20 U-SEC LOOP
+            PLA
+:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
+            CMP   #$D5        ;DONE COUNTING?
+            BEQ   :DONE
+            INY
+            BNE   :LOOP1
+            INC   HEXNUM+1
+            BNE   :LOOP2
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+:DONE       STY   HEXNUM
+            PLP
+            RTS

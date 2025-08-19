@@ -272,6 +272,10 @@ SDNAME      DS    $100
 *
 CODEADR     =     $5B00       ;<----
 *
+MENUTSZ     EQU   $1E
+ZXMODSZ     EQU   $32
+ZXUNPSZ     EQU   $13B
+*
 TOPMEM      =     CODEADR-$300  ;$300 for VOLNMS, PRIM, SECOND, etc.
 VOLNMS      =     TOPMEM
 TRKBUF      =     TOPMEM-$5000
@@ -317,8 +321,23 @@ SOFAR       DS    $10
 INTRLV      DS    $10
 INTLV1      DS    $10
 SECS        DS    $10
+ZXMODULE    DS    ZXMODSZ
+ZXUNPACK    DS    ZXUNPSZ
+MENUTBL     DS    MENUTSZ
+JDDISK      DS    3
+JD1FILE     DS    3
+JDOTREE     DS    3
+            DS    2           ;free space here
+RDTR62      DS    $6A
+MIX1ST      DS    $40
+MIX2ND      DS    $40
+MIX3RD      DS    $40
+WRTRANS     DS    $40
+PHRWTSADR   DS    1
             DEND
-* This mustn't pass CODEADR.
+WAITBL2     =     RDTR62+$2A
+            ERR   {RDTR62&$FF}-$96
+            DEND
 *
 *
 * ProDOS global page stuff:
@@ -369,20 +388,3 @@ SIZEERR     EQU   $81         ;Request exceeds end of memory.
 TRANSERR    EQU   $82         ;Not all requested bytes were transferred.
 HNDERR      EQU   $83         ;Handle in zero page invalid (overwritten!)
 NOMEMERR    EQU   $84         ;No memory found in OPEN call.
-*
-* Things that live at the top of main memory,
-* just below ProDOS.
-* Defined here because *dependencies*.
-* There are assembler guards to verify the
-* sizes, so you'll need to adjust them if you
-* make changes to the main menu dispatch table
-* or the unpacker routines.
-MENUTSZ     EQU   $1E
-ZXMODSZ     EQU   $32
-ZXUNPSZ     EQU   $13B
-MENUTBL     EQU   MLI-MENUTSZ
-JDOTREE     EQU   MENUTBL-3
-JD1FILE     EQU   JDOTREE-3
-JDDISK      EQU   JD1FILE-3
-ZXUNPACK    EQU   JDDISK-ZXUNPSZ
-ZXMODULE    EQU   ZXUNPACK-ZXMODSZ

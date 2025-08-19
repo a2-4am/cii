@@ -4,13 +4,8 @@
 * modularized entry points
 *
 *labels in VARS
-*JDDISK
-            JMP   DDISK
-*JD1FILE
-            JMP   D1FILE
-*JDOTREE
-            JMP   DOTREE
 *MENUTBL
+]SPOT       =     *
             DW    COPY
             DW    CATALOG
             DW    DELETE
@@ -26,4 +21,10 @@
             DW    MAKESUB
             DW    SETPRINT
             DW    QUIT
-            ERR   *-MENUTBL-MENUTSZ
+            ERR   *-]SPOT-MENUTSZ
+*JDDISK
+            JMP   DDISK
+*JD1FILE
+            JMP   D1FILE
+*JDOTREE
+            JMP   DOTREE

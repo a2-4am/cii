@@ -20,10 +20,6 @@ MEMCPY      MAC
 :LOCATE     CLD
             CLI
 *
-* Move unpacker (and menu dispatch table) into place
-*
-            >>>   MEMCPY,DZX0BEG;DZX0END;ZXMODULE
-*
 * Move self-decompressing modules into place
 *
             >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
@@ -41,6 +37,11 @@ MEMCPY      MAC
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
             >>>   MEMCPY,D1FILEX7BEG;D1FILEX7END;D1FILE
             >>>   MEMCPY,DDISKX7BEG;DDISKX7END;DDISK
+*
+* Move interleave tables, unpacker, menu dispatch table,
+* and other global jump vectors into place
+*
+            >>>   MEMCPY,DZX0BEG;DZX0END;INTRLV
 *
             LDX   $FBB3       ;FOR LATER
 *
@@ -309,7 +310,67 @@ MEMCPY      MAC
             JSR   $800
 *
 :SKIPDAT
-            JMP   FILER       ;GO START
+*
+* build data tables for PHRWTS
+*
+            LDY   #0
+            LDX   #$16
+]BLOOP1
+            STX   $3C
+            TXA
+            ASL
+            BIT   $3C
+            BEQ   :BRANCH1
+            ORA   $3C
+            EOR   #$FF
+            AND   #$7E
+]BLOOP2
+            BCS   :BRANCH1
+            LSR
+            BNE   ]BLOOP2
+            TXA
+            ORA   #$80
+            STA   WRTRANS,Y
+            TYA
+            ASL
+            ASL
+            INY
+            DB    $CD
+:BRANCH1
+            LDA   #$FF
+            STA   RDTR62-$16,X
+            INX
+            BPL   ]BLOOP1
+            LDX   #8
+]BLOOP3
+            LDA   :SEEKTBL-1,X
+            STA   RDTR62+$2A-1,X
+            DEX
+            BNE   ]BLOOP3
+]BLOOP4
+            LDA   :BITTBL,X
+            STA   MIX1ST-$40,Y
+            INY
+            TYA
+:SMC        AND   #0
+            BNE   ]BLOOP4
+            INX
+            TXA
+            AND   #3
+            BNE   ]BLOOP4
+            TAX
+            TYA
+            BEQ   :BUILDERQ
+            ASL
+            ASL
+            BNE   ]BLOOP4
+            ROL
+            TAX
+            LDA   :MASKTBL,X
+            STA   :SMC+1
+            LDX   #0
+            BEQ   ]BLOOP4     ; always
+:BUILDERQ   JMP   FILER       ;GO START
 *
 :PFXLST     DB    $1
             DW    $280
@@ -323,6 +384,10 @@ MEMCPY      MAC
             DB    $2,$0
 *
 :RAMFLG     DB    $0
+*
+:SEEKTBL    DB    $70,$2C,$26,$22,$1F,$1E,$1D,$1C
+:BITTBL     DB    $00,$02,$01
+:MASKTBL    DB    $03,$0F
 *
 DOMEMCPY
             DUM   $F0
