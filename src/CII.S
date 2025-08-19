@@ -24,7 +24,6 @@
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
-            PUT   BOOTSEC.33
 *
             PUTBIN  ../build/SETCLOCK.X
 CLKXEND

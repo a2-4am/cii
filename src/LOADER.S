@@ -43,35 +43,6 @@ MEMCPY      MAC
 *
             >>>   MEMCPY,DZX0BEG;DZX0END;INTRLV
 *
-            LDX   $FBB3       ;FOR LATER
-*
-* MOVE NOBOOT TO $D000
-*
-            LDA   $C083
-            LDA   $C083
-            LDY   #0
-:NBLP       LDA   BOOTBEG,Y
-            CPY   #BOOTEND-BOOTBEG+1
-            BCC   :NBLP1
-            LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
-:NBLP1      STA   $D000,Y
-            INY
-            BNE   :NBLP
-*
-* WHILE WE'RE IN THE LANGUAGE CARD,
-* SAVE AUXMEM IRQ VECTOR.
-*
-            CPX   #6
-            BNE   :SKIPIRQ    ;NOT //E
-*
-            STA   $C009       ;AUX LC
-            LDA   $FFFE
-            STA   IRQSAV
-            LDA   $FFFF
-            STA   IRQSAV+1
-            STA   $C008
-*
-:SKIPIRQ    LDA   $C082
 *
 * FIGURE OUT SLOT NUMBER
 *
@@ -293,27 +264,42 @@ MEMCPY      MAC
 *
             >>>   UNPACK,MAINXEND;MAINEND
 *
-* Set reset vector now that we have somewhere to point to
+            BIT   A2E
+            BPL   :SKIPIRQ    ;NOT //E
+            LDA   $C083
+            LDA   $C083
 *
-            LDA   #FILER
-            STA   $3F2
-            LDA   #>FILER
-            STA   $3F3
-            EOR   #$A5
-            STA   $3F4
+* WHILE WE'RE IN THE LANGUAGE CARD,
+* SAVE AUXMEM IRQ VECTOR.
 *
-            LDA   MACHID
-            LSR
-            BCS   :SKIPDAT
+            STA   $C009       ;AUX LC
+            LDA   $FFFE
+            STA   IRQSAV
+            LDA   $FFFF
+            STA   IRQSAV+1
+            STA   $C008
 *
-            >>>   UNPACK,CLKXEND;$800+CLKEND-CLKBEG
-            JSR   $800
+:SKIPIRQ    
 *
-:SKIPDAT
-*
-* build data tables for PHRWTS
+* MOVE NOBOOT TO $D000
+* (this was part of the code we just unpacked,
+* in a region we're about to reuse for the PHRWTS
+* data tables)
 *
             LDY   #0
+:NBLP       LDA   BOOTBEG,Y
+            CPY   #BOOTEND-BOOTBEG+1
+            BCC   :NBLP1
+            LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
+:NBLP1      STA   $D000,Y
+            INY
+            BNE   :NBLP
+            LDA   $C082
+*
+* Build data tables for PHRWTS
+*
+* Y IS ALREADY 0
+*           LDY   #0
             LDX   #$16
 ]BLOOP1
             STX   $3C
@@ -370,7 +356,27 @@ MEMCPY      MAC
             STA   :SMC+1
             LDX   #0
             BEQ   ]BLOOP4     ; always
-:BUILDERQ   JMP   FILER       ;GO START
+:BUILDERQ
+*
+* Set reset vector now that we have somewhere to point to.
+* If user presses Reset while entering a date, it will jump
+* to FILER which can handle a null date.
+*
+            LDA   #FILER
+            STA   $3F2
+            LDA   #>FILER
+            STA   $3F3
+            EOR   #$A5
+            STA   $3F4
+*
+            LDA   MACHID
+            LSR
+            BCS   :SKIPDAT
+*
+            >>>   UNPACK,CLKXEND;$800+CLKEND-CLKBEG
+            JSR   $800
+*
+:SKIPDAT    JMP   FILER       ;GO START
 *
 :PFXLST     DB    $1
             DW    $280
