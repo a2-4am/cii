@@ -2,7 +2,8 @@
             DSK   ../build/DODEV.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/MATCH.VARS
+            ORG   MATCHEND
 DODEV
             ORG   *+3
 

@@ -30,3 +30,5 @@
             JMP   DOTREE
 *JDODEV
             JMP   DODEV
+*JMATCH
+            JMP   MATCH

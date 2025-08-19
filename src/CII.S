@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/MATCH.VARS
             PUT   ../build/DODEV.VARS
             PUT   ../build/DDISK.VARS
             PUT   ../build/D1FILE.VARS
@@ -42,6 +43,16 @@ MMXEND
             PUTBIN  ../build/FILER.X
 MAINXEND
             ERR   MAINXEND>BTPFX  ;BTPFX clobbered before FILER is unpacked
+*
+MATCHX7BEG
+            ORG   MATCH
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    MATCHEND
+            PUTBIN  ../build/MATCH.X7
+:X7END
+            ORG
+MATCHX7END
 *
 DODEVX7BEG
             ORG   DODEV
