@@ -732,7 +732,7 @@ SEECAT      LDA   #0
             STA   CURRV
 :NOTCURR    JSR   CSTAT
             LDA   #$FF
-            JSR   CATLN1      ;DISPLAY LINE
+            JSR   JCATLN1     ;DISPLAY LINE
             JSR   PNORML      ;SET NORMAL
             JSR   CROUT
             INC   SHOW        ;NEXT ENTRY
@@ -788,52 +788,7 @@ CATLIN      PHA
             JSR   PRSPC
             JSR   PRSPC
             PLA
-CATLN1      PHA
-            LDX   SHOW        ;SET *POINT
-            JSR   SETPNT
-            PLA
-CATLN2      BIT   DOSNOW
-            BPL   :CAT33
-            JMP   PCATLN
-*
-:CAT33      LDY   #$02
-            LDA   (POINT),Y   ;GET LOCKED
-            BMI   :LOCKED     ;STATUS
-            LDA   #" "        ;PRINT SPACE
-            BNE   :SEELOCK
-:LOCKED     LDA   #"*"        ;OR *
-:SEELOCK    JSR   PCOUT
-            JSR   FILTYP      ;FIND FILETYPE
-            LDA   TYPCHR,X    ;PRINT FILTYP
-            JSR   PCOUT       ;CHARACTER
-            JSR   PRSPC       ;PRINT SPACE
-            LDY   #$21        ;INDEX TO
-            LDA   (POINT),Y   ;FILE SIZE
-            STA   HEXNUM      ;PUT IN
-            INY               ;CONVERT
-            LDA   (POINT),Y   ;BUFFERS
-            STA   HEXNUM+1
-            JSR   HEXDEC      ;HEX->DECIMAL
-            JSR   PRTLZ       ;PRINT DIGITS
-            JSR   PRSPC       ;PRINT SPACE
-            JSR   CFILE       ;SEE FILENAME
-:OUT        RTS
-:LENGTH     DB    $0
-*
-*
-* FIND FILETYPE
-*
-FILTYP      LDX   #$08
-            LDY   #$02
-            LDA   (POINT),Y
-            AND   #$7F
-:LOOP       CMP   TYPBYT,X
-            BEQ   :OUT
-            DEX
-            BNE   :LOOP
-:OUT        RTS
-TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
-TYPCHR      ASC   "?BARSBAIT"
+            JMP   JCATLN1
 *
 * SLIDE SELECTED FILES TO TOP OF
 * STATUS ARRAY (ARROW FLAGGED)

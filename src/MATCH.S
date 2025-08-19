@@ -2,7 +2,8 @@
             DSK   ../build/MATCH.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/CATLN1.VARS
+            ORG   CATLN1END
 MATCH       
             ORG   *+3
 

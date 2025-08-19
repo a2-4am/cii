@@ -329,7 +329,8 @@ JD1FILE     DS    3
 JDOTREE     DS    3
 JDODEV      DS    3
 JMATCH      DS    3
-            DS    $0C         ;free space here
+JCATLN1     DS    3
+            DS    $09         ;free space here
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40
