@@ -395,9 +395,9 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 *
 :HEADER
-            ASC   "           Copy ][ Plus  8.5"
+            ASC   "           Copy ][ Reboot 1.0"
             DB    $8D
-            ASC   "(C) 1982-9 Central Point Software, Inc."
+            ASC   " (C) 1982-9 Central Point, (C) 2025 4am"
             DB    $8D
 :DASHES     ASC   "----------------------------------------"
             DB    $0
