@@ -131,7 +131,7 @@
 *    source code. UTIL.SYSTEM is byte-for-byte identical
 *    to v8.4 from 1989.
 *
-*  (in progress)  8.5
+*  (in progress)  Copy ][ Reboot 1.0
 *
 *  Remove bitcopy launchers and associated text and menu items.
 *    The utilities stand alone.
@@ -181,6 +181,9 @@
 *    if available. Other catalog displays now use 40 columns.
 *  No longer warn on startup about ProDOS 1.3. You should
 *    still upgrade ProDOS though. That is a very old version!
+*  Fixed off-by-1 bug that ended up writing junk data at the
+*    end of the boot sector of DOS-formatted floppy disks.
+*  Rebranded as Copy ][ Reboot.
 *  Distributed on a self-booting disk image with
 *    ProDOS 2.4.3 from <https://prodos8.com/>
 *    and the universal ("jumbo") clock driver from
