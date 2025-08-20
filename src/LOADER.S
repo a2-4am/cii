@@ -291,7 +291,7 @@ MEMCPY      MAC
 *
             LDY   #0
 :NBLP       LDA   BOOTBEG,Y
-            CPY   #BOOTEND-BOOTBEG+1
+            CPY   #BOOTEND-BOOTBEG
             BCC   :NBLP1
             LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
 :NBLP1      STA   $D000,Y
