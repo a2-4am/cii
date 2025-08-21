@@ -789,23 +789,3 @@ CATLIN      PHA
             JSR   PRSPC
             PLA
             JMP   JCATLN1
-*
-* SLIDE SELECTED FILES TO TOP OF
-* STATUS ARRAY (ARROW FLAGGED)
-*
-PATMOV      LDX   #$00
-            LDY   #$00
-:LOOP       LDA   STATUS,Y
-            BEQ   :NEXT
-            STA   STATUS,X
-            LDA   CBYTE,Y
-            STA   CBYTE,X
-            LDA   CSECTR,Y
-            STA   CSECTR,X
-            INX
-:NEXT       INY
-            CPY   NACTIV
-            BCC   :LOOP
-            STX   FILNUM
-            RTS
-
