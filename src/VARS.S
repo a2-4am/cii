@@ -3,50 +3,12 @@
 *
 CIIPVER     =     $85         ;version 8.5
 *
-* Printer message constants:
-QCAT        =     $01
-QVIEW       =     $08
-QBCOPY      =     $10
-QDISK       =     $12
-QDOS        =     $13
-QSPEED      =     $1B
-QREAD       =     $25
-QWRITE      =     $26
-QBLNK4      =     $27
-QBLNK3      =     $28
-QENTER      =     $29
-QSLOT       =     $2A
-QWRONG      =     $2B
-QFILE       =     $2C
-QSTAT0      =     $2D
-QSTAT2      =     $2F
-QSTAT3      =     $30
-QSTAT4      =     $31
-QTRACK      =     $33
-QSECTR      =     $34
-QCRESC      =     $35
-QNOFIL      =     $36
-QIO         =     $39
-QERROR      =     $3A
-QSPACE      =     $3C
-QINSC2      =     $3D
-QHEADR      =     $3E
-QDRIVE      =     $3F
-QDASH       =     $42
-QPRESS      =     $43
-QMORE       =     $44
-*
-*
 * Memory equates:
 *
 *  WARNING: ENHANCED APPLE //C CHANGES LOCATIONS
 *           $00 - $08 AT RESET
 *  MUST MAKE SURE VARIABLES AT $00 - $08 ARE NOT
 *  NEEDED AFTER RESET
-*
-* DOS UTILITY RELOCATOR
-SRC         =     $0
-DEST        =     $2
 *
 LINLIM      =     $00
 CURR        =     $01

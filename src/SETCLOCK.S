@@ -6,7 +6,7 @@
 *
 CLKBEG
 *
-            LDA   #QHEADR
+            LDA   #MHEADER
             JSR   PRINT
             JSR   PRHERE
             DB    $8D,$8D
