@@ -206,7 +206,8 @@ CDDOKEY     JSR   SEECAT
             DW    DO1
             DW    DO2
 *
-CPYADD      LDX   CURR        ;IS IT NOW
+CPYADD      EQU   *
+            LDX   CURR        ;IS IT NOW
             LDA   STATUS,X    ;EMPTY?
             BNE   :NOPE
             INC   FILNUM      ;YES:INC TOTAL
@@ -215,7 +216,8 @@ CPYADD      LDX   CURR        ;IS IT NOW
 :NOPE       CLC
             RTS
 *
-CPYTAB      JSR   LOHERE
+CPYTAB      EQU   *
+            JSR   LOHERE
             ASC   "Insert copy number: [Return]-Complete"
             DB    $8D
             ASC   "insertion, [Esc]-Back out"
@@ -228,7 +230,8 @@ CPYTAB      JSR   LOHERE
             JMP   PINVRS
 *
 *
-CPYNUM      JSR   CPYTAB
+CPYNUM      EQU   *
+            JSR   CPYTAB
             LDA   CPYDIG      ;PRINT DIGIT
             JSR   PHHEX
             JSR   PNORML
@@ -336,7 +339,8 @@ CPYNUM      JSR   CPYTAB
 :INSERT     DB    $0
 :TEMP       DB    $0
 *
-CPYENT      JSR   GETPAT
+CPYENT      EQU   *
+            JSR   GETPAT
             BCS   :OUT
             LDA   #$00
             STA   CURR
@@ -356,7 +360,8 @@ CPYENT      JSR   GETPAT
             LDA   #MPSTATE0
             JMP   LOWMES
 *
-CPYDEL      JSR   DODEL
+CPYDEL      EQU   *
+            JSR   DODEL
             BEQ   :CPYDEL0    ;NOTHING THERE
             DEC   FILNUM
 :CPYDEL0    JSR   SEECAT
@@ -378,10 +383,22 @@ DODEL       LDY   CURR        ;IS SOMETHING
             DEX               ;SET Z = 0
 :NOPE       RTS
 *
+* 'DIVE OUT' of subdirectory
 *
+* entry point called by COPY, DELETE, and
+* DISKMAP to return to parent directory
+* after operating on all the relevant files
+* in a subdirectory
 *
 DIVOUT      LDA   #0
-            DB    $2C
+            DB    $2C         ;HIDE LDA #$FF
+*
+* 'DIVE OUT' of subdirectory
+*
+* entry point called when user presses [<]
+* to return to parent directory during the
+* interactive catalog display
+* 
 DIVOT0      LDA   #$FF
             STA   :DIVFLAG
             LDA   #0
