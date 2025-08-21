@@ -107,7 +107,10 @@ FORMAT
             JSR   DEVTYP
             CMP   #1          ;/RAM?
             BEQ   :DOITNOW    ;YES
-            JSR   GETVOL      ;GET VOL NAME
+*GETVOL     
+            JSR   PRHERE
+            DB    $8D,$8D,$0
+            JSR   GVCOM       ;GET VOL NAME
             BCS   :GOFOUT     ;ABORT
 *
 *

@@ -854,8 +854,6 @@ SPLGO1      STA   $42
             RTS
 
 *
-GETVOL      JSR   PRHERE
-            DB    $8D,$8D,$0
 GVCOM       JSR   PRHERE
             ASC   "Volume Name: /"
             DB    $0
