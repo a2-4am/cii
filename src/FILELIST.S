@@ -672,20 +672,32 @@ INITCD      LDA   #$00
 *
 * SEE FILE QUEUE
 *
+* Entry point called by COPY, DELETE,
+* UNDELETE, and VERIFY during their
+* actual operation to show progress
+* by displaying a non-interactive
+* catalog display. '--MORE--' headers
+* and footers are disabled, and the
+* number of active files is controlled
+* by the operation rather than by
+* user interaction.
+*
 FILEQ       LDA   FILNUM
             STA   NACTIV
-*
-* FALL THRU TO SEECT1
-*
-*
+            LDA   #$FF
+            DB    $2C         ;HIDE LDA #0
+* FALL THRU
 *
 * SHOW A PAGE OF CATALOG
 * CURR, NACTIV MUST BE
 * INITIALIZED  ->
+* Entry point called by the interactive
+* catalog display to refresh the visible
+* file list after user scrolls, marks,
+* unmarks, renumbers, or enters a pattern.
 *
-SEECT1      LDA   #$FF
-            DB    $2C
-SEECAT      LDA   #0
+SEECAT      EQU   *
+            LDA   #0
             STA   CFLAG
             LDA   NACTIV      ;IF ANY
             BEQ   :OUT        ;ACTIVE FILES:
@@ -753,12 +765,14 @@ SEECAT      LDA   #0
             JMP   PRINT
 :COUNTER    DB    $0
 :VCOUNT     DB    $0
-CFLAG       DB    $0
+CFLAG       EQU   *
+            DB    $0
 *
 * DISPLAY CATALOG STATUS
 * SHOW POINTS TO ENTRY  ->
 *
-CSTAT       LDA   #$00
+CSTAT       EQU   *
+            LDA   #$00
             STA   CH
             LDX   SHOW        ;GET SELECT
             LDA   STATUS,X    ;STATUS
