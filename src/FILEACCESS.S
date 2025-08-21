@@ -363,8 +363,8 @@ INSS1       LDA   ONLY1       ;IF ONLY 1:
             BPL   :SELECT
             LDA   #0
             STA   SDFLG
-            LDA   #MINSSRC    ;'INSERT SOURCE DISK'
-            JSR   LOWMES
+            JSR   LOHERE
+            ASC   "Insert source disk",8D,00
             JSR   INSCOM      ;WAIT FOR KEY
             STA   PDOS        ;1
 :SELECT     RTS
@@ -387,11 +387,12 @@ INSD1       LDA   ONLY1
             BMI   :SELECT
             LDA   #$FF
             STA   SDFLG
-            LDA   #MINSTGT    ;'INSERT TARGET DISK'
-            JSR   LOWMES
-            JSR   INSCOM
+            JSR   PRINSTGT
             STA   SDOS        ;1
 :SELECT     RTS
+PRINSTGT    JSR   LOHERE
+            ASC   "Insert target disk",8D,00
+            JMP   INSCOM
 *
 SDFLG       DB    $0
 *

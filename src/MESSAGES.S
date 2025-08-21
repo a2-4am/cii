@@ -119,12 +119,10 @@ MDASHES     DS    1           ;now 3B
 MPRESS      DS    1           ;now 3C
 MMORE       DS    1           ;now 3D
 MHEADER     DS    1           ;3E
-MINSSRC     DS    1           ;now 3F
-MINSTGT     DS    1           ;now 40
 *
 * Enumerated error messages handled by OUCH/ERRMSG
 *
-MERRENUM    DS    1           ;now 41
+MERRENUM    DS    1           ;now 3F
             DS    1
             DS    1
             DS    1
@@ -213,22 +211,20 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :PRESS      ;now 3C
             DW    :MORE       ;now 3D
             DW    :HEADER     ;3E
-            DW    :INSSRC     ;now 3F
-            DW    :INSTGT     ;now 40
 *
-            DW    :ERR2B      ;41
+            DW    :ERR2B      ;3F
+            DW    :ERR44      ;40
+            DW    :ERR45      ;41
             DW    :ERR44      ;42
-            DW    :ERR45      ;43
-            DW    :ERR44      ;44
-            DW    :ERR48      ;45
-            DW    :ERR49      ;46
-            DW    :ERR4E      ;47
-            DW    :ERR3F      ;48
+            DW    :ERR48      ;43
+            DW    :ERR49      ;44
+            DW    :ERR4E      ;45
+            DW    :ERR3F      ;46
+            DW    :ERR52      ;47
+            DW    :ERR47      ;48
             DW    :ERR52      ;49
-            DW    :ERR47      ;4A
-            DW    :ERR52      ;4B
-            DW    :ERR2F      ;4C
-            DW    :ERR2F      ;4D
+            DW    :ERR2F      ;4A
+            DW    :ERR2F      ;4B
 *
 *
 *
@@ -410,12 +406,6 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 :MORE       ASC   "----------------- MORE -----------------"
             DB    $0
-*
-:INSSRC     ASC   "Insert source disk"
-            DB    $8D,$0
-*
-:INSTGT     ASC   "Insert target disk"
-            DB    $8D,$0
 *
 MONTH1      ASC   "JFMAMJJASOND"
 MONTH2      ASC   "AEAPAUUUECOE"

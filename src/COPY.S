@@ -192,9 +192,8 @@ COPY
             JSR   PCOUT       ;(Show the character typed)
             CMP   #"Y"
             BNE   :COPYQ      ;->Not Y.
-            LDA   #MINSTGT    ;Y: Prompt to insert target disk
-            JSR   LOWMES
-            JSR   INSCOM      ;Wait for keypress & clear message.
+            JSR   PRINSTGT    ;Y: Prompt to insert target disk,
+                              ;Wait for keypress & clear message.
             JSR   :ERRWND
             JSR   CROUT
             JSR   INIT
