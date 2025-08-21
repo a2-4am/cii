@@ -26,7 +26,13 @@ REN2        JSR   COMTRE
 *
 * RENAME VOLUME
 *
-RENVOL      JSR   NEWVOL      ;GET NEW NAME
+RENVOL      EQU   *
+*NEWVOL
+            JSR   PRHERE
+            DB    $8D,$8D
+            ASC   "New "
+            DB    $0
+            JSR   GVCOM
             BCS   :RENVOLQ
             JSR   RDBLK2
             LDY   #0

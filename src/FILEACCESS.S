@@ -854,11 +854,6 @@ SPLGO1      STA   $42
             RTS
 
 *
-NEWVOL      JSR   PRHERE
-            DB    $8D,$8D
-            ASC   "New "
-            DB    $0
-            JMP   GVCOM
 GETVOL      JSR   PRHERE
             DB    $8D,$8D,$0
 GVCOM       JSR   PRHERE
