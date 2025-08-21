@@ -3,6 +3,7 @@
             PUT   VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/VERIFY.VARS
+            PUT   ../build/RDDATA.VARS
             ORG   VERIFYEND
 VIEW        
             ORG   *+3

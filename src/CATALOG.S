@@ -3,6 +3,7 @@
             PUT   VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
+            PUT   ../build/RDDATA.VARS
             ORG   COPYEND
 CATALOG
             ORG   *+3

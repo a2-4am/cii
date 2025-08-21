@@ -6,6 +6,7 @@
             PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/RDDATA.VARS
             PUT   ../build/CATLN1.VARS
             PUT   ../build/MATCH.VARS
             PUT   ../build/DODEV.VARS
@@ -44,6 +45,16 @@ MMXEND
             PUTBIN  ../build/FILER.X
 MAINXEND
             ERR   MAINXEND>BTPFX  ;BTPFX clobbered before FILER is unpacked
+*
+RDDATAX7BEG
+            ORG   RDDATA
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    RDDATAEND
+            PUTBIN  ../build/RDDATA.X7
+:X7END
+            ORG
+RDDATAX7END
 *
 CATLN1X7BEG
             ORG   CATLN1

@@ -4,6 +4,7 @@
             PUT   ../build/FILER.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/DOTREE.VARS
+            PUT   ../build/RDDATA.VARS
             ORG   DOTREEEND
 COPY
             ORG   *+3

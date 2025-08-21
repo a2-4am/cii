@@ -2,7 +2,8 @@
             DSK   ../build/CATLN1.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/RDDATA.VARS
+            ORG   RDDATAEND
 CATLN1      
             ORG   *+3
 *

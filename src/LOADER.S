@@ -40,6 +40,7 @@ MEMCPY      MAC
             >>>   MEMCPY,DODEVX7BEG;DODEVX7END;DODEV
             >>>   MEMCPY,MATCHX7BEG;MATCHX7END;MATCH
             >>>   MEMCPY,CATLN1X7BEG;CATLN1X7END;CATLN1
+            >>>   MEMCPY,RDDATAX7BEG;RDDATAX7END;RDDATA
 *
 * Move interleave tables, unpacker, menu dispatch table,
 * and other global jump vectors into place
