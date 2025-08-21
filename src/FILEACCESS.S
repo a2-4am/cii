@@ -855,7 +855,7 @@ SPLGO1      STA   $42
 
 *
 GVCOM       JSR   PRHERE
-            ASC   "Volume name: /"
+            ASC   "olume name: /"
             DB    $0
 GVCOM1      LDA   #$0F
             STA   LINLIM

@@ -109,7 +109,7 @@ FORMAT
             BEQ   :DOITNOW    ;YES
 *GETVOL     
             JSR   PRHERE
-            DB    $8D,$8D,$0
+            ASC   8D,8D,"V",00
             JSR   GVCOM       ;GET VOL NAME
             BCS   :GOFOUT     ;ABORT
 *

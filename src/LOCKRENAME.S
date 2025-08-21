@@ -29,9 +29,7 @@ REN2        JSR   COMTRE
 RENVOL      EQU   *
 *NEWVOL
             JSR   PRHERE
-            DB    $8D,$8D
-            ASC   "New "
-            DB    $0
+            ASC   8D,8D,"New v",00
             JSR   GVCOM
             BCS   :RENVOLQ
             JSR   RDBLK2
