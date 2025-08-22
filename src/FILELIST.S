@@ -477,6 +477,16 @@ ST8MSG      LDA   STATE
             ADC   #MPSTATE0
             JMP   LOWMES
 *
+* 'DIVE IN' to subdirectory
+* called when user presses [>]
+* to enter a subdirectory during the
+* interactive catalog display
+*
+* also called from COPY after creating
+* a subdirectory, from DELETE while
+* deleting a subdirectory, and from
+* DISKMAP while entering a subdirectory
+*
 DIVEIN      JSR   CURPNT
             JSR   DIR?
             BCS   :NOTDIR
@@ -536,14 +546,16 @@ DIR?        LDY   #0
 *
 *
 *
-TOGGLE      LDX   CURR        ;GET CURRENT
+TOGGLE      EQU   *
+            LDX   CURR        ;GET CURRENT
             LDA   STATUS,X    ;FILE STATUS
             EOR   #$FF        ;TOGGLE IT
             STA   STATUS,X    ;REPLACE IT
 NIL         CLC
             RTS
 *
-PATTRN      JSR   GETPAT      ;READ PATTERN
+PATTRN      EQU   *
+            JSR   GETPAT      ;READ PATTERN
             BCS   :OUT
             LDA   #$00        ;INITIALIZE
             STA   CURR
@@ -559,7 +571,8 @@ PATTRN      JSR   GETPAT      ;READ PATTERN
             STA   CURR
             JMP   ST8MSG
 *
-NOPATT      LDA   CURR
+NOPATT      EQU   *
+            LDA   CURR
             STA   LASTM
             JSR   LOHERE
             ASC   "Enter filename (one file)"
@@ -588,7 +601,8 @@ LOKAST      JSR   CURPNT
             CLC
             RTS
 *
-LOKPAT      JSR   GETPAT      ;GET PATTERN
+LOKPAT      EQU   *
+            JSR   GETPAT      ;GET PATTERN
             BCS   :OUT
 *           JSR   ASKLOK
 *ASKLOK
@@ -626,7 +640,8 @@ LOKPAT      JSR   GETPAT      ;GET PATTERN
             JMP   LOWMES
 :LOCK       DB    $0
 *
-NEWNAM      JSR   LOHERE
+NEWNAM      EQU   *
+            JSR   LOHERE
             ASC   "Rename "
             DB    $0
             JSR   CURPNT
@@ -648,14 +663,17 @@ NEWNAM      JSR   LOHERE
 *
 * GET FILE NAME
 *
-GETFNM      LDA   #$1E        ;DOS FILENAME LIMIT
+GETFNM      EQU   *
+            LDA   #$1E        ;DOS FILENAME LIMIT
             BIT   DOSNOW
             BPL   GETLN0
             LDA   #$0F        ;PRODOS FILENAME LIMIT
-GETLN0      STA   LINLIM
+GETLN0      EQU   *
+            STA   LINLIM
             JMP   GETLN
 *
-GETPAT      LDA   CURR
+GETPAT      EQU   *
+            LDA   CURR
             STA   LASTM
             JSR   LOHERE
             ASC   "Enter filename (,opt. filetypes)",8D,"? ",00
@@ -663,6 +681,9 @@ GETPAT      LDA   CURR
             BNE   GETLN0      ;ALWAYS
 *
 * INITIALIZES CATALOG DISPLAY
+* called from catalog display, but also
+* from DIVECK after diving into or out of
+* a subdirectory, also from VIEW
 *
 INITCD      LDA   #$00
             STA   CURR
