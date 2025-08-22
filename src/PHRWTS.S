@@ -255,10 +255,10 @@ PHRWTS      PHP
             NOP
 :WRITE11    NOP
 :WRITE9     NOP
-:WRITE7     NOP
-:WRITE5     NOP
+WRITE7      NOP
+WRITE5      NOP
 :WRITE3     CMP   $00
-:WRITE0     STA   $C08D,X
+WRITE0      STA   $C08D,X
             CMP   $C08C,X
             RTS
 :SLOTABS    DB    $0
@@ -316,7 +316,7 @@ PHRWTS      PHP
 * WRITE ADDRESS PROLOG
 *
             LDA   #$D5
-            JSR   :WRITE0
+            JSR   WRITE0
             LDA   #$AA
             JSR   :WRITE9
             LDA   #$96
@@ -440,7 +440,7 @@ PHRWTS      PHP
 :GET2ND     LDA   SECOND      ;<-
             STA   :TEMPZP
             LDA   #$FF
-            JSR   :WRITE0
+            JSR   WRITE0
             NOP
             NOP
 *
@@ -459,7 +459,7 @@ PHRWTS      PHP
 *
             CMP   $00
             LDA   #$D5
-            JSR   :WRITE7
+            JSR   WRITE7
             LDA   #$AA
             JSR   :WRITE9
             LDA   #$AD
@@ -1099,79 +1099,6 @@ FAKTRK      JSR   :DRINDEX
             ROR               ;20000SSS
             TAX
             PLA
-            RTS
-*
-*
-************************************
-*    DISK SPEED CRITICAL CODE      *
-************************************
-*
-CRIT1       PHP
-            SEI
-            LDA   #$1D        ;INIT HIBYTE
-            STA   TEMP        ;OF COUNTER.
-            LDA   #$FF        ;WP CHECK DONE
-            STA   $C08F,X     ;WRITE MODE.
-            CMP   $C08C,X
-            PHA
-            PLA
-            NOP
-            LDA   #$FF
-]SPOT       =     *
-:NOPAGE     PHA
-            PLA
-:LOOP       JSR   :WRITE7
-            DEY
-            BNE   :NOPAGE
-            DEC   TEMP
-            BNE   :LOOP
-            CMP   $00
-            JSR   :WRITE5
-            PHA
-            PLA
-            NOP
-            NOP
-            LDY   #5
-:D5LOOP     LDA   #$D5
-            NOP
-            NOP
-            JSR   :WRITE0
-            DEY
-            BNE   :D5LOOP
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-            LDA   #$FF
-            JSR   :WRITE5
-            LDA   $C08E,X
-            LDA   $C08C,X
-            PLP
-:WRTS       RTS
-*
-CRIT2       PHP
-            SEI
-            LDY   #$00        ;INIT COUNT
-            STY   HEXNUM+1
-            LDX   HSLOT
-]SPOT       =     *
-:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
-            BPL   :LOOPD5
-            CMP   #$D5
-            BNE   :LOOPD5
-:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
-            BPL   :NOTD5
-            CMP   #$D5
-            BEQ   :NOTD5
-:LOOP1      PHA               ;20 U-SEC LOOP
-            PLA
-:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
-            CMP   #$D5        ;DONE COUNTING?
-            BEQ   :DONE
-            INY
-            BNE   :LOOP1
-            INC   HEXNUM+1
-            BNE   :LOOP2
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-:DONE       STY   HEXNUM
-            PLP
             RTS
 *
 SECS
