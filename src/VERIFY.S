@@ -364,7 +364,8 @@ VERIFY
 *    DISK SPEED CRITICAL CODE      *
 ************************************
 *
-CRIT1       PHP
+CRIT1       EQU   *
+            PHP
             SEI
             LDA   #$1D        ;INIT HIBYTE
             STA   TEMP        ;OF COUNTER.
@@ -404,7 +405,8 @@ CRIT1       PHP
             PLP
 :WRTS       RTS
 *
-CRIT2       PHP
+CRIT2       EQU   *
+            PHP
             SEI
             LDY   #$00        ;INIT COUNT
             STY   HEXNUM+1
