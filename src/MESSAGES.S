@@ -3,6 +3,16 @@
 *          MESSAGES               *
 *                                 *
 ***********************************
+HOTKEYS
+            ASC   "CTDLRAFYVMPUBSQ"  ; main menu
+            ASC   "PD"        ; FORMAT submenu
+            ASC   "FDWO"      ; COPY submenu
+            ASC   "NFDH"      ; CATALOG submenu
+            ASC   "DFS"       ; VERIFY submenu
+            ASC   "VT"        ; VIEW submenu
+            ASC   "FDO"       ; DELETE submenu
+            ASC   "FV"        ; RENAME submenu
+
 *
 * Menu IDs
 *
@@ -321,11 +331,11 @@ MESSAG      DW    :COPY       ;0 MENU 0
 *
 :NORMAL     ASC   "Normal"
             DB    $0
-:WLENGTH    ASC   "W/ File Lengths"
+:WLENGTH    ASC   "File Lengths"
             DB    $0
-:WDELETE    ASC   "W/ Deleted Files"
+:WDELETE    ASC   "Deleted Files"
             DB    $0
-:WHIDDEN    ASC   "W/ Hidden Chars"
+:WHIDDEN    ASC   "Hidden Chars"
             DB    $0
 *
 :SPEED      ASC   "Drive Speed"

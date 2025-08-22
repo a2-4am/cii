@@ -59,9 +59,9 @@ FILER       LDX   #$FF
 *:CHOOZ0
             JSR   CHOPOS
             JSR   PRHERE
-            ASC   "Use arrow keys",2F,8D
-            ASC   "& [Return] to",2F,8D
-            ASC   "select function",2F,8D,00
+            ASC   "Use hotkey or",2F,8D
+            ASC   "arrows & [Return]"
+            ASC   "to select",2F,8D,00
             JSR   INIT
             LDX   #$00
             JSR   CHOOZ
@@ -86,11 +86,25 @@ CHOOZ       JSR   MENU
 :LOOP1      JSR   CHKKEY
             BNE   :NOTARO
             BCS   :RIGHTA
-            BCC   :LEFTA
+            BCC   :LEFTA      ;ALWAYS
 *
 :NOTARO     CMP   #$8D        ;CR?
-            BNE   :LOOP1
+            BEQ   :CR
+            STA   :LASTKEY
+            LDY   FIRST,X
+:HKLOOP     LDA   :LASTKEY
+            CMP   HOTKEYS,Y
+            BEQ   :HK
+            INY
+            TYA
+            CMP   LAST,X
+            BNE   :HKLOOP
+            BEQ   :LOOP1      ;ALWAYS
 *
+:HK         TYA
+            STA   CHOICE,X
+            JSR   MENU
+* fall through to :CR
 :CR         SEC
             LDA   CHOICE,X
             STA   OPTCHS
@@ -120,14 +134,21 @@ CHOOZ       JSR   MENU
             JMP   CHOOZ
 *
 * DISPLAY MENU
-MENU        LDA   #4
-            CPX   #0
-            BEQ   :USE4
-            ASL
+MENU        LDA   #4          ;assume VTAB 4
+            CPX   #0          ;is main menu (X=0)?
+            BEQ   :USE4       ;Y->VTAB 4
+            ASL               ;N->VTAB 8
 :USE4       JSR   VLEFT
             LDA   FIRST,X     ;START AT ITS
             STA   :OPTNUM     ;1ST OPTION
-:LOOP       CMP   CHOICE,X    ;CHOSEN ONE?
+:LOOP       PHA
+            TAY
+            LDA   HOTKEYS,Y
+            JSR   PCOUT
+            LDA   #"-"
+            JSR   PCOUT
+            PLA
+            CMP   CHOICE,X    ;CHOSEN ONE?
             BNE   :SEEOPT
             JSR   PINVRS      ; INVERSE IT
 :SEEOPT     JSR   PRINT       ;PRINT IT
@@ -139,6 +160,7 @@ MENU        LDA   #4
             BNE   :LOOP       ;END OF MENU
             RTS
 :OPTNUM     DB    $0
+:LASTKEY    DB    $0
 *
 * Menus: (USE THE NAMED IDS LISTED IN MESSAGES)
 *  0 Main

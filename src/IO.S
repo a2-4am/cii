@@ -177,9 +177,9 @@ PRDKEY      BIT   $C010       ;NO TYPEAHEAD
 *
 * POSITION FOR MAIN SCREEN CHOOSES
 *
-CHOPOS      LDA   #$12
+CHOPOS      LDA   #$11
             STA   WNDWTH
-            LDA   #$16
+            LDA   #$17
             STA   WNDLFT
             LDA   #$04
 * fall through to VLEFT
