@@ -244,17 +244,6 @@ MEMCPY      MAC
             JSR   SETVID      ; change 80 screen to 40.
             JSR   SETKBD
             STA   KBDSTB
-            LDY   #0
-            STY   DOSNOW
-*            STY   AUXFLG     ; unused
-*            STY   PSLOT       ;NO PRINTER.
-            STY   FMT400K
-            DEY               ;FF
-            STY   TRKFLG
-            LDA   #$0A
-            STA   ASYNC
-            LSR               ;A-->5
-            STA   DSYNC
 *
 * Turn off 80 cols.
             BIT   FLAG80
@@ -284,13 +273,25 @@ MEMCPY      MAC
             STA   $C008
 *
 :SKIPIRQ    
+            LDA   #$0A
+            STA   ASYNC
+            LSR               ;A-->5
+            STA   DSYNC
+            LDY   #$FF
+            STY   TRKFLG
+            INY               ;Y=0
+            STY   DOSNOW
+*            STY   AUXFLG     ; unused
+*            STY   PSLOT       ;NO PRINTER.
+            STY   FMT400K
 *
 * MOVE NOBOOT TO $D000
 * (this was part of the code we just unpacked,
 * in a region we're about to reuse for the PHRWTS
 * data tables)
 *
-            LDY   #0
+* Y IS ALREADY 0
+*           LDY   #0
 :NBLP       LDA   BOOTBEG,Y
             CPY   #BOOTEND-BOOTBEG
             BCC   :NBLP1
