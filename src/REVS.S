@@ -152,6 +152,9 @@
 *  Use lowercase for most strings, if available.
 *  Add single-letter hotkeys to the main menu and submenus.
 *    Most are back-ported from v9.
+*  Add support for selecting next matching slot or drive by
+*    number in the 'Select Device' list. Algorithm back-ported
+*    from v9.
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.
 *  Add more recognized filetypes in catalog displays and

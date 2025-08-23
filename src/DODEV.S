@@ -24,7 +24,11 @@ DODEV
             BEQ   :GETVOLS
             CMP   #"/"
             BEQ   :GETVOLS
-            CMP   #$8D
+            CMP   #"1"
+            BCC   :NOTNUM
+            CMP   #":"
+            BCC   :NUM
+:NOTNUM     CMP   #$8D
             BNE   :KEYORD     ;BAD KEY
 *
 :CHOOSE     LDX   CURDEV
@@ -98,6 +102,46 @@ DODEV
 :ONLINE     DB    $2
             DB    $0
             DW    VOLNMS
+:NUM        AND   #$07        ;[4am] backport v9 behavior
+            ASL               ;to intelligently select slot/drive
+            ASL               ;based on digit pressed
+            ASL
+            ASL
+            STA   :NUMTEMP
+            CMP   #$30
+            BCC   :NUM2SLT
+:NUM2DRV    LDX   #0
+]NUMLOOP    LDA   DVICES,X
+            AND   #$F0
+            CMP   :NUMTEMP
+            BEQ   :GOODNUM
+            INX
+            CPX   NUMDEV
+            BCC   ]NUMLOOP
+            BEQ   ]NUMLOOP
+            JMP   :KEYORD     ;no match
+:GOODNUM    STX   CURDEV
+            JMP   :DEVMNU
+:NUM2SLT    LDX   #0
+]NUMLOOP    LDA   DVICES,X
+            AND   #$70
+            CMP   #$30
+            BCC   :NUM2DRV
+            INX
+            CPX   NUMDEV
+            BCC   ]NUMLOOP
+            BEQ   ]NUMLOOP
+            LDA   :NUMTEMP
+            CMP   #$10
+            PHP
+            LDX   CURDEV
+            LDA   DVICES,X
+            AND   #$70
+            PLP
+            BEQ   :NOORA
+            ORA   #$80
+:NOORA      STA   :NUMTEMP
+            JMP   :NUM2DRV
 *
 *
 :SEEDEVS    LDA   #2
@@ -183,5 +227,6 @@ DODEV
             DEY
             BNE   :SEEVLP
 :SEEVOLQ    RTS
+:NUMTEMP    DB    $0
 *
 DODEVEND
