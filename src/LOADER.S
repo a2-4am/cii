@@ -246,7 +246,7 @@ MEMCPY      MAC
             STA   KBDSTB
             LDY   #0
             STY   DOSNOW
-            STY   AUXFLG
+*            STY   AUXFLG     ; unused
 *            STY   PSLOT       ;NO PRINTER.
             STY   FMT400K
             DEY               ;FF

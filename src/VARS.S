@@ -278,7 +278,7 @@ ADRVOL      DS    1
 *
 DSYNC       DS    1
 DRES        DS    1           ;Data checksum result
-AUXFLG      DS    1           ;Read/write aux mem?
+            DS    1           ;[4am] remove unused AUXFLG
 TRKFLG      DS    1           ;Check track
 *
 SOFAR       DS    $10
