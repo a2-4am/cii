@@ -4,7 +4,7 @@
 *                                 *
 ***********************************
 HOTKEYS
-            ASC   "CTDLRAFYVMPUBSQ"  ; main menu
+            ASC   "CTDLRAFYVMPUBQ"  ; main menu
             ASC   "PD"        ; FORMAT submenu
             ASC   "FDWO"      ; COPY submenu
             ASC   "NFDH"      ; CATALOG submenu
@@ -46,7 +46,7 @@ MTSMAP      DS    1
 MNEWBOOT    DS    1
 MUNDEL      DS    1
 MMKDIR      DS    1
-MNEWINFO    DS    1
+*MNEWINFO    DS    1
 MQUIT       DS    1
 *
 * Message IDs used by each submenu are listed in
@@ -163,7 +163,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :NEWBOOT
             DW    :UNDEL
             DW    :MKDIR
-            DW    :NEWINFO
+*            DW    :NEWINFO
             DW    :QUIT
 *
             DW    :PRODOS     ;0F MENU 5 (was 7)
@@ -308,8 +308,8 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 :MKDIR      ASC   "Create Subdirectory"
             DB    $0
-:NEWINFO    ASC   "Set Printer Slot"
-            DB    $0
+*:NEWINFO    ASC   "Set Printer Slot"
+*            DB    $0
 :QUIT       ASC   "Quit"
             DB    $0
 *

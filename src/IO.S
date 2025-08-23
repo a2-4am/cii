@@ -299,8 +299,9 @@ PRTFIL      CLC
 :PRO00      PLP
             BCS   :PRO1       ;NO FILE NAME
             JSR   CFILE
-:PRO1       LDA   PRNTR?
-            BNE   :CFILEQ     ;DON'T CLREOL
+:PRO1
+*            LDA   PRNTR?
+*            BNE   :CFILEQ     ;DON'T CLREOL
             JMP   CLREOL
 *
 :DOS33      LDA   #2
@@ -452,29 +453,31 @@ PCOUT       BIT   A2E
 :FLASH      AND   #$3F        ;MAKE FLASH
             ORA   #$40
 *
-:CHKPRTR    CMP   #$80        ;IF FLASH OR
-            BCS   :GOCOUT     ;INVERSE:
-            PHA               ;SAVE CHAR...
-            LDA   PSLOT
-            ORA   #$C0
-            CMP   CSWL+1      ;PRINTING?
-            BNE   :NOTPRTR    ;NO
-            PLA               ;YES:
-            BIT   A2E         ;WATCHING OUT
-            BPL   :NLOWINV    ;FOR ALTCHR,
-            BIT   $C01E
-            BMI   :MAKNORM
-:NLOWINV    AND   #$3F
-:MAKNORM    ORA   #$80        ;CONVERT BACK
-            CMP   #$A0        ;TO PRINTING
-            BCS   :GOCOUT
-            ORA   #$40
-            BNE   :GOCOUT     ;(ALWAYS)
+:CHKPRTR    
+*            CMP   #$80        ;IF FLASH OR
+*            BCS   :GOCOUT     ;INVERSE:
+*            PHA               ;SAVE CHAR...
+*            LDA   PSLOT
+*            ORA   #$C0
+*            CMP   CSWL+1      ;PRINTING?
+*            BNE   :NOTPRTR    ;NO
+*            PLA               ;YES:
+*            BIT   A2E         ;WATCHING OUT
+*            BPL   :NLOWINV    ;FOR ALTCHR,
+*            BIT   $C01E
+*            BMI   :MAKNORM
+*:NLOWINV    AND   #$3F
+*:MAKNORM    ORA   #$80        ;CONVERT BACK
+*            CMP   #$A0        ;TO PRINTING
+*            BCS   :GOCOUT
+*            ORA   #$40
+*            BNE   :GOCOUT     ;(ALWAYS)
 *
-:NOTPRTR    PLA
-:GOCOUT     CMP   #$FF        ;SOME PRINTERS
-            BNE   :GOCOUT2    ;DELETE WITH
-            LDA   #$DF        ;FF'S
+*:NOTPRTR    PLA
+:GOCOUT     
+*            CMP   #$FF        ;SOME PRINTERS
+*            BNE   :GOCOUT2    ;DELETE WITH
+*            LDA   #$DF        ;FF'S
 :GOCOUT2    JMP   COUT
 *
 * DISPLAY SLOT AND DRIVE

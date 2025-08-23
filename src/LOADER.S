@@ -247,7 +247,7 @@ MEMCPY      MAC
             LDY   #0
             STY   DOSNOW
             STY   AUXFLG
-            STY   PSLOT       ;NO PRINTER.
+*            STY   PSLOT       ;NO PRINTER.
             STY   FMT400K
             DEY               ;FF
             STY   TRKFLG

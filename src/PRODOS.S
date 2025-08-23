@@ -576,9 +576,9 @@ PRVCOM      STA   UNIT
             STA   CH
             LDA   UNIT
             JSR   SEEDEV
-            LDA   PRNTR?
-            BPL   :SKIPCR
-            JSR   CROUT
+*            LDA   PRNTR?
+*            BPL   :SKIPCR
+*            JSR   CROUT
 :SKIPCR     LDA   #1
             JSR   VLEFT
             LDY   #0

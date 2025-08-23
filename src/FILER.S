@@ -17,6 +17,6 @@ BOOTEND
             PUT   MESSAGES
             PUT   PRODOS
             PUT   LOCKRENAME
-            PUT   PRINTER
+*            PUT   PRINTER
             PUT   MENU
 MAINEND                       ;where image of main program ends

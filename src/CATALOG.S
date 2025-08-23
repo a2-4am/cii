@@ -41,20 +41,20 @@ CATALOG
 :TRY80      JSR   COL80
 :CATCONT    JSR   TOP1
             JSR   PRVNM
-            JSR   ASKPR?      ;PRINTER ON?
-            LDA   PSLOT
-            BEQ   :SKIP2
-            JSR   HOME
+*            JSR   ASKPR?      ;PRINTER ON?
+*            LDA   PSLOT
+*            BEQ   :SKIP2
+*            JSR   HOME
 :SKIP2      JSR   RDACNT      ;GET CATALOG
             LDA   #$80
             STA   DELFLG      ;RESET DELETE
             LDA   #0
             STA   :COUNT      ;CR COUNTER
-            LDA   PRNTR?      ;YES PRINTER?
-            BEQ   :CHOOSE
-            JSR   HOME
-            JSR   PRON        ;PRINTER ON
-            JSR   :CROUNT
+*            LDA   PRNTR?      ;YES PRINTER?
+*            BEQ   :CHOOSE
+*            JSR   HOME
+*            JSR   PRON        ;PRINTER ON
+*            JSR   :CROUNT
 :CHOOSE     JSR   TOP1        ;3/6/87 (WAS TOP1A)
             JSR   PRVNM
             BIT   DOSNOW
@@ -101,16 +101,16 @@ CATALOG
             BPL   :HID3       ;CHAR
             CMP   #$A0
             BCS   :HID3       ;IF CONTROL,
-            BIT   PRNTR?
-            BMI   :PRTHID
+*            BIT   PRNTR?
+*            BMI   :PRTHID
             AND   #$1F
 * BIT *A2E
 * BPL HIDPUT
 * ORA #$40
 * STA    $C00F            ;ALTCHARSET
-            BPL   :HIDPUT     ;ALWAYS
+*            BPL   :HIDPUT     ;ALWAYS
 *
-:PRTHID     EOR   #$60        ;OR LOWERCASE
+*:PRTHID     EOR   #$60        ;OR LOWERCASE
 :HIDPUT     STA   (POINT),Y
 :HID3       INY               ;NEXT...
             CPY   #$21
@@ -242,8 +242,8 @@ CATALOG
             BMI   :NF1        ;80-COL
             INC   :COUNT
 :NF1        INC   SHOW
-            LDA   PRNTR?
-            BNE   :NEXTF
+*            LDA   PRNTR?
+*            BNE   :NEXTF
             LDA   :COUNT
             CMP   #$12
             BCC   :NEXTF
@@ -270,9 +270,9 @@ CATALOG
 :ALLDONE    JSR   CROUT
             JSR   :CSPACE
             JSR   CROUT
-            LDA   PRNTR?
-            BEQ   :ALLDN1
-            JSR   PROFF
+*            LDA   PRNTR?
+*            BEQ   :ALLDN1
+*            JSR   PROFF
 :ALLDN1     JMP   PRESS
 *
 :CSPACE     LDA   #>VTOC1

@@ -40,17 +40,17 @@ VIEW
             LDA   #5
             STA   WNDTOP
             JSR   :SEEFILE    ;FILENAME
-            JSR   ASKPR?      ;PRINT IT?
+*            JSR   ASKPR?      ;PRINT IT?
             JSR   SWPCHK      ;CHECK DISK
             JSR   OPNSRC      ;OPEN FILE
             LDA   #$FF
             STA   :RDFLAG
-            LDA   PRNTR?      ;PRINTER?
-            BNE   :PRINTIT
+*            LDA   PRNTR?      ;PRINTER?
+*            BNE   :PRINTIT
 *
-            LDA   PSLOT       ;ASKED?
-            BEQ   :NOASK
-            JSR   HOME        ;CLEAR
+*            LDA   PSLOT       ;ASKED?
+*            BEQ   :NOASK
+*            JSR   HOME        ;CLEAR
 :NOASK      LDA   #$05
             STA   WNDTOP
 :PAGELP     JSR   :PAGE       ;SEE PAGE
@@ -61,26 +61,26 @@ VIEW
             BEQ   :PAGELP
             BNE   :NEXTFIL
 *
-:PRINTIT    JSR   PRON
-            JSR   TOP1        ;PRINT HEADER
-            JSR   CROUT
-            JSR   :SEEFILE    ;& FILENAME
-            JSR   CROUT2
-            JSR   PROFF
-            LDA   #$05
-            STA   WNDTOP
-:PPAGELP    JSR   PRON
-            JSR   :PAGE       ;PRINT PAGE
-            PHP
-            JSR   PROFF
-            PLP
-            BCS   :PENDFIL
-            LDA   :DONE
-            BEQ   :PPAGELP
-:PENDFIL    JSR   PRON        ;FINISH WITH
-            JSR   CROUT2      ;2 BLANK LINES
-            JSR   PROFF
-            JMP   :NEXTFIL
+*:PRINTIT    JSR   PRON
+*            JSR   TOP1        ;PRINT HEADER
+*            JSR   CROUT
+*            JSR   :SEEFILE    ;& FILENAME
+*            JSR   CROUT2
+*            JSR   PROFF
+*            LDA   #$05
+*            STA   WNDTOP
+*:PPAGELP    JSR   PRON
+*            JSR   :PAGE       ;PRINT PAGE
+*            PHP
+*            JSR   PROFF
+*            PLP
+*            BCS   :PENDFIL
+*            LDA   :DONE
+*            BEQ   :PPAGELP
+*:PENDFIL    JSR   PRON        ;FINISH WITH
+*            JSR   CROUT2      ;2 BLANK LINES
+*            JSR   PROFF
+*            JMP   :NEXTFIL
 *
 *
 * PRINT FILENAME
@@ -192,7 +192,7 @@ VIEW
             JSR   PCOUT       ;PRINT CHAR
             DEC   :NCHARS     ;DEC CHAR COUNT
             BNE   :NXTCHR     ;TO ZERO?
-            LDA   PRNTR?
+*            LDA   PRNTR?
             BEQ   :DECNCRS
 :DOCR       JSR   CROUT
 :DECNCRS    DEC   :NCRS

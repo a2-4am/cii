@@ -26,14 +26,14 @@ STATE       =     $0F
 NACTIV      =     $10
 DELFLG      =     $11
 HEXNUM      =     $12         ;3
-PRNTR?      =     $15
+*PRNTR?      =     $15
 SECTOR      =     $16
 CPYDIG      =     $17         ;3 Insert-digits in COPY FILES display.
 * RAMFactor incorrectly uses zp location $19 during Smartport
 *  status call. My MM code stuffs $19 to make it work. Make
 *  sure $19 remains a temporary location.
 FILNUM      =     $1A
-PSLOT       =     $1B
+*PSLOT       =     $1B
 BITMSK      =     $1C         ;2
 TRACK       =     $1E
 *
@@ -236,7 +236,7 @@ SDNAME      DS    $100
 *
 CODEADR     =     $5B00       ;<----
 *
-MENUTSZ     EQU   $1E
+MENUTSZ     EQU   $1C
 ZXMODSZ     EQU   $32
 ZXUNPSZ     EQU   $13B
 *
@@ -294,7 +294,7 @@ JDOTREE     DS    3
 JDODEV      DS    3
 JMATCH      DS    3
 JCATLN1     DS    3
-            DS    $09         ;free space here
+            DS    $0B         ;free space here
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40

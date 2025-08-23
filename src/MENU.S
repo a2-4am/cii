@@ -53,7 +53,7 @@ FILER       LDX   #$FF
             JSR   PRINT
             JSR   :CINFO      ;DISK INFO LINE
             LDX   #$00        ;MAIN MENU
-            STX   PRNTR?
+*            STX   PRNTR?
             STX   RADR
             STX   TOPDIF
 *:CHOOZ0
@@ -179,32 +179,33 @@ CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERDISK,MVALUES,MPRODOS,MCOPFILE,MFILE
 *
 *   SEE DISK INFO
 *
-:CINFO      LDA   #$15
-            JSR   VLEFT
-            LDA   #$21
-            STA   CH
-            JSR   PRHERE
-            INV   "PRINTER"
-            DB    $0
+:CINFO
+*            LDA   #$15
+*            JSR   VLEFT
+*            LDA   #$21
+*            STA   CH
+*            JSR   PRHERE
+*            INV   "PRINTER"
+*            DB    $0
             LDA   #$16
             JSR   VLEFT
             LDA   DATE
             LDX   DATE+1
             JSR   SHODAT
-            LDA   #$21
-            STA   CH
-            LDA   PSLOT
-            BEQ   :OFF
-            PHA
-            LDA   #MSLOT
-            JSR   PRINT
-            PLA
-            JSR   PHHEX
-            JMP   CROUT
+*            LDA   #$21
+*            STA   CH
+*            LDA   PSLOT
+*            BEQ   :OFF
+*            PHA
+*            LDA   #MSLOT
+*            JSR   PRINT
+*            PLA
+*            JSR   PHHEX
+*            JMP   CROUT
 *
-:OFF        JSR   PRHERE
-            ASC   "  Off "
-            DB    $8D,0
+*:OFF        JSR   PRHERE
+*            ASC   "  Off "
+*            DB    $8D,0
             RTS
 *
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE

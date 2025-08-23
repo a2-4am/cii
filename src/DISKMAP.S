@@ -32,7 +32,8 @@ TSMAP
             JSR   KYESC
             JMP   :CBITMAP
 *
-:GOTFILS    JSR   ASKPR?
+:GOTFILS    
+*            JSR   ASKPR?
 *
 :CBITMAP    BIT   DOSNOW
             BPL   :CBIT33
@@ -117,7 +118,7 @@ TSMAP
             INY
             CPY   #$8C
             BCC   :TRKLP      ;DONE BITMAP
-            JSR   :PRSCRN     ;PRINT SCREEN?
+*            JSR   :PRSCRN     ;PRINT SCREEN?
             LDA   #MCRESC     ;PROMPT TO
             JSR   LINE24      ;CONTINUE
             JSR   KYESC
@@ -218,8 +219,9 @@ TSMAP
             BCS   :NEXT
             BCC   :PREV
 *
-:NOTARO     CMP   #"P"
-            BEQ   :PRINT
+:NOTARO
+*            CMP   #"P"
+*            BEQ   :PRINT
             BIT   DOSNOW
             BPL   :NXTFILE
             AND   #$EF
@@ -249,8 +251,8 @@ TSMAP
             DEC   CURR
             BCS   :NXTFILE    ;ALWAYS
 *
-:PRINT      JSR   :PRSCRN
-            JMP   :NXTFILE
+*:PRINT      JSR   :PRSCRN
+*            JMP   :NXTFILE
 *
 :MTSUB      LDA   #MMTSUB     ;EMPTY SUBDIR
             JSR   LINE24
@@ -341,72 +343,72 @@ TSMAP
             BCS   :NOPLOP1
 *
 *
-* PRINTER SCREEN DUMP FOR T/S MAP
-:PRSCRNQ    RTS
-:PRSCRN     LDA   PRNTR?
-            BEQ   :PRSCRNQ
+** PRINTER SCREEN DUMP FOR T/S MAP
+*:PRSCRNQ    RTS
+*:PRSCRN     LDA   PRNTR?
+*            BEQ   :PRSCRNQ
 * COPY SCREEN UP
-            LDA   #$16        ;STARTLASTLINE
-            STA   :VCOUNT
-:UP         LDA   :VCOUNT
-            JSR   :PRTAB
-            LDY   #$27        ;LAST CHAR
-:UP2        LDA   (BASL),Y    ;COPY UP
-            STA   (POINT),Y
-            DEY               ;BACK UP
-            BPL   :UP2
-            DEC   :VCOUNT     ;BACK UP
-            BPL   :UP
-* PRINT SCREEN IMAGE
-            JSR   PRON        ;PRINTER ON
-            JSR   CROUT
-            LDA   #$00
-            STA   :VCOUNT
-:PR         JSR   :PRTAB      ;DATA VTAB
-            LDY   #$00
-:PR2        LDA   (POINT),Y   ;GET CHAR
-            CMP   #$20        ;INVERSE SPACE
-            BNE   :PR3
-            LDA   #"*"        ;-> '*'
-:PR3        JSR   PCOUT       ;PRINT CHAR
-            INY
-            CPY   #$28        ;NEXT
-            BCC   :PR2
-            JSR   CROUT       ;PRINT CR
-            INC   :VCOUNT     ;NEXT LINE
-            LDA   :VCOUNT
-            CMP   #$16
-            BCC   :PR
-            JSR   PROFF
-* PUT SCREEN BACK (GENTLY)
-            DEC   :VCOUNT
-:DOWN       LDA   :VCOUNT
-            JSR   :PRTAB
-            LDY   #$27
-:DOWN2      LDA   (POINT),Y
-            STA   (BASL),Y
-            DEY
-            BPL   :DOWN2
-            DEC   :VCOUNT
-            BPL   :DOWN
-            RTS
+*            LDA   #$16        ;STARTLASTLINE
+*            STA   :VCOUNT
+*:UP         LDA   :VCOUNT
+*            JSR   :PRTAB
+*            LDY   #$27        ;LAST CHAR
+*:UP2        LDA   (BASL),Y    ;COPY UP
+*            STA   (POINT),Y
+*            DEY               ;BACK UP
+*            BPL   :UP2
+*            DEC   :VCOUNT     ;BACK UP
+*            BPL   :UP
+** PRINT SCREEN IMAGE
+*            JSR   PRON        ;PRINTER ON
+*            JSR   CROUT
+*            LDA   #$00
+*            STA   :VCOUNT
+*:PR         JSR   :PRTAB      ;DATA VTAB
+*            LDY   #$00
+*:PR2        LDA   (POINT),Y   ;GET CHAR
+*            CMP   #$20        ;INVERSE SPACE
+*            BNE   :PR3
+*            LDA   #"*"        ;-> '*'
+*:PR3        JSR   PCOUT       ;PRINT CHAR
+*            INY
+*            CPY   #$28        ;NEXT
+*            BCC   :PR2
+*            JSR   CROUT       ;PRINT CR
+*            INC   :VCOUNT     ;NEXT LINE
+*            LDA   :VCOUNT
+*            CMP   #$16
+*            BCC   :PR
+*            JSR   PROFF
+** PUT SCREEN BACK (GENTLY)
+*            DEC   :VCOUNT
+*:DOWN       LDA   :VCOUNT
+*            JSR   :PRTAB
+*            LDY   #$27
+*:DOWN2      LDA   (POINT),Y
+*            STA   (BASL),Y
+*            DEY
+*            BPL   :DOWN2
+*            DEC   :VCOUNT
+*            BPL   :DOWN
+*            RTS
 *
-:PRTAB      JSR   TABV
-            LDA   BASL
-            STA   POINT
-            CLC
-            LDA   BASL+1
-            ADC   #$38        ;<-
-            STA   POINT+1
-            RTS
+*:PRTAB      JSR   TABV
+*            LDA   BASL
+*            STA   POINT
+*            CLC
+*            LDA   BASL+1
+*            ADC   #$38        ;<-
+*            STA   POINT+1
+*            RTS
 *
-:COUNT      DB    $0
+*:COUNT      DB    $0
 :TEMPX      DB    $0
-:LETTER     DB    $0
-:TEMPH      DB    $0
-:TEMPV      DB    $0
+*:LETTER     DB    $0
+*:TEMPH      DB    $0
+*:TEMPV      DB    $0
 :TEMP       DB    $0
-:VCOUNT     DB    $0
+*:VCOUNT     DB    $0
 *
 TSMAPEND
             ORG
