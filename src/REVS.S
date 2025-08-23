@@ -135,6 +135,7 @@
 *
 *  Remove bitcopy launchers and associated text and menu items.
 *    The utilities stand alone.
+*  Remove printer support.
 *  Don't format RAM disk on quit if we didn't actually find one.
 *    This fixes a long-standing bug that could overwrite block 2
 *    of the last used device before quitting to ProDOS.
