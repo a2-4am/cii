@@ -56,17 +56,17 @@ FILER       LDX   #$FF
 *            STX   PRNTR?
             STX   RADR
             STX   TOPDIF
-*:CHOOZ0
+CHOOZ0
             JSR   CHOPOS
             JSR   PRHERE
             ASC   "Use hotkey or",2F,8D
             ASC   "arrows & [Return]"
-            ASC   "to select",2F,8D,00
+            ASC   "to select",2F,8D,2F,8D,2F,8D,2F,8D,2F,8D,2F,00
             JSR   INIT
-            LDX   #$00
-            JSR   CHOOZ
             LDX   #$FF
             STX   OPTCHS
+            INX
+            JSR   CHOOZ
 *
             ASL
             TAY
@@ -83,7 +83,10 @@ CHOOZ1      JSR   CHOPOS
             ASC   "Select option:",2F,8D,00
 *
 CHOOZ       JSR   MENU
-:LOOP1      JSR   CHKKEY
+:LOOP1      JSR   GETKEY
+            CMP   #$9B
+            BEQ   CHOOZ0
+            JSR   CHKKEY0
             BNE   :NOTARO
             BCS   :RIGHTA
             BCC   :LEFTA      ;ALWAYS

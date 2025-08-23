@@ -135,7 +135,7 @@ CASKEY      JSR   PRDKEY
             JMP   :LOW2UP
 *
 CHKKEY      JSR   KYESC
-            CMP   #$88        ;LEFT ARROW
+CHKKEY0     CMP   #$88        ;LEFT ARROW
             BEQ   :RETCLR
             CMP   #$8B        ;UP ARROW
             BEQ   :RETCLR
