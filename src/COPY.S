@@ -71,7 +71,7 @@ COPY
 *
 * *** COPY DISK ***
 *
-:ITSDISK    LDA   #$12        ;Set to say DISK (item $12), not DISK W/FORMAT
+:ITSDISK    LDA   #MCOPDISK   ;Set to say DISK, not DISK W/ FORMAT
             STA   OPTCHS      ; cuz DISK W/ FORMAT doesn't fit on screen.
             JSR   COMH00      ;Say it.
             JSR   :INSDSK
