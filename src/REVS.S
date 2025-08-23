@@ -150,10 +150,13 @@
 *    buffer starting address down to $1C00, which is unused at
 *    the time READBM is called.
 *  Use lowercase for most strings, if available.
+*  Add single-letter hotkeys to the main menu and submenus.
+*    Most are back-ported from v9.
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.
 *  Add more recognized filetypes in catalog displays and
-*    file lists, mostly IIgs-related.
+*    file lists, mostly IIgs-related, including 4 back-ported
+*    from v9.
 *      $16  PFS  PFS Document
 *      $2E  P8C  ProDOS 8 Code Module
 *      $42  FTD  File Type Definitions
@@ -193,7 +196,7 @@
 *  No longer warn on startup about ProDOS 1.3. You should
 *    still upgrade ProDOS though. That is a very old version!
 *  Fixed off-by-1 bug that ended up writing junk data at the
-*    end of the boot sector of DOS-formatted floppy disks.
+*    end of the boot sector code on DOS-formatted floppy disks.
 *  Rebranded as Copy ][ Reboot.
 *  Distributed on a self-booting disk image with
 *    ProDOS 2.4.3 from <https://prodos8.com/>
