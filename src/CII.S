@@ -235,6 +235,7 @@ QUITX7BEG
 :X7END
             ORG
 QUITX7END
+            ERR   QUITEND>$BEFF  ; can't clobber ProDOS global page
 *
 DZX0BEG
             ORG   INTRLV
