@@ -504,7 +504,9 @@ WRITBM      LDA   BM
 :TEMP       DB    $0
 *
 *
-PSPACE      LDA   #>DATA
+PSPACE      LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
+                              ;that can use $2000 consecutive bytes for the
+                              ;entire bitmap
             JSR   READBM
             LDA   BMLEN
             ASL

@@ -138,6 +138,17 @@
 *  Don't format RAM disk on quit if we didn't actually find one.
 *    This fixes a long-standing bug that could overwrite block 2
 *    of the last used device before quitting to ProDOS.
+*  PSPACE routine (used by all Catalog functions) and PUNDO0
+*    (used by Undelete Files) calls READBM to read the entire
+*    volume bitmap into a variable length buffer. On a large
+*    enough hard drive, this buffer can grow to $2000 bytes and
+*    clobber the sector interleave tables that are initialized
+*    at startup at CODEADDR-$30. Clobbering the interleave
+*    tables makes all Copy Disk operations of floppy disks fail
+*    until the program is restarted and the interleave tables
+*    are reinitialized. This has been fixed by moving the bitmap
+*    buffer starting address down to $1C00, which is unused at
+*    the time READBM is called.
 *  Use lowercase for most strings, if available.
 *  Support Pronto-DOS disks in Change Boot Program.
 *    Sectors for startup program and filetype are offset by 2.

@@ -206,6 +206,8 @@ VTOC1       =     SRCTSL+$100
 CAT1        DS    $F00
 SDIR        =     CAT1
 DOSDAT      =     *
+BMDATA      =     SDIR+$800   ;1C00 - variable buffer for bitmap, which
+                              ; can take up to $2000 bytes for giant disks
 DATA        =     SDIR+$2800
 DATPAG      =     DATA+$100
             DEND

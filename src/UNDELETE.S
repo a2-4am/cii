@@ -463,7 +463,9 @@ SWAPEM      EQU   *
 ********************************
 *
 PUNDO0      EQU   *
-            LDA   #>DATA
+            LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
+                              ;that can use $2000 consecutive bytes for the
+                              ;entire bitmap
             JSR   READBM      ;READ IN ENTIRE BITMAP
             JSR   CURPNT
 *
