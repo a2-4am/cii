@@ -63,10 +63,10 @@ CHOOZ0
             ASC   "arrows & [Return]"
             ASC   "to select",2F,8D,2F,8D,2F,8D,2F,8D,2F,8D,2F,00
             JSR   INIT
+            LDX   #$00
+            JSR   CHOOZ
             LDX   #$FF
             STX   OPTCHS
-            INX
-            JSR   CHOOZ
 *
             ASL
             TAY
@@ -85,8 +85,9 @@ CHOOZ1      JSR   CHOPOS
 CHOOZ       JSR   MENU
 :LOOP1      JSR   GETKEY
             CMP   #$9B
-            BEQ   CHOOZ0
-            JSR   CHKKEY0
+            BNE   :NOTESC
+            JMP   CHOOZ0
+:NOTESC     JSR   CHKKEY0
             BNE   :NOTARO
             BCS   :RIGHTA
             BCC   :LEFTA      ;ALWAYS
