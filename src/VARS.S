@@ -236,7 +236,7 @@ SDNAME      DS    $100
 *
 CODEADR     =     $5B00       ;<----
 *
-MENUTSZ     EQU   $1C
+MENUTSZ     EQU   $1E
 ZXMODSZ     EQU   $32
 ZXUNPSZ     EQU   $13B
 *
@@ -294,7 +294,7 @@ JDOTREE     DS    3
 JDODEV      DS    3
 JMATCH      DS    3
 JCATLN1     DS    3
-            DS    $0B         ;free space here
+            DS    $09         ;free space here
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40
@@ -309,6 +309,7 @@ WAITBL2     =     RDTR62+$2A
 *
 * ProDOS global page stuff:
 MLI         =     $BF00
+JCLOCK      =     $BF06
 DEVADR      =     $BF10
 DEVNUM      =     $BF30
 DEVCNT      =     $BF31

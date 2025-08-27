@@ -364,8 +364,6 @@ MEMCPY      MAC
 :BUILDERQ
 *
 * Set reset vector now that we have somewhere to point to.
-* If user presses Reset while entering a date, it will jump
-* to FILER which can handle a null date.
 *
             LDA   #FILER
             STA   $3F2
@@ -373,15 +371,7 @@ MEMCPY      MAC
             STA   $3F3
             EOR   #$A5
             STA   $3F4
-*
-            LDA   MACHID
-            LSR
-            BCS   :SKIPDAT
-*
-            >>>   UNPACK,CLKXEND;$800+CLKEND-CLKBEG
-            JSR   $800
-*
-:SKIPDAT    JMP   FILER       ;GO START
+            JMP   FILER       ;GO START
 *
 :PFXLST     DB    $1
             DW    $280

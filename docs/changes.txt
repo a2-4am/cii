@@ -1,0 +1,35 @@
+Differences from Copy ][ Plus 7.x to Copy ][ Plus 8.4
+
+- The principal changes were to the Copy Disk option. It can optionally format the target disk as part of the copy operation, which is useful when copying 3.5-inch disks. (For 5.25-inch disks, it always formats as it copies.)
+
+- Copy Disk also includes "extra memory" handling, to take advantage of most extra memory in your computer to reduce the number of disk swaps. If the entire disk image can fit into memory at one time, then the program can make multiple copies of the disk without having to reread the original source disk each time!  This is an improvement over the old "disk-image" copying used by earlier versions of Copy ][ Plus, so disk-image copying is no longer supported.
+
+- Copy File had a bug where, if you copied a file from a DOS 3.3 disk to a ProDOS disk, then immediately copied a large file between two ProDOS disks, the second file could end up being copied improperly. This has been fixed.
+
+Differences from Copy ][ Plus 8.4 to Copy ][ Reboot 1.0
+
+- All menu items and messages are displayed in mixed uppercase and lowercase, if available. On systems that do not support lowercase text, all menu items and messages will be displayed in uppercase as in previous versions.
+
+- All menu items can now be selected with single-letter hotkeys. Most hotkeys are the same as Copy ][ Plus v9.
+
+- Quit To ProDOS had a bug where, on systems with a large RAMdisk but not the standard small RAMdisk in slot 3 drive 2, Copy ][ Plus could end up writing bad data on block 2 of the boot volume, rendering it unbootable. This has been fixed.
+
+- Undelete Files and all Catalog options had a bug where, on large enough hard disks, an in-memory buffer for the volume bitmap would grow too large and overwrite internal data tables, causing all Copy Disk operations of floppy disks to fail until Copy ][ Plus was restarted. This has been fixed.
+
+- Catalog displays and file lists recognize 23 more filetypes, mostly IIgs-related.
+
+- Change Boot Program option now auto-detects and supports Pronto-DOS, in addition to Apple's DOS 3.3. Sector numbers for the startup program and filetype are offset by 2.
+
+- In the Copy File option, "Delete" has been renamed to "Unmark", and the hotkey [D] has been changed to [U]. Pressing [D] still works to unmark a file.
+
+- In the Quit option, it now says "Press [Return] to quit to ProDOS" instead of "Press [Q]". Pressing [Q] still works.
+
+- The Quit option has a new option, "Press [M] to enter monitor". This was first implemented in Copy ][ Plus v6.0 but never displayed. Now it is displayed.
+
+- On startup, the program no longer asks if you want 80-column catalog displays. Directory trees and the Catalog W/FILE LENGTHS option will always use 80 columns if available. Other catalog options will always use 40 columns.
+
+- On startup, the program no longer warns against using ProDOS version 1.3. You should still upgrade ProDOS, though. That is a very old version!
+
+- Printer support has been removed. Please do not print.
+
+- Bit copy programs have been removed from the disk and from the COPY menu. The utilities stand alone.

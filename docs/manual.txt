@@ -1,0 +1,1102 @@
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2025-08-25.
+
+With Copy ][ Reboot, you can
+
+- Copy any 16-sector unprotected 5.25-inch disk
+- Copy unprotected 3.5-inch disks
+- Copy files
+- Convert files between DOS and ProDOS formats
+- Catalog a disk
+- Catalog showing file lengths
+- Catalog showing deleted files
+- Delete files
+- Delete all information from a disk
+- Lock or unlock files
+- Rename files
+- Alphabetize the catalog
+- Format a disk
+- Verify that the disk is readable
+- Verify that files are readable
+- Check disk drive speed
+- View the contents of files
+- See a map of what files are stored where on the disk
+- Undelete files, to recover files that were accidentally deleted
+
+These options work with either DOS 3.3 or ProDOS disks. Because of the inherent differences between DOS and ProDOS, some additional options will work only with DOS disks, and some only with ProDOS disks. The options for DOS disks include
+
+- Copy DOS onto a disk
+- Catalog showing any hidden control characters
+- Delete DOS to free up more space for files
+- Change the boot program on the disk
+
+The options for ProDOS disks include
+
+- View any or all subdirectories without having to type pathnames
+- Rename a volume
+- Create new subdirectories
+
+Most of the options listed above are for standard DOS 3.3 or ProDOS disks only. However, the utility options Copy Disk and Verify Disk can be used with any 16-sector unprotected disks, including DOS 3.3, ProDOS, SOS, CP/M, and Pascal format disks.
+
+Note for Apple /// users: Copy ][ Reboot is designed to work only on Apple ][ series (or compatible) computers. However, Apple /// SOS stores files exactly like ProDOS. You can use Copy ][ Reboot on an Apple ][ to work with Apple /// SOS disks.
+
+The program can access ProDOS files stored on floppy disks, hard disks, RAMdisks, 3.5-inch disks, and any other ProDOS-compatible "intelligent" disk devices. This is because ProDOS itself has the ability to work with all of these devices.
+
+When accessing DOS 3.3 files, however, the program will work only with 35-track 5.25-inch disks. DOS 3.3, from Apple Computer, Inc., originally was designed and intended only for 5.25-inch disks. Various other companies have since devised elaborate "patches" or modified versions of DOS 3.3 to allow it to work with another type of disk device. Patches for different devices have sometimes conflicted with one another. Since Copy ][ Reboot works from ProDOS and directly handles the 5.25-inch disks itself, there is no DOS 3.3 in memory to "patch" for these other devices.
+
+Hardware Requirements & Recommendations
+
+To use Copy ][ Reboot, you need a 64K Apple ][ series (or compatible) computer. This can be
+
+- Apple ][ with 16K (or larger) memory card, or
+- Apple ][ Plus with 16K (or larger) memory card, or
+- Apple IIe, or
+- Apple IIc, or
+- Apple IIgs, or
+- Laser 128, or
+- Laser 128EX, or
+- other Apple-compatible computer with at least 64K of memory, and designed to work with ProDOS.
+
+For most options, you need only one disk drive. However, a second disk drive can be helpful when copying disks or files. The Copy Disk option can take advantage of additional memory to copy a disk with fewer passes: a 128K computer can copy a disk in fewer passes than a 64K computer. Also, if you have at least 128K of memory, then the program will look for other memory to reduce the number of passes further. (See Appendix B for information about what kinds of memory are supported.)
+
+What You Need to Know
+
+We assume that you are generally familiar with either DOS 3.3 or ProDOS, and the standard DOS operations such as Catalog, DELETE, RENAME, etc. If you need to know more about these things, you should refer to your DOS or ProDOS User's Manual. A few of the options are a little more complicated; this manual includes explanations for those options.
+
+Hexadecimal number notation is used throughout the program. Following usual computerese conventions, hexadecimal numbers are preceded with a dollar sign, as in "$05" for 5, "$0A" for 10, or "$10" for 16. Understanding hex numbers is helpful, but not necessary.
+
+For users interested in learning more, we recommend
+
+- "DOS Programmer's Manual" and/or "ProDOS Programmer's Manual", by Apple Computer, for information on DOS commands, with an appendix on disk file storage,
+
+- "Beneath Apple DOS" and/or "Beneath Apple ProDOS", by Quality Software, for information on file storage and track and sector formatting,
+
+- "Understanding the Apple II" or "Understanding the Apple IIe", also by Quality Software, with a chapter of in-depth information on 5.25-inch disk hardware.
+
+About This Manual
+
+This manual will show you how to use each option step-by-step. In nearly every case, the program will show "reminder" prompts as to what commands or menu options are valid. We encourage you to carefully read through this manual to take advantage of all of the program's features.
+
+- Appendix A is a technical reference on disks and disk hardware.
+
+- Appendix B discusses how and when the program uses extra memory in your computer.
+
+About The Disk
+
+When you boot the Copy ][ Reboot disk, the program automatically starts up and the main menu appears.
+
+If you have a hard disk, you may find it convenient to copy the program to your hard disk. The entire program is in the file UTIL.SYSTEM.
+
+The Copy ][ Reboot disk is a standard ProDOS disk and is not copy-protected in any way. You can make a backup of the disk using the Copy Disk option, or with any other standard disk copy program. We encourage you to back up Copy ][ Reboot right away, then put the original disk in a safe place, in case anything happens to your copy.
+
+The Main Menu
+
+After booting the Copy ][ Reboot disk or launching the program from your hard drive, the program loads completely into memory, and the main menu appears. At this point, it is safe to remove your Copy ][ Reboot disk.
+
+                 --v--
+
+           Copy ][ Reboot 1.0
+ (C) 1982-9 Central Point, (C) 2025 4am
+----------------------------------------
+
+C-Copy                 Use hotkey or
+T-Catalog Disk         arrows & [Return]
+D-Delete               to select
+L-Lock/Unlock Files
+R-Rename
+A-Alphabetize Catalog
+F-Format Disk
+Y-Verify
+V-View Files
+M-Disk Map
+P-Change Boot Program
+U-Undelete Files
+B-Create Subdirectory
+E-Enter Date
+Q-Quit
+
+
+
+<No Date>
+
+                 --^--
+
+Along the left side of the screen are the 15 main options. Some of these options have sub-menus to select specific functions.
+
+Throughout the program, you can press the Escape key ([Esc]) to safely back out of the sub-menu or current option.
+
+One of the menu items is always highlighted using inverse (black on white) letters. If you want to choose that option, just press [Return]. If you want to choose another option, pressing the arrow keys will move the highlight inverse field to that option. Try pressing the arrow keys a few times. The left arrow (and up arrow, if your computer has one) moves the inverse field up, and the right (and down) arrow moves it down. Once the option you want is highlighted, then press [Return] to run it. Note the prompt in the upper-right:
+
+                 --v--
+
+                       Use hotkey or
+                       arrows & [Return]
+                       to select
+
+                 --^--
+
+At the bottom of the screen, you see either today's date, or the phrase "<No Date>". When you're working with ProDOS disks, Copy ][ Reboot can "stamp" the date onto any files you're copying.
+
+Setting The Date
+
+Apple IIgs computers have a built-in clock, and there are add-on cards and chips that can be installed in other Apple II models to add clock functionality. The Copy ][ Reboot disk bundles a "jumbo" clock driver that supports many different clock cards and chips:
+
+- No-Slot Clock
+- The Cricket!
+- Applied Engineering DClock
+- ROMX Real-Time Clock
+- FujiNet Clock
+- Apple IIgs built-in clock
+- Thunderclock and all compatible cards
+
+If any supported clock driver is installed, Copy ][ Reboot determines the date automatically. If not, you have the option of entering the date yourself.
+
+To enter the date yourself, use the arrow keys to choose the "Enter Date" option, then press [Return]. The cursor will move to the date field in the lower left corner of the screen. Type in the 2-digit day of the month, the 3-letter abbreviation for the month, and the last 2 digits of the year. If you make a mistake, you can press the left arrow key to back up and type it again.
+
+If it can not determine the date automatically, and you do not enter a date manually, Copy ][ Reboot will simply stamp "<No Date>" as the date on any ProDOS files you copy.
+
+Catalog Options
+
+One of the most convenient aspects of the program is the easy way you can select which disks or files you want to work with. This is explained in this and following sections, but it applies to all of the options.
+
+To get a catalog of a disk, select the Catalog option. A sub-menu will appear on the right of the screen. The options are
+
+                 --v--
+
+                       N-Normal
+                       F-File Lengths
+                       D-Deleted Files
+                       H-Hidden Chars
+
+                 --^--
+
+Once again, use the arrow keys and [Return] to choose the option you want.
+
+Selecting Disks
+
+Copy ][ Reboot now needs to know which drive you want to work with. You should see a display similar to the following:
+
+                 --v--
+
+Select device:
+
+Slot 3  Drive 2: /RAM disconnected
+Slot 6  Drive 1
+Slot 6  Drive 2
+
+
+
+Press [?] to display volume names
+
+                 --^--
+
+The list of slots and drives you will see includes all floppy drives and compatible ProDOS disk devices that are plugged into your computer. Computers such as the Apple IIe, Apple IIgs, and Laser 128 have disk "ports" in addition to, or instead of, real slots.
+
+Here are the usual "slot" assignments made by different computers for drives connected to a drive port:
+
+- The Apple IIc and Laser 128 built-in drive are slot 6 drive 1. The drive connector is slot 6 drive 2.
+
+- The Laser 128EX drive connector is slot 6 drive 2 if a 5.25-inch drive is connected, or slot 7 drive 1 if a 3.5-inch drive is connected.
+
+- The Apple IIgs drive connector is slot 6 drives 1 & 2 for 5.25-inch drives, slot 5 drive 1 for the first 3.5-inch drive. If a RAMdisk is set up with the Control Panel, the RAMdisk is slot 5 drive 2 and a second 3.5-inch drive is slot 2 drive 1. Without a RAMdisk, a second 3.5-inch drive is slot 5 drive 2.
+
+The drive selection menu works very much like the main menu. To choose a drive, all you need to do is use the arrow keys so that the desired drive is highlighted, then press [Return].
+
+In addition, from this menu you can press [?] (you don't have to hold down the SHIFT key) to see what disks are in each drive. Suppose the Copy ][ Reboot disk is in drive 1 and a DOS 3.3 disk is in drive 2. If you press [?], the drives will whir and you'll see a list like this:
+
+                 --v--
+
+Slot 3  Drive 2: /RAM disconnected
+Slot 6  Drive 1: /COPY.II.REBOOT
+Slot 6  Drive 2: DOS 3.3
+
+                 --^--
+
+Any ProDOS disks will show a slash "/" and its ProDOS volume name. Any DOS disks will show "DOS 3.3", since DOS disks don't have volume names.
+
+If the disk you wanted is not in any drive, you can change disks, then press [?] again to make sure the correct disk is now in the drive. When the disk you want to work with is in an appropriate drive, use the arrow keys to highlight that drive, then press [Return]. You can also press [Esc] to back out if you decide you don't want to do this option.
+
+The "/RAM disconnected" designation in the display refers to the special small RAMdisk that ProDOS installs in any Apple II series (or compatible) computer that has 128K of memory. "/RAM" is an area of memory that ProDOS sets aside to act like a very fast disk drive, pretending to be slot 3 drive 2. If /RAM didn't contain any files (it won't if you just booted the Copy ][ Reboot disk), then Copy ][ Reboot disconnects it so that it can use the extra memory for its own uses. You can reconnect /RAM with the FORMAT option, described later.
+
+Note: Copy ][ Reboot will disconnect only the small built-in RAMdisk. If you have an "auxiliary-memory" based memory board plugged into your Apple IIe or IIc, and you've run the RAMdisk driver program supplied with your memory board, Copy ][ Reboot won't disturb the large RAMdisk it creates.
+
+Selecting Subdirectories (ProDOS only)
+
+What happens next depends on what kind of disk you've selected. If you're working with a ProDOS disk that contains one or more "subdirectories", then an additional display appears so that you can select which subdirectory you want. This is called the subdirectory "tree" display. The Copy ][ Reboot disk itself contains a few subdirectories. These subdirectories are empty (do not contain any files) and are included only so that you can see the tree display.
+
+As an example, make sure the Copy ][ Reboot disk is in the drive, then select the Catalog (Normal) option and the appropriate drive. The drive will whir for a few moments, then the screen will display something like this:
+
+                 --v--
+
+COPY.II.REBOOT--->SUB1--------->SUBSUB1
+                             !
+                             !->SUBSUB2
+
+                 --^--
+
+This diagram shows that the main, or "root" directory (which goes by the volume name "COPY.II.REBOOT") has one subdirectory, named SUBl. In addition, the subdirectory SUB1 contains two subdirectories of its own, named SUBSUBl and SUBSUB2. This is called a "tree" diagram because the subdirectories extend from the "root" directory like branches of a tree.
+
+By using the arrow keys, you can select any subdirectory. You can move up, down, right, or left, following the "branches" between directories. (If you have an Apple ][ or ][ Plus, press [A] to move up and [Z] to move down.) If the diagram is too large to fit on the screen, it will scroll automatically as you move around on the tree.
+
+When the directory you want is selected, press [Return] to actually see the files in that directory.
+
+Normal Catalog Option
+
+The "normal" catalog is similar to the standard DOS "Catalog" or ProDOS "CAT" command. Copy ][ Reboot checks the disk in the drive to see whether it is a DOS or a ProDOS disk. If it's a DOS disk, the disk volume number is shown, then for each file, the optional "locked" asterisk, the filetype letter, the file length (in sectors), and finally the filename are shown, one line for each file. If it's a ProDOS disk, Copy ][ Reboot lists the volume name, then for each file, the optional "locked" asterisk, the filename, the 3-letter filetype abbreviation, the file length (in blocks), and the date the file was last modified.
+
+The catalog pauses after every 20 files. You can continue by pressing any key (except [Esc], which will stop the catalog and return you to the main menu).
+
+Catalog Showing File Lengths Option
+
+The catalog showing "file lengths" shows all the same information as the normal catalog. For all Basic files, it also shows the actual length of the program in bytes. For binary files, it shows both the starting memory address of the file and its length. Here is an example DOS 3.3 catalog listing for two files:
+
+                 --v--
+
+*A 006 HELLO
+       L1137  (L$0471)
+*B 003 CHAIN
+       A2056, L456  (A$0808, L$01C8)
+
+                 --^--
+
+This shows that the Basic file HELLO is 1137 bytes long ($471 in hex), and the binary file CHAIN has a starting address of 2056 and a length of 456 (with corresponding hex numbers in parentheses).
+
+For ProDOS disks, the Catalog WITH FILE LENGTHS option is similar to the ProDOS 80-column Catalog command, adding the "created" date, the length of the file in bytes, and any "subtype" when appropriate.
+
+Catalog Showing Deleted Files Option
+
+The catalog showing "deleted files" includes the files on the disk which have been marked as deleted, but have not yet been overwritten by a new file entry. Any deleted files are marked in this display with the letter "D" to the left of the entry. Note that in some cases, deleted files can safely be recovered and made active again using the Undelete Files option, explained later.
+
+Catalog Showing Hidden Characters Option
+
+DOS 3.3 allows users to include hidden "control" characters in a filename. The catalog showing "hidden characters" allows you to see any embedded control characters, which are normally not printed by Copy ][ Reboot. The control characters show up as inverse characters.
+
+Since ProDOS does not normally allow hidden control characters in filenames, this option usually just prints a normal catalog with ProDOS disks.
+
+Copy Options
+
+The main menu Copy option gives you four separate choices:
+
+                 --v--
+
+                       F-Files
+                       D-Disk
+                       W-Disk w/ Format
+                       O-DOS
+
+                 --^--
+
+You will need to select two drives:
+
+1. The "source" drive, which will contain the original disk you want to copy from.
+
+2. The "target" drive, which will contain the disk you're copying to.
+
+Copy ][ Reboot will first ask you to "Enter source device" and show you the same menu described earlier for selecting one of the drives. After you've selected the source drive, it then asks you to "Enter target device". Select this drive in the same way. If you select the same drive for both source and target, Copy ][ Reboot will prompt you when to switch disks.
+
+Copy Files Option
+
+The Copy Files option allows you to copy standard DOS and ProDOS files from one disk to another quickly and easily. You can also use it to convert files between DOS and ProDOS formats. You should have the disks in the drives before making the source and target selections. If you have only one drive, you should have the source disk, the one containing the files to be copied, in the drive. The source drive will whir for a moment. If it contains a ProDOS disk with subdirectories, then the subdirectory "tree" display will appear for you to select which subdirectory contains the files you want to copy. Then a "file display" for the source disk will appear.
+
+Selecting Files
+
+The file display is used in various ways throughout Copy ][ Reboot for selecting files to be worked with. Here it is used to determine which files to copy. Note that the first file in the catalog is highlighted (displayed in inverse). By using the arrow keys, you can cause any file in the catalog to be highlighted. If you repeatedly press the arrow keys, the display will scroll.
+
+The prompt below the display reads
+
+                 --v--
+
+[Return]-Mark file, [U]nmark, [E]nter
+filename, Number-Insert, [G]o,
+[Esc]-Exit
+
+                 --^--
+
+These commands allow you to select not only which files to copy, but in what order to copy them! This is a handy feature if you want files to appear in a certain order on the catalog of a disk.
+
+Pressing [Return] will place a number to the left of the current (inverse) file. The first [Return] will place the number 1, the second a 2, etc. These numbers represent the order in which the files will be copied. If you accidentally press [Return] to mark a file you don't want to copy, you can unmark the file by moving the inverse field to that file and pressing [U] for Unmark. You can also make insertions in the list of numbers by typing a number directly, then pressing [Return].
+
+In addition, you can select one or more files by pressing [E], for Enter Filename. You can type a single filename, and the program will look for that name in the catalog display and mark it with the next available number. You can also enter filename "patterns".
+
+A pattern is a filename with one or more equals signs ("=") in it. The equals sign is a special "wildcard" character that will match any number of characters in the catalog, as long as the rest of the filename matches. For example, the pattern "AB=" will match the files "AB", "ABCDE", and "ABRAHAM". The pattern "=N=" will match the files "N", "OH NO", or any filename containing the letter N. The pattern "=" will match anything, and can be used when you want to copy every file on the disk.
+
+In addition, patterns can specify what filetypes to match. If you want to match only certain filetypes, finish the pattern by typing a comma, followed by the filetypes used in the catalog. For DOS 3.3 disks, these are the letters:
+
+A - Applesoft
+I - Integer
+B - Binary
+T - Text
+
+For example, the pattern "=XYZ,BT" will match any file whose name ends in "XYZ" and is a binary or text file. The pattern "=,A" will match any Applesoft Basic file.
+
+For ProDOS disks, the filetypes would be the ProDOS 3-letter abbreviations. For example, the pattern "=XYZ,BIN,TXT" will match any file whose name ends in "XYZ" and is a BINary or TeXT file. The pattern "=,BAS" will match any Applesoft BASic file.
+
+After you enter the pattern and press [Return], the program will scan through the display, marking all matching files. If no files match, the inverse field will return to the file that was in inverse before you pressed [E].
+
+If you're working with a ProDOS disk that contains subdirectories, the File Display also provides you with another way of selecting which subdirectory you want to work with. If you want to look "into" a subdirectory, use the arrow keys to highlight the subdirectory name. Now press the [>] (greater-than sign) key (you don't have to hold down the SHIFT key). The drive will whir, and the selected subdirectory will replace the directory you were looking at a moment before. If you want to "back out" of a subdirectory, just press [<] (less-than sign). You'll be returned to the next higher directory level. You can use the [>] and [<] keys to look into any subdirectory on the disk, before you decide which subdirectory you want to work with. You can only select files in one subdirectory at a time.
+
+Note: the Catalog option doesn't have this [>], [<] feature. If you want to browse a number of subdirectories on a disk, one good way is to choose one of the file options, such as VIEW FILES, to bring up the file display. Then you can press [>] and [<] to look at different subdirectories.
+
+Continuing with Copy Files
+
+If you're copying files from a ProDOS disk that contains subdirectories, you can also copy entire subdirectories! Just use the arrow keys and [Return] to number the subdirectory like the files you're copying. Copy ][ Reboot will automatically copy the subdirectory and every file inside the subdirectory.
+
+When you've selected all the files that you want to copy, press [G] for Go to begin the copy. If only one drive is being used, you will be prompted to insert the proper disk.
+
+As the files are copied the program will check to see if any of the files already reside on the target disk. If there are duplicate filenames, you will be prompted, as in this example:
+
+                 --v--
+
+File HELLO
+already exists. Now what?
+[C]opy Anyway, [N]ew Name, [D]on't Copy,
+[Esc]-Exit Copy
+
+                 --^--
+
+If the duplicate file is locked, the prompt will say "& is locked" as well.
+
+If you select to "Copy Anyway", the original file on the target disk will be deleted, then the new file copied. If you select "New Name", you will be asked to type in a new name for the file. Selecting "Don't Copy" will skip this file and continue with the next files, if any. Pressing [Esc] will exit out of the entire copy option.
+
+As the files are being copied, they are shown in the file display, with the file currently being copied shown highlighted. At the bottom of the screen, you'll also see the word "Target:", with the name of the file being copied. This is especially useful if you're copying files from a DOS 3.3 disk onto a ProDOS disk. Since ProDOS has more restrictions concerning filenames, Copy ][ Reboot might have to slightly change the name of the DOS file to fit ProDOS rules. This changed filename is shown after the word "Target:" for your information.
+
+Created and Modified Dates (ProDOS Only)
+
+Copy ][ Reboot follows a certain convention for the created and modified dates of any ProDOS files it copies. These are the dates that can be seen with the Catalog option. Copy ][ Reboot uses the current date as the created date when making a copy of a file, rather than using the created date of the original file. The modified date of the copied file is kept the same as the original file. This convention is the same as that used in Apple's FILER program, but different from their Apple II System Utilities program.
+
+This approach is intentional, as it provides useful information: if the created date of a file is more recent than the modified date, this tells you that this file is a copy of another file. The created date indicates when the copy was made, and the modified date indicates when the last changes were made to the original file. If the created date is older than the modified date, this means the file has been modified on this disk since it was placed there.
+
+Converting Files Between DOS 3.3 and ProDOS
+
+Converting files between DOS 3.3 and ProDOS is very straightforward with Copy Files. To convert files from DOS to ProDOS, simply choose the Copy Files option and select the DOS disk as the source disk and the ProDOS disk as the target disk. Select the files you want to convert and press [G] for Go. Copy ][ Reboot will automatically recognize that the disks are of different types, and convert the files as it copies. To convert ProDOS to DOS, instead select the ProDOS disk as the source and the DOS disk as the target disk.
+
+Copy Disk Option
+
+The Copy Disk option can make fast, reliable copies of any standard unprotected 16-sector disks. (DOS 3.3, ProDOS, SOS, CP/M, and Pascal disks all use a 16-sector format.) Copy Disk can also copy unprotected 3.5-inch Apple-format disks, or copy between any two ProDOS disk devices that have the same size.
+
+The Copy Disk option is not intended for copying information between disks of different sizes. If, for example, you could copy all the blocks from a 140K floppy disk (including the disk "bookkeeping" blocks) onto a 1Meg RAMdisk, the RAMdisk would now "think" that it was only a 140K disk, too. That would leave the rest of the RAMdisk unusable. If you want to copy information between disks of different sizes, instead choose the Copy Files option.
+
+To copy a disk, simply choose the Copy Disk option, select source and target drives, insert the disks, and press [Return]. If for some reason you wish to stop the copying, pressing [Esc] will take you back to the main menu. If you're copying using only one drive, Copy ][ Reboot will tell you when to insert each disk.
+
+Copy Disk can take advantage of most kinds of extra memory in your computer to reduce the number of passes needed to copy a disk. As the Copy Disk option makes the copy, it first reads a number of tracks (or a number of blocks) from the "source" disk into memory, then writes those tracks (or blocks) to the "target" disk. It repeats this process (each called a "pass") until all the tracks or blocks are copied. If you're copying from one drive to another, the number of "passes" back and forth between the two drives doesn't really matter much. However, if you're copying with only one drive, the extra-memory handling can reduce the number of times you have to swap disks. See Appendix B for information about what kinds of memory Copy ][ Reboot can use.
+
+If the entire disk's contents can be read into memory in one pass, then when the copy is completed, you're offered the option to make additional copies of the same disk. These copies are made more qUickly, since the original "source" disk doesn't have to be read again. This is ideal for mass duplication of a single disk, such as a user group's public domain software library.
+
+Copying 5.25-Inch Disks
+
+When copying unprotected 5.25-inch disks, Copy ][ Reboot uses its own optimized floppy disk capabilities for greater speed. It copies the disk track by track, and automatically formats as it copies, so disks do not have to be formatted ahead of time. It doesn't matter whether you choose Copy Disk or Copy Disk W/ FORMAT when copying 5.25-inch disks; Copy ][ Reboot's built-in floppy routines always format-and-write simultaneously.
+
+There are 35 tracks on a 5.25-inch disk, numbered in hexadecimal from $00 to $22. As it reads or writes each track, Copy ][ Reboot displays the track number at the bottom of the screen.
+
+Copy Disk also checks for errors as it copies. If an error occurs, a message will be displayed showing what kind of error it is (Read error or Write error) and what track on the disk it occurred on. The program will continue copying the rest of the disk. A read error means that one or more sectors on the source disk are unreadable. The disk media itself may or may not be damaged. If a write error occurs, then the media on the destination disk is most likely damaged. Double-check everything, then try again.
+
+Even if the Copy Disk routine reads a bad sector, it will still write a "good" sector to the destination disk. That is, some of the data in that sector may be inaccurate, but an I/O error will usually not occur if that sector on the destination disk is read. If a disk is getting old and begins to create I/O errors, the data should be copied to a new disk using Copy Disk.
+
+Copying 3.5-inch Disks
+
+When copying 3.5-inch disks, Copy ][ Reboot handles the information block-by-block through ProDOS, rather than track-by-track, because of the inherent differences between 3.5-inch drives and 5.25-inch drives. Choose Copy Disk if you know the target disk is already formatted; otherwise choose Copy Disk W/ FORMAT to format the target disk as part of the copy process (which takes a little longer).
+
+Continuing with Copy Disk
+
+When the copy is complete, and if the copy took just one "pass", you'll then see this prompt:
+
+                 --v--
+
+Copy same onto another disk (Y/N) ?
+
+                 --^--
+
+If you want to make a second copy of the same disk, press Y (for Yes). You'll be prompted to insert a new target disk. Insert a second disk and press [Return]. A second copy will be made onto this disk. The "Copy same" question will then be repeated so you can make more copies if you want.
+
+Copy DOS Option (DOS 3.3 Only)
+
+Copy DOS is similar to Copy Disk, but it copies only the first three tracks of a disk. This is where the Disk Operating System is stored on DOS 3.3 disks. You can use Copy DOS to add DOS to a disk that was formatted with the Copy ][ Reboot FORMAT option. See Format Disk below for more information.
+
+You can copy a new DOS onto a disk that has somehow had its DOS tracks damaged or erased. You can also convert an initialized, or "slave" disk into a "master" disk. The difference between initialized and master disks is not important in most applications. See the Apple DOS 3.3 manual for more information.
+
+To copy the DOS from one disk to another, insert a disk that contains the DOS into the source drive and the disk to "receive" the DOS into the target drive, then choose the Copy DOS option. The DOS will be copied onto the target disk. If you choose Copy DOS and select a ProDOS disk by mistake, Copy ][ Reboot will simply inform you that this is "Not a ProDOS function".
+
+Delete Options
+
+The main Delete option has three sub-options:
+
+                 --v--
+
+                       F-Files
+                       D-Disk
+                       O-DOS
+
+                 --^--
+
+Delete Files Option
+
+This option is equivalent to the standard DOS or ProDOS "DELETE" command, except that a number of files can be deleted at one time. Choose the Delete Files option, then select the appropriate drive. If the disk contains ProDOS subdirectories, the subdirectory "tree" display will appear so that you can select the subdirectory in which you want to delete files.
+
+A File Display appears next, similar to the one used in Copy Files. As before, you can use the [>] and [<] keys to browse through any subdirectories on the disk before selecting files to delete. This prompt appears at the bottom of the screen:
+
+                 --v--
+
+[Return]-Toggle marker, [E]nter
+filename, [G]o, [Esc]-Exit
+
+                 --^--
+
+Pressing [Return] causes an arrow "->" to appear to the left of the file entry. The arrow marks the file to be deleted. Repeatedly pressing [Return] toggles the arrow on and off. A number of files are marked by using the arrow keys and [Return]. A filename or pattern can also be entered with [E]. The rules for the pattern are the same as for Copy Files. Any file that matches the pattern will be marked to be deleted.
+
+To carry out the deletion, press [G] for Go. All files marked will be deleted. The file display will show the filenames as the files are deleted.
+
+Note: if you want to delete a subdirectory on a ProDOS disk, first find that subdirectory in the tree display that appears. Back up one level (to the left) in the tree display, highlight that subdirectory, and press [Return] to bring up the file display for that higher subdirectory. Now find the name of the original subdirectory (the one you want to delete) as an entry within this file display. Press [Return] to mark it. If you mark a ProDas subdirectory to be deleted, Copy ][ Reboot will delete the subdirectory itself and every file within the subdirectory.
+
+Delete Disk
+
+The Delete Disk option cleanly erases all the "record-keeping" information on the disk, including the names and locations of the files, and the presence or absence of DOS or ProDOS. Deleting a disk is similar to reformatting it to start over, but takes less time. An unformatted disk, however, must be formatted before it can be used.
+
+The program will display the disk's volume name (for ProDOS disks) or volume number (for DOS 3.3 disks). An extra warning prompt will appear on the screen to prevent data from inadvertently being destroyed:
+
+                 --v--
+
+Ready to delete disk (Y/N) ?
+
+                 --^--
+
+Make sure the disk you want to delete is in the drive! Then answer "Y" to delete the disk.
+
+Delete DOS (DOS 3.3 only)
+
+As mentioned above, on DOS 3.3 disks, DOS uses the first three tracks on a disk. The Delete DOS option "frees" two of those tracks so that files can use them. The first track (track 0) is not accessible to files, and is not freed. Deleting the DOS increases the storage capacity of a disk by 8 KB, but the disk cannot be booted, since there is no longer any DOS to boot. If you try to boot a disk that has had its DOS deleted with Copy ][ Reboot, it will print this message on the screen:
+
+                 --v--
+
+     THIS DISK HAS NO DOS TO BOOT.
+
+
+
+        INSERT ANOTHER DISK AND
+
+        PRESS A KEY TO REBOOT.
+
+                 --^--
+
+The Delete DOS option does not apply to ProDOS disks. You can accomplish the same thing with a ProDOS disk by deleting the file named "PRODOS".
+
+Lock/Unlock Files Option
+
+If you wish to lock or unlock one or more files, choose this option and select the appropriate drive. If you've selected a ProDOS disk that contains subdirectories, the subdirectory "tree" display will appear for you to select which subdirectory contains the files you want to lock or unlock.
+
+Then a file display for the disk will appear. As in a normal catalog, an asterisk to the left designates each file that is locked.
+
+A new prompt appears:
+
+                 --v--
+
+[Return]-Toggle asterisk, [E]nter
+filename, [G]o, [Esc]-Exit
+
+                 --^--
+
+Use the arrow keys to select a file, then press [Return] to toggle its 'locked' asterisk on or off. You can use these keys to set the desired locked status for every file on the disk.
+
+To lock or unlock a number of files automatically, press [E]. You'll be prompted for a filename, with the same pattern capabilities as discussed above. After entering a filename, you will see this prompt:
+
+                 --v--
+
+[L]ock or [U]nlock?
+
+                 --^--
+
+Press [L] to lock all of the files that match the pattern, or press [U] to unlock them.
+
+After setting all of the desired files, press [G] for Go. The catalog will be written back to the disk, with the proper files locked and unlocked.
+
+Rename Options
+
+The main Rename option has two sub-options:
+
+                 --v--
+
+                       F-Files
+                       V-Volume
+
+                 --^--
+
+Rename Files Option
+
+To rename files, select this option and an appropriate drive. The usual file display will appear, with yet another prompt:
+
+                 --v--
+
+[Return]-Select to rename, [E]nter
+filename, [G]o, [Esc]-Exit
+(Renamed files are marked)
+
+                 --^--
+
+To rename a file, move the inverse field to that file with the arrow keys, then press [Return]. You will be asked what to rename the file as. Enter a new name and press [Return]. This must be a legal DOS or ProDOS filename:
+
+- DOS filenames must begin with a letter and cannot contain a comma.
+- ProDOS filenames must begin with a letter and can contain only letters, numbers, and periods.
+
+If you enter a bad filename, the warning message "Invalid filename" will appear and you will be prompted for another filename. If you decide that you do not want to rename the file, press [Esc].
+
+For every file that is renamed, an arrow ("->") appears to the left of the file. This simply serves as a reminder as to which files have been renamed.
+
+The Enter filename option is available, but since files must be renamed manually, the [E] option stops at the first file that matches the pattern, leaving that file highlighted. From here you can press [Return] to rename the file.
+
+To make the changes permanent, press [G] for Go. The new filenames will be written to the disk.
+
+Rename Volume Option (ProDOS only)
+
+If you want to change the volume name of a ProDOS disk, choose the Rename Volume option and the appropriate drive. The disk's current volume name will be shown, and you'll see this prompt:
+
+                 --v--
+
+New volume name:
+
+                 --^--
+
+Type in the new name. Remember that the volume name must be no more than 15 characters long, begin with a letter, and contain only letters, numbers, and periods. Press [Return] to complete the renaming, or press [Esc] if you want to exit without renaming the volume.
+
+Alphabetize Catalog Option
+
+This option alphabetizes the file entries stored on the disk so that when you do a CATALOG, the files will appear in alphabetical order.
+
+Select this option and a drive (and a subdirectory if necessary). Copy ][ Reboot will read the current catalog, alphabetize it in the computer's memory, and show you what the alphabetized catalog will look like. If the catalog is long, you may need to press [Return] a few times to see the whole catalog. Then you'll see this prompt:
+
+                 --v--
+
+[G]-Go, [Esc]-Exit
+
+                 --^--
+
+If you want this alphabetized catalog made permanent on your disk, press [G]. If you change your mind and don't want the alphabetized catalog, press [Esc]. Copy ][ Reboot will return you to the main menu without changing the disk.
+
+When alphabetizing bootable ProDOS disks, take note: if a disk contains two or more files whose filenames end with ".SYSTEM", the first .SYSTEM file in the catalog is the one that starts up whenever the disk is booted. Alphabetizing the disk can rearrange the .SYSTEM files, causing a different program to start up the next time you boot the disk! We recommend that you don't alphabetize any original program disk, that you make a backup and alphabetize the backup.
+
+Format Disk Option
+
+This option formats a disk so that files can be stored onto it. A blank disk must be formatted before it can be used. If a formatted disk already contains information, then formatting it again will completely wipe out the old information.
+
+When you choose FORMAT, a submenu appears for you to choose whether to format the disk for DOS 3.3 or for ProDOS. Then select the drive which contains the disk you want to format.
+
+DOS 3.3 Formatting
+
+Normally under DOS 3.3, you can use a DOS "INIT" command to initialize a disk. Formatting a disk is not quite the same as initializing one. If you're unfamiliar with the differences between formatting and initializing, here is some information that might be helpful.
+
+The DOS 3.3 INIT command does the following:
+
+1. Lays down sector boundaries, dividing the disk into individual sectors, so the disk can be written to and read from (this is the actual formatting),
+
+2. Writes the catalog track, which is a place to record the names of the files that will go on the disk,
+
+3. Puts a copy of DOS (Disk Operating System) onto the disk so the disk will boot,
+
+4. Saves whatever Basic program is in memory onto the disk,
+
+5. Sets up DOS so that the Basic program will run automatically (as the "greeting" program) whenever the disk is booted.
+
+For DOS 3.3 disks, the Copy ][ Reboot Format Disk option does the following:
+
+1. Lays down sector boundaries, dividing the disk into individual sectors (like the DOS 3.3 INIT command),
+
+2. Writes the catalog track (like the DOS 3.3 INIT command),
+
+3. Writes a "boot sector", so that if you try to boot the disk, it will print a message saying there is no DOS on this disk to boot.
+
+Using Copy ][ Reboot, you can make bootable DOS 3.3 disks. You will need another disk that already contains DOS and a greeting program.
+
+1. Format the disk with the Format Disk (DOS 3.3) option.
+
+2. Use the Copy DOS option to copy the DOS from another DOS 3.3 disk onto the new disk.
+
+3. Copy a Basic greeting program onto the disk with the Copy Files option.
+
+4. If necessary, use Change Boot Program (described later) to change the name of the program DOS runs to the name of the file you saved.
+
+ProDOS Formatting Option
+
+For ProDOS disks, the Copy ][ Reboot Format Disk option does the following:
+
+1. Lays down sector boundaries, dividing the disk into individual sectors, so the disk can be written to and read from (this is the actual formatting),
+
+2. Writes the volume and directory area, which is a place to record the volume name and the names of the files that will go on the disk,
+
+3. Writes "boot blocks", so that if you later copy the appropriate files onto the disk, it will become a bootable disk.
+
+Whenever you boot a normal ProDOS disk, it first finds the file named "PRODOS" on the disk, and loads it into the computer's memory. Then it looks for the first file that ends with ".SYSTEM" (for example, "BASIC.SYSTEM"), and loads that too. The system program might look for yet a third file. For example, BASIC.SYSTEM looks for a Basic program called "STARTUP" on the disk.
+
+You can make a bootable ProDOS disk with Copy ][ Reboot. You need another disk that contains the file "PRODOS" and whatever .SYSTEM file you want the disk to start up with.
+
+1. Format the disk with the Format Disk (PRODOS) option.
+
+2. Use the Copy Files option to copy the PRODOS file and the appropriate .SYSTEM file from another ProDOS disk onto the new disk.
+
+3. Copy any other necessary files onto the new disk.
+
+Formatting /RAM
+
+As mentioned earlier, with 128K Apple II series (or compatible) computers, ProDOS installs a small "RAMdisk" into part of the computer's memory. This is a program that acts like a very fast disk drive with a volume name of /RAM. However, it stores information into Apple memory rather than onto a floppy disk. Once you turn the computer off, any files you've saved in the RAMdisk are lost.
+
+Copy ][ Reboot can use this same area of memory to speed up disk copying, so it "disconnects" the RAMdisk if it doesn't contain any files. That's why you see the phrase "/RAM DISCONNECTED" in the Drive Select Display. If you want to use the RAMdisk from Copy ][ Reboot and you don't care if disk copying takes more passes, then you can use the Format Disk option to reconnect /RAM. Just choose Format Disk, and select Slot 3 Drive 2 for the drive. After the RAMdisk is "reformatted", you can copy files to it, catalog it, and do the things you would normally do with a ProDOS disk. If you later want to disconnect the RAMdisk again, you can use the Delete Disk option to do this.
+
+Note: if you have a large (greater than 64K) "auxiliary-memory" based memory board, you need to use the RAMdisk install program supplied with your memory board before ProDOS - and Copy ][ Reboot - can make use of the extra memory. See the section on "Large Memory Boards" at the end of this chapter and Appendix F for more information about how Copy ][ Reboot deals with extra memory and /RAM.
+
+Verify Option
+
+The Verify option is used to select one of three sub-options:
+
+                 --v--
+
+                       D-Disk
+                       F-Files
+                       S-Drive Speed
+
+                 --^--
+
+Verify Disk Option
+
+This option is used to check if any sectors or blocks on the disk are bad. If the disk being verified is a 5.25-inch disk, Copy ][ Reboot verifies it track-by-track. Any other disk device is verified block-by-block.
+
+Copy ][ Reboot quickly reads each of the tracks (or blocks) in turn. As it reads, the current track or block number is displayed near the bottom of the screen:
+
+                 --v--
+
+Verifying Track $03
+
+                 --^--
+
+If bad sectors are found on any track, their track and sector numbers will be displayed in hexadecimal in the middle of the screen, as in this example:
+
+                 --v--
+
+Error Track $03
+Sector $5 7 B
+
+                 --^--
+
+This message means there were errors on track $03, sectors $5, $7, and $B.
+
+When finished, the program will show the total number of errors. If you want to exit out of the verify before it's finished, you can press [Esc] at any time.
+
+Verify Disk will work with standard 16-sector (DOS 3.3, ProDOS, SOS, CP/M, and Pascal) 5.25-inch disks and with other ProDOS compatible disk devices. Unformatted disks will produce errors, since there are no sectors written on the disk to verify. Most copy-protected disks will also produce errors, since the formatting on these disks is often different than the standard Apple 16-sector format.
+
+If a normal DOS or ProDOS disk you're using is giving DOS I/O errors, it can be one of three things: bad data, bad sectors, or a physically damaged disk. Bad data means the catalog or file information is wrong, for example, telling the DOS to look for a file on track 200! A bad sector is one that simply can't be read (possibly caused by a "power glitch" or by opening the drive door or pressing Reset while the drive was writing) even though the disk is still capable of storing good data. A disk can also be permanently damaged from improper handling, fingerprints, heat, spilled coffee, rabid dogs, etc.
+
+It's a good idea to verify suspect disks to see where the errors are. If Verify Files shows errors, but Verify Disk does not, then bad data stored in the catalog is the most likely culprit. If Verify Disk shows errors, then you have either bad sectors or a damaged disk (or a blank or copy-protected disk). You should use Copy Files or Copy Disk to save as much of the information as you can, then try to reformat the disk. If the formatting fails, then the disk is most likely permanently damaged.
+
+Verify Files Option
+
+Verify Files checks the data and sectors used by individual files. After selecting the appropriate drive (and subdirectory if necessary), the drive will whir and a file display will appear. Here, the files to be verified can be selected with [Return] the same way the files to be deleted were selected in the Delete Files option. An arrow will appear by all selected files. The Enter filename command can also be used to select files, with the usual multi-file pattern capabilities. To begin verifying those files, press [G].
+
+The file display will highlight each file as it is verified. If an error occurs, the track and sector number (or the block number) for the error will appear. You can press [Return] to continue verifying the file, [SPACE] to move to the next file, or [Esc] to return to the main menu.
+
+Verify Drive Speed Option (5.25-inch drives only)
+
+To properly read the data on disks, a 5.25-inch disk drive must spin at the right speed. This speed is 5 revolutions per second, or 1 revolution every 200 milliseconds. This speed was set at the factory, but with time, the drive speed can drift. If the speed is too far from 200 milliseconds, I/O errors can occur, or data can be written that is unreadable on a normal-speed drive.
+
+The Verify Drive Speed option allows you to periodically check the speed of your disk drives. Select the option and the appropriate drive, then insert a blank or unused disk into the drive and press [Return]. (Do not use a valuable disk. This option writes over part of the disk!) In a few seconds, the drive speed will be displayed. Note that for normal use, the drive speed can vary from 198 to 202 milliseconds (ms.). Small fluctuations in the speed are also normal. (Strangely enough, smaller numbers mean faster speeds!) The speed will be displayed until you press [Esc].
+
+Verify Drive Speed is not used for 3.5-inch drives, because these drives continually change speeds depending on which track is being accessed. Circuitry built into 3.5-inch drives monitors and corrects their own speeds as they operate.
+
+View Files Option
+
+The View Files option allows you to quickly and easily look at the data in any file. This is useful for double-checking exactly what is in a file before copying it, deleting it, etc. View Files has two sub-options, for viewing the data as values or as text. The values option shows both the hexadecimal numbers and the ASCII characters in the file. The text option prints just the characters in a more readable form.
+
+To view one or more files, choose the VIEW FILES option, then the VALUES or TEXT sub-option. Select the appropriate disk drive (and subdirectory, if necessary). A file display for the disk will appear. Use the arrow keys to highlight the file you want to view, then press [G].
+
+The file is displayed a page at a time. You can press [Return] to see another page, or [Esc] to return to the catalog display. When using the View Values option, the file is displayed as hexadecimal bytes, 8 bytes per line, with the equivalent ASCII characters to the right. Control characters are replaced with periods. In the View Text mode, the characters are printed out in standard 40-character lines. Control characters are not printed, except for carriage returns.
+
+In the upper right portion of the screen is a running "byte count", showing how many bytes in the file have been printed. This can be used to find the approximate locations of text strings or bytes in the file.
+
+At the end of a DOS 3.3 file, there may be a few funny characters, including inverse "@" signs. These are extra characters beyond the end of the real end-of-file. They were not suppressed because random access text files can have end-of- file markers interspersed throughout the file, before the file has actually ended. These files can still be viewed. The View Files option stops reading when there are no more data sectors to read.
+
+When you've finished viewing one file, the program returns to the file display. From here, you can select another file to view, or press [Esc] to go back to the main menu.
+
+Disk Map Option (5.25-inch drives only)
+
+The Disk Map gives you an informative display showing what sectors on the disk are used by which files, and which sectors are free for use. It is designed only for 5.25-inch floppy drives. To see the Disk Map, choose the Disk Map option and the desired disk drive. The drive will whir and you'll see a grid-like map of all the sectors on the disk, with the track numbers ($0 to $22) across the top row and the sector numbers ($0 to $F) along the left edge.
+
+Note: if you're looking at a ProDOS disk, the sector numbers at the left will be slightly out of order. This is intentional, as it more accurately reflects the way ProDOS groups pairs of sectors together.
+
+In the grid, every sector on the disk that is marked as "in use" is shown as an asterisk in a white box (an inverse asterisk). Unused sectors are marked with a dot (a period). If the disk is mostly full, large areas of the grid will be filled in with inverse asterisks. You can see whether or not any given sector is in use by following the track number down and the sector number across and noting whether or not an inverse space is there.
+
+After looking at this display, press [Return] again. Now a map for the first file on the disk will be displayed. The filename is shown at the top of the screen. Below, the map now shows only those sectors used by that file.
+
+Notice the prompt at the bottom of the screen:
+
+                 --v--
+
+Use arrow keys to map other files
+
+                 --^--
+
+If you press the right-arrow key, a map of the subsequent file on the disk will appear. You can use the right and left arrow keys to see a map of any file on the disk. If you're mapping a ProDOS disk with subdirectories, any subdirectory you view will appear as letter D's rather than asterisks. Similar to the file display, you can then use [>] and [<] to map the files within subdirectories. Press [Esc] when you want to exit back to the main menu.
+
+Change Boot Program option (DOS 3.3 only)
+
+When a standard initialized DOS 3.3 disk is booted, it automatically runs whatever Basic program the disk was initialized with. For example, a disk that was initialized with the command "INIT HELLO" will run the program "HELLO" whenever it is booted. Using the Change Booting Program option, you change the DOS to boot a different Basic program, or even BRUN a binary file or EXEC a textfile on boot-up!
+
+Select the Change Boot Program option and a drive that contains the appropriate DOS 3.3 disk. A file display for the disk will appear. At the bottom of the screen, the name of the file that the disk currently boots up with will be printed. To select a new booting program, use the arrow keys to highlight the desired file. You can also Enter a filename or a pattern. The highlight will stop at the first filename that matches the pattern. Press [Gl to save this file as the booting program. Copy ][ Reboot will automatically check the filetype of the file, and set either the RUN, BRUN, or EXEC command for boot-up.
+
+Note: for ProDOS disks, the first system-type file that ends in ".SYSTEM" is always loaded when you boot the disk, so Change Boot Program doesn't apply. See Format Disk above, or your ProDOS User's Manual for more information.
+
+Undelete Files Option
+
+When a DOS 3.3 file is deleted, it is not immediately erased. It is instead marked internally as a deleted file, and its sectors are marked as free to be re-used. If other data does not later overwrite part of the file, it can still be recovered and made an active file. If a file has just been accidentally deleted, and no other disk writing has occurred, the file can always be recovered, or "undeleted". That is what the Undelete Files option is for.
+
+When ProDOS deletes a file, the file is marked internally as a deleted file, but with older versions of ProDOS, oftentimes some of the file "bookkeeping" information itself is lost too. There is not enough information left to guarantee that the file can be correctly recovered. In these cases, the Undelete Files option will make a "best guess" effort to recover the file.
+
+But when Copy ][ Reboot deletes a file from a ProDOS disk, it marks the file internally as deleted, but also keeps keeps all of the file information intact. If you accidentally delete a ProDOS file using Copy ][ Reboot, and no other disk writing has occurred, the file can always be recovered with the Undelete Files option.
+
+To undelete one or more files, select the Undelete Files option and an appropriate drive (and subdirectory if necessary). A file display will come on the screen, this time containing a list of all the deleted files still stored invisibly in the catalog. If there are no deleted files in the catalog, the message "NO FILES" will appear. Use the arrow keys, the Enter filename command, and [Return] to select the files to be undeleted. Press [G].
+
+The file display will show the files as the program attempts to undelete them. If a deleted file has already been partly or completely overwritten with other data, Copy ][ Reboot will not undelete it, since the data is not recoverable. If any of the files cannot be undeleted, they will then be listed with the label "LOST FILES".
+
+After the undelete is completed, use the Copy ][ Reboot Catalog option to look at the undeleted files on the disk. If Copy ][ Reboot had difficulty undeleting a file (which may sometimes occur, but only for files deleted by older versions of ProDOS, not by Copy ][ Reboot), then the undeleted file will be marked with a question mark. Copy ][ Reboot has no way of knowing if it recovered all of the information correctly. You should always test or try using the suspect file to see if it was recovered successfully. If the file is good, you can later lock or unlock the file to remove the question mark.
+
+Create Subdirectory Option
+
+If you want to add a new subdirectory to a ProDOS disk, then choose the Create Subdirectory option and an appropriate disk drive. If the disk already contains some subdirectories, then the subdirectory "tree" display will appear next. You should select whichever directory level you want to add your new subdirectory to.
+
+Next Copy ][ Reboot will ask you to enter the new "Subdirectory name:". Type in the name you want to give this subdirectory. (Following ProDOS rules, it must begin with a letter, and contain only letters, numbers, and periods.) Press [Return] and Copy ][ Reboot will add this new subdirectory to your disk.
+
+Quit Option
+
+When you want to exit Copy ][ Reboot and run another ProDOS program or boot another disk, choose the Quit option. To boot a new disk, insert the disk and press [CONTROL-RESET]. To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
+
+Large Memory Boards
+
+The program supports the use of extra memory cards as ProDOS RAMdisks. This section describes how Copy ][ Reboot treats RAMdisks as standard ProDOS disk devices. For information about how Copy ][ Reboot uses extra memory to reduce the number of passes when copying disks, also see Appendix B.
+
+Memory cards that can plug into or are assigned to a numbered slot don't need any special setup, because the card itself contains the special ROMcode that lets ProDOS - and therefore Copy ][ Reboot - recognize it as a RAMdisk. Copy ][ Reboot recognizes these cards automatically. Here is a non-comprehensive list of numbered-slot memory cards:
+
+- Apple 1Meg Memory Expansion Board,
+- Applied Engineering RAMFactor board,
+- Laser 128EX internal slot 5 memory expansion,
+- Apple IIe (newer versions) internal slot 4 memory expansion,
+- Apple IIgs Control Panel (slot 5 drive 2) RAMdisk.
+
+Memory cards that are auxiliary-slot based need to be set up before Copy ][ Reboot can work with them. This is because these cards are simply large memory boards, and mean nothing to ProDOS unless a "RAMDisk driver" program is first installed to make the memory look like a RAMdisk. Here are some examples of auxiliary-slot based memory cards:
+
+- Applied Engineering RAMWorks board,
+- CheckMate Technology MultiMate board,
+- Applied Engineering Z-RAM board (for the Apple IIc).
+
+The auxiliary-slot memory boards come with a setup disk or utility disk. One of the programs on this disk creates the "RAMdisk driver". To use the memory board as a RAMdisk, you first need to run this program to install the RAMdisk driver into ProDOS. (See the instructions that came with the memory board.) Once this is done, the memory now appears to ProDOS as a large RAMdisk. You can then exit and switch to another ProDOS application, such as Copy ][ Reboot. ProDOS - and Copy ][ Reboot - will now treat the RAMdisk as any other ProDOS-compatible disk. (To start up the program from Basic, you can type "-UTIL.SYSTEM".)
+
+These large RAMdisks appear as slot 3 drive 1 or slot 3 drive 2, depending on the particular installation program. They are not disconnected by Copy ][ Reboot, unlike ProDOS's small slot 3 drive 2 RAMdisk. If you see "/RAM disconnected" in the drive select display, that is ProDOS's small RAMdisk, not the large one set up by your installation program.
+
+Take note, however: if you want to keep the large RAMdisk intact, you should not press CTRL-Open Apple-RESET to "cold-boot" another disk. If you do this, the RAMdisk installation you did will be lost, and you'll have to run the memory board's setup program again! You should instead "run" or "switch to" whatever ProDOS application you want to use next.
+
+Directory Limitations
+
+For practical programming reasons, Copy ][ Reboot can keep track of no more than 255 files in one directory at a time. If you have a ProDOS disk that contains more than 255 files in one subdirectory, the program will show you the first 255. Any files after the first 255 will be unaffected by any of the operations in Copy ][ Reboot.
+
+This limitation allows an entire directory to be stored in memory, giving Copy ][ Reboot much of its speed. Copy ][ Reboot could have been designed to handle unlimited-size directories, but that would have slowed down its operation quite a bit. Several Apple publications have recommended a maximum of 80 to 100 files in anyone ProDOS directory. Directories larger than that begin to significantly bog down disk operations for any ProDOS application.
+
+In addition, the subdirectory "tree" display can keep track of at most 254 subdirectories. If you have a disk with more than 254 subdirectories, the first 254 will appear in the tree display. You can still access the extra subdirectories by first selecting a higher level directory from the tree, then using the [>] and [<] keys from the file display to "dive" into the desired subdirectory.
+
+Appendix A - Disks and Disk Hardware
+
+This appendix is included as a concise reference on disks and disk hardware. It explains disk formatting and storage, and most of the terms needed before exploring disk protection schemes. It is, however, a reference rather than a tutorial. For more complete information, and some useful examples for 5.25-inch disks, we suggest the book "Beneath Apple DOS" (or "Beneath Apple ProDOS") by Quality Software. Also, an appendix in Apple's DOS Programmer's manual describes DOS file formats, and "Understanding the Apple II" (also by Quality Software) describes the disk hardware in greater depth.
+
+This reference assumes that you are familiar with computer concepts such as hexadecimal, binary, bytes, bits, and subroutines.
+
+ProDOS, DOS 3.3, Blocks, Sectors
+
+Copy ][ Reboot can work with disks created by two different Apple disk operating systems: DOS 3.3 and ProDOS. DOS 3.3, as originally supplied by Apple, is designed to work only with 35-track 5.25-inch floppy disks. ProDOS is capable of handling 5.25-inch disks, 3.5-inch disks, RAMdisks, hard disks, and any other disk device that follows certain conventions required by ProDOS. Both of these operating systems perform a number of tasks, including saving or writing files onto the disk, loading or reading files from the disk, and keeping track of where on the disk the files are stored.
+
+Depending on what program is being run, DOS may need to access anywhere from one byte up to thousands of bytes from the disk at anyone time. What is needed is a way to divide the information into manageable chunks.
+
+ProDOS divides any disk device into numbered "blocks", each block containing 512 bytes of data. A disk might have, for example, 280 blocks, numbered 0 to 279. For 5.25-inch disks only, each block is actually made up of two "sectors" paired together, each sector containing 256 bytes of data. This pairing of sectors is handled by ProDOS's low-level floppy disk routines, however. The ProDOS file system is concerned only with whole blocks.
+
+DOS 3.3, not having to handle other kinds of disk devices, divides a 5.25-inch disk directly into 256-byte sectors.
+
+When a file is saved to disk, DOS 3.3 breaks the file into 256-byte chunks, looks on the disk for sectors that are not currently "in use", saves the chunks into the free sectors, makes a record on the disk of which sectors the file uses so it can find the file later, and marks the sectors "in use". ProDOS is similar, except that it always works with 512-byte blocks.
+
+5.25-inch Disks - Tracks and Sectors
+
+The data on a normal 5.25-inch disk is stored in 35 circular tracks, numbered 0 through 34 ($00 through $22 in hexadecimal). The outermost track is track $00; the innermost track is track $22. The disk drive, controlled by DOS, can position the read/write head (similar to the tape head in a cassette deck) under any one of the tracks. As the disk spins over the head, the drive can read or write the information on that track. The information is actually recorded on the underside of the disk.
+
+Each circular track is divided like a pie into 16 sectors. The sectors on each track are numbered 0 through 15 ($00 through $0F). Each sector stores 256 bytes of usable data. DOS 3.3 always reads and writes information a sector at a time.
+
+There are (35 tracks * 16 sectors =) 560 sectors on a standard formatted 5.25-inch disk. A disk can store a total of (560 sectors * 256 bytes per sector =) 143,360 bytes (140K).
+
+Apple DOS 3.3, ProDOS 8 and ProDOS 16, Apple Pascal, CP/M, and Apple /// SOS all use the same track and sector formatting on 5.25-inch disks. However, the way the sectors are used for file storage varies greatly with each operating system.
+
+3.5-inch Disks - Tracks, Sectors, Sides, Blocks
+
+The data on a 3.5-inch disk is stored on 80 circular tracks. The tracks are numbered 0 to 79 ($00 to $4F in hexadecimal). Most 3.5-inch disks are formatted as double-sided, which means they contain information on both the bottom and top surfaces of the disk media. Each of the 80 circular tracks is therefore divided into two "sides". The 3.5-inch drives have two read/write heads, one for the bottom surface and one for the top. The disk drive can position these heads -- as one unit -- under and over any track of the disk.
+
+Each circular track, or side, is divided like a pie into several sectors. Each sector stores 512 bytes of usable data. The number of sectors per track is not constant for the whole disk, but varies depending on the track number.
+
+Actually, each sector holds 524 bytes of data: the 512 data bytes are preceded by 12 "tag" bytes. On Apple II-format 3.5-inch disks, the 12 tag bytes are always zero, and are ignored during normal reads and writes. The 524-byte format is used for compatibility with the 3.5-inch disk format for Apple Macintosh computers, which store "file tag" information, related to file recovery, into the 12 bytes.
+
+The outer tracks have a greater circumference (greater distance around the circle) than the inner tracks, and therefore have more media for storing information. The 3.5-inch disk format takes advantage of this for greater storage capacity, storing more sectors per track on the outer tracks.
+
+Tracks | Sectors/Track | Sector #s
+-------+---------------+----------
+$00-0F |      12       |  $00-0B
+$10-1F |      11       |  $00-0A
+$20-2F |      10       |  $00-09
+$30-3F |       9       |  $00-08
+$40-4F |       8       |  $00-07
+
+For 3.5-inch disks, blocks and sectors are really the same thing; they're just numbered differently. A double-sided 3.5-inch disk contains a total of 1600 blocks or sectors. When thought of as sectors, they're numbered within each track and side as $00 to $0B (as shown in the table above). When thought of as blocks, they're instead numbered for the entire disk, 0 to 1599 ($0000 to $063F in hex). For example, block $0000 is the same as track $00, side 1, sector $00. Block $000C is the same as track $00, side 2, sector $00. Block $063F is the same as track $4F, side 2, sector $07 (the last block on the disk).
+
+Disk Hardware - Reading & Writing Bytes, Speed
+
+Most of this section deals with 5.25-inch drives, but 3.5-inch drives are very similar. The differences for 3.5-inch drives are discussed in the next section.
+
+A 5.25-inch drive spins the disk at about 5 revolutions per second, or .2 seconds = 200 milliseconds per revolution.
+
+The bytes on the disk, and the bits that make up those bytes, must be written at evenly spaced intervals around the circular track. Since the disk media is passing over the read/ write head at a fairly constant speed, that means each bit must be written onto the media at the right moment, in order to be placed onto the correct spot on the disk.
+
+The timing involved in accessing the disk, especially when writing, must be precise. This makes disk access very "timing critical".
+
+When writing a single byte to the disk, DOS sends the byte to a special "data latch" on the disk controller card. The hardware on the card then writes the 8 bits of the byte, one bit at a time, onto the disk media passing over the head. The hardware writes one bit every 4 usec (microseconds, or millionths of a second). It takes 32 microseconds to write all 8 bits of the byte (4 usec per bit * 8 bits per byte).
+
+To write many bytes, DOS sends bytes to the data latch at exact 32 microsecond intervals, so that when the hardware has finished writing one byte, it receives the next byte to write.
+
+If another byte isn't sent to the latch at the end of 32 microseconds, then the hardware begins writing individual zero bits onto the disk, a zero bit every 4 microseconds, until another byte is sent to the latch.
+
+Any byte value can be written to the disk. However, only some values can be read back reliably, due to the Apple disk format and the nature of floppy disks in general.
+
+When reading, the disk hardware waits until it reads a one bit from the disk, then gathers the next 7 bits to form an 8-bit byte. This is one of the fundamental limitations. Every byte read from the disk has its high bit set. If a byte is to be read back correctly, it must be written to the disk with its high bit set.
+
+The other limitation is that the circuitry can't reliably read more than 2 zero bits in a row. If there are too many zeros in a row, the circuitry will begin reading some of them incorrectly as ones. Bytes that have more than 2 consecutive zero bits are considered "invalid bytes", because they cannot be read reliably. If an invalid byte stored on the disk is read back, it might be read correctly, or it might be read incorrectly as another invalid byte or as a valid byte.
+
+If a byte is read back as invalid, then some invalid byte is stored on the disk, though it may not be the byte that was read since the circuitry may have read it wrong.
+
+Since not all possible byte values can be read correctly, information being written to the disk must usually be "encoded" in some way first, so that only valid bytes are written. DOS does this encoding for every sector it writes.
+
+Another problem in reading the disk is finding where one byte ends and the next byte begins. The data on the disk is stored simply as a long stream of bits. Here is an example bit stream:
+
+11010101101010101001011
+
+The hardware could read a byte starting with any of the one bits. If the starting point is wrong, then the bytes read will be completely wrong. What is needed is a way to "synchronize" the hardware to the correct byte boundaries.
+
+To synchronize the hardware to the bytes when reading, special bytes called "sync bytes" are written onto the disk with every sector. A sync byte is written by sending an $FF (binary 11111111) to the disk data latch, then waiting 40 microseconds before writing the next byte. The $FF is written during the first 32 microseconds, then the hardware writes 2 zeros to the disk before a new byte is sent to the latch. Sync bytes are sometimes referred to as 10-bit bytes (8 bits for the $FF + 2 zero bits).
+
+If several sync bytes are written one after another, the following pattern will be stored on the disk:
+
+1111111100 1111111100 1111111100 1111111100 etc.
+
+When reading this pattern from the disk, if the hardware is already "in sync", it will read 8 ones (to make an $FF byte), skip the 2 zeros (because it's waiting for another one bit), read the next 8 ones (to make another $FF), skip 2 more zeros, and so on. To DOS, sync $FF's look just like normal $FF's.
+
+Often, however, the hardware will be "out of sync" when it begins reading the sync bytes. For example, it may begin with the fifth one bit of the above pattern, and read back binary 11110011, or $F3. Because of the 10-bit pattern being read 8 bits at a time, sync bytes have an interesting property. After reading at most 5 sync bytes, the hardware will always fall into sync with the bytes stored on the disk.
+
+Other 9 and 10 bit patterns can also be used to synchronize the disk hardware, but 10-bit $FF's are the most common.
+
+The total number of bits that can fit on a track is determined by how fast the disk is spinning when it is written to. If the disk is spinning at a slower than usual speed, then the bits will be written more closely together on the track. This means more bits are written before the track has completed a full revolution. Unfortunately, the quality of the disk media imposes limits on how closely the bits can be packed reliably on the disk. The standard disk speed of 200 milliseconds per revolution was chosen as a good compromise between reliability and high data storage.
+
+A standard disk speed also needs to be maintained for compatibility from one disk drive to the next. For example, a drive spinning at the slow speed of 210 milliseconds per revolution might be able to format, read, and write its own disks reliably, but it will have great difficulties reading a disk that was made on a drive that spins at a correct 200 milliseconds.
+
+If a drive spins at the correct speed, 50000 bits will fit around the track. This can translate to 6520 ($1978) 32-usec bytes, or 5000 ($1388) 40-usec sync bytes.
+
+Disk Hardware - 3.5-inch Drives
+
+A 3.5-inch disk spins faster than a 5.25-inch disk. The rotational speed also varies: It spins more slowly on the outer tracks (about 150 milliseconds per revolution), to accommodate the greater number of sectors, and faster on the inner tracks (about 100 milliseconds per revolution) for the fewer sectors there.
+
+The hardware writes a bit every 2 microseconds. It takes 16 microseconds to write all 8 bits of the byte. The timing for writing bytes isn't as critical as it is for 5.25-inch disks, because the Apple 3.5-inch circuitry provides its own timing for writing a new byte every 16 microseconds. The disk routines must simply be ready to give it the next byte "soon enough". If the disk routines don't deliver the next byte in time, the hardware leaves "write mode", not writing any more bytes to the disk until it has been reset.
+
+Since the timing is fixed at 16 microseconds, or exactly 8 bit times, the disk routines can't use delays to directly write 10-bit sync bytes. However, it can write a repeating pattern of bytes which ends up on the disk as a series of sync bytes. This is the usual pattern:
+
+$FF $3F $CF $F3 $FC $FF
+
+This sequence is identical to these bits:
+
+11111111 00111111 11001111 11110011 11111100 11111111
+
+Notice that this makes the usual bit pattern on disk (as described earlier) for sync bytes:
+
+1111111100 1111111100 1111111100 1111111100 etc.
+
+Contents of a Sector
+
+In order to read any given single sector, DOS must move the read/write head to the right track then begin reading bytes, waiting for that sector to pass by the head.
+
+Every sector is made up of an address field and a data field. The address field contains information such as which sector this is and what the volume number of the disk is. The data field contains the actual information desired, such as a part of a file.
+
+Here is a breakdown of a sector on a 5.25-inch disk:
+
+Sync Field: between 5 and 40 sync $FF's. This guarantees that the hardware is in sync when reading the sector.
+
+Address Field:
+
+Prologue: D5 AA 96. These 3 bytes acts as a marker, "A Sector Begins Here". The DOS read routines look for this pattern first. When it finds the pattern, it knows that the rest of the address field follows.
+
+Volume number: 2 bytes. The volume number of the disk is stored next (in every sector) in an encoded form that uses only valid disk bytes. The encoding used here is called "4-and-4 encoding", and uses 2 bytes to store the 1-byte volume number.
+
+Track number: 2 bytes. The track number is also stored in the address field of each sector, using 4-and-4 encoding. It is included so that in case the read/write head is "lost" and over the wrong track, DOS can find which track it's on by reading an address field, then move from there to the correct track.
+
+Sector number: 2 bytes. The "hard" sector number, 4-and-4 encoded. (See below for hard and soft sectors.)
+
+Checksum: 2 bytes. Another 4-and-4 encoded number that is used to verify that the volume, track, and sector numbers are correct.
+
+Epilogue: DE AA. This marks the end of the address field.
+
+Possible glitch bytes: See below.
+
+Sync Field: about 5 to 10 more sync $FF's.
+
+Data Field:
+
+Prologue: D5 AA AD. These three bytes mark the beginning of the data field. The encoded data always follows.
+
+Data: 342 bytes. The 256 bytes of information are stored here, encoded as 342 valid disk bytes. The encoding scheme used is called "6-and-2 encoding", and involves some rather complicated bit rearranging, exclusive-ORing, and translation (through a lookup table) to valid disk bytes. The part of DOS that does the encoding and decoding is fast and efficient, but the 342 disk bytes bear little resemblance to the 256 data bytes they represent.
+
+Checksum: 1 byte. This byte is used to help verify that there are no errors in the 342 data bytes.
+
+Epilogue: DE AA. These bytes mark the end of the data field and the end of the sector.
+
+Here is the breakdown of a sector on a 3.5-inch disk:
+
+Sync field: between 5 and 100 sync $FF's. This guarantees that the hardware is in sync when reading the sector.
+
+Address Field:
+
+Prologue: D5 AA 96. These 3 bytes act as a marker, "A Sector Begins Here". The 3.5-inch controller's read routines look for this pattern first. When it finds the pattern, it knows that the rest of the address field follows.
+
+Track number: 1 byte. The track number is stored in the address field of each sector, translated to a valid disk byte. Actually, the track number, ranging from $00 to $4F is a 7-bit value, but the disk translation handles values only up to 6 bits. The highest bit of the track number is stored two bytes later.
+
+Sector number: 1 byte, as a translated valid disk value.
+
+Side number and track high bit: 1 byte, translated. The side number for this side of the track and the high bit of the track number are combined together as a binary number in the form: nOOOOt, where n represents the side number (0 for side 1, 1 for side 2), and t represents the high bit of the track number. This 6-bit binary number is then translated to a valid disk byte.
+
+Number of sides and interleave value: 1 byte, translated. The number of sides used on this disk and the "interleave value" are combined together as a binary number in the form: s0iiii, where s represents the number of sides (0 for single-sided, 1 for double-sided) and iiii represents the interleave value. (Interleave is described below.) This 6-bit binary number is then translated to a valid disk byte.
+
+Checksum: 1 byte, translated, used to verify that the previous data values are all correct.
+
+Epilogue: DE AA. This marks the end of the address field.
+
+Possible glitch bytes: See below.
+
+Sync field: about 5 to 10 more sync $FF's.
+
+Data Field:
+
+Prologue: D5 AA AD. These three bytes mark the beginning of the data field. The encoded data always follows.
+
+Sector number: 1 byte, translated. The translated sector number is stored again here.
+
+Data: 699 bytes. The 512 bytes of information (preceded by the 12 bytes of "tag" information) are stored here, encoded as 699 valid disk bytes. The encoding scheme is a variation of the 6- and-2 encoding scheme used on 5.25-inch disks; it involves a different method of bit rearranging (every 3 data bytes are converted to 4 consecutive disk bytes), 3 overlapping loops of exclusive-ORing, and translation to valid disk bytes. The 699 disk bytes bear little resemblance to the 524 data bytes they represent.
+
+Checksum: 3 bytes. These three bytes, resulting from the 3 overlapping exclusive-OR loops, are used to help verify that there are no errors in the 699 data bytes.
+
+Epilogue: DE AA. These bytes mark the end of the data field and the end of the sector.
+
+Reading, Writing, and Formatting
+
+A 3.5-inch drive controller (whether built into the computer or on a plug-in card) contains its own programming for handling reading and writing blocks and formatting the disk. ProDOS itself simply makes requests to the controller to perform the reading and writing as it needs them. Most other kinds of ProDOS- compatible disk devices, such as hard disks and RAMdisks, are the same way.
+
+A 5.25-inch drive controller contains only enough programming to boot a disk; it does not provide for reading and writing sectors or formatting the disk. DOS 3.3 has its own set of internal routines (called RWTS, for Read Write Track Sector) for accomplishing this. ProDOS also has its own set of internal routines for reading and writing blocks (pairs of sectors) on 5.25-inch disks. It does not provide for formatting 5.25-inch disks, though. A separate application that includes its own formatting routines, such as Copy ][ Reboot or Apple's Filer program, must be run to do this. Copy ][ Reboot contains its own optimized 5.25-inch routines for formatting, reading, writing, verifying, etc.
+
+When either reading or writing a sector, DOS (or whatever programming is doing the disk access) must first find the correct sector. It calls a read address field routine that looks for and reads the next address field to pass by the read/write head. DOS then checks the track and sector numbers from this address field to see if this is the desired sector. If it is not, 'DOS continues to look for the correct one. If it can't find the desired sector within a certain number of tries, it gives up and returns an error.
+
+When reading, after DOS finds the right address field, it calls a routine to read the data field, which will be passing by the read/write head within a couple hundred microseconds.
+
+When writing, after finding the correct address field, DOS calls a routine to write a new data field over the old one. The calls themselves aren't timed exactly, so DOS might begin writing the new data field a few bits earlier or later than the old data field. This produces a "glitch" on the disk where writing begins, since the new bits aren't in sync with the previous bits on the disk. Another glitch occurs at the end of the data field, when DOS stops writing new information.
+
+When DOS reads the disk, these glitches often throw the hardware out of sync with the bytes on the disk. That's why both address and data fields are preceded with sync fields, so that the hardware can get back into sync.
+
+Notice that during normal use, data fields are rewritten, but not address fields. When a disk is formatted, both address and data fields are written onto the disk.
+
+In formatting each track, DOS writes a very large initial sync field, then all of the sectors for that track in one revolution of the disk. This "wipes clean" any old information that might have been on the track. The data fields written are "empty". (When read and decoded, the sectors contain all zero bytes.)
+
+The initial sync field is large enough that the last sector put onto the track will overwrite the beginning of the sync field as the disk completes one full revolution.
+
+If the disk is spinning too fast (5.25-inch disks only), then the entire initial sync field (and possibly part of the first sector) will be overwritten, which means the formatting failed. If the disk is spinning more slowly than usual, then the remaining part of the sync field which was not overwritten will be very large.
+
+When DOS 3.3 begins formatting a 5.25-inch disk, it writes and rereads the first track a few times, adjusting the sizes of the sync fields between each sector (changing the amount of data written onto the track) so that the remaining initial sync field is about the same size as as the other sync fields. This certainly isn't necessary, but it spaces the sectors around the track a little more evenly.
+
+A 3.5-inch controller double-checks and adjusts the drive speed during formatting, so the remaining part of the initial sync field is about the same size on all 3.5-inch disks.
+
+Hard and Soft Sectors (5.25-inch disks)
+
+Before writing a sector, DOS must "pre-nibblize" the 256 data bytes into 342 disk bytes to be written. After reading a sector, DOS must "post-nibblize" the 342 disk bytes back into 256 data bytes. Because of the time this takes, the next sector to read or write has already passed by before DOS is ready to access it. DOS is fast enough, though, to access every other sector as it passes under the head.
+
+To make disk access fast yet simple, DOS 3.3 "re-maps" the sector numbers in memory so that if a program asks for consecutive sector numbers, DOS will actually access every other disk sector for speed. The sector numbers asked for by a program (including Copy ][ Reboot) are called "soft sectors". The sector numbers actually stored on the disk are called "hard sectors". For example, if you access soft sectors $7, $6, $5, and $4 in that order, DOS 3.3 will look on the disk for hard sectors $1, $3, $5, and $7.
+
+For ProDOS, 8 blocks fit on each 16-sector track. The blocks are numbered 0-7 on track 0, 8 - 15 on track 1, 16 - 23 on track 2, etc. Similar to DOS 3.3, the numbering between blocks and hard sectors is done in a special way to keep disk access fast.
+
+Here is a table that shows the hard sector numbers for a track, the corresponding DOS 3.3 soft sector numbers, and the ProDOS block numbers (divided into part 'a' and part 'b' since each block is 2 sectors long.):
+
+Hard | DOS 3.3 Soft | ProDOS Block
+-----+--------------+-------------
+ $0  |      $0      |    $0-a
+ $1  |      $7      |    $4-a
+ $2  |      $E      |    $0-b
+ $3  |      $6      |    $4-b
+ $4  |      $D      |    $1-a
+ $5  |      $5      |    $5-a
+ $6  |      $C      |    $1-b
+ $7  |      $4      |    $5-b
+ $8  |      $B      |    $2-a
+ $9  |      $3      |    $6-a
+ $A  |      $A      |    $2-b
+ $B  |      $2      |    $6-b
+ $C  |      $9      |    $3-a
+ $D  |      $1      |    $7-a
+ $E  |      $8      |    $3-b
+ $F  |      $F      |    $7-b
+
+Interleave (3.5-inch disks)
+
+Before writing a block, the 3.5-inch controller must "pre-nibblize" the 512 data bytes (plus the 12 "zero" tag bytes) into 699 disk bytes to be written. After reading a block, the controller must "post-nibblize" the 699 disk bytes back into 512 data bytes. The pre-nibblize and post-nibblize routines take different amounts of time on different types of drives and controllers.
+
+A Unidisk 3.5 drive, for example, actually contains an internal "computer" which performs the pre- and post-nibblizing within the drive, transferring the finished 512 bytes of data to and from the Apple. Because of the time this takes, three additional sectors have passed by before the internal controller is ready to access another sector.
+
+For an Apple 3.5 drive connected to an Apple IIgs, the 3.5-inch controller inside the GS performs the pre- and post-nibblizing. One additional sector passes by during this time.
+
+Because the controller isn't fast enough to access consecutive sectors on the track, Apple-format 3.5-inch disks are formatted with the sector numbers out of order, or "interleaved", on each track. Here is the order of the sectors for the different track groups ("S/T" = "Sectors/Track"):
+
+Tracks | S/T | Sector #s
+-------+-----+-------------------------
+$00-0F |  12 | $0 3 6 9 1 4 7 A 2 5 8 B
+$10-1F |  11 | $0 3 6 9 1 4 7 A 2 5 8
+$20-2F |  10 | $0 5 3 8 1 6 4 9 2 7
+$30-3F |   9 | $0 7 5 3 1 8 6 4 2
+$40-4F |   8 | $0 2 4 6 1 3 5 7
+
+Notice that with this order, consecutive sector numbers are always four sectors apart, so the disk has an "interleave" of 4. This allows an application to request consecutive block or sector numbers, accessing the blocks as fast as a Unidisk 3.5 drive allows.
+
+This interleave is formatted into the "hard" sectors on the 3.5-inch disk (the sector numbers are actually out of order), as opposed to the "soft sector" renumbering that occurs with 5.25-inch disks (the hard sector numbers on disk are in order, but a lookup is done from the "soft" sectors that a program requests).
+
+Macintosh disks are formatted (by block) the same way as Apple II-format 3.5-inch disks, with two exceptions: (1) The 12 tag bytes within each Macintosh block normally contain information related to file recovery, rather than containing zeros. (2) Macintosh disks are formatted with an interleave of 2 (rather than 4), which means consecutive sector numbers are two sectors apart around the track.
+
+You could copy a Macintosh disk using the Copy Disk w/Format option. However, the Macintosh tag information would be lost, and the interleave of the resulting disk would be wrong. This would cause disk access to the copy to be slower than the original disk, because the sectors aren't in the proper order for fast, efficient access. Similarly, you could copy an Apple II-format 3.5-inch disk using the SECTOR COPY option found in CPS's Copy II, Apple Macintosh version, but again the interleave would be wrong, causing disk access to the copy to be slower.
+
+Appendix B - Extra Memory
+
+The Copy Disk option can take advantage of extra memory in your computer so that fewer disk swaps are needed for the copy. An internal "Memory Manager" section invisibly handles this extra memory.
+
+Below is a brief discussion of the Memory Manager. You don't need to know this information to use Copy ][ Reboot. It's provided here for your reference only.
+
+There are several different kinds of memory that can be added to an Apple or Apple-compatible computer: expansion RAM in the Apple IIgs, numbered-slot Apple style (or Laser 128EX) Memory Expansion RAM, and auxiliary-slot RAM boards for the Apple IIe or IIc. Unfortunately, all memory is not created equal! The extra memory does not appear to the computer as just "more main memory". Each kind of expansion memory appears in a different way and requires a different method to access. This means that for an application program to use the various kinds of memory, additional programming must be written to handle each. The Copy ][ Reboot Memory Manager does this handling.
+
+The Memory Manager can access extra memory in two ways:
+
+1. It can make use of available expansion memory in an Apple IIgs.
+
+2. If there are one or more ProDOS-compatible RAMdisks available, it will find the one RAMdisk that has the most free space, and use that remaining space without disturbing other files on the RAMdisk.
+
+With those two methods, it can get memory from several places:
+
+- Apple IIgs expansion memory, whether or not that memory is set up (from the Control Panel) as a RAMdisk.
+
+- a numbered-slot memory board, such as the Apple 1 Meg Memory Expansion Board, the Applied Engineering RamFactor board, or the AST SprintDisk.
+
+- the slot 5 memory expansion in a Laser 128 EX.
+
+- the slot 4 memory expansion in a newer Apple IIc if equipped with IIc Memory Expansion Card.
+
+- an Apple IIe (or IIc) auxiliary-memory board if it has already been set up as a RAMdisk, such as the Applied Engineering RamWorks boards set up with their "ProDrive" RAMdisk software, or the CheckMate Technology MultiMate board set up with their RAMdisk software.
+
+The Memory Manager section of course takes up memory itself! It must reside in the main memory of the computer in order to work with the other kinds of memory. This leaves less room in main memory for the rest of the program and for data areas. The saying "You need money to make money" could be adapted as "You need memory to get memory." For this reason, the Memory Manager requires at least 128K of memory built into the computer in order to access additional memory. Therefore, it cannot find additional memory in an Apple ][ or Apple ][ Plus (or ][ Plus compatible) computer. Also, if ProDOS's small slot 3 drive 2 RAMdisk is used or formatted, this ties up the additional memory, so the Memory Manager is no longer available.
+
+If the Memory Manager has trouble using the memory (for example if a RAMdisk is not working correctly), it will display a message letting you know of the problem. If you copy again, the Memory Manager won't be used this time, so that you can continue with the copy.
+
+Colophon
+
+You have reached the end of the manual. Thank you for reading it! Many people contributed to writing it. Sadly, Central Point Software did not name any of the contributors to the original Copy ][ Plus manual, but we appreciate their efforts. The content of this manual is 99% their words.
+
+Copy ][ Reboot comes at a time when printed material has gotten more expensive, but digital distribution is essentially free. As such, we have chosen to convert the printed manual to this "soft-docs" format. Additions, deletions, and corrections were managed by 4am.

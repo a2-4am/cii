@@ -19,7 +19,7 @@
             DW    BOOTPG
             DW    UNDEL
             DW    MAKESUB
-*            DW    SETPRINT
+            DW    SETCLOCK
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
 *JDDISK

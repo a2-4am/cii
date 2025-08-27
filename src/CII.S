@@ -3,7 +3,6 @@
             TR    ON          ;Truncate object code printout
             PUT   REVS        ;revision info -- comments only
             PUT   VARS        ;assorted equates for everybody
-            PUT   ../build/SETCLOCK.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/RDDATA.VARS
@@ -28,9 +27,6 @@
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
-*
-            PUTBIN  ../build/SETCLOCK.X
-CLKXEND
 *
 MMXBEG
             ORG   MMSPOT

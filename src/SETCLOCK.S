@@ -1,17 +1,6 @@
-            TYP   BIN
-            DSK   ../build/SETCLOCK.O
-            PUT   VARS
-            PUT   ../build/FILER.VARS
-            ORG   $800
-*
-CLKBEG
-*
-            LDA   #MHEADER
-            JSR   PRINT
-            JSR   PRHERE
-            DB    $8D,$8D
-            ASC   "Enter date or press [Esc] to skip"
-            DB    $8D,$8D,$0
+SETCLOCK
+            LDA   #$16
+            JSR   VLEFT
             LDA   DATE
             BEQ   :NODAT
             LDX   DATE+1
@@ -95,6 +84,7 @@ CLKBEG
             LDX   #3
             PLA
             JMP   :NXTIN1
+:GOSKIP     RTS
 *
 :CR         CPX   #9
             BCS   :CROK
@@ -149,7 +139,20 @@ CLKBEG
             LDA   :YEAR
             ROL
             STA   DATE+1
-:GOSKIP     RTS
+*
+* set time to 0
+            LDA   #0
+            STA   TIME
+            STA   TIME+1
+*
+* disable clock driver after setting date
+* and update ProDOS machine byte to say there's no clock
+            LDA   #$60
+            STA   JCLOCK
+            LDA   MACHID
+            AND   #$FE
+            STA   MACHID
+            RTS
 
 :BADDAY     LDX   #0
             DB    $2C
@@ -178,4 +181,3 @@ CLKBEG
 :DAYS       DB    $20,$1E,$20,$1F,$20,$1F,$20,$20,$1F,$20
             DB    $1F,$20
 *
-CLKEND

@@ -1,0 +1,43 @@
+Adjusting Your Drive Speed
+
+If the speed is out of bounds, in most cases you can adjust the drive speed yourself. Here are procedures for adjusting the speed of Apple Disk II or Micro-Sci A-2 drives, Duodisks, or Apple Ilc built-in and external drives.
+
+To adjust the speed on Apple Disk II drives or Micro-Sci A-2 drives:
+
+1. Turn off your computer.
+
+2. Remove the drive cover. There are four screws on the bottom of Apple drives or on the sides of Micro-Sci A-2 drives. After removing them, slide the cover off towards the back of the drive. You might want to unplug the drive from the controller card for more room before sliding the cover off.
+
+3. Now reconnect the drive to the controller card, and reboot your Copy ][ Reboot disk, choosing the Verify Drive Speed option.
+
+4. The drive speed can be adjusted by turning the speed control potentiometer. This is a small ceramic box with a tiny adjustment screw at one end. It can be found on the smaller circuit board at the back of the drive (right side of the drive, far lower corner). Turn the screw with a screwdriver or your fingernail until the drive speed is correct.
+
+5. Re-install the cover on your disk drive.
+
+To adjust the Duodisk:
+
+1. Tip the Duodisk up on its side so the underside of its case is exposed. There are two small holes underneath each drive, near the drive door. The speed adjustment screws are in the holes.
+
+2. Boot Copy ][ Reboot and choose the Verify Drive Speed option. The drive will run fine on its side. It doesn't have to be upright.
+
+3. With a small-blade screwdriver, turn the screw in the appropriate hole until the drive speed is correct.
+
+To adjust the Apple //e built-in drive:
+
+1. Tip the //e computer itself on its side so the underside of its case is exposed. There is a small hole in the bottom of the case, near the drive door. The drive speed adjustment screw is in the hole.
+
+2. Boot Copy ][ Reboot and choose the Verify Drive Speed option. The computer will run fine tipped on its side.
+
+3. With a small-blade screwdriver, turn the screw until the drive speed is correct.
+
+To adjust the Apple //e external drive:
+
+1. Tip the drive on its side so the underside of its case is exposed. There is probably a silver label on the bottom of the case near the drive door. Underneath this label is a small hole, and the drive speed adjustment screw is in the hole. You'll probably want to remove the label to access the hole.
+
+2. Boot Copy ][ Reboot and choose the Verify Drive Speed option.
+
+3. With a small-blade screwdriver, turn the screw until the drive speed is correct.
+
+Note: in older Franklin computers, the processor itself runs at a slightly different speed. This affects both the optimal speed for the drives and the timing of the Verify Drive Speed option itself. Most Franklin drives are preset so that the drive speed reads at about 198 ms. per revolution. If you have problems accessing or backing up commercial disks on a Franklin computer, adjusting the speed closer to 200 ms. may help.
+
+A more technical discussion of drive speed is included in Appendix A for interested readers.
