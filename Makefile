@@ -421,10 +421,6 @@ $(QUITVARS): $(QUITO)
 $(QUITX7): $(QUITO)
 	$(call X7,$(QUITO))
 
-# things that go in the root directory
-$(PRODOS) $(CLOCK): $(BUILDDIR)
-	$(CADIUS) ADDFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/" "$@" -C
-
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
 
@@ -434,7 +430,6 @@ clean:
 $(BUILDDIR):
 	mkdir -p "$@"
 	touch "$(BUILDLOG)"
-	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 140KB -C
 
 all: clean mount
 
