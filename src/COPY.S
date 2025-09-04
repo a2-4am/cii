@@ -255,12 +255,12 @@ COPY
 *
             BIT   DOSNOW
             BMI   :NOPRO
-            LDX   #>CVTOC
-            JSR   :RDVTOC
             JSR   :WRPASS
 *
 * MARK TRACKS 1 & 2 AS USED IN BITMAP
 *
+            LDX   #>CVTOC
+            JSR   :RDVTOC
             LDA   #>CVTOC
             STA   RPAGE
             JSR   STVTOC      ;RETURNS A=0
