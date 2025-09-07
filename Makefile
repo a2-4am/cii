@@ -98,6 +98,7 @@ QUITO=$(BUILDDIR)/QUIT.O
 QUITX7=$(BUILDDIR)/QUIT.X7
 QUITVARS=$(BUILDDIR)/QUIT.VARS.S
 EXE=$(BUILDDIR)/$(SYSNAME)
+PRODOS=res/PRODOS\#FF0000
 MANUAL=$(BUILDDIR)/REBOOT.MANUAL\#040000
 VARS = (awk -F';' '$1 { printf "%s EQU %s\n", $$6, $$5 }' < "$2_Symbols.txt" | grep -v "_" | sed -e "s/00\//\$$/g" > "$@")
 
@@ -111,12 +112,9 @@ $(MANUAL): $(BUILDDIR)
 	tr "\n" "\r" < docs/manual.txt > "$(MANUAL)"
 
 $(BUILDDISK): $(EXE) $(MANUAL)
-	cp res/template.po "$(BUILDDISK)"
-	$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
-	$(CADIUS) ADDFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(MANUAL)" -C
-	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/SUB1/" -C
-	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/SUB1/SUBSUB1/" -C
-	$(CADIUS) CREATEFOLDER "$(BUILDDISK)" "/$(DISKVOLUME)/SUB1/SUBSUB2/" -C
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(PRODOS)" -C
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(MANUAL)" -C
 
 #
 # Memory Manager module (self-contained)(compressed)
@@ -430,6 +428,7 @@ clean:
 $(BUILDDIR):
 	mkdir -p "$@"
 	touch "$(BUILDLOG)"
+	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 140KB -C
 
 all: clean mount
 
