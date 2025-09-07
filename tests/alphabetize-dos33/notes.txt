@@ -1,0 +1,30 @@
+ALPHABETIZE CATALOG (DOS 3.3)
+
+Notes:
+
+ps-graphics-DOS33.do is a DOS 3.3 disk with a large number of small files.
+
+Requirements:
+
+- two disk drives in slot 6
+
+Steps:
+
+- Duplicate ps-graphics-DOS33.do to sorted-v84.do
+- Launch Copy ][ Plus v8.4
+- Mount sorted-v84.do in Slot 6, Drive 2
+- Alphabetize Catalog > select Slot 6, Drive 2 > [G]o
+- Quit Copy ][ Plus
+- Duplicate ps-graphics-DOS33.do to sorted-reboot.do
+- Launch Copy ][ Reboot
+- Mount sorted-reboot.do in Slot 6, Drive 2
+- Alphabetize Catalog > select Slot 6, Drive 2 > [G]o
+- Quit Copy ][ Reboot
+
+Expectations:
+
+$ diff ps-graphics-DOS33.do sorted-reboot.do
+Binary files ps-graphics-DOS33.do and sorted-reboot.do differ
+
+$ diff sorted-reboot.do sorted-v84.do
+(no output)
