@@ -26,6 +26,8 @@ Steps:
 
 Expectations:
 
+- Once each alphabetize operation starts, there are no further prompts before main menu appears
+
 $ diff beagle-graphics-ProDOS.po sorted-reboot.po
 Binary files beagle-graphics-ProDOS.po and sorted-reboot.po differ
 

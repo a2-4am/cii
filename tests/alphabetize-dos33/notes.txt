@@ -23,6 +23,8 @@ Steps:
 
 Expectations:
 
+- Once each alphabetize operation starts, there are no further prompts before main menu appears
+
 $ diff ps-graphics-DOS33.do sorted-reboot.do
 Binary files ps-graphics-DOS33.do and sorted-reboot.do differ
 
