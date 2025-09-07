@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2025-08-25.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2025-09-06.
 
 With Copy ][ Reboot, you can
 
@@ -134,11 +134,13 @@ One of the menu items is always highlighted using inverse (black on white) lette
 
                  --^--
 
+Instead of using arrow keys and [Return], you can also select any option by typing its hotkey. Each option's hotkey is listed before the option name. So typing "C" will select "Copy", "T" will select "Catalog Disk", "D" will select "Delete", and so on. You do not need to press [Return] after typing a hotkey.
+
 At the bottom of the screen, you see either today's date, or the phrase "<No Date>". When you're working with ProDOS disks, Copy ][ Reboot can "stamp" the date onto any files you're copying.
 
 Setting The Date
 
-Apple IIgs computers have a built-in clock, and there are add-on cards and chips that can be installed in other Apple II models to add clock functionality. The Copy ][ Reboot disk bundles a "jumbo" clock driver that supports many different clock cards and chips:
+Apple IIgs computers have a built-in clock, and there are add-on cards and chips that can be installed in other Apple II models to add clock functionality. The Copy ][ Reboot disk bundles the latest version of ProDOS (2.4.3 at time of writing) and several additional clock drivers. Together, they support many different clock cards and chips:
 
 - No-Slot Clock
 - The Cricket!
@@ -148,7 +150,7 @@ Apple IIgs computers have a built-in clock, and there are add-on cards and chips
 - Apple IIgs built-in clock
 - Thunderclock and all compatible cards
 
-If any supported clock driver is installed, Copy ][ Reboot determines the date automatically. If not, you have the option of entering the date yourself.
+If any supported clock is detected, its driver is installed and Copy ][ Reboot determines the date automatically. If not, you have the option of entering the date yourself.
 
 To enter the date yourself, use the arrow keys to choose the "Enter Date" option, then press [Return]. The cursor will move to the date field in the lower left corner of the screen. Type in the 2-digit day of the month, the 3-letter abbreviation for the month, and the last 2 digits of the year. If you make a mistake, you can press the left arrow key to back up and type it again.
 
@@ -169,7 +171,7 @@ To get a catalog of a disk, select the Catalog option. A sub-menu will appear on
 
                  --^--
 
-Once again, use the arrow keys and [Return] to choose the option you want.
+Once again, press any of the hotkeys (N, F, D, or H), or use the arrow keys and [Return] to choose the option you want.
 
 Selecting Disks
 
@@ -260,7 +262,7 @@ The catalog showing "file lengths" shows all the same information as the normal 
 
 This shows that the Basic file HELLO is 1137 bytes long ($471 in hex), and the binary file CHAIN has a starting address of 2056 and a length of 456 (with corresponding hex numbers in parentheses).
 
-For ProDOS disks, the Catalog WITH FILE LENGTHS option is similar to the ProDOS 80-column Catalog command, adding the "created" date, the length of the file in bytes, and any "subtype" when appropriate.
+For ProDOS disks, the Catalog Showing File Lengths option is similar to the ProDOS 80-column Catalog command, adding the "created" date, the length of the file in bytes, and any "subtype" when appropriate.
 
 Catalog Showing Deleted Files Option
 
@@ -334,7 +336,7 @@ After you enter the pattern and press [Return], the program will scan through th
 
 If you're working with a ProDOS disk that contains subdirectories, the File Display also provides you with another way of selecting which subdirectory you want to work with. If you want to look "into" a subdirectory, use the arrow keys to highlight the subdirectory name. Now press the [>] (greater-than sign) key (you don't have to hold down the SHIFT key). The drive will whir, and the selected subdirectory will replace the directory you were looking at a moment before. If you want to "back out" of a subdirectory, just press [<] (less-than sign). You'll be returned to the next higher directory level. You can use the [>] and [<] keys to look into any subdirectory on the disk, before you decide which subdirectory you want to work with. You can only select files in one subdirectory at a time.
 
-Note: the Catalog option doesn't have this [>], [<] feature. If you want to browse a number of subdirectories on a disk, one good way is to choose one of the file options, such as VIEW FILES, to bring up the file display. Then you can press [>] and [<] to look at different subdirectories.
+Note: the Catalog option doesn't have this [>], [<] feature. If you want to browse a number of subdirectories on a disk, one good way is to choose one of the file options, such as View Files, to bring up the file display. Then you can press [>] and [<] to look at different subdirectories.
 
 Continuing with Copy Files
 
@@ -383,7 +385,7 @@ If the entire disk's contents can be read into memory in one pass, then when the
 
 Copying 5.25-Inch Disks
 
-When copying unprotected 5.25-inch disks, Copy ][ Reboot uses its own optimized floppy disk capabilities for greater speed. It copies the disk track by track, and automatically formats as it copies, so disks do not have to be formatted ahead of time. It doesn't matter whether you choose Copy Disk or Copy Disk W/ FORMAT when copying 5.25-inch disks; Copy ][ Reboot's built-in floppy routines always format-and-write simultaneously.
+When copying unprotected 5.25-inch disks, Copy ][ Reboot uses its own optimized floppy disk capabilities for greater speed. It copies the disk track by track, and automatically formats as it copies, so disks do not have to be formatted ahead of time. It doesn't matter whether you choose Copy Disk or Copy Disk w/Format when copying 5.25-inch disks; Copy ][ Reboot's built-in floppy routines always format-and-write simultaneously.
 
 There are 35 tracks on a 5.25-inch disk, numbered in hexadecimal from $00 to $22. As it reads or writes each track, Copy ][ Reboot displays the track number at the bottom of the screen.
 
@@ -393,7 +395,7 @@ Even if the Copy Disk routine reads a bad sector, it will still write a "good" s
 
 Copying 3.5-inch Disks
 
-When copying 3.5-inch disks, Copy ][ Reboot handles the information block-by-block through ProDOS, rather than track-by-track, because of the inherent differences between 3.5-inch drives and 5.25-inch drives. Choose Copy Disk if you know the target disk is already formatted; otherwise choose Copy Disk W/ FORMAT to format the target disk as part of the copy process (which takes a little longer).
+When copying 3.5-inch disks, Copy ][ Reboot handles the information block-by-block through ProDOS, rather than track-by-track, because of the inherent differences between 3.5-inch drives and 5.25-inch drives. Choose Copy Disk if you know the target disk is already formatted; otherwise choose Copy Disk w/Format to format the target disk as part of the copy process (which takes a little longer).
 
 Continuing with Copy Disk
 
@@ -700,7 +702,7 @@ View Files Option
 
 The View Files option allows you to quickly and easily look at the data in any file. This is useful for double-checking exactly what is in a file before copying it, deleting it, etc. View Files has two sub-options, for viewing the data as values or as text. The values option shows both the hexadecimal numbers and the ASCII characters in the file. The text option prints just the characters in a more readable form.
 
-To view one or more files, choose the VIEW FILES option, then the VALUES or TEXT sub-option. Select the appropriate disk drive (and subdirectory, if necessary). A file display for the disk will appear. Use the arrow keys to highlight the file you want to view, then press [G].
+To view one or more files, choose the View Files option, then the Values or Text sub-option. Select the appropriate disk drive (and subdirectory, if necessary). A file display for the disk will appear. Use the arrow keys to highlight the file you want to view, then press [G].
 
 The file is displayed a page at a time. You can press [Return] to see another page, or [Esc] to return to the catalog display. When using the View Values option, the file is displayed as hexadecimal bytes, 8 bytes per line, with the equivalent ASCII characters to the right. Control characters are replaced with periods. In the View Text mode, the characters are printed out in standard 40-character lines. Control characters are not printed, except for carriage returns.
 
@@ -746,9 +748,9 @@ When ProDOS deletes a file, the file is marked internally as a deleted file, but
 
 But when Copy ][ Reboot deletes a file from a ProDOS disk, it marks the file internally as deleted, but also keeps keeps all of the file information intact. If you accidentally delete a ProDOS file using Copy ][ Reboot, and no other disk writing has occurred, the file can always be recovered with the Undelete Files option.
 
-To undelete one or more files, select the Undelete Files option and an appropriate drive (and subdirectory if necessary). A file display will come on the screen, this time containing a list of all the deleted files still stored invisibly in the catalog. If there are no deleted files in the catalog, the message "NO FILES" will appear. Use the arrow keys, the Enter filename command, and [Return] to select the files to be undeleted. Press [G].
+To undelete one or more files, select the Undelete Files option and an appropriate drive (and subdirectory if necessary). A file display will come on the screen, this time containing a list of all the deleted files still stored invisibly in the catalog. If there are no deleted files in the catalog, the message "No files" will appear. Use the arrow keys, the Enter filename command, and [Return] to select the files to be undeleted. Press [G].
 
-The file display will show the files as the program attempts to undelete them. If a deleted file has already been partly or completely overwritten with other data, Copy ][ Reboot will not undelete it, since the data is not recoverable. If any of the files cannot be undeleted, they will then be listed with the label "LOST FILES".
+The file display will show the files as the program attempts to undelete them. If a deleted file has already been partly or completely overwritten with other data, Copy ][ Reboot will not undelete it, since the data is not recoverable. If any of the files cannot be undeleted, they will then be listed with the label "Lost files".
 
 After the undelete is completed, use the Copy ][ Reboot Catalog option to look at the undeleted files on the disk. If Copy ][ Reboot had difficulty undeleting a file (which may sometimes occur, but only for files deleted by older versions of ProDOS, not by Copy ][ Reboot), then the undeleted file will be marked with a question mark. Copy ][ Reboot has no way of knowing if it recovered all of the information correctly. You should always test or try using the suspect file to see if it was recovered successfully. If the file is good, you can later lock or unlock the file to remove the question mark.
 
