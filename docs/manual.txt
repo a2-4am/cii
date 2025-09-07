@@ -223,13 +223,13 @@ Note: Copy ][ Reboot will disconnect only the small built-in RAMdisk. If you hav
 
 Selecting Subdirectories (ProDOS only)
 
-What happens next depends on what kind of disk you've selected. If you're working with a ProDOS disk that contains one or more "subdirectories", then an additional display appears so that you can select which subdirectory you want. This is called the subdirectory "tree" display. The Copy ][ Reboot disk itself contains a few subdirectories. These subdirectories are empty (do not contain any files) and are included only so that you can see the tree display.
+What happens next depends on what kind of disk you've selected. If you're working with a ProDOS disk that contains one or more "subdirectories", then an additional display appears so that you can select which subdirectory you want. This is called the subdirectory "tree" display.
 
-As an example, make sure the Copy ][ Reboot disk is in the drive, then select the Catalog (Normal) option and the appropriate drive. The drive will whir for a few moments, then the screen will display something like this:
+As an example, imagine a disk that had one subdirectory named "SUB1", which itself contained two subdirectories. If you selected any Catalog option, the screen would display something like this:
 
                  --v--
 
-COPY.II.REBOOT--->SUB1--------->SUBSUB1
+EXAMPLE.DISK----->SUB1--------->SUBSUB1
                              !
                              !->SUBSUB2
 
