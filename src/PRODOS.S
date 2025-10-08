@@ -944,7 +944,60 @@ DVTYPX      LDA   #0
 :ROMDRV1    LDY   #$FE
             LDA   (TMPPTR),Y
             AND   #$88
-            ORA   #$02
+            BMI   :ISRMV
+*
+* [4am] This drive has a ROM-based driver,
+* is not a Disk II, and CsFE claims that
+* it is non-removable. But maybe we should
+* treat it as removable anyway. Some modern
+* peripherals such as CFFA3000 should really
+* count as 'removable' media for our purposes,
+* because the user can hot-swap the mounted
+* disk image at any time, either through a
+* physical switch or a GS CDA (or emulator UI,
+* if they are using an emulated CFFA).
+* This primarily affects whole-disk copy
+* operations -- if the user selects a CFFA-
+* controlled drive as both the source and
+* target drive, we should prompt for the source
+* and destination disks and assume the user can
+* handle swapping out the disk images when
+* prompted.
+*
+* CFFA 1.0: $CsF6 = 43 46 46 41 10
+* CFFA 1.2: $CsF6 = 43 46 46 41 12
+* CFFA 2.0: $CsF6 = 43 46 46 41 FF
+* CFFA3000: $CsF6 = 43 46 33 4B 31
+
+            TAX
+            LDY   #$F6
+            LDA   (TMPPTR),Y
+            CMP   #$43
+            BNE   :NOTCFFA
+            INY
+            LDA   (TMPPTR),Y
+            CMP   #$46
+            BNE   :NOTCFFA
+            INY
+            LDA   (TMPPTR),Y
+            CMP   #$46
+            BNE   :MAYBE3K
+            INY
+            LDA   (TMPPTR),Y
+            CMP   #$41
+            BNE   :NOTCFFA
+            BEQ   :ISCFFA     ;ALWAYS
+:MAYBE3K    CMP   #$33
+            BNE   :NOTCFFA
+            INY
+            LDA   (TMPPTR),Y
+            CMP   #$4B
+            BNE   :NOTCFFA
+:ISCFFA     TXA
+            ORA   #$80        ;BIT 7=REMOVABLE
+            TAX
+:NOTCFFA    TXA
+:ISRMV      ORA   #$02
 :COMOUT     CLC
             DB    $B0
 :RAMOUT     SEC
