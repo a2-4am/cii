@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2025-09-06.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-05.
 
 With Copy ][ Reboot, you can
 
@@ -60,7 +60,7 @@ For most options, you need only one disk drive. However, a second disk drive can
 
 What You Need to Know
 
-We assume that you are generally familiar with either DOS 3.3 or ProDOS, and the standard DOS operations such as Catalog, DELETE, RENAME, etc. If you need to know more about these things, you should refer to your DOS or ProDOS User's Manual. A few of the options are a little more complicated; this manual includes explanations for those options.
+We assume that you are generally familiar with either DOS 3.3 or ProDOS, and the standard DOS operations such as CATALOG, DELETE, RENAME, etc. If you need to know more about these things, you should refer to your DOS or ProDOS User's Manual. A few of the options are a little more complicated; this manual includes explanations for those options.
 
 Hexadecimal number notation is used throughout the program. Following usual computerese conventions, hexadecimal numbers are preceded with a dollar sign, as in "$05" for 5, "$0A" for 10, or "$10" for 16. Understanding hex numbers is helpful, but not necessary.
 
