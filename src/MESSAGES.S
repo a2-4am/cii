@@ -403,7 +403,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :HEADER
             ASC   "           Copy ][ Reboot 1.0"
             DB    $8D
-            ASC   " (C) 1982-9 Central Point, (C) 2025 4am"
+            ASC   " (C) 1982-9 Central Point, (C) 2026 4am"
             DB    $8D
 :DASHES     ASC   "----------------------------------------"
             DB    $0
