@@ -95,7 +95,7 @@ After booting the Copy ][ Reboot disk or launching the program from your hard dr
                  --v--
 
            Copy ][ Reboot 1.0
- (C) 1982-9 Central Point, (C) 2025 4am
+ (C) 1982-9 Central Point, (C) 2026 4am
 ----------------------------------------
 
 C-Copy                 Use hotkey or
