@@ -235,7 +235,7 @@ EXAMPLE.DISK----->SUB1--------->SUBSUB1
 
                  --^--
 
-This diagram shows that the main, or "root" directory (which goes by the volume name "COPY.II.REBOOT") has one subdirectory, named SUBl. In addition, the subdirectory SUB1 contains two subdirectories of its own, named SUBSUBl and SUBSUB2. This is called a "tree" diagram because the subdirectories extend from the "root" directory like branches of a tree.
+This diagram shows that the main, or "root" directory (which goes by the volume name "EXAMPLE.DISK") has one subdirectory, named SUBl. In addition, the subdirectory SUB1 contains two subdirectories of its own, named SUBSUBl and SUBSUB2. This is called a "tree" diagram because the subdirectories extend from the "root" directory like branches of a tree.
 
 By using the arrow keys, you can select any subdirectory. You can move up, down, right, or left, following the "branches" between directories. (If you have an Apple ][ or ][ Plus, press [A] to move up and [Z] to move down.) If the diagram is too large to fit on the screen, it will scroll automatically as you move around on the tree.
 
