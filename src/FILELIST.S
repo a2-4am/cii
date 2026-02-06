@@ -827,7 +827,7 @@ CSTAT       EQU   *
             BIT   A2E
             BVS   :FANCYCHK
             JSR   PRHERE
-            ASC   " ->"
+            ASC   "-> "
             DB    $0
             RTS
 :FANCYCHK
