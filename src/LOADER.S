@@ -154,7 +154,8 @@ MEMCPY      MAC
 *
 * A2E:
 *  0 --> NOT AN APPLE //E OR //C
-* FF --> //E OR //C
+* 80 --> UNENHANCED //E
+* C0 --> ENHANCED //E OR //C
 *
 * FLAG80:
 *  0 --> NO 80-COLUMN
@@ -175,7 +176,14 @@ MEMCPY      MAC
             LDA   $FBB3
             CMP   #$06
             BNE   :NO80COL    ;->NOT //E, so not 80 col, either.
-            DEC   A2E         ;0-->FF
+            LDA   #$00
+            DB    $1A         ;check for 65c02 using INC opcode
+            BEQ   :UNENH      ;if A is still 0, 65c02 was not found
+            LDA   #$C0        ;enhanced //e
+            DB    $2C
+:UNENH
+            LDA   #$80        ;unenhanced //e
+            STA   A2E
             LDY   MACHID
             TYA
             AND   #2
@@ -259,9 +267,7 @@ MEMCPY      MAC
 *
             BIT   A2E
             BPL   :SKIPIRQ    ;NOT //E
-            LDA   #$00
-            DB    $1A         ;check for 65c02 using INC opcode
-            BEQ   :SAVEIRQ    ;if A is still 0, 65c02 was not found
+            BVC   :SAVEIRQ    ;//e but unenhanced
 *
 * enhanced //e or later, so convert dashes to pretty MouseText dashes
 *
