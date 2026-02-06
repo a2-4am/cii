@@ -824,10 +824,28 @@ CSTAT       EQU   *
             BCC   :NUMBER     ;IF $FF OR $FE
             BIT   CFLAG
             BMI   :DOSPC
+            BIT   A2E
+            BVS   :FANCYCHK
             JSR   PRHERE
-            ASC   "-> "
+            ASC   " ->"
             DB    $0
             RTS
+:FANCYCHK
+            JSR   PRSPC
+            BIT   PINVFL
+            BMI   :SELCHK
+            JSR   PRHERE
+            DB    $44         ;MouseText checkmark
+            ASC   " "
+            DB    $0
+            RTS
+:SELCHK
+            JSR   PNORML
+            JSR   PRHERE
+            DB    $45         ;MouseText inverse checkmark
+            DB    $0
+            JSR   PINVRS
+            JMP   PRSPC
 *
 :NUMBER     STA   HEXNUM      ;PRINT NUMBER
             LDA   #$00
