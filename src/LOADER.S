@@ -259,12 +259,28 @@ MEMCPY      MAC
 *
             BIT   A2E
             BPL   :SKIPIRQ    ;NOT //E
-            LDA   $C083
-            LDA   $C083
+            LDA   #$00
+            DB    $1A         ;check for 65c02 using INC opcode
+            BEQ   :SAVEIRQ    ;if A is still 0, 65c02 was not found
 *
-* WHILE WE'RE IN THE LANGUAGE CARD,
+* enhanced //e or later, so convert dashes to pretty MouseText dashes
+*
+            LDY   #$52        ;enough to cover DASHES and :MORE
+:DASHLOOP
+            LDA   DASHES,Y
+            CMP   #"-"
+            BNE   :NEXTDASH
+            LDA   #$53
+            STA   DASHES,Y
+:NEXTDASH
+            DEY
+            BPL   :DASHLOOP
+*
 * SAVE AUXMEM IRQ VECTOR.
 *
+:SAVEIRQ
+            LDA   $C083
+            LDA   $C083
             STA   $C009       ;AUX LC
             LDA   $FFFE
             STA   IRQSAV

@@ -217,7 +217,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :INROOT     ;38
             DW    :CRESC1     ;now 39
             DW    :ERROR      ;3A
-            DW    :DASHES     ;now 3B
+            DW    DASHES      ;now 3B
             DW    :PRESS      ;now 3C
             DW    :MORE       ;now 3D
             DW    :HEADER     ;3E
@@ -405,7 +405,9 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $8D
             ASC   " (C) 1982-9 Central Point, (C) 2026 4am"
             DB    $8D
-:DASHES     ASC   "----------------------------------------"
+DASHES      ASC   "----------------------------------------"
+            DB    $0
+:MORE       ASC   "----------------- MORE -----------------"
             DB    $0
 :READ       ASC   "Read"
             DB    $0
@@ -413,8 +415,6 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 :PRESS      DB    $8D
 :PRESS1     ASC   "Press [Return] "
-            DB    $0
-:MORE       ASC   "----------------- MORE -----------------"
             DB    $0
 *
 MONTH1      ASC   "JFMAMJJASOND"
