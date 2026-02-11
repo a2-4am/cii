@@ -4,7 +4,7 @@
 *                                 *
 ***********************************
 HOTKEYS
-            ASC   "CTDLRAFYVMPUBEQ"  ; main menu
+            ASC   "XCDLRAFYVMPU/EQ"  ; main menu
             ASC   "PD"        ; FORMAT submenu
             ASC   "FDWO"      ; COPY submenu
             ASC   "NFDH"      ; CATALOG submenu
@@ -284,7 +284,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
 *
 :COPY       ASC   "Copy"
             DB    $0
-:CATALOG    ASC   "Catalog Disk"
+:CATALOG    ASC   "Catalog"
             DB    $0
 :DELETE     ASC   "Delete"
             DB    $0

@@ -98,8 +98,8 @@ After booting the Copy ][ Reboot disk or launching the program from your hard dr
  (C) 1982-9 Central Point, (C) 2026 4am
 ----------------------------------------
 
-C-Copy                 Use hotkey or
-T-Catalog Disk         arrows & [Return]
+X-Copy                 Use hotkey or
+C-Catalog              arrows & [Return]
 D-Delete               to select
 L-Lock/Unlock Files
 R-Rename
@@ -110,7 +110,7 @@ V-View Files
 M-Disk Map
 P-Change Boot Program
 U-Undelete Files
-B-Create Subdirectory
+/-Create Subdirectory
 E-Enter Date
 Q-Quit
 
@@ -134,7 +134,7 @@ One of the menu items is always highlighted using inverse (black on white) lette
 
                  --^--
 
-Instead of using arrow keys and [Return], you can also select any option by typing its hotkey. Each option's hotkey is listed before the option name. So typing "C" will select "Copy", "T" will select "Catalog Disk", "D" will select "Delete", and so on. You do not need to press [Return] after typing a hotkey.
+Instead of using arrow keys and [Return], you can also select any option by typing its hotkey. Each option's hotkey is listed before the option name. So typing "X" will select "Copy", "C" will select "Catalog", "D" will select "Delete", and so on. You do not need to press [Return] after typing a hotkey.
 
 At the bottom of the screen, you see either today's date, or the phrase "<No Date>". When you're working with ProDOS disks, Copy ][ Reboot can "stamp" the date onto any files you're copying.
 
@@ -243,7 +243,7 @@ When the directory you want is selected, press [Return] to actually see the file
 
 Normal Catalog Option
 
-The "normal" catalog is similar to the standard DOS "Catalog" or ProDOS "CAT" command. Copy ][ Reboot checks the disk in the drive to see whether it is a DOS or a ProDOS disk. If it's a DOS disk, the disk volume number is shown, then for each file, the optional "locked" asterisk, the filetype letter, the file length (in sectors), and finally the filename are shown, one line for each file. If it's a ProDOS disk, Copy ][ Reboot lists the volume name, then for each file, the optional "locked" asterisk, the filename, the 3-letter filetype abbreviation, the file length (in blocks), and the date the file was last modified.
+The "normal" catalog is similar to the standard DOS "CATALOG" or ProDOS "CAT" command. Copy ][ Reboot checks the disk in the drive to see whether it is a DOS or a ProDOS disk. If it's a DOS disk, the disk volume number is shown, then for each file, the optional "locked" asterisk, the filetype letter, the file length (in sectors), and finally the filename are shown, one line for each file. If it's a ProDOS disk, Copy ][ Reboot lists the volume name, then for each file, the optional "locked" asterisk, the filename, the 3-letter filetype abbreviation, the file length (in blocks), and the date the file was last modified.
 
 The catalog pauses after every 20 files. You can continue by pressing any key (except [Esc], which will stop the catalog and return you to the main menu).
 
@@ -762,7 +762,7 @@ Next Copy ][ Reboot will ask you to enter the new "Subdirectory name:". Type in 
 
 Quit Option
 
-When you want to exit Copy ][ Reboot and run another ProDOS program or boot another disk, choose the Quit option. To boot a new disk, insert the disk and press [CONTROL-RESET]. To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
+When you want to exit Copy ][ Reboot and run another ProDOS program or boot another disk, choose the Quit option. To boot a new disk, insert the disk and press [Control-Reset]. To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
 
 Large Memory Boards
 
