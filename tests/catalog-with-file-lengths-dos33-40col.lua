@@ -6,6 +6,7 @@
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2p"
+  MODELARGS="-sl0 'lang'"
   DISKARGS="-flop1 $FLOPIMG -flop2 'DOS 3.3 System Master.do'"
   CHECKAUXMEMORY="false"
 
