@@ -28,7 +28,7 @@ test.Step(
     cii.WaitForSelection("COPYFILES") -- two items are selected, Copy and Files
     apple2.Type("D") -- Disk
     cii.WaitForScreenContains("SELECT SOURCE DEVICE:")
-    apple2.Type("61") -- Slot 6, Drive 1
+    apple2.Type("6") -- Slot 6, Drive 1
     cii.WaitForSelection("SLOT 6  DRIVE 1")
     apple2.ReturnKey()
     cii.WaitForScreenContains("SELECT TARGET DEVICE:")
