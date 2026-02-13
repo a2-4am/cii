@@ -797,7 +797,7 @@ FIXSUB      JSR   SWPCHK
 * SET UP PARENT POINTERS
 *
             LDA   POINT+1
-            AND   #$FE
+            AND   #$FE        ;/!\ assumes SDIR is aligned to even page boundary
             CMP   #>SDIR      ;14
             BNE   :FS2        ;NOT 1ST
             LDA   DIRBLK

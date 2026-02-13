@@ -188,8 +188,7 @@ STRTYP      =     $3CF
 *
 SCREEN      =     $5A2
 *
-            DUM   $800
-CVTOC       DS    $100        ;800
+            DUM   $900
 STATUS      DS    $100        ;900
 CBYTE       DS    $100        ;A00
 CSECTR      DS    $100        ;B00
@@ -197,19 +196,21 @@ CSECTR      DS    $100        ;B00
 FILBUF      =     *           ;C00
 DSTTSL      DS    $200        ;C00
 DESBUF      DS    $200        ;E00  used in DESTROY FILE
-SMIB        DS    $200
+SMIB        DS    $200        ;1000
 RBLKL       =     SMIB+$0081
 RBLKH       =     SMIB+$0181
-SIB         DS    $200
+SIB         DS    $200        ;1200
 SRCTSL      =     SIB
-VTOC1       =     SRCTSL+$100
-CAT1        DS    $F00
-SDIR        =     CAT1
+VTOC1       =     SRCTSL+$100 ;1300
+CAT1        DS    $F00        ;1400
+SDIR        =     CAT1        ;1400
+                              ;/!\ must be aligned on even page boundary
+                              ;due to 'AND #$FE' logic in FIXSUB
 DOSDAT      =     *
-BMDATA      =     SDIR+$800   ;1C00 - variable buffer for bitmap, which
+BMDATA      =     SDIR+$800   ;2900 - variable buffer for bitmap, which
                               ; can take up to $2000 bytes for giant disks
-DATA        =     SDIR+$2800
-DATPAG      =     DATA+$100
+DATA        =     SDIR+$2800  ;4900
+DATPAG      =     DATA+$100   ;4A00
             DEND
 *
 *
@@ -240,32 +241,46 @@ MENUTSZ     EQU   $1E
 ZXMODSZ     EQU   $32
 ZXUNPSZ     EQU   $13B
 *
-TOPMEM      =     CODEADR-$300  ;$300 for VOLNMS, PRIM, SECOND, etc.
-VOLNMS      =     TOPMEM
-TRKBUF      =     TOPMEM-$5000
-TOP40       =     TOPMEM-$4000
-TOP30       =     TOPMEM-$3000
-TOP11       =     TOPMEM-$1100
-TOP10       =     TOPMEM-$1000
+TOPMEM      =     CODEADR-$300 ;5800 - permanently reserve $300 for VOLNMS, PRIM, SECOND, etc.
+VOLNMS      =     TOPMEM      ;5800 - $100 bytes
+                              ;Used by 'display volume names' in device selection.
+                              ;Also used by DOSTYP.
+                              ;May also be used in Copy Files to verify the
+                              ;correct disk is in the drive after swapping.
+                              ;May also be used in Format Disk when formatting
+                              ;an already-formatted ProDOS disk.
+CVTOC       =     TOPMEM      ;5800 - $100 bytes
+                              ;Used by Copy DOS
+                              ;Used by Delete DOS
+                              ;Used by SWCK which is called by INSS and INSD
+                              ;which are called by many 1-drive operations
+                              ;including Copy Files to verify the correct disk
+                              ;is in the drive after swapping.
+                              ;However it is not used by Copy Disk.
+TRKBUF      =     TOPMEM-$5000 ;800
+TOP40       =     TOPMEM-$4000 ;1800
+TOP30       =     TOPMEM-$3000 ;2800
+TOP11       =     TOPMEM-$1100 ;4700
+TOP10       =     TOPMEM-$1000 ;4800
 *
             DUM   TOP10
-VTOC2       DS    $100
-VTRACK      =     VTOC2+$30
-VDIR        =     VTOC2+$31
-NSECTS      =     VTOC2+$35
-CAT2        DS    $F00
+VTOC2       DS    $100        ;4800
+VTRACK      =     VTOC2+$30   ;4830
+VDIR        =     VTOC2+$31   ;4831
+NSECTS      =     VTOC2+$35   ;4835
+CAT2        DS    $F00        ;4900-57FF
             DEND
 *
-MMIOBUF     =     TOP10       ;ProDOS buffer for MM
-MMSPOT      =     MMIOBUF+$400  ;MM code sits after MM ProDOS buffer
+MMIOBUF     =     TOP10       ;4800 - $400 byte ProDOS buffer for MM
+MMSPOT      =     MMIOBUF+$400 ;4C00 - MM code sits after MM ProDOS buffer
 *
 *-------------------
 AUXMM       =     $0800       ;MM's home in aux memory
 *-------------------
 *
             DUM   CODEADR-$200
-PRIM        DS    $100
-SECOND      DS    $57
+PRIM        DS    $100        ;used by PHRWTS during write
+SECOND      DS    $57         ;used by PHRWTS during write
 VOLNAM      DS    $10
 BTPFX       DS    $50
 ASYNC       DS    1           ;# OF SYNC TO WRITE

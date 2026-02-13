@@ -245,26 +245,37 @@ COPY
 * VERIFY SOURCE DISK IS REALLY DOS
 *
             LDX   #>VTOC1
-            JSR   :RDVTOC
-            JSR   DOS?
-            JSR   :RDPASS
-            JSR   TARHDR
-            JSR   INSD
+            JSR   :RDVTOC     ;Read T11S00 from source disk into CVTOC ($100 bytes).
+                              ;Does not return if no DOS VTOC was found on T11S00.
+                              ;We do not use the VTOC data. If the routine returns,
+                              ;that's good enough for us
+            JSR   DOS?        ;Read T00,S00 from source disk into DATA ($100 bytes).
+                              ;Does not return if no DOS bootloader was found on T00S00
+            JSR   :RDPASS     ;Read T00-T02 into TOP40 ($3000 bytes)
+            JSR   TARHDR      ;Update screen header with target disk info
+            JSR   INSD        ;prompt to insert target disk if necessary
 *
 * VERIFY TARGET DISK IS REALLY DOS
 *
             BIT   DOSNOW
             BMI   :NOPRO
-            JSR   :WRPASS
+            LDX   #>CVTOC     ;[4am] CVTOC was moved higher to avoid conflict with TRKBUF
+                              ;[4am] because CODEADR is now low enough that there's
+                              ;[4am] no room below TRKBUF anymore.
+            JSR   :RDVTOC     ;read T11S00 into CVTOC ($100 bytes)
+                              ;does not return if no DOS VTOC was found on T11S00
+            JSR   :WRPASS     ;write T00-T02
 *
 * MARK TRACKS 1 & 2 AS USED IN BITMAP
 *
-            LDX   #>CVTOC
-            JSR   :RDVTOC
             LDA   #>CVTOC
             STA   RPAGE
             JSR   STVTOC      ;RETURNS A=0
-            JSR   SET1A2
+            JSR   SET1A2      ;Sets bits in target disk VTOC (already in memory)
+                              ;and writes VTOC to T11S00 on target disk.
+                              ;/!\ This routine sets hard-coded addresses offset
+                              ;from CVTOC and writes to disk w/o reading, so the
+                              ;target disk VTOC has to be in memory already
             JMP   FILER
 *
 :RDVTOC     LDA   #1
@@ -403,7 +414,7 @@ COPY
 *
 :DOPASS     BIT   MMISOPEN
             BMI   :DOLCPAS    ;->MM open: don't access 1st buffer.
-            LDA   #>TOP40     ;Else (1B00-2AFF)
+            LDA   #>TOP40     ;Else (1800-27FF)
             STA   RPAGE
             JSR   :PASSINC    ; do 1 track in main mem.
             BCS   :PASSOUT
@@ -411,7 +422,7 @@ COPY
             BCS   :PASSOUT
             JSR   :MMPASS     ;Do MM.
             BCS   :PASSOUT
-            LDA   #>TOP30     ;2B00-5AFF
+            LDA   #>TOP30     ;2800-57FF
             STA   RPAGE
 :DPLOOP     JSR   :PASSINC    ;Do remaining main mem...
             BCS   :PASSOUT
