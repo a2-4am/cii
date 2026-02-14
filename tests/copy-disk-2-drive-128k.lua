@@ -19,7 +19,7 @@ s5d1:unload()
 s6d2:unload()
 
 test.Step(
-  "[FLAKY] Copy Disk on 128K //e with 2 drives matches v8.4 behavior",
+  "[FLAKY] Copy Disk on 128K //e with 2 drives copies in 2 passes, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(source_filename)

@@ -18,7 +18,7 @@ local source_filename = s6d2.filename
 s5d1:unload()
 
 test.Step(
-  "[FLAKY] Copy Disk on 64K //e with 1 drive matches v8.4 behavior",
+  "[FLAKY] Copy Disk on 64K //e with 1 drive copies in 9 passes, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy

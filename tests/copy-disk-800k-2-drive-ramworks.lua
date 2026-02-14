@@ -21,7 +21,7 @@ s4d1:unload()
 s4d2:unload()
 
 test.Step(
-  "Copy Disk (800K) on 8MB //e with RAMWorks RAM disk can write multiple times without re-reading, matches v8.4 behavior",
+  "Copy Disk (800K) on 8MB //e with RAMWorks RAM disk copies in 1 pass, can write multiple times without re-reading, matches v8.4 behavior",
   function()
     apple2.WaitForBitsy()
     apple2.TabKey() -- switch to slot 6 drive 2 containing Copy ][ Reboot

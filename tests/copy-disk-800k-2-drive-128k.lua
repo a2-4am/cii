@@ -16,7 +16,7 @@ local s5d2 = manager.machine.images[":sl5:superdrive:fdc:1:35hd"]
 local target_filename = s5d2.filename
 
 test.Step(
-  "Copy Disk (800K) on 128K //e with 2 Superdrives matches v8.4 behavior",
+  "Copy Disk (800K) on 128K //e with 2 Superdrives copies in 12 passes, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy

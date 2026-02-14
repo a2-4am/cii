@@ -19,7 +19,7 @@ local target2_filename = s2d1.filename
 s2d1:unload()
 
 test.Step(
-  "Copy Disk (800K) on 8MB //e with RAMFactor RAM disk can write multiple times without re-reading, matches v8.4 behavior",
+  "Copy Disk (800K) on 8MB //e with RAMFactor RAM disk copies in 1 pass, can write multiple times without re-reading, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy

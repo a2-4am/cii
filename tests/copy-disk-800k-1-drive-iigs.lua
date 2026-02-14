@@ -13,7 +13,7 @@ local target_filename = s5d2.filename
 s5d2:unload()
 
 test.Step(
-  "Copy Disk (800K) on 1.25MB IIgs matches v8.4 behavior",
+  "Copy Disk (800K) on 1.25MB IIgs copies in 1 pass, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy

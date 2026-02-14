@@ -22,7 +22,7 @@ s5d2:unload()
 s6d2:unload()
 
 test.Step(
-  "[FLAKY] Copy Disk on 8MB //e with RAMFactor RAM disk can write multiple times without re-reading, matches v8.4 behavior",
+  "[FLAKY] Copy Disk on 8MB //e with RAMFactor RAM disk copies in 1 pass, can write multiple times without re-reading, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy
