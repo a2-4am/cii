@@ -22,7 +22,7 @@ s5d2:unload()
 s6d2:unload()
 
 test.Step(
-  "Copy DOS to unformatted disk matches v8.4 behavior",
+  "Copy DOS to unformatted disk fails, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(source_filename)
