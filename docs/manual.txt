@@ -15,8 +15,8 @@ With Copy ][ Reboot, you can
 - Rename files
 - Alphabetize the catalog
 - Format a disk
-- Verify that the disk is readable
 - Verify that files are readable
+- Verify that a disk is readable
 - Check disk drive speed
 - View the contents of files
 - See a map of what files are stored where on the disk
