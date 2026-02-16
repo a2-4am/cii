@@ -8,7 +8,7 @@ HOTKEYS
             ASC   "PD"        ; FORMAT submenu
             ASC   "FDWO"      ; COPY submenu
             ASC   "NFDH"      ; CATALOG submenu
-            ASC   "DFS"       ; VERIFY submenu
+            ASC   "FDS"       ; VERIFY submenu
             ASC   "VT"        ; VIEW submenu
             ASC   "FDO"       ; DELETE submenu
             ASC   "FV"        ; RENAME submenu
@@ -75,8 +75,8 @@ MWHIDDEN    DS    1
 *
 * VERIFY submenu
 *
-MVERDISK    DS    1           ;19 MENU 3
-MVERFILE    DS    1
+MVERFILE    DS    1           ;19 MENU 3
+MVERDISK    DS    1
 MSPEED      DS    1
 *
 * VIEW submenu
@@ -179,8 +179,8 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :WDELETE
             DW    :WHIDDEN
 *
-            DW    :DISK       ;19 MENU 3
-            DW    :FILES
+            DW    :FILES      ;19 MENU 3
+            DW    :DISK
             DW    :SPEED
 *
             DW    :VALUES     ;1C MENU 4

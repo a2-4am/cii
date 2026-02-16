@@ -14,13 +14,13 @@ VERIFY
             LDX   #UVERIFY
             JSR   CHOOZ1      ;SELECT VERIFY
             STA   :TEMP       ;OPTION.
-            CMP   #1
+            TAX
             BNE   :NOTFIL
             JSR   COMTRE
             JMP   :VFILES
 *
 :NOTFIL     JSR   COMHDR
-            LDA   :TEMP       ;JUMP TO
+            DEC   :TEMP       ;JUMP TO
             BEQ   :VDISK      ;OPTION
             JMP   :SPEED1
 *
