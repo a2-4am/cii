@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-11.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-16.
 
 With Copy ][ Reboot, you can
 
@@ -647,11 +647,17 @@ The Verify option is used to select one of three sub-options:
 
                  --v--
 
-                       D-Disk
                        F-Files
+                       D-Disk
                        S-Drive Speed
 
                  --^--
+
+Verify Files Option
+
+Verify Files checks the data and sectors used by individual files. After selecting the appropriate drive (and subdirectory if necessary), the drive will whir and a file display will appear. Here, the files to be verified can be selected with [Return] the same way the files to be deleted were selected in the Delete Files option. An arrow will appear by all selected files. The Enter filename command can also be used to select files, with the usual multi-file pattern capabilities. To begin verifying those files, press [G].
+
+The file display will highlight each file as it is verified. If an error occurs, the track and sector number (or the block number) for the error will appear. You can press [Return] to continue verifying the file, [SPACE] to move to the next file, or [Esc] to return to the main menu.
 
 Verify Disk Option
 
@@ -683,12 +689,6 @@ Verify Disk will work with standard 16-sector (DOS 3.3, ProDOS, SOS, CP/M, and P
 If a normal DOS or ProDOS disk you're using is giving DOS I/O errors, it can be one of three things: bad data, bad sectors, or a physically damaged disk. Bad data means the catalog or file information is wrong, for example, telling the DOS to look for a file on track 200! A bad sector is one that simply can't be read (possibly caused by a "power glitch" or by opening the drive door or pressing Reset while the drive was writing) even though the disk is still capable of storing good data. A disk can also be permanently damaged from improper handling, fingerprints, heat, spilled coffee, rabid dogs, etc.
 
 It's a good idea to verify suspect disks to see where the errors are. If Verify Files shows errors, but Verify Disk does not, then bad data stored in the catalog is the most likely culprit. If Verify Disk shows errors, then you have either bad sectors or a damaged disk (or a blank or copy-protected disk). You should use Copy Files or Copy Disk to save as much of the information as you can, then try to reformat the disk. If the formatting fails, then the disk is most likely permanently damaged.
-
-Verify Files Option
-
-Verify Files checks the data and sectors used by individual files. After selecting the appropriate drive (and subdirectory if necessary), the drive will whir and a file display will appear. Here, the files to be verified can be selected with [Return] the same way the files to be deleted were selected in the Delete Files option. An arrow will appear by all selected files. The Enter filename command can also be used to select files, with the usual multi-file pattern capabilities. To begin verifying those files, press [G].
-
-The file display will highlight each file as it is verified. If an error occurs, the track and sector number (or the block number) for the error will appear. You can press [Return] to continue verifying the file, [SPACE] to move to the next file, or [Esc] to return to the main menu.
 
 Verify Drive Speed Option (5.25-inch drives only)
 
