@@ -4,7 +4,7 @@
 *                                 *
 ***********************************
 HOTKEYS
-            ASC   "XCDLRAFYVMPU/EQ"  ; main menu
+            ASC   "XCDLRAFYVMBU/EQ"  ; main menu
             ASC   "PD"        ; FORMAT submenu
             ASC   "FDWO"      ; COPY submenu
             ASC   "NFDH"      ; CATALOG submenu
@@ -284,7 +284,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
 *
 :COPY       ASC   "Copy"
             DB    $0
-:CATALOG    ASC   "Catalog"
+:CATALOG    ASC   "Catalog Disk"
             DB    $0
 :DELETE     ASC   "Delete"
             DB    $0
@@ -300,7 +300,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 :VIEW       ASC   "View Files"
             DB    $0
-:TSMAP      ASC   "Disk Map"
+:TSMAP      ASC   "Map Disk"
             DB    $0
 :NEWBOOT    ASC   "Change Boot Program"
             DB    $0

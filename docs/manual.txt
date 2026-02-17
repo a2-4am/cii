@@ -99,7 +99,7 @@ After booting the Copy ][ Reboot disk or launching the program from your hard dr
 ----------------------------------------
 
 X-Copy                 Use hotkey or
-C-Catalog              arrows & [Return]
+C-Catalog Disk         arrows & [Return]
 D-Delete               to select
 L-Lock/Unlock Files
 R-Rename
@@ -107,7 +107,7 @@ A-Alphabetize Catalog
 F-Format Disk
 Y-Verify
 V-View Files
-M-Disk Map
+M-Map Disk
 P-Change Boot Program
 U-Undelete Files
 /-Create Subdirectory
@@ -134,7 +134,7 @@ One of the menu items is always highlighted using inverse (black on white) lette
 
                  --^--
 
-Instead of using arrow keys and [Return], you can also select any option by typing its hotkey. Each option's hotkey is listed before the option name. So typing "X" will select "Copy", "C" will select "Catalog", "D" will select "Delete", and so on. You do not need to press [Return] after typing a hotkey.
+Instead of using arrow keys and [Return], you can also select any option by typing its hotkey. Each option's hotkey is listed before the option name. So typing "X" will select "Copy", "C" will select "Catalog Disk", "D" will select "Delete", and so on. You do not need to press [Return] after typing a hotkey.
 
 At the bottom of the screen, you see either today's date, or the phrase "<No Date>". When you're working with ProDOS disks, Copy ][ Reboot can "stamp" the date onto any files you're copying.
 
@@ -156,11 +156,11 @@ To enter the date yourself, use the arrow keys to choose the "Enter Date" option
 
 If it can not determine the date automatically, and you do not enter a date manually, Copy ][ Reboot will simply stamp "<No Date>" as the date on any ProDOS files you copy.
 
-Catalog Options
+Catalog Disk Options
 
 One of the most convenient aspects of the program is the easy way you can select which disks or files you want to work with. This is explained in this and following sections, but it applies to all of the options.
 
-To get a catalog of a disk, select the Catalog option. A sub-menu will appear on the right of the screen. The options are
+To get a list of files on a disk, select the Catalog Disk option. A sub-menu will appear on the right of the screen. The options are
 
                  --v--
 
@@ -225,7 +225,7 @@ Selecting Subdirectories (ProDOS only)
 
 What happens next depends on what kind of disk you've selected. If you're working with a ProDOS disk that contains one or more "subdirectories", then an additional display appears so that you can select which subdirectory you want. This is called the subdirectory "tree" display.
 
-As an example, imagine a disk that had one subdirectory named "SUB1", which itself contained two subdirectories. If you selected any Catalog option, the screen would display something like this:
+As an example, imagine a disk that had one subdirectory named "SUB1", which itself contained two subdirectories. If you selected any Catalog Disk option, the screen would display something like this:
 
                  --v--
 
@@ -241,13 +241,13 @@ By using the arrow keys, you can select any subdirectory. You can move up, down,
 
 When the directory you want is selected, press [Return] to actually see the files in that directory.
 
-Normal Catalog Option
+Normal Catalog Disk Option
 
 The "normal" catalog is similar to the standard DOS "CATALOG" or ProDOS "CAT" command. Copy ][ Reboot checks the disk in the drive to see whether it is a DOS or a ProDOS disk. If it's a DOS disk, the disk volume number is shown, then for each file, the optional "locked" asterisk, the filetype letter, the file length (in sectors), and finally the filename are shown, one line for each file. If it's a ProDOS disk, Copy ][ Reboot lists the volume name, then for each file, the optional "locked" asterisk, the filename, the 3-letter filetype abbreviation, the file length (in blocks), and the date the file was last modified.
 
 The catalog pauses after every 20 files. You can continue by pressing any key (except [Esc], which will stop the catalog and return you to the main menu).
 
-Catalog Showing File Lengths Option
+Catalog Disk Showing File Lengths Option
 
 The catalog showing "file lengths" shows all the same information as the normal catalog. For all Basic files, it also shows the actual length of the program in bytes. For binary files, it shows both the starting memory address of the file and its length. Here is an example DOS 3.3 catalog listing for two files:
 
@@ -262,13 +262,13 @@ The catalog showing "file lengths" shows all the same information as the normal 
 
 This shows that the Basic file HELLO is 1137 bytes long ($471 in hex), and the binary file CHAIN has a starting address of 2056 and a length of 456 (with corresponding hex numbers in parentheses).
 
-For ProDOS disks, the Catalog Showing File Lengths option is similar to the ProDOS 80-column Catalog command, adding the "created" date, the length of the file in bytes, and any "subtype" when appropriate.
+For ProDOS disks, the Catalog Disk Showing File Lengths option is similar to the ProDOS 80-column CATALOG command, adding the "created" date, the length of the file in bytes, and any "subtype" when appropriate.
 
-Catalog Showing Deleted Files Option
+Catalog Disk Showing Deleted Files Option
 
 The catalog showing "deleted files" includes the files on the disk which have been marked as deleted, but have not yet been overwritten by a new file entry. Any deleted files are marked in this display with the letter "D" to the left of the entry. Note that in some cases, deleted files can safely be recovered and made active again using the Undelete Files option, explained later.
 
-Catalog Showing Hidden Characters Option
+Catalog Disk Showing Hidden Characters Option
 
 DOS 3.3 allows users to include hidden "control" characters in a filename. The catalog showing "hidden characters" allows you to see any embedded control characters, which are normally not printed by Copy ][ Reboot. The control characters show up as inverse characters.
 
@@ -712,9 +712,9 @@ At the end of a DOS 3.3 file, there may be a few funny characters, including inv
 
 When you've finished viewing one file, the program returns to the file display. From here, you can select another file to view, or press [Esc] to go back to the main menu.
 
-Disk Map Option (5.25-inch drives only)
+Map Disk Option (5.25-inch drives only)
 
-The Disk Map gives you an informative display showing what sectors on the disk are used by which files, and which sectors are free for use. It is designed only for 5.25-inch floppy drives. To see the Disk Map, choose the Disk Map option and the desired disk drive. The drive will whir and you'll see a grid-like map of all the sectors on the disk, with the track numbers ($0 to $22) across the top row and the sector numbers ($0 to $F) along the left edge.
+The Map Disk option gives you an informative display showing what sectors on the disk are used by which files, and which sectors are free for use. It is designed only for 5.25-inch floppy drives. To see the map, choose the Map Disk option and the desired disk drive. The drive will whir and you'll see a grid-like map of all the sectors on the disk, with the track numbers ($0 to $22) across the top row and the sector numbers ($0 to $F) along the left edge.
 
 Note: if you're looking at a ProDOS disk, the sector numbers at the left will be slightly out of order. This is intentional, as it more accurately reflects the way ProDOS groups pairs of sectors together.
 
