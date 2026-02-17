@@ -1030,10 +1030,7 @@ COPY
             JSR   PRHERE
             DB    $8D
             ASC   "New name?"
-            INV   "/"
-            DB    $8D
-            INV   "/"
-            DB    $0
+            DB    $FF,$8D,$FF,$00
             LDA   #$16
             JSR   VLEFT
             LDA   #$0A
