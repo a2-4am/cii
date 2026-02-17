@@ -47,28 +47,17 @@ MEMCPY      MAC
 * and other global jump vectors into place
 *
             >>>   MEMCPY,DZX0BEG;DZX0END;INTRLV
-*
-*
-* FIGURE OUT SLOT NUMBER
-*
-            LDX   #1          ;Mark the ProDOS global page as
-            STX   MEMTABL+$17  ; busy in the global page bitmap.
-            LDA   DEVNUM
-            STA   BOOTDV
-            BPL   :ISD1
-            INX
-:ISD1       STX   RPDRIV
-* AND #$70
-* STA *RPSLOT
+* Y=0 on exit from MEMCPY
+            TYA               ;0
 *
 * CLEAR OUT PRODOS MEMORY BITMAP
 *
             LDX   #$16
-            TYA               ;0
 :CLRMAP     STA   MEMTABL,X
             STA   ACURR,X
             DEX
             BNE   :CLRMAP
+* A=0, X=0, Y=0
 *
 * (no more minimum version at $BFFC?
 * ProDOS manual says it's a reserved location)
@@ -82,6 +71,16 @@ MEMCPY      MAC
 *            STA   PCURR      ;handled in-loop
 *            STA   SCURR      ;handled in-loop
 *            STA   RPSLOT      ;handled in-loop
+*
+* FIGURE OUT SLOT NUMBER
+*
+            INX               ;1 Mark the ProDOS global page as
+            STX   MEMTABL+$17 ;  busy in the global page bitmap.
+            LDA   DEVNUM
+            STA   BOOTDV
+            BPL   :ISD1
+            INX               ;2
+:ISD1       STX   RPDRIV
 *
 * PUT VERSION NUMBER AT $BFFD
 *
@@ -446,4 +445,6 @@ DOMEMCPY
             INC   :DST+1
             DEC   :PAGES
             BNE   ]COPYLOOP
+* Y=0 on exit
+* Z=1 on exit
             RTS
