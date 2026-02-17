@@ -38,5 +38,5 @@ test.Step(
     s6d2:unload() -- eject disk (ensures disk image is updated)
     test.ExpectBinaryEquals(util.SlurpFile(actual_filename),
                             util.SlurpFile(expected_filename),
-                            "Alphabetize Catalog (DOS 3.3) disk image differs from v8.4")
+                            "Delete Files (DOS 3.3) disk image differs from v8.4")
 end)
