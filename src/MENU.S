@@ -59,9 +59,9 @@ FILER       LDX   #$FF
 CHOOZ0
             JSR   CHOPOS
             JSR   PRHERE
-            ASC   "Use hotkey or",2F,8D
+            ASC   "Use hotkey or",FF,8D
             ASC   "arrows & [Return]"
-            ASC   "to select",2F,8D,2F,8D,2F,8D,2F,8D,2F,8D,2F,00
+            ASC   "to select",FF,8D,FF,8D,FF,8D,FF,8D,FF,8D,FF,00
             JSR   INIT
             LDX   #$00
             JSR   CHOOZ
@@ -79,8 +79,8 @@ CHOOZ0
 *
 CHOOZ1      JSR   CHOPOS
             JSR   PRHERE
-            DB    $2F,$8D,$2F,$8D
-            ASC   "Select option:",2F,8D,00
+            DB    $FF,$8D,$FF,$8D
+            ASC   "Select option:",FF,8D,00
 *
 CHOOZ       JSR   MENU
 :LOOP1      JSR   GETKEY

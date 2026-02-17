@@ -62,7 +62,7 @@ MDOS33      DS    1
 * COPY submenu
 *
 MCOPFILE    DS    1           ;11 MENU 6 (was 8)
-MCOPDISK    DS    1
+MDISK       DS    1
 MDSKWFMT    DS    1
 MCOPDOS     DS    1
 *
@@ -117,22 +117,26 @@ MPSTATE3    DS    1           ;30
 MPSTAT45    DS    1           ;31
             DS    1           ;32 (enumerated, also PSTAT45, do not remove)
 *
-MTRACK      DS    1           ;33
-MSECTOR     DS    1           ;34
-MCRESC      DS    1           ;35
-MNOFILES    DS    1           ;36
-MMTSUB      DS    1           ;now 37
-MINROOT     DS    1           ;38
-MCRESC1     DS    1           ;now 39
-MERROR      DS    1           ;3A
-MDASHES     DS    1           ;now 3B
-MPRESS      DS    1           ;now 3C
-MMORE       DS    1           ;now 3D
-MHEADER     DS    1           ;3E
+MFNGOESC    DS    1           ;33
+MESCEXIT    DS    1           ;34
+MDIR        DS    1           ;35
+MDASH17     DS    1           ;36
+MTRACK      DS    1           ;37
+MSECTOR     DS    1           ;38
+MCRESC      DS    1           ;39
+MNOFILES    DS    1           ;3A
+MMTSUB      DS    1           ;3B
+MINROOT     DS    1           ;3C
+MCRESC1     DS    1           ;3D
+MERROR      DS    1           ;3E
+MDASHES     DS    1           ;3F
+MPRESS      DS    1           ;40
+MMORE       DS    1           ;41
+MHEADER     DS    1           ;42
 *
 * Enumerated error messages handled by OUCH/ERRMSG
 *
-MERRENUM    DS    1           ;now 3F
+MERRENUM    DS    1           ;43
             DS    1
             DS    1
             DS    1
@@ -199,7 +203,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :WRITE      ;26
             DW    :BLANK4     ;27
             DW    :BLANK3     ;28
-            DW    :TOOLNG0    ;now 29
+            DW    :TOOLNG0    ;29
             DW    :SLOT       ;2A
             DW    :PRESS1     ;2B
             DW    :FILE       ;2C
@@ -209,32 +213,36 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :PSTATE3    ;30
             DW    :PSTAT45    ;31
             DW    :PSTAT45    ;32
-            DW    :TRACK      ;33
-            DW    :SECTOR     ;34
-            DW    :CRESC      ;35
-            DW    :NOFILES    ;36
-            DW    :MTSUB      ;now 37
-            DW    :INROOT     ;38
-            DW    :CRESC1     ;now 39
-            DW    :ERROR      ;3A
-            DW    DASHES      ;now 3B
-            DW    :PRESS      ;now 3C
-            DW    :MORE       ;now 3D
-            DW    :HEADER     ;3E
+            DW    :FNGOESC    ;33
+            DW    :ESCEXIT    ;34
+            DW    :DIR        ;35
+            DW    :DASH17     ;36
+            DW    :TRACK      ;37
+            DW    :SECTOR     ;38
+            DW    :CRESC      ;39
+            DW    :NOFILES    ;3A
+            DW    :MTSUB      ;3B
+            DW    :INROOT     ;3C
+            DW    :CRESC1     ;3D
+            DW    :ERROR      ;3E
+            DW    DASHES      ;3F
+            DW    :PRESS      ;40
+            DW    :MORE       ;41
+            DW    :HEADER     ;42
 *
-            DW    :ERR2B      ;3F
-            DW    :ERR44      ;40
-            DW    :ERR45      ;41
-            DW    :ERR44      ;42
-            DW    :ERR48      ;43
-            DW    :ERR49      ;44
-            DW    :ERR4E      ;45
-            DW    :ERR3F      ;46
-            DW    :ERR52      ;47
-            DW    :ERR47      ;48
-            DW    :ERR52      ;49
-            DW    :ERR2F      ;4A
-            DW    :ERR2F      ;4B
+            DW    :ERR2B
+            DW    :ERR44
+            DW    :ERR45
+            DW    :ERR44
+            DW    :ERR48
+            DW    :ERR49
+            DW    :ERR4E
+            DW    :ERR3F
+            DW    :ERR52
+            DW    :ERR47
+            DW    :ERR52
+            DW    :ERR2F
+            DW    :ERR2F
 *
 *
 *
@@ -253,8 +261,8 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :ERR49      ASC   "Directory full"
             DB    $0
 *
-:ERR4E      ASC   "Can not delete non-empty subdirectory"
-            DB    $0
+:ERR4E      ASC   "Can not delete non-empty sub"
+            DB    MDIR
 *
 :ERR3F      ASC   "Subdirectory not found"
             DB    $0
@@ -268,14 +276,14 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :ERR2F      ASC   "No disk in drive"
             DB    $0
 *
-:INROOT     ASC   "Already in root directory"
-            DB    $0
+:INROOT     ASC   "Already in root "
+            DB    MDIR
 *
-:NOTSUB     ASC   "Not a subdirectory"
-            DB    $0
+:NOTSUB     ASC   "Not a sub"
+            DB    MDIR
 *
-:MTSUB      ASC   "Empty subdirectory"
-            DB    $0
+:MTSUB      ASC   "Empty sub"
+            DB    MDIR
 *
 :TOOLONG    DB    $8D,$8D
 :TOOLNG0    ASC   "Prefix too long"
@@ -284,30 +292,30 @@ MESSAG      DW    :COPY       ;0 MENU 0
 *
 :COPY       ASC   "Copy"
             DB    $0
-:CATALOG    ASC   "Catalog Disk"
-            DB    $0
+:CATALOG    ASC   "Catalog "
+            DB    MDISK
 :DELETE     ASC   "Delete"
             DB    $0
-:LOCK       ASC   "Lock/Unlock Files"
-            DB    $0
+:LOCK       ASC   "Lock/Unlock "
+            DB    MFILES
 :RENAME     ASC   "Rename"
             DB    $0
 :ALPHA      ASC   "Alphabetize Catalog"
             DB    $0
-:FORMAT     ASC   "Format Disk"
-            DB    $0
+:FORMAT     ASC   "Format "
+            DB    MDISK
 :VERIFY     ASC   "Verify"
             DB    $0
-:VIEW       ASC   "View Files"
-            DB    $0
-:TSMAP      ASC   "Map Disk"
-            DB    $0
+:VIEW       ASC   "View "
+            DB    MFILES
+:TSMAP      ASC   "Map "
+            DB    MDISK
 :NEWBOOT    ASC   "Change Boot Program"
             DB    $0
-:UNDEL      ASC   "Undelete Files"
-            DB    $0
-:MKDIR      ASC   "Create Subdirectory"
-            DB    $0
+:UNDEL      ASC   "Undelete "
+            DB    MFILES
+:MKDIR      ASC   "Create Sub"
+            DB    MDIR
 :NEWDATE    ASC   "Enter Date"
             DB    $0
 :QUIT       ASC   "Quit"
@@ -333,8 +341,8 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 :WLENGTH    ASC   "File Lengths"
             DB    $0
-:WDELETE    ASC   "Deleted Files"
-            DB    $0
+:WDELETE    ASC   "Deleted "
+            DB    MFILES
 :WHIDDEN    ASC   "Hidden Chars"
             DB    $0
 *
@@ -347,8 +355,8 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $0
 *
 *
-:BLANK4     DB    $2F,$8D
-:BLANK3     DB    $2F,$8D,$2F,$8D,$2F
+:BLANK4     DB    $FF,$8D
+:BLANK3     DB    $FF,$8D,$FF,$8D,$FF
             DB    $0
 *
 :SLOT       ASC   "Slot "
@@ -361,36 +369,36 @@ MESSAG      DW    :COPY       ;0 MENU 0
             ASC   "[Return]-Mark file, [U]nmark, [E]nter"
             DB    $8D
             ASC   "filename, Number-Insert, [G]o,"
-            DB    $8D
-            ASC   "[Esc]-Exit"
-            DB    $0
+            DB    $8D,MESCEXIT
 :PSTATE1
-            ASC   "[Return]-Toggle marker, [E]nter"
-            DB    $8D
-            ASC   "filename, [G]o, [Esc]-Exit"
-            DB    $0
+            ASC   "[Return]-Toggle marker, "
+            DB    MFNGOESC
 :PSTATE2
-            ASC   "[Return]-Toggle asterisk, [E]nter"
-            DB    $8D
-            ASC   "filename, [G]o, [Esc]-Exit"
-            DB    $0
+            ASC   "[Return]-Toggle asterisk, "
+            DB    MFNGOESC
 :PSTATE3
-            ASC   "[Return]-Select to rename, [E]nter"
-            DB    $8D
-            ASC   "filename, [G]o, [Esc]-Exit"
-            DB    $8D
             ASC   "(Renamed files are marked)"
-            DB    $0
+            DB    $8D
+            ASC   "[Return]-Select to rename, "
+            DB    MFNGOESC
 :PSTAT45
-            ASC   "[G]o, [E]nter Filename, [Esc] to exit"
+            ASC   "[G]o, [E]nter filename, "
+            DB    MESCEXIT
+:FNGOESC    ASC   "[E]nter"
+            DB    $8D
+            ASC   "filename, [G]o, "
+            DB    MESCEXIT
+:ESCEXIT    ASC   "[Esc]-Exit "
+            DB    $0
+:DIR        ASC   "directory"
             DB    $0
 :TRACK      ASC   "Track $"
             DB    $0
 :SECTOR     ASC   "Sector $"
             DB    $0
 :CRESC1     DB    $8D
-:CRESC      ASC   "[Return]-Continue, [Esc]-Exit "
-            DB    $0
+:CRESC      ASC   "[Return]-Continue, "
+            DB    MESCEXIT
 *
 :NOFILES    DB    $8D
             ASC   "No files"
@@ -405,9 +413,11 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $8D
             ASC   " (C) 1982-9 Central Point, (C) 2026 4am"
             DB    $8D
-DASHES      ASC   "----------------------------------------"
-            DB    $0
-:MORE       ASC   "----------------- MORE -----------------"
+DASHES      ASC   "-----------------------"
+            DB    MDASH17
+:MORE       ASC   "----------------- MORE "
+            DB    MDASH17
+:DASH17     ASC   "-----------------"
             DB    $0
 :READ       ASC   "Read"
             DB    $0

@@ -250,7 +250,7 @@ VERIFY
             LDA   #$16
             JSR   VLEFT       ;CLEAR PROMPT
             JSR   PRHERE      ;(LEAVE ERROR)
-            DB    $2F,$8D,$2F,0
+            DB    $FF,$8D,$FF,0
             PLA
             CMP   #" "
             BEQ   :SET        ;IF EQUAL, CARRY WILL BE SET

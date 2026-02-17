@@ -308,7 +308,7 @@ PRTFIL      CLC
             JSR   VLEFT
             JSR   PRHERE
             ASC   "File: "
-            DB    $2F,0
+            DB    $FF,0
             PLP
             BCS   :CFILEQ
 * fall through to CFILE
@@ -574,7 +574,9 @@ PRINT       ASL               ;LOOK-UP &
 :PRINT2     LDY   #$00
             LDA   (MESPNT),Y  ;GET CHAR
             BEQ   :OUT
-            CMP   #$2F
+            CMP   #$40
+            BCC   PRINT       ;chain another message
+            CMP   #$FF
             BEQ   :CLEAR
             JSR   PCOUT       ;PRINT CHAR
 :NEXT       INC   MESPNT      ;2-BYTE INC.

@@ -330,7 +330,7 @@ TSMAP
             INC   WNDBTM
             JSR   PRHERE
             ASC   "Invalid: "
-            DB    $2F,0
+            DB    $FF,0
             BIT   DOSNOW
             BMI   :INVPRO
             JSR   TSVALS      ;PRINT T&S

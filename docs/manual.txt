@@ -526,9 +526,9 @@ To rename files, select this option and an appropriate drive. The usual file dis
 
                  --v--
 
+(Renamed files are marked)
 [Return]-Select to rename, [E]nter
 filename, [G]o, [Esc]-Exit
-(Renamed files are marked)
 
                  --^--
 

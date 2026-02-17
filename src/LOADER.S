@@ -273,7 +273,7 @@ MEMCPY      MAC
 *
 * enhanced //e or later, so convert dashes to pretty MouseText dashes
 *
-            LDY   #$52        ;enough to cover DASHES and :MORE
+            LDY   #$41        ;enough to cover DASHES and :MORE
 :DASHLOOP
             LDA   DASHES,Y
             CMP   #"-"

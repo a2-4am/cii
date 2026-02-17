@@ -71,7 +71,7 @@ COPY
 *
 * *** COPY DISK ***
 *
-:ITSDISK    LDA   #MCOPDISK   ;Set to say DISK, not DISK W/ FORMAT
+:ITSDISK    LDA   #MDISK      ;Set to say DISK, not DISK W/ FORMAT
             STA   OPTCHS      ; cuz DISK W/ FORMAT doesn't fit on screen.
             JSR   COMH00      ;Say it.
             JSR   :INSDSK
@@ -323,7 +323,7 @@ COPY
             JSR   VLEFT
             JSR   PRHERE
             ASC   "Reading"
-            DB    $2F,$0
+            DB    $FF,$0
             LDA   :PTYPE
             STA   :TYPE
             LDA   #$20        ;READ TRACK
@@ -369,7 +369,7 @@ COPY
             BEQ   :WRPASS1    ;->No!
             JSR   PRHERE      ;Yup:  Announce yourself
             ASC   "Formatting"
-            DB    $2F,0       ; (cleol)
+            DB    $FF,$0      ; (cleol)
 *
             LDA   FMT400K     ;Was source disk a 400K 3.5-inch disk?
             BPL   :WRFMT      ;->No, just format.
@@ -385,7 +385,7 @@ COPY
 *
 :WRPASS1    JSR   PRHERE
             ASC   "Writing"
-            DB    $2F,$0
+            DB    $FF,$0
             LDA   :STYPE
             STA   :TYPE
             LDA   :SVBLK
