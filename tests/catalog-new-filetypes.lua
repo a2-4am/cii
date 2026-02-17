@@ -49,11 +49,11 @@ local expected_files = {
 }
 
 test.Step(
-  "Catalog (ProDOS) shows new filetypes",
+  "Catalog Disk (ProDOS) shows new filetypes",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
-    cii.WaitForSelection("CATALOGNORMAL") -- two items are selected, Catalog and Normal
+    cii.WaitForSelection("CATALOG DISKNORMAL") -- two items are selected, Catalog Disk and Normal
     apple2.ReturnKey()
     cii.WaitForScreenContains("SELECT DEVICE:")
     apple2.Type("62") -- Slot 6, Drive 2
@@ -63,7 +63,7 @@ test.Step(
       cii.WaitForScreenContains(last_line[pagenum])
       local pagetext = apple2.GrabTextScreen():upper()
       for dummy,line in ipairs(lines) do
-        test.Expect(pagetext:find(line), "Catalog with new filetypes does not contain " .. line)
+        test.Expect(pagetext:find(line), "Catalog Disk with new filetypes does not contain " .. line)
       end
     end
 end)

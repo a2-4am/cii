@@ -45,11 +45,11 @@ local expected_files = {
 }
 
 test.Step(
-  "Catalog w/Deleted Files (DOS 3.3) matches v8.4 behavior",
+  "Catalog Disk w/Deleted Files (DOS 3.3) matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
-    cii.WaitForSelection("CATALOGNORMAL") -- two items are selected, Catalog and Normal
+    cii.WaitForSelection("CATALOG DISKNORMAL") -- two items are selected, Catalog Disk and Normal
     apple2.Type("D") -- Deleted Files
     cii.WaitForScreenContains("SELECT DEVICE:")
     apple2.Type("62") -- Slot 6, Drive 2
@@ -59,7 +59,7 @@ test.Step(
       cii.WaitForScreenContains(last_line[pagenum])
       local pagetext = apple2.GrabTextScreen():upper()
       for dummy,line in ipairs(lines) do
-        test.Expect(pagetext:find(line), "Catalog w/File Lengths does not contain " .. line)
+        test.Expect(pagetext:find(line), "Catalog Disk w/File Lengths does not contain " .. line)
       end
     end
 end)
