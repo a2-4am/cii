@@ -117,22 +117,23 @@ MPSTATE3    DS    1           ;30
 MPSTAT45    DS    1           ;31
             DS    1           ;32 (enumerated, also PSTAT45, do not remove)
 *
-MFNGOESC    DS    1           ;33
-MESCEXIT    DS    1           ;34
-MDIR        DS    1           ;35
-MDASH17     DS    1           ;36
-MTRACK      DS    1           ;37
-MSECTOR     DS    1           ;38
-MCRESC      DS    1           ;39
-MNOFILES    DS    1           ;3A
-MMTSUB      DS    1           ;3B
-MINROOT     DS    1           ;3C
-MCRESC1     DS    1           ;3D
-MERROR      DS    1           ;3E
-MDASHES     DS    1           ;3F
-MPRESS      DS    1           ;40
-MMORE       DS    1           ;41
-MHEADER     DS    1           ;42
+MEFGOESC    DS    1           ;33
+MFNGOESC    DS    1           ;34
+MESCEXIT    DS    1           ;35
+MDIR        DS    1           ;36
+MDASH17     DS    1           ;37
+MTRACK      DS    1           ;38
+MSECTOR     DS    1           ;39
+MCRESC      DS    1           ;3A
+MNOFILES    DS    1           ;3B
+MMTSUB      DS    1           ;3C
+MINROOT     DS    1           ;3D
+MCRESC1     DS    1           ;3E
+MERROR      DS    1           ;3F
+MDASHES     DS    1           ;40
+MPRESS      DS    1           ;41
+MMORE       DS    1           ;42
+MHEADER     DS    1           ;43
 *
 * Enumerated error messages handled by OUCH/ERRMSG
 *
@@ -213,22 +214,23 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :PSTATE3    ;30
             DW    :PSTAT45    ;31
             DW    :PSTAT45    ;32
-            DW    :FNGOESC    ;33
-            DW    :ESCEXIT    ;34
-            DW    :DIR        ;35
-            DW    :DASH17     ;36
-            DW    :TRACK      ;37
-            DW    :SECTOR     ;38
-            DW    :CRESC      ;39
-            DW    :NOFILES    ;3A
-            DW    :MTSUB      ;3B
-            DW    :INROOT     ;3C
-            DW    :CRESC1     ;3D
-            DW    :ERROR      ;3E
-            DW    DASHES      ;3F
-            DW    :PRESS      ;40
-            DW    :MORE       ;41
-            DW    :HEADER     ;42
+            DW    :EFGOESC    ;33
+            DW    :FNGOESC    ;34
+            DW    :ESCEXIT    ;35
+            DW    :DIR        ;36
+            DW    :DASH17     ;37
+            DW    :TRACK      ;38
+            DW    :SECTOR     ;39
+            DW    :CRESC      ;3A
+            DW    :NOFILES    ;3B
+            DW    :MTSUB      ;3C
+            DW    :INROOT     ;3D
+            DW    :CRESC1     ;3E
+            DW    :ERROR      ;3F
+            DW    DASHES      ;40
+            DW    :PRESS      ;41
+            DW    :MORE       ;42
+            DW    :HEADER     ;43
 *
             DW    :ERR2B
             DW    :ERR44
@@ -372,21 +374,21 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DB    $8D,MESCEXIT
 :PSTATE1
             ASC   "[Return]-Toggle marker, "
-            DB    MFNGOESC
+            DB    MEFGOESC
 :PSTATE2
             ASC   "[Return]-Toggle asterisk, "
-            DB    MFNGOESC
+            DB    MEFGOESC
 :PSTATE3
             ASC   "(Renamed files are marked)"
             DB    $8D
             ASC   "[Return]-Select to rename, "
-            DB    MFNGOESC
+            DB    MEFGOESC
 :PSTAT45
-            ASC   "[G]o, [E]nter filename, "
-            DB    MESCEXIT
-:FNGOESC    ASC   "[E]nter"
+            ASC   "[E]nter "
+            DB    MFNGOESC
+:EFGOESC    ASC   "[E]nter"
             DB    $8D
-            ASC   "filename, [G]o, "
+:FNGOESC    ASC   "filename, [G]o, "
             DB    MESCEXIT
 :ESCEXIT    ASC   "[Esc]-Exit "
             DB    $0
