@@ -1,7 +1,7 @@
 *
 * Constants:
 *
-CIIPVER     =     $85         ;version 8.5
+CIIRVER     =     $10         ;version 1.0
 *
 * Memory equates:
 *
@@ -151,7 +151,8 @@ RADR        =     $F4
 RPAGE       =     $F5
 RCMND       =     $F6
 RRTN        =     $F7
-RPSLOT      =     $F8
+RPSLOT      =     $F8         ;must be within $16 of ACURR
+                              ;due to optimizations in LOADER
 RPDRIV      =     $F9
 * ZXMODULE uses $FA,$FB,$FC,$FD,$FE,$FF
 HSLOT       =     $F0

@@ -17,6 +17,5 @@ BOOTEND
             PUT   MESSAGES
             PUT   PRODOS
             PUT   LOCKRENAME
-            PUT   SETCLOCK
             PUT   MENU
 MAINEND                       ;where image of main program ends

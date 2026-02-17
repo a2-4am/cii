@@ -23,6 +23,7 @@ MEMCPY      MAC
 * Move self-decompressing modules into place
 *
             >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
+            >>>   MEMCPY,SETCLOCKX7BEG;SETCLOCKX7END;SETCLOCK
             >>>   MEMCPY,MAKESUBX7BEG;MAKESUBX7END;MAKESUB
             >>>   MEMCPY,UNDELETEX7BEG;UNDELETEX7END;UNDEL
             >>>   MEMCPY,CHANGEBOOTX7BEG;CHANGEBOOTX7END;BOOTPG
@@ -65,6 +66,7 @@ MEMCPY      MAC
             LDX   #$16
             TYA               ;0
 :CLRMAP     STA   MEMTABL,X
+            STA   ACURR,X
             DEX
             BNE   :CLRMAP
 *
@@ -76,14 +78,14 @@ MEMCPY      MAC
             STA   PPFX
             STA   SPFX
             STA   APFX
-            STA   ACURR
-            STA   PCURR
-            STA   SCURR
-            STA   RPSLOT
+*            STA   ACURR      ;handled in-loop
+*            STA   PCURR      ;handled in-loop
+*            STA   SCURR      ;handled in-loop
+*            STA   RPSLOT      ;handled in-loop
 *
 * PUT VERSION NUMBER AT $BFFD
 *
-            LDA   #CIIPVER
+            LDA   #CIIRVER
             STA   IVERSION
 *
             LDY   DEVCNT

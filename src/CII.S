@@ -23,6 +23,7 @@
             PUT   ../build/CHANGEBOOT.VARS
             PUT   ../build/UNDELETE.VARS
             PUT   ../build/MAKESUB.VARS
+            PUT   ../build/SETCLOCK.VARS
             PUT   ../build/QUIT.VARS
             ORG   $2000
 *
@@ -221,6 +222,16 @@ MAKESUBX7BEG
 :X7END
             ORG
 MAKESUBX7END
+*
+SETCLOCKX7BEG
+            ORG   SETCLOCK
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    SETCLOCKEND
+            PUTBIN  ../build/SETCLOCK.X7
+:X7END
+            ORG
+SETCLOCKX7END
 *
 QUITX7BEG
             ORG   QUIT

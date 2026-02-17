@@ -2,8 +2,8 @@
             DSK   ../build/QUIT.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/MAKESUB.VARS
-            ORG   MAKESUBEND
+            PUT   ../build/SETCLOCK.VARS
+            ORG   SETCLOCKEND
 QUIT        
             ORG   *+3
 

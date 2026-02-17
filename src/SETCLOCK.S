@@ -1,4 +1,12 @@
+            TYP   BIN
+            DSK   ../build/SETCLOCK.O
+            PUT   VARS
+            PUT   ../build/FILER.VARS
+            PUT   ../build/MAKESUB.VARS
+            ORG   MAKESUBEND
 SETCLOCK
+            ORG   *+3
+
             LDA   #$16
             JSR   VLEFT
             LDA   DATE
@@ -6,6 +14,27 @@ SETCLOCK
             LDX   DATE+1
             JSR   SHODAT
             JMP   :NXTIN0
+*
+:CNVT       AND   #$0F
+            STA   :TEMP
+            ASL
+            ASL
+            CLC
+            ADC   :TEMP
+            ASL
+            STA   :TEMP
+            TXA
+            AND   #$0F
+            CLC
+            ADC   :TEMP
+            RTS
+*
+:TEMP       DB    $0
+:DAY        DB    $0
+:MONTH      DB    $0
+:YEAR       DB    $0
+:DAYS       DB    $20,$1E,$20,$1F,$20,$1F,$20,$20,$1F,$20
+            DB    $1F,$20
 *
 :NODAT      JSR   PRHERE
             ASC   "DD-MMM-YY"
@@ -161,23 +190,4 @@ SETCLOCK
             JSR   PCOUT
             JMP   :NXTINX
 *
-:CNVT       AND   #$0F
-            STA   :TEMP
-            ASL
-            ASL
-            CLC
-            ADC   :TEMP
-            ASL
-            STA   :TEMP
-            TXA
-            AND   #$0F
-            CLC
-            ADC   :TEMP
-            RTS
-:TEMP       DB    $0
-:DAY        DB    $0
-:MONTH      DB    $0
-:YEAR       DB    $0
-:DAYS       DB    $20,$1E,$20,$1F,$20,$1F,$20,$20,$1F,$20
-            DB    $1F,$20
-*
+SETCLOCKEND
