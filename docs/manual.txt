@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-16.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-17.
 
 With Copy ][ Reboot, you can
 
@@ -381,7 +381,7 @@ To copy a disk, simply choose the Copy Disk option, select source and target dri
 
 Copy Disk can take advantage of most kinds of extra memory in your computer to reduce the number of passes needed to copy a disk. As the Copy Disk option makes the copy, it first reads a number of tracks (or a number of blocks) from the "source" disk into memory, then writes those tracks (or blocks) to the "target" disk. It repeats this process (each called a "pass") until all the tracks or blocks are copied. If you're copying from one drive to another, the number of "passes" back and forth between the two drives doesn't really matter much. However, if you're copying with only one drive, the extra-memory handling can reduce the number of times you have to swap disks. See Appendix B for information about what kinds of memory Copy ][ Reboot can use.
 
-If the entire disk's contents can be read into memory in one pass, then when the copy is completed, you're offered the option to make additional copies of the same disk. These copies are made more qUickly, since the original "source" disk doesn't have to be read again. This is ideal for mass duplication of a single disk, such as a user group's public domain software library.
+If the entire disk's contents can be read into memory in one pass, then when the copy is completed, you're offered the option to make additional copies of the same disk. These copies are made more quickly, since the original "source" disk doesn't have to be read again. This is ideal for mass duplication of a single disk, such as a user group's public domain software library.
 
 Copying 5.25-Inch Disks
 
