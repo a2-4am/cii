@@ -51,7 +51,11 @@ FILER       LDX   #$FF
             JSR   VLEFT       ; Put it back at the top before printing the...
             LDA   #MHEADER
             JSR   PRINT
-            JSR   :CINFO      ;DISK INFO LINE
+            LDA   #$16
+            JSR   VLEFT
+            LDA   DATE
+            LDX   DATE+1
+            JSR   SHODAT
             LDX   #$00        ;MAIN MENU
 *            STX   PRNTR?
             STX   RADR
@@ -183,7 +187,7 @@ CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILE
 *
 *   SEE DISK INFO
 *
-:CINFO
+*:CINFO
 *            LDA   #$15
 *            JSR   VLEFT
 *            LDA   #$21
@@ -191,11 +195,6 @@ CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILE
 *            JSR   PRHERE
 *            INV   "PRINTER"
 *            DB    $0
-            LDA   #$16
-            JSR   VLEFT
-            LDA   DATE
-            LDX   DATE+1
-            JSR   SHODAT
 *            LDA   #$21
 *            STA   CH
 *            LDA   PSLOT
@@ -210,7 +209,7 @@ CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILE
 *:OFF        JSR   PRHERE
 *            ASC   "  Off "
 *            DB    $8D,0
-            RTS
+*            RTS
 *
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE
 TOP1        JSR   HOME
