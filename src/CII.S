@@ -238,9 +238,6 @@ DZX0BEG
 *INTRLV
             DB    $0,$D,$B,$9,$7,$5,$3,$1
             DB    $E,$C,$A,$8,$6,$4,$2,$F
-*INTLV1
-            DB    $0,$7,$E,$6,$D,$5,$C,$4
-            DB    $B,$3,$A,$2,$9,$1,$8,$F
             PUT   DZX0TURBO
             PUT   DISPATCH
             ORG

@@ -300,7 +300,7 @@ TRKFLG      DS    1           ;Check track
 *
 SOFAR       DS    $10
 INTRLV      DS    $10
-INTLV1      DS    $10
+*INTLV1      DS    $10        ;now in VERIFY
 *SECS        DS    $10        ;now in PHRWTS
 ZXMODULE    DS    ZXMODSZ
 ZXUNPACK    DS    ZXUNPSZ
@@ -311,7 +311,7 @@ JDOTREE     DS    3
 JDODEV      DS    3
 JMATCH      DS    6
 JCATLN1     DS    6
-            DS    3           ;free space here
+            DS    $13         ;free space here
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40
