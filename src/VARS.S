@@ -98,7 +98,7 @@ DSPNUM      =     $8B
 CHMAX       =     $8C
 *
 COUNT       =     $A6
-TERROR      =     $A7
+*TERROR      =     $A7        ;[4am] unused
 ISAUX       =     $A8
 A2E         =     $A9
 *
