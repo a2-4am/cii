@@ -26,8 +26,8 @@ UNDEL
 :GOTFILS    JSR   SWPCHK
             JSR   COMH00
             LDA   #$00
-            STA   BADNUM
-            STA   MAYBE
+            STA   :BADNUM
+            STA   :MAYBE
             STA   CURR
 *
 * ATTEMPT REGULAR UNDELETE OF DOS
@@ -43,7 +43,7 @@ UNDEL
 *
             JSR   PATMOV      ;SQUISH LIST
             STX   NACTIV
-            LDA   MAYBE
+            LDA   :MAYBE
             BEQ   :CKBAD
 *
 * ATTEMPT 'SMART' UNDELETE OF
@@ -76,7 +76,7 @@ UNDEL
             CMP   FILNUM
             BCC   :SMARTLP
 *
-:CKBAD      LDA   BADNUM      ;ANY LOST
+:CKBAD      LDA   :BADNUM     ;ANY LOST
             BEQ   :OUT        ;FILES?
             JSR   HOME
             JSR   PATMOV
@@ -160,7 +160,7 @@ UNDEL
             LDA   #$00        ;CATALOG
             BEQ   :MARKIT     ;ALWAYS
 :CANT       JSR   RDCAT1      ;RE-READ IF
-            INC   BADNUM      ;NO GOOD
+            INC   :BADNUM
             LDA   #$FF
 :MARKIT     LDX   CURR        ;MARK FILE
             STA   STATUS,X    ;GOOD OR BAD
@@ -362,12 +362,12 @@ PUNDO       EQU   *
             BCC   UNDOIT      ;GOOD SWAP
 *
 MRKBAD      EQU   *
-            INC   BADNUM
+            INC   :BADNUM
             LDA   #$FF
             BNE   MRKCOM      ;ALWAYS
 *
 DOMAYBE     EQU   *
-            INC   MAYBE
+            INC   :MAYBE
             LDA   #$FE
 *
 * WIPE OUT FIRST CHAR OF FILENAME
@@ -672,5 +672,8 @@ PUNDO0      EQU   *
             BNE   :IBAGN
             CLC
             RTS
+*
+:BADNUM     DB    $0
+:MAYBE      DB    $0
 *
 UNDELEND

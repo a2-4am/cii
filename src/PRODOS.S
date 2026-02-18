@@ -1602,6 +1602,3 @@ SETHIM      SEC
             SBC   TOPDIF      ;0 OR 3
             STA   HIMEM
             RTS
-*
-BADNUM      DB    $0
-MAYBE       DB    $0
