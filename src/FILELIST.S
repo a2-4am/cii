@@ -44,7 +44,7 @@ CATDS2      LDA   NACTIV
             BCC   :SEEFILE
             JSR   PRHERE
             DB    $8D
-            ASC   "is the current booting program."
+            ASC   "is the current boot program."
             DB    $8D,$0
             LDA   #MPSTAT45
             JSR   PRINT
