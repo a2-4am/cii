@@ -17,8 +17,13 @@
 :TRIES      DB    0
             DEND
 *
-            DUM   $5000
-:DEST       DB    0           ;MODIFY-POKED
+* This is a fake address, never used.
+* :READ62 self-modifies the high byte
+* of all instances of it to the desired
+* target address.
+*
+            DUM   $FD00
+:DEST       DB    0
             DEND
 *
 * These tables are now built dynamically on startup.
