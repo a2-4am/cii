@@ -12,9 +12,7 @@ FORMAT
 *          FORMAT DISK         *
 ********************************
 *
-            LDX   #UFORMAT
-            JSR   CHOOZ1      ;DOS OR PRODOS
-            CMP   #0
+            LDA   CHOOZOPT
             BEQ   :FPRODOS
             LDA   #$FF
 :FPRODOS    EOR   #$FF

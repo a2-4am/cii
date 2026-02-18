@@ -13,9 +13,6 @@ COPY
 *             COPY             *
 ********************************
 *
-            LDX   #UCOPY      ;Which COPY option?
-            JSR   CHOOZ1
-*            STA   :COPYOPT   ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             LDA   #>TOPMEM
             STA   HIMEM
             LDY   #0

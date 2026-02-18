@@ -5,9 +5,7 @@
 *
 RENAME      LDA   #$03
             STA   STATE
-            LDX   #URENAME
-            JSR   CHOOZ1
-            CMP   #0
+            LDA   CHOOZOPT
             BEQ   REN2        ;RENAME FILES
             JSR   COMHDR
             BIT   DOSNOW

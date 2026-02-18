@@ -12,9 +12,7 @@ CATALOG
 *          CATALOG DISK          *
 **********************************
 *
-            LDX   #UCATALOG   ;SELECT OPTION
-            JSR   CHOOZ1
-*            STA   :TYPE      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
+            LDA   CHOOZOPT
             CMP   #$02
             BNE   :NOTDEL
             LDA   #$01

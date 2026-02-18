@@ -12,10 +12,7 @@ DELETE
 *         DELETE              *
 *******************************
 *
-            LDX   #UDELETE
-            JSR   CHOOZ1      ;FILES, DOS, OR DISK
-*            STA   :TEMP      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
-            CMP   #0
+            LDA   CHOOZOPT
             BNE   :NOTFILZ
             JSR   COMTRE
             JMP   :DFILES

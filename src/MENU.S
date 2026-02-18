@@ -57,7 +57,6 @@ FILER       LDX   #$FF
             LDX   DATE+1
             JSR   SHODAT
             LDX   #$00        ;MAIN MENU
-*            STX   PRNTR?
             STX   RADR
             STX   TOPDIF
 CHOOZ0
@@ -67,21 +66,27 @@ CHOOZ0
             ASC   "arrows & [Return]"
             ASC   "to select",FF,8D,FF,8D,FF,8D,FF,8D,FF,8D,FF,00
             JSR   INIT
-            LDX   #$00
+            LDX   #:UMAIN
             JSR   CHOOZ
             LDX   #$FF
             STX   OPTCHS
 *
+            TAX
             ASL
             TAY
             LDA   MENUTBL,Y
             STA   :JUMP+1
             LDA   MENUTBL+1,Y
             STA   :JUMP+2
-:JUMP       JSR   $1000
+            LDA   SUBMNIDX,X  ; check for submenu
+            BMI   :JUMP       ; no submenu
+            TAX
+            JSR   :CHOOZ1     ; yes display submenu
+            BCS   CHOOZ0      ; no selection from submenu
+:JUMP       JSR   $1000       ; fake address, modified above
             JMP   FILER
 *
-CHOOZ1      JSR   CHOPOS
+:CHOOZ1     JSR   CHOPOS
             JSR   PRHERE
             DB    $FF,$8D,$FF,$8D
             ASC   "Select option:",FF,8D,00
@@ -90,7 +95,7 @@ CHOOZ       JSR   MENU
 :LOOP1      JSR   GETKEY
             CMP   #$9B
             BNE   :NOTESC
-            JMP   CHOOZ0
+            RTS               ;C=1 on exit
 :NOTESC     JSR   CHKKEY0
             BNE   :NOTARO
             BCS   :RIGHTA
@@ -186,32 +191,6 @@ LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS
 FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES
 CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES
 *
-*   SEE DISK INFO
-*
-*:CINFO
-*            LDA   #$15
-*            JSR   VLEFT
-*            LDA   #$21
-*            STA   CH
-*            JSR   PRHERE
-*            INV   "PRINTER"
-*            DB    $0
-*            LDA   #$21
-*            STA   CH
-*            LDA   PSLOT
-*            BEQ   :OFF
-*            PHA
-*            LDA   #MSLOT
-*            JSR   PRINT
-*            PLA
-*            JSR   PHHEX
-*            JMP   CROUT
-*
-*:OFF        JSR   PRHERE
-*            ASC   "  Off "
-*            DB    $8D,0
-*            RTS
-*
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE
 TOP1        JSR   HOME
             LDA   #0
@@ -243,3 +222,32 @@ CLOSE       JSR   MLI
             DW    :CLSLST
             RTS
 :CLSLST     DB    $1,$0
+*
+* Menu/submenu IDs for CHOOZ
+*
+            DUM   0
+:UMAIN      DS    1
+:UCATALOG   DS    1
+:UDELETE    DS    1
+:UVERIFY    DS    1
+:UVIEW      DS    1
+:UFORMAT    DS    1
+:UCOPY      DS    1
+:URENAME    DS    1
+            DEND
+*
+SUBMNIDX    DB    :UCOPY      ; COPY
+            DB    :UCATALOG   ; CATALOG
+            DB    :UDELETE    ; DELETE
+            DB    $FF         ; LOCK (no submenu)
+            DB    :URENAME    ; RENAME
+            DB    $FF         ; ALPHA (no submenu)
+            DB    :UFORMAT    ; FORMAT
+            DB    :UVERIFY    ; VERIFY
+            DB    :UVIEW      ; VIEW
+            DB    $FF         ; TSMAP (no submenu)
+            DB    $FF         ; BOOTPG (no submenu)
+            DB    $FF         ; UNDEL (no submenu)
+            DB    $FF         ; MAKESUB (no submenu)
+            DB    $FF         ; SETCLOCK (no submenu)
+            DB    $FF         ; QUIT (no submenu)

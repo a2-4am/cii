@@ -11,10 +11,7 @@ VERIFY
 *           VERIFY OPTIONS          *
 *************************************
 *
-            LDX   #UVERIFY
-            JSR   CHOOZ1      ;SELECT VERIFY OPTION
-*            STA   :TEMP      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
-            TAX
+            LDA   CHOOZOPT
             BNE   :NOTFIL
             JSR   COMTRE
             JMP   :VFILES

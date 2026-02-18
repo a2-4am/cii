@@ -14,19 +14,6 @@ HOTKEYS
             ASC   "FV"        ; RENAME submenu
 
 *
-* Menu IDs
-*
-            DUM   0
-UMAIN       DS    1
-UCATALOG    DS    1
-UDELETE     DS    1
-UVERIFY     DS    1
-UVIEW       DS    1
-UFORMAT     DS    1
-UCOPY       DS    1
-URENAME     DS    1
-            DEND
-*
 * Message IDs
 * Some are opaque, others are enumerated.
 * Read the comments!
