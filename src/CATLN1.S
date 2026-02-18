@@ -15,6 +15,12 @@ CATLN1
             BPL   :CAT33
             JMP   PCATLN
 *
+TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
+TYPCHR      ASC   "?BARSBAIT"
+:TYPE       DB    $0
+:SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
+:SUBS1      ASC   "RAAAAAAAA"
+*
 :CAT33      LDY   #$02
             LDA   (POINT),Y   ;GET LOCKED
             BMI   :LOCKED     ;STATUS
@@ -52,9 +58,6 @@ FILTYP      EQU   *
             DEX
             BNE   :LOOP
 :OUT        RTS
-TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
-TYPCHR      ASC   "?BARSBAIT"
-*
 *
 PCATLN      STA   :TYPE       ;CAT DPLY TYPE
             LDY   #$1E        ;ACCESS
@@ -168,9 +171,5 @@ PCATLN      STA   :TYPE       ;CAT DPLY TYPE
             LDA   (POINT),Y
             JSR   HEXDC2
             JMP   PRT5RJ
-*
-:TYPE       DB    $0
-:SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
-:SUBS1      ASC   "RAAAAAAAA"
 *
 CATLN1END
