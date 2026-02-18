@@ -31,6 +31,8 @@
 *JDODEV
             JMP   DODEV
 *JMATCH
-            JMP   MATCH
+            JSR   CATLIB      ; decompress
+            JMP   CATLIB+4
 *JCATLN1
-            JMP   CATLN1
+            JSR   CATLIB      ; decompress
+            JMP   CATLIB+7

@@ -6,8 +6,7 @@
             PUT   ../build/MM.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/RDDATA.VARS
-            PUT   ../build/CATLN1.VARS
-            PUT   ../build/MATCH.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/DODEV.VARS
             PUT   ../build/DDISK.VARS
             PUT   ../build/D1FILE.VARS
@@ -53,25 +52,15 @@ RDDATAX7BEG
             ORG
 RDDATAX7END
 *
-CATLN1X7BEG
-            ORG   CATLN1
+CATLIBX7BEG
+            ORG   CATLIB
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    CATLN1END
-            PUTBIN  ../build/CATLN1.X7
+            DA    CATLIBEND
+            PUTBIN  ../build/CATLIB.X7
 :X7END
             ORG
-CATLN1X7END
-*
-MATCHX7BEG
-            ORG   MATCH
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    MATCHEND
-            PUTBIN  ../build/MATCH.X7
-:X7END
-            ORG
-MATCHX7END
+CATLIBX7END
 *
 DODEVX7BEG
             ORG   DODEV

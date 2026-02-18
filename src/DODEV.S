@@ -2,8 +2,8 @@
             DSK   ../build/DODEV.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/MATCH.VARS
-            ORG   MATCHEND
+            PUT   ../build/CATLIB.VARS
+            ORG   CATLIBEND
 DODEV
             ORG   *+3
 
