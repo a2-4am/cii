@@ -117,6 +117,7 @@ CHOOZ       JSR   MENU
             LDA   CHOICE,X
             STA   OPTCHS
             SBC   FIRST,X
+            STA   CHOOZOPT
             LDX   #$00
             STX   WNDLFT
             LDX   #$28

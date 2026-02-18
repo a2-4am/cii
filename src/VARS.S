@@ -99,6 +99,7 @@ CHMAX       =     $8C
 *
 COUNT       =     $A6
 *TERROR      =     $A7        ;[4am] unused
+CHOOZOPT    =     $A7         ;[4am] reuse unused address to store chosen menu index
 ISAUX       =     $A8
 A2E         =     $A9
 *

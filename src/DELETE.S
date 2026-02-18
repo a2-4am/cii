@@ -13,15 +13,15 @@ DELETE
 *******************************
 *
             LDX   #UDELETE
-            JSR   CHOOZ1      ;DOS, DISK,
-            STA   :TEMP       ;OR FILES?
+            JSR   CHOOZ1      ;FILES, DOS, OR DISK
+*            STA   :TEMP      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             CMP   #0
             BNE   :NOTFILZ
             JSR   COMTRE
             JMP   :DFILES
 *
 :NOTFILZ    JSR   COMHDR
-            LDA   :TEMP
+            LDA   CHOOZOPT
             CMP   #$02
             BEQ   :DDOS
 *
@@ -91,11 +91,6 @@ DELETE
             ASC   " deleted"
             DB    $8D,$0
             JMP   PRESS
-*
-*
-*
-:TEMP       DB    $0
-*
 *
 :READY?     JSR   PRHERE
             DB    $8D,$8D

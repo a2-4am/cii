@@ -12,15 +12,15 @@ VERIFY
 *************************************
 *
             LDX   #UVERIFY
-            JSR   CHOOZ1      ;SELECT VERIFY
-            STA   :TEMP       ;OPTION.
+            JSR   CHOOZ1      ;SELECT VERIFY OPTION
+*            STA   :TEMP      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             TAX
             BNE   :NOTFIL
             JSR   COMTRE
             JMP   :VFILES
 *
 :NOTFIL     JSR   COMHDR
-            DEC   :TEMP       ;JUMP TO
+            DEC   CHOOZOPT    ;JUMP TO
             BEQ   :VDISK      ;OPTION
             JMP   :SPEED1
 *
@@ -258,7 +258,6 @@ VERIFY
 :SET        RTS
 *
 :VERRORS    DB    $0,$0
-:TEMP       DB    $0
 *
 *
 **********  DISK SPEED  *************

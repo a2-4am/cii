@@ -14,7 +14,7 @@ VIEW
 *
             LDX   #UVIEW      ;VALUES OR TEXT
             JSR   CHOOZ1
-            STA   :T1V0
+*            STA   :T1V0      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             JSR   COMTRE
             LDA   #$05
             STA   STATE
@@ -127,7 +127,7 @@ VIEW
             JSR   TABV        ;& VTAB
             LDA   :TEMPH
             STA   CH
-            LDA   :T1V0       ;TEXT OR
+            LDA   CHOOZOPT    ;TEXT OR
             BNE   :TEXT       ;VALUES?
             LDA   #$11
             STA   :NCRS       ;LINE COUNTER
@@ -240,7 +240,6 @@ VIEW
             RTS
 *
 *
-:T1V0       DB    $0
 :TEMPY      DB    $0
 :NCHARS     DB    $0
 :NCRS       DB    $0

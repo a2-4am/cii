@@ -14,7 +14,7 @@ CATALOG
 *
             LDX   #UCATALOG   ;SELECT OPTION
             JSR   CHOOZ1
-            STA   :TYPE
+*            STA   :TYPE      ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             CMP   #$02
             BNE   :NOTDEL
             LDA   #$01
@@ -33,7 +33,7 @@ CATALOG
 * if TREEA displayed a directory tree, then
 * we are currently in 80-column mode, so
 * switch back to 40.
-:MAYBE80    LDA   :TYPE
+:MAYBE80    LDA   CHOOZOPT
             CMP   #$01        ;w/file lengths
             BEQ   :TRY80
             JSR   COL40
@@ -62,7 +62,7 @@ CATALOG
             JSR   :CROUNT
             JSR   PRHERE
             ASC   "   NAME           TYPE  BLKS  MODIFIED",00
-            LDA   :TYPE
+            LDA   CHOOZOPT
             CMP   #1
             BNE   :VOL1
             INC   :COUNT
@@ -82,7 +82,7 @@ CATALOG
 :CONTINU    LDA   #0
             STA   CH
             STA   SHOW
-            LDA   :TYPE       ;CHOOSE OPTION
+            LDA   CHOOZOPT       ;CHOOSE OPTION
             BEQ   :NORMAL
             CMP   #$01
             BEQ   :LENGTHS
@@ -116,14 +116,14 @@ CATALOG
             CPY   #$21
             BCC   :HID2
 *
-:SKIPHID    LDA   :TYPE
+:SKIPHID    LDA   CHOOZOPT
             JSR   CATLIN
             JSR   :NEXTFIL
             BCC   :HID1
             BCS   :GOALLD
 *
 * NORMAL CATALOG
-:NORMAL     LDA   :TYPE
+:NORMAL     LDA   CHOOZOPT
             JSR   CATLIN
             JSR   :NEXTFIL
             BCC   :NORMAL
@@ -220,7 +220,6 @@ CATALOG
 :NEXT2      JSR   :NEXTFIL
             BCS   :ALLDONE
             JMP   :FILELP4
-:TYPE       DB    $0
 :FILTYPE    DB    $0
 *
 :COMMA
@@ -235,7 +234,7 @@ CATALOG
 :NEXTFIL    JSR   :CROUNT
             BIT   DOSNOW
             BPL   :NF1
-            LDA   :TYPE
+            LDA   CHOOZOPT
             CMP   #1
             BNE   :NF1
             LDA   FLAG80

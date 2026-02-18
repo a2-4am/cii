@@ -15,7 +15,7 @@ COPY
 *
             LDX   #UCOPY      ;Which COPY option?
             JSR   CHOOZ1
-            STA   :COPYOPT
+*            STA   :COPYOPT   ;[4am] CHOOZ1 now stores this for us in CHOOZOPT
             LDA   #>TOPMEM
             STA   HIMEM
             LDY   #0
@@ -44,7 +44,7 @@ COPY
             LDA   #1
             STA   PDOS
             STA   SDOS
-            LDA   :COPYOPT    ;Chose option 0 - FILES?
+            LDA   CHOOZOPT    ;Chose option 0 - FILES?
             BNE   :NOTFILZ    ;->No: it's DISK or DOS
             JMP   :CPYFILS
 *
@@ -58,7 +58,7 @@ COPY
             STA   :BLKLO
             LDA   #$19        ;Fix for Smartport calls with
             STA   $19         ; AST Sprintdisk.
-            LDA   :COPYOPT    ;[4am] adjust -2 this and following COPYOPTs
+            LDA   CHOOZOPT    ;[4am] adjust -2 this and following COPYOPTs
             CMP   #3          ;Is it COPY DOS?
             BNE   :ITSDISK    ;->No, it's DISK or DISK W/ FORMAT.
             JMP   :ITSDOS     ;->It's COPY DOS.
@@ -336,7 +336,7 @@ COPY
             STA   :SVBLK+1
             JSR   :DOPASS     ;READ.
 *
-            LDA   :COPYOPT    ;COPY DISK W/FORMAT?
+            LDA   CHOOZOPT    ;COPY DISK W/FORMAT?
             CMP   #2
             BNE   :RDPASSQ    ;->No.
             LDA   :PASSNUM    ;Yes: first time through?
@@ -356,7 +356,7 @@ COPY
 *
 :WRPASS     LDA   #$15
             JSR   VLEFT
-            LDA   :COPYOPT    ;Is user's choice
+            LDA   CHOOZOPT    ;Is user's choice
             CMP   #2          ; COPY DISK W/ FORMAT?
             BNE   :WRPASS1    ;->No.
             LDA   :PASSNUM    ;Yes: 1st write pass?
@@ -395,7 +395,7 @@ COPY
             LDA   :SVTRK      ;RESTORE TRK
             STA   RTRACK      ;IF 1ST TIME:
             BNE   :WRPASS2
-            LDA   :COPYOPT
+            LDA   CHOOZOPT
             CMP   #3          ;COPY DOS?
             BEQ   :WRPASS2    ;->Yes.
             LDA   :TYPE
@@ -447,7 +447,7 @@ COPY
             CMP   :BLKLO
 :CHKBK0     RTS
 *
-:LCPASS     LDA   :COPYOPT
+:LCPASS     LDA   CHOOZOPT
             CMP   #3          ;Option 5 - COPY DOS?
             BEQ   :LCOUT      ;->Yes: Don't use auxmem.
             LDA   ISAUX       ;No: Is there auxmem to use?
@@ -1977,7 +1977,6 @@ COPY
 :TSTRK      DB    $0
 :TSSECT     DB    $0
 :TRK1ST     DB    $0
-:COPYOPT    DB    $0
 *
 *
 *
