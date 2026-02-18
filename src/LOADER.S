@@ -234,7 +234,7 @@ MEMCPY      MAC
 :DISCON     STA   ISAUX
 *
 :NORAM      LDA   ISAUX       ;After all that, do we have usable auxmem?
-            BPL   :SETMISC    ;->Nope.
+            BPL   :SKIPMM     ;->Nope.
 *
 * Auxiliary memory is available now at startup.
 * Locate Memory Manager code into safe haven in aux memory.
@@ -243,24 +243,7 @@ MEMCPY      MAC
             >>>   MEMCPY,MMXBEG;MMXEND;AUXMM
             STA   $C004
             DEC   GOTMM       ;Mark that we got Memory Manager.
-*
-* Continue with miscellaneous initialization stuff.
-*
-:SETMISC
-            JSR   SETNOR
-            JSR   INIT
-            JSR   HOME        ;Clear screen before SETVID might
-            JSR   SETVID      ; change 80 screen to 40.
-            JSR   SETKBD
-            STA   KBDSTB
-*
-* Turn off 80 cols.
-            BIT   FLAG80
-            BPL   :AFTER80
-            LDA   #$15        ;(ProDOS Tech. Ref., 5.3.1.3, page 99)
-            JSR   $C300
-*
-:AFTER80
+:SKIPMM
 *
 * Unpack MAIN portion of program into place
 *
