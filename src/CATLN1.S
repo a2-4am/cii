@@ -15,12 +15,6 @@ CATLN1
             BPL   :CAT33
             JMP   PCATLN
 *
-TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
-TYPCHR      ASC   "?BARSBAIT"
-:TYPE       DB    $0
-:SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
-:SUBS1      ASC   "RAAAAAAAA"
-*
 :CAT33      LDY   #$02
             LDA   (POINT),Y   ;GET LOCKED
             BMI   :LOCKED     ;STATUS
@@ -82,7 +76,26 @@ PCATLN      STA   :TYPE       ;CAT DPLY TYPE
             BCC   :TABLP1
             LDY   #$10
             LDA   (POINT),Y
-            JSR   PRTYPE
+*PRTYPE (now inline)
+            LDX   #TYPE1-TYPES-1
+:PRTY1      CMP   TYPES,X
+            BEQ   :GOTTYPE
+            DEX
+            BPL   :PRTY1
+*
+* UNRECOGNIZED, PRINT FILE TYPE IN HEX
+*
+            JSR   DOLLAR
+            JSR   PHBYTE
+            JMP   :NOTYPE
+*
+:GOTTYPE    LDA   TYPE1,X
+            JSR   PCOUT
+            LDA   TYPE2,X
+            JSR   PCOUT
+            LDA   TYPE3,X
+            JSR   PCOUT
+:NOTYPE
 *
 * DISPLAY # OF BLOCKS
 *
@@ -171,5 +184,11 @@ PCATLN      STA   :TYPE       ;CAT DPLY TYPE
             LDA   (POINT),Y
             JSR   HEXDC2
             JMP   PRT5RJ
+*
+TYPBYT      DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
+TYPCHR      ASC   "?BARSBAIT"
+:TYPE       DB    $0
+:SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
+:SUBS1      ASC   "RAAAAAAAA"
 *
 CATLN1END

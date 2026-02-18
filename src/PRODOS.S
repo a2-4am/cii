@@ -641,24 +641,6 @@ PRVNMS      LDA   SDOS
             LDA   SUNIT
             JMP   PRVCOM
 *
-PRTYPE      LDX   #TYPE1-TYPES-1
-:PRTY1      CMP   TYPES,X
-            BEQ   :GOTIT
-            DEX
-            BPL   :PRTY1
-*
-* PRINT FILE TYPE IN HEX
-*
-            JSR   DOLLAR
-            JMP   PHBYTE
-*
-:GOTIT      LDA   TYPE1,X
-            JSR   PCOUT
-            LDA   TYPE2,X
-            JSR   PCOUT
-            LDA   TYPE3,X
-            JMP   PCOUT
-*
 * [4am] backported types from v9
 * $5A  CFG  Configuration
 * $AD  BDF  Apple IIgs BASIC Data
