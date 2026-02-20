@@ -49,10 +49,6 @@ MEMCPY      MAC
             DEX
             BNE   :CLRMAP
 * A=0, X=0, Y=0
-*
-* (no more minimum version at $BFFC?
-* ProDOS manual says it's a reserved location)
-*
             STA   PINVFL      ;0
             STA   PFX
             STA   PPFX
@@ -63,7 +59,7 @@ MEMCPY      MAC
 *            STA   SCURR      ;handled in-loop
 *            STA   RPSLOT      ;handled in-loop
 *
-* FIGURE OUT SLOT NUMBER
+* FIGURE OUT BOOT SLOT/DRIVE NUMBER
 *
             INX               ;1 Mark the ProDOS global page as
             STX   MEMTABL+$17 ;  busy in the global page bitmap.
@@ -71,7 +67,10 @@ MEMCPY      MAC
             STA   BOOTDV
             BPL   :ISD1
             INX               ;2
-:ISD1       STX   RPDRIV
+:ISD1       STX   RPDRIV      ;1 or 2
+*
+* (no more minimum version at $BFFC?
+* ProDOS manual says it's a reserved location)
 *
 * PUT VERSION NUMBER AT $BFFD
 *
@@ -243,11 +242,14 @@ MEMCPY      MAC
 *
             >>>   UNPACK,MAINXEND;MAINEND
 *
+* Check for //e
+*
             BIT   A2E
             BPL   :SKIPIRQ    ;NOT //E
             BVC   :SAVEIRQ    ;//e but unenhanced
 *
-* enhanced //e or later, so convert dashes to pretty MouseText dashes
+* enhanced //e or later
+* Convert dashes to pretty MouseText dashes
 *
             LDY   #$41        ;enough to cover DASHES and :MORE
 :DASHLOOP
@@ -260,6 +262,7 @@ MEMCPY      MAC
             DEY
             BPL   :DASHLOOP
 *
+* //e or later
 * SAVE AUXMEM IRQ VECTOR.
 *
 :SAVEIRQ
