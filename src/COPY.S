@@ -2282,4 +2282,36 @@ DODVS1      EQU   *
             STX   CURDVS
             RTS
 *
+*
+TREEP       LDA   #0
+            STA   SRCTAR
+            LDA   PUNIT
+            STA   UNIT
+            JSR   DOSTYP
+            STA   PDOS
+            LDA   #PPFX
+            STA   PFXADR
+            LDA   #>PPFX
+            STA   PFXADR+1
+            LDA   PCURR
+            JSR   JDOTREE
+            BCS   SETP
+            STA   PCURR
+            RTS
+*
+SETP        EQU   *
+            LDA   PUNIT
+            STA   UNIT
+            JSR   SETSD
+:SETP1      LDA   #>PPFX
+            LDX   #PPFX
+            JSR   STPFXC
+            LDA   PDOS
+            CMP   #1
+            BNE   :NOT1
+            JSR   DOSTYP
+            STA   PDOS
+:NOT1       STA   DOSNOW
+            RTS
+*
 COPYEND

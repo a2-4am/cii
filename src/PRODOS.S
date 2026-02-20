@@ -938,6 +938,7 @@ DODEV0      STA   DEVFLG
             STX   CURDVA
             RTS
 *
+* called by COPY FILE and DELETE FILE(DELLIB)
 DOWAIT      LDX   #$03
 :WAITLP     LDA   #$C4
             JSR   WAIT
@@ -1015,37 +1016,6 @@ UNTPFX
 :SPLST      DB    $1
             DW    PFX
 *
-*
-*
-TREEP       LDA   #0
-            STA   SRCTAR
-            LDA   PUNIT
-            STA   UNIT
-            JSR   DOSTYP
-            STA   PDOS
-            LDA   #PPFX
-            STA   PFXADR
-            LDA   #>PPFX
-            STA   PFXADR+1
-            LDA   PCURR
-            JSR   JDOTREE
-            BCS   SETP
-            STA   PCURR
-            RTS
-*
-SETP        LDA   PUNIT
-            STA   UNIT
-            JSR   SETSD
-:SETP1      LDA   #>PPFX
-            LDX   #PPFX
-            JSR   STPFXC
-            LDA   PDOS
-            CMP   #1
-            BNE   :NOT1
-            JSR   DOSTYP
-            STA   PDOS
-:NOT1       STA   DOSNOW
-            RTS
 *
 TREES       LDA   #$FF
             STA   SRCTAR
