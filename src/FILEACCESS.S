@@ -271,10 +271,12 @@ DORWTS      JSR   PHRWTS
             JMP   ERROUT
 *
 * READ TSLIST & UPDATE SECTOR POINTER
+* called by RDDATA
 RDTSL       JSR   RDTSL1
             BCS   ERR1
             RTS
 *
+* called by RDDATA and DISKMAP
 FNDBLK      JSR   FNBLK1
             BCC   :FND1
 :ERR?       CMP   #$FF
@@ -283,6 +285,7 @@ FNDBLK      JSR   FNBLK1
 :FND1       RTS
 ERR1        JMP   ERROUT
 *
+* called by FNDBLK (above) and VERIFY
 FNBLK1      LDA   STRTYP      ;IF SAPLING,
             CMP   #$10        ; RETURN EOF
             BEQ   :FNDEOF
@@ -347,11 +350,12 @@ FNBLK1      LDA   STRTYP      ;IF SAPLING,
 *-------------------------------------
 *
 * OPEN SOURCE FILE
-*
+* called by CATALOG, COPY, DISKMAP, and VIEW
 OPNSRC      JSR   OPNFIL
             BCS   ERR1
             RTS
 *
+* called by OPNSRC (above) and VERIFY
 OPNFIL      JSR   CURPNT      ;POINT TO FILE
             BIT   DOSNOW
             BPL   :DOS33
@@ -426,7 +430,7 @@ OPNFIL      JSR   CURPNT      ;POINT TO FILE
             LDA   #$01
             STA   RCMND       ;FALL THRU...
 *
-*
+* called by RDTSL (above) and VERIFY
 RDTSL1      LDA   RPAGE
             PHA
             LDA   #>SRCTSL    ;READ INTO
@@ -452,7 +456,8 @@ INCPT2      LDA   POINT2
 IP3         RTS
 *
 *
-*
+* SmartPort Format
+* called by COPY, FORMAT(DELLIB), and QUIT
 *
 SPLFRM      LDA   #3
 SPLGO1      STA   $42
@@ -473,11 +478,14 @@ SPLGO1      STA   $42
             STA   RRTN        ;4/5/86
             LDA   $C082
             RTS
-
 *
+* Prompt for volume name
+* [4am] caller now displays first letter 'v' or 'V'
+* called by FORMAT(DELLIB) and RENAME VOLUME
 GVCOM       JSR   PRHERE
             ASC   "olume name: /"
             DB    $0
+* alternate entry point called by MAKESUB
 GVCOM1      LDA   #$0F
             STA   LINLIM
             JSR   GETLN
@@ -613,7 +621,10 @@ FIXSUB      JSR   SWPCHK
 *
             JMP   WTBLK
 *
-*
+* COMMON TREE
+* Choose ProDOS device then choose directory
+* called by ALPHABETIZE, DELETE(DELLIB),
+* RENAME FILES, MAKESUB, UNDELETE, VERIFY, and VIEW
 COMTRE      JSR   DODEVP
             JSR   TREEA
             JSR   COMH00
@@ -671,6 +682,7 @@ PATMOV      LDX   #$00
             STX   FILNUM
             RTS
 *
+* called by DIVEIN(DELLIB) and DISKMAP
 DIR?        LDY   #0
             LDA   (POINT),Y
             AND   #$F0
