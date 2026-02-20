@@ -186,10 +186,10 @@ MENU        LDA   #4          ;assume VTAB 4
 *  6 Copy
 *  7 Rename
 *
-*  Menu:          0       1          2         3        4       5        6         7
-LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS+1,MVOLUME+1
-FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES
-CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES
+*  Menu:          0       1          2         3        4       5        6         7         8
+LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS+1,MVOLUME+1,MREBOOT+1
+FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
+CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
 *
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE
 TOP1        JSR   HOME
@@ -203,6 +203,51 @@ TOP1        JSR   HOME
             BMI   :TOP1A
             JSR   PRINT
 :TOP1A      RTS
+*
+QUIT        LDX   CHOOZOPT
+            BEQ   :QUIT1
+            DEX
+            BEQ   :MONITOR
+            LDA   $FBB3
+            CMP   #$38        ;pre-II+ has no reboot routine
+            BEQ   :MONITOR
+            JMP   $FAA6
+:MONITOR    JMP   $FF59
+*
+:QUIT1      LDY   #0
+            TYA
+:QUITZZ     STA   $280,Y
+            INY
+            BPL   :QUITZZ
+*
+            LDA   ISAUX
+            CMP   #$FF
+            BNE   :QUIT2
+*
+* /RAM HAS BEEN DISCONNECTED, FORMAT IT
+*
+            LDA   #$B0
+            JSR   UNTDEV
+            LDA   GODEV+2     ;Did we actually find /RAM to format?
+            BEQ   :QUIT2      ;No->don't call
+            JSR   SPLFRM
+:QUIT2
+*MOVPFX
+            LDY   #$40
+:MLOOP      LDA   BTPFX-1,Y
+            STA   PFX-1,Y
+            DEY
+            BNE   :MLOOP
+            STY   $280
+            JSR   SETBUT
+            INC   $3F4
+            LDA   #0          ;Fix cursor position in Quit code(?).
+            STA   CH
+            JSR   MLI
+            DB    $65
+            DW    :QUTLST
+:QUTLST     DB    $4
+*
 *
 *
 * Close MM if it appears to be open.
@@ -234,6 +279,7 @@ CLOSE       JSR   MLI
 :UFORMAT    DS    1
 :UCOPY      DS    1
 :URENAME    DS    1
+:UQUIT      DS    1
             DEND
 *
 SUBMNIDX    DB    :UCOPY      ; COPY
@@ -250,4 +296,4 @@ SUBMNIDX    DB    :UCOPY      ; COPY
             DB    $FF         ; UNDEL (no submenu)
             DB    $FF         ; MAKESUB (no submenu)
             DB    $FF         ; SETCLOCK (no submenu)
-            DB    $FF         ; QUIT (no submenu)
+            DB    :UQUIT      ; QUIT

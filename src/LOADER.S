@@ -22,7 +22,6 @@ MEMCPY      MAC
 *
 * Move self-decompressing modules into place
 *
-            >>>   MEMCPY,QUITX7BEG;QUITX7END;QUIT
             >>>   MEMCPY,SETCLOCKX7BEG;SETCLOCKX7END;SETCLOCK
             >>>   MEMCPY,MAKESUBX7BEG;MAKESUBX7END;MAKESUB
             >>>   MEMCPY,UNDELETEX7BEG;UNDELETEX7END;UNDEL

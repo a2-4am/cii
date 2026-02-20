@@ -12,6 +12,7 @@ HOTKEYS
             ASC   "VT"        ; VIEW submenu
             ASC   "FDO"       ; DELETE submenu
             ASC   "FV"        ; RENAME submenu
+            ASC   "QMR"       ; QUIT submenu
 
 *
 * Message IDs
@@ -82,7 +83,13 @@ MDELDOS     DS    1
 MFILES      DS    1           ;21 MENU 7 (was 9)
 MVOLUME     DS    1           ;22
 *
-MTOOLONG    DS    1           ;23
+* QUIT submenu
+*
+MQPRODOS    DS    1           ;23 MENU 8
+MMONITOR    DS    1           ;24
+MREBOOT     DS    1           ;25
+*
+MTOOLONG    DS    1           ;23-TODO--------------------------------------------------------------------------------
 MNOTSUB     DS    1           ;24
 * READ and WRITE messages are enumerated
 * (WRITE must be READ+1)
@@ -185,7 +192,11 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :FILES      ;21 MENU 7 (was 9)
             DW    :VOLUME     ;22
 *
-            DW    :TOOLONG    ;23
+            DW    :QPRODOS    ;23 MENU 8
+            DW    :MONITOR    ;24
+            DW    :REBOOT     ;25
+*
+            DW    :TOOLONG    ;23--TODO----------------------------------------------------------
             DW    :NOTSUB     ;24
             DW    :READ       ;25
             DW    :WRITE      ;26
@@ -343,6 +354,12 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :TEXT       ASC   "Text"
             DB    $0
 *
+:QPRODOS    ASC   "Quit to ProDOS"
+            DB    $0
+:MONITOR    ASC   "Enter Monitor"
+            DB    $0
+:REBOOT     ASC   "Reboot"
+            DB    $0
 *
 :BLANK4     DB    $FF,$8D
 :BLANK3     DB    $FF,$8D,$FF,$8D,$FF

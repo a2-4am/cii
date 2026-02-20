@@ -20,7 +20,6 @@
             PUT   ../build/UNDELETE.VARS
             PUT   ../build/MAKESUB.VARS
             PUT   ../build/SETCLOCK.VARS
-            PUT   ../build/QUIT.VARS
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
@@ -189,16 +188,7 @@ SETCLOCKX7BEG
             ORG
 SETCLOCKX7END
 *
-QUITX7BEG
-            ORG   QUIT
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    QUITEND
-            PUTBIN  ../build/QUIT.X7
-:X7END
-            ORG
-QUITX7END
-            ERR   QUITEND>$BEFF  ; can't clobber ProDOS global page
+            ERR   SETCLOCKX7END>$BEFF  ; can't clobber ProDOS global page
 *
 DZX0BEG
             ORG   ZXMODULE
