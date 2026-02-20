@@ -492,7 +492,7 @@ SHTIM0      JSR   PRSPC
             TAX
             DEY
             LDA   (POINT),Y
-SHOTIM      PHA
+            PHA
             TXA
             JSR   HEXDC1
             JSR   PRT2RJ
