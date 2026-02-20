@@ -104,54 +104,6 @@ CLRCAT      STA   POINT+1
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
 *
-* PLACE INPUT FILE INTO ENTRY
-*   AT (*POINT)
-*
-PLACE       LDX   #0
-:CRLP       INX
-            LDA   LINEIN,X
-            CMP   #$8D
-            BNE   :CRLP
-            BIT   DOSNOW
-            BMI   :PIPRODOS
-            LDA   #" "        ;MOVE LINE TO
-            LDY   #$20        ;ENTRY:
-:SPACELP    STA   (POINT),Y   ;COPY SPACES
-            DEY               ;TO ENTRY
-            CPY   #$03
-            BPL   :SPACELP
-            TXA
-            TAY
-            DEX               ;BEFORE CR
-            INY               ;ENTRY OFFSET 3
-            INY               ;MORE
-            LDA   #$FF
-:PUTLP0     STA   :MASK
-:PUTLP      LDA   LINEIN,X    ;COPY CHARS
-            AND   :MASK
-            STA   (POINT),Y
-            DEY
-            DEX
-            BPL   :PUTLP
-            CLC
-            RTS
-:PIPRODOS   LDY   #0
-            LDA   (POINT),Y
-            AND   #$F0
-            STA   (POINT),Y
-            TXA
-            AND   #$0F
-            TAX
-            ORA   (POINT),Y
-            STA   (POINT),Y
-            TXA
-            TAY
-            DEX
-            LDA   #$7F
-            BNE   :PUTLP0     ;ALWAYS
-*
-:MASK       DB    $0
-*
 * SET POINTER FROM CATALOG ARRAY
 *
 CURPNT      LDX   CURR

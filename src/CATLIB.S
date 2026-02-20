@@ -21,6 +21,7 @@ CATLIB
 *private:                        *
 * MATCH - pattern matcher        *
 * TYPES - recognized filetypes   *
+* PLACE - input file into entry  *
 **********************************
 *
             RTS
@@ -1498,4 +1499,54 @@ PRDCNT      EQU   *
 :UHOH       DEC   NACTIV
             INC   RPAGE
             BNE   :RDRDON     ;ALWAYS
+*
+* PLACE INPUT FILE INTO ENTRY
+*   AT (*POINT)
+*
+PLACE       EQU   *
+            LDX   #0
+:CRLP       INX
+            LDA   LINEIN,X
+            CMP   #$8D
+            BNE   :CRLP
+            BIT   DOSNOW
+            BMI   :PIPRODOS
+            LDA   #" "        ;MOVE LINE TO
+            LDY   #$20        ;ENTRY:
+:SPACELP    STA   (POINT),Y   ;COPY SPACES
+            DEY               ;TO ENTRY
+            CPY   #$03
+            BPL   :SPACELP
+            TXA
+            TAY
+            DEX               ;BEFORE CR
+            INY               ;ENTRY OFFSET 3
+            INY               ;MORE
+            LDA   #$FF
+:PUTLP0     STA   :MASK
+:PUTLP      LDA   LINEIN,X    ;COPY CHARS
+            AND   :MASK
+            STA   (POINT),Y
+            DEY
+            DEX
+            BPL   :PUTLP
+            CLC
+            RTS
+:PIPRODOS   LDY   #0
+            LDA   (POINT),Y
+            AND   #$F0
+            STA   (POINT),Y
+            TXA
+            AND   #$0F
+            TAX
+            ORA   (POINT),Y
+            STA   (POINT),Y
+            TXA
+            TAY
+            DEX
+            LDA   #$7F
+            BNE   :PUTLP0     ;ALWAYS
+*
+:MASK       DB    $0
+*
 CATLIBEND
