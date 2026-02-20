@@ -967,15 +967,7 @@ UNTPFX
             BEQ   :NOTDSK2    ;NO DRIVE
             BIT   DOSNOW
             BMI   :NOTDSK2
-            LDA   HDRIVE
-            CLC
-            ADC   HSLOT
-            TAX
-            LDA   $C089,X     ;SELECT DRIVE
-            LDX   HSLOT
-            LDA   $C089,X     ;MOTOR ON
-            JSR   RDADDR
-            LDA   $C088,X
+            JSR   RDDRIVE
 :NOTDSK2    LDA   ADRVOL
             STA   PFX+5
             CLC

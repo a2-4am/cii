@@ -4,6 +4,7 @@
             PUT   REVS        ;revision info -- comments only
             PUT   VARS        ;assorted equates for everybody
             PUT   ../build/MM.VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/RDDATA.VARS
             PUT   ../build/CATLIB.VARS
@@ -20,6 +21,10 @@
 *
             PUT   LOADER      ;This relocates & gets everything started.
 *
+BOOTBEG
+            PUTBIN  ../build/BOOTSEC.33.O
+BOOTEND
+*
 MMXBEG
             ORG   MMSPOT
             JSR   ZXMODULE
@@ -29,6 +34,16 @@ MMXBEG
 :X7END
             ORG
 MMXEND
+*
+PHRWTSX7BEG
+            ORG   PHRWTSADR
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    PHRWTSEND
+            PUTBIN  ../build/PHRWTS.X7
+:X7END
+            ORG
+PHRWTSX7END
 *
             PUTBIN  ../build/FILER.X
 MAINXEND

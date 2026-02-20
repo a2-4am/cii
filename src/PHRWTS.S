@@ -1,3 +1,27 @@
+            TYP   BIN
+            DSK   ../build/PHRWTS.O
+            PUT   VARS
+            ORG   PHRWTSADR
+PHRWTSLIB
+            ORG   *+3
+            RTS
+
+* ******** PHIL'S RWTS ***********
+* PHRWTS - RWTS main entry point *
+* FAKTRK - set RWTS track #      *
+* RDDRIVE - verify disk in drive *
+**********************************
+*
+* [4am] Lots of timing-critical disk code in here,
+* so there are tons of assembler directives to
+* ensure that specific loops do not cross a page
+* boundary (because branching across a page boundary
+* adds 1 cycle). This module always starts on a page
+* boundary close to CODEADR, so there shouldn't be
+* too much churn even if you need to move other code
+* in memory. But if any of the directives ever trip,
+* do not ignore them! You will regret this!
+
 *
 * Time out from code for some LOCAL LABELS
 *
@@ -92,9 +116,6 @@
 *            DB    $ED,$EE,$EF,$F2,$F3,$F4,$F5,$F6
 *            DB    $F7,$F9,$FA,$FB,$FC,$FD,$FE,$FF
 *
-]SPOT       =     *
-:WAITBL1    DB    $01,$30,$28,$24,$20,$1E,$1D,$1C
-            ERR   {*&$FF00}-{]SPOT&$FF00}
 *
 *
 * ***** READ & POST-NIBBLIZE DATA *****
@@ -235,7 +256,8 @@
 :GOODAT     RTS
 *
 *
-PHRWTS      PHP
+PHRWTSINTERNAL
+            PHP
             SEI
             JSR   :RWTS
             BCC   :RWTSC
@@ -260,10 +282,10 @@ PHRWTS      PHP
             NOP
 :WRITE11    NOP
 :WRITE9     NOP
-WRITE7      NOP
-WRITE5      NOP
+:WRITE7     NOP
+            NOP
 :WRITE3     CMP   $00
-WRITE0      STA   $C08D,X
+:WRITE0     STA   $C08D,X
             CMP   $C08C,X
             RTS
 :SLOTABS    DB    $0
@@ -321,7 +343,7 @@ WRITE0      STA   $C08D,X
 * WRITE ADDRESS PROLOG
 *
             LDA   #$D5
-            JSR   WRITE0
+            JSR   :WRITE0
             LDA   #$AA
             JSR   :WRITE9
             LDA   #$96
@@ -445,7 +467,7 @@ WRITE0      STA   $C08D,X
 :GET2ND     LDA   SECOND      ;<-
             STA   :TEMPZP
             LDA   #$FF
-            JSR   WRITE0
+            JSR   :WRITE0
             NOP
             NOP
 *
@@ -464,7 +486,7 @@ WRITE0      STA   $C08D,X
 *
             CMP   $00
             LDA   #$D5
-            JSR   WRITE7
+            JSR   :WRITE7
             LDA   #$AA
             JSR   :WRITE9
             LDA   #$AD
@@ -522,7 +544,8 @@ WRITE0      STA   $C08D,X
 *
 * READ PROLOG
 *
-RDADDR      LDY   #$FC        ;INIT ERROR
+RDADDR      EQU   *
+            LDY   #$FC        ;INIT ERROR
             STY   :ADRCNT     ;COUNT (772)
 :RDADPRO    INY
             BNE   :RDAPRO1    ;COUNT ERRORS
@@ -681,7 +704,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
 *
 :RESEEK     LDA   ADRTRK      ;SAY YOU'RE ON
             ASL               ;TRACK THE ADR
-            JSR   FAKTRK      ;FIELD THINKS,
+            JSR   FAKTRKINTERNAL ;FIELD THINKS,
             LDA   RTRACK      ;THEN SEEK TO
 *
 * FALL INTO SEEK
@@ -735,7 +758,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             TAY
             SEC
 :KICKON     JSR   :KICKCUR    ;KICK NEW ON
-            LDA   :WAITBL1,Y  ;WAIT A BIT
+            LDA   WAITBL1,Y   ;WAIT A BIT
             JSR   :DELAY
             LDA   :LASTRK
             CLC
@@ -906,7 +929,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             PHA               ;YOU'RE ON A
             ASL               ;HIGHER TRACK,
             ADC   #$10
-            JSR   FAKTRK
+            JSR   FAKTRKINTERNAL
             LDA   #$00        ;THEN SEEK 0
             JSR   :SEEK       ;TO RATCHET.
             PLA
@@ -970,9 +993,6 @@ RDADDR      LDY   #$FC        ;INIT ERROR
 :GOTRAK     LDX   HSLOT
             JMP   :WRTRAK
 *
-*
-* ******** PHIL'S RWTS ***********
-*
 :OTHER      LSR               ;SELECT OTHER
             LSR               ;RWTS OPTIONS
             LSR
@@ -992,7 +1012,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             CMP   #$40        ;IF RATCHET:
             BNE   :GOSTART
             LDA   #$60
-            JSR   FAKTRK      ;SAY TRK 48
+            JSR   FAKTRKINTERNAL ;SAY TRK 48
             LDA   #$00
             STA   RTRACK      ;SET TRK 0
 :GOSTART    JSR   :START      ;START UP
@@ -1089,7 +1109,8 @@ RDADDR      LDY   #$FC        ;INIT ERROR
 *
 * TELL RWTS WHAT TRACK IT'S ON
 *
-FAKTRK      JSR   :DRINDEX
+FAKTRKINTERNAL
+            JSR   :DRINDEX
             STA   $478,X      ;STORE IN TABLE
             RTS
 *
@@ -1106,9 +1127,29 @@ FAKTRK      JSR   :DRINDEX
             PLA
             RTS
 *
-SECS
-            DB    $0,$E,$D,$C,$B,$A,$9,$8
-            DB    $7,$6,$5,$4,$3,$2,$1,$F
-INTRLV
+* RDDRIVE
+* Turn on drive and try to read an address field,
+* then turn off the drive again
+*
+* called by UNTPFX
+RDDRIVEINTERNAL
+            LDA   HDRIVE
+            CLC
+            ADC   HSLOT
+            TAX
+            LDA   $C089,X     ;SELECT DRIVE (C08A,X or C08B,X)
+            LDX   HSLOT
+            LDA   $C089,X     ;MOTOR ON
+            JSR   RDADDR
+            LDA   $C088,X
+            RTS
+*
+INTRLV      EQU   *
             DB    $0,$D,$B,$9,$7,$5,$3,$1
             DB    $E,$C,$A,$8,$6,$4,$2,$F
+]SPOT       =     *
+WAITBL1     EQU   *
+            DB    $01,$30,$28,$24,$20,$1E,$1D,$1C
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+*
+PHRWTSEND

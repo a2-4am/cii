@@ -242,6 +242,10 @@ MEMCPY      MAC
 *
             >>>   UNPACK,MAINXEND;MAINEND
 *
+* Copy more self-decompressing modules into place
+*
+            >>>   MEMCPY,PHRWTSX7BEG;PHRWTSX7END;PHRWTSLIB
+*
 * Check for //e
 *
             BIT   A2E
@@ -285,9 +289,6 @@ MEMCPY      MAC
             STY   FMT400K
 *
 * MOVE DOS 3.3 NO-BOOT SECTOR TO LC RAM BANK 2
-* (this was part of the code we just unpacked,
-* in a region we're about to reuse for the PHRWTS
-* data tables)
 *
 * Y IS ALREADY 0
 *           LDY   #0

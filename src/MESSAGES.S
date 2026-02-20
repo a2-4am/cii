@@ -89,49 +89,49 @@ MQPRODOS    DS    1           ;23 MENU 8
 MMONITOR    DS    1           ;24
 MREBOOT     DS    1           ;25
 *
-MTOOLONG    DS    1           ;23-TODO--------------------------------------------------------------------------------
-MNOTSUB     DS    1           ;24
+MTOOLONG    DS    1           ;26
+MNOTSUB     DS    1           ;27
 * READ and WRITE messages are enumerated
 * (WRITE must be READ+1)
-MREAD       DS    1           ;25
-MWRITE      DS    1           ;26
+MREAD       DS    1           ;28
+MWRITE      DS    1           ;29
 *
-MBLANK4     DS    1           ;27
-MBLANK3     DS    1           ;28
-MTOOLNG0    DS    1           ;now 29
-MSLOT       DS    1           ;2A
-MPRESS1     DS    1           ;2B
-MFILE       DS    1           ;2C
+MBLANK4     DS    1           ;2A
+MBLANK3     DS    1           ;2B
+MTOOLNG0    DS    1           ;2C
+MSLOT       DS    1           ;2D
+MPRESS1     DS    1           ;2E
+MFILE       DS    1           ;2F
 *
 * PSTATE messages are enumerated
-MPSTATE0    DS    1           ;2D
-MPSTATE1    DS    1           ;2E
-MPSTATE2    DS    1           ;2F
-MPSTATE3    DS    1           ;30
-MPSTAT45    DS    1           ;31
-            DS    1           ;32 (enumerated, also PSTAT45, do not remove)
+MPSTATE0    DS    1           ;30
+MPSTATE1    DS    1           ;31
+MPSTATE2    DS    1           ;32
+MPSTATE3    DS    1           ;33
+MPSTAT45    DS    1           ;34
+            DS    1           ;35 (enumerated, also PSTAT45, do not remove)
 *
-MEFGOESC    DS    1           ;33
-MFNGOESC    DS    1           ;34
-MESCEXIT    DS    1           ;35
-MDIR        DS    1           ;36
-MDASH17     DS    1           ;37
-MTRACK      DS    1           ;38
-MSECTOR     DS    1           ;39
-MCRESC      DS    1           ;3A
-MNOFILES    DS    1           ;3B
-MMTSUB      DS    1           ;3C
-MINROOT     DS    1           ;3D
-MCRESC1     DS    1           ;3E
-MERROR      DS    1           ;3F
-MDASHES     DS    1           ;40
-MPRESS      DS    1           ;41
-MMORE       DS    1           ;42
-MHEADER     DS    1           ;43
+MEFGOESC    DS    1           ;36
+MFNGOESC    DS    1           ;37
+MESCEXIT    DS    1           ;38
+MDIR        DS    1           ;39
+MDASH17     DS    1           ;3A
+MTRACK      DS    1           ;3B
+MSECTOR     DS    1           ;3C
+MCRESC      DS    1           ;3D
+MNOFILES    DS    1           ;3E
+MMTSUB      DS    1           ;3F
+MINROOT     DS    1           ;40
+MCRESC1     DS    1           ;41
+MERROR      DS    1           ;42
+MDASHES     DS    1           ;43
+MPRESS      DS    1           ;44
+MMORE       DS    1           ;45
+MHEADER     DS    1           ;46
 *
 * Enumerated error messages handled by OUCH/ERRMSG
 *
-MERRENUM    DS    1           ;43
+MERRENUM    DS    1           ;47
             DS    1
             DS    1
             DS    1
@@ -196,41 +196,41 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    :MONITOR    ;24
             DW    :REBOOT     ;25
 *
-            DW    :TOOLONG    ;23--TODO----------------------------------------------------------
-            DW    :NOTSUB     ;24
-            DW    :READ       ;25
-            DW    :WRITE      ;26
-            DW    :BLANK4     ;27
-            DW    :BLANK3     ;28
-            DW    :TOOLNG0    ;29
-            DW    :SLOT       ;2A
-            DW    :PRESS1     ;2B
-            DW    :FILE       ;2C
-            DW    :PSTATE0    ;2D
-            DW    :PSTATE1    ;2E
-            DW    :PSTATE2    ;2F
-            DW    :PSTATE3    ;30
-            DW    :PSTAT45    ;31
-            DW    :PSTAT45    ;32
-            DW    :EFGOESC    ;33
-            DW    :FNGOESC    ;34
-            DW    :ESCEXIT    ;35
-            DW    :DIR        ;36
-            DW    :DASH17     ;37
-            DW    :TRACK      ;38
-            DW    :SECTOR     ;39
-            DW    :CRESC      ;3A
-            DW    :NOFILES    ;3B
-            DW    :MTSUB      ;3C
-            DW    :INROOT     ;3D
-            DW    :CRESC1     ;3E
-            DW    :ERROR      ;3F
-            DW    DASHES      ;40
-            DW    :PRESS      ;41
-            DW    :MORE       ;42
-            DW    :HEADER     ;43
+            DW    :TOOLONG    ;26
+            DW    :NOTSUB     ;27
+            DW    :READ       ;28
+            DW    :WRITE      ;29
+            DW    :BLANK4     ;2A
+            DW    :BLANK3     ;2B
+            DW    :TOOLNG0    ;2C
+            DW    :SLOT       ;2D
+            DW    :PRESS1     ;2E
+            DW    :FILE       ;2F
+            DW    :PSTATE0    ;30
+            DW    :PSTATE1    ;31
+            DW    :PSTATE2    ;32
+            DW    :PSTATE3    ;33
+            DW    :PSTAT45    ;34
+            DW    :PSTAT45    ;35
+            DW    :EFGOESC    ;36
+            DW    :FNGOESC    ;37
+            DW    :ESCEXIT    ;38
+            DW    :DIR        ;39
+            DW    :DASH17     ;3A
+            DW    :TRACK      ;3B
+            DW    :SECTOR     ;3C
+            DW    :CRESC      ;3D
+            DW    :NOFILES    ;3E
+            DW    :MTSUB      ;3F
+            DW    :INROOT     ;40
+            DW    :CRESC1     ;41
+            DW    :ERROR      ;42
+            DW    DASHES      ;43
+            DW    :PRESS      ;44
+            DW    :MORE       ;45
+            DW    :HEADER     ;46
 *
-            DW    :ERR2B
+            DW    :ERR2B      ;47
             DW    :ERR44
             DW    :ERR45
             DW    :ERR44

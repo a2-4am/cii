@@ -410,5 +410,8 @@ TSMAP
 :TEMP       DB    $0
 *:VCOUNT     DB    $0
 *
+SECS
+            DB    $0,$E,$D,$C,$B,$A,$9,$8
+            DB    $7,$6,$5,$4,$3,$2,$1,$F
 TSMAPEND
             ORG

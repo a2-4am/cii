@@ -299,6 +299,9 @@ MENUTBL     DS    MENUTSZ
 * entry points for functions inside
 * compressed libraries
 *
+PHRWTS      DS    6
+RDDRIVE     DS    6
+FAKTRK      DS    6
 DELETE      DS    6
 FORMAT      DS    6
 D1FILE      DS    6
@@ -318,7 +321,7 @@ SETCLOCK    DS    6
 BOOTPG      DS    6
 VIEW        DS    6
 ALPHA       DS    6
-            DS    $42 ;free space here
+            DS    $30 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

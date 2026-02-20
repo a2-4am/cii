@@ -2,13 +2,9 @@
             DSK   ../build/FILER.O
             PUT   VARS
             PUT   ../build/MM.VARS
-            PUT   ../build/BOOTSEC.33.VARS
+            PUT   ../build/PHRWTS.VARS
 *
-            ORG   PHRWTSADR+BOOTSEC-BOOTSECEND
-BOOTBEG
-            PUTBIN  ../build/BOOTSEC.33.O
-BOOTEND
-            PUT   PHRWTS      ;Page-aligned, timing-critical disk code
+            ORG   PHRWTSEND
             PUT   FILEACCESS
             PUT   FMTFIX
             PUT   LINEINPUT

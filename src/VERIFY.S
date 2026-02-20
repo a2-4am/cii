@@ -375,13 +375,13 @@ CRIT1       EQU   *
 ]SPOT       =     *
 :NOPAGE     PHA
             PLA
-:LOOP       JSR   WRITE7
+:LOOP       JSR   :WRITE7
             DEY
             BNE   :NOPAGE
             DEC   TEMP
             BNE   :LOOP
             CMP   $00
-            JSR   WRITE5
+            JSR   :WRITE5
             PHA
             PLA
             NOP
@@ -390,16 +390,23 @@ CRIT1       EQU   *
 :D5LOOP     LDA   #$D5
             NOP
             NOP
-            JSR   WRITE0
+            JSR   :WRITE0
             DEY
             BNE   :D5LOOP
             ERR   {*&$FF00}-{]SPOT&$FF00}
             LDA   #$FF
-            JSR   WRITE5
+            JSR   :WRITE5
             LDA   $C08E,X
             LDA   $C08C,X
             PLP
 :WRTS       RTS
+*
+:WRITE7     NOP
+:WRITE5     NOP
+            CMP   $00
+:WRITE0     STA   $C08D,X
+            CMP   $C08C,X
+            RTS
 *
 CRIT2       EQU   *
             PHP
