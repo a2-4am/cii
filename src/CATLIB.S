@@ -1549,4 +1549,40 @@ PLACE       EQU   *
 *
 :MASK       DB    $0
 *
+SETLOK      EQU   *
+            BIT   DOSNOW
+            BPL   :DOS33
+            LDY   #$1E
+            LDX   #1          ;ANTICIPATE LOCKING
+            CMP   #$FF
+            BEQ   :SLK3       ;LOCK IT
+            CMP   #$80
+            BNE   :SLK2       ;UNLOCK IT
+            LDA   (POINT),Y
+            AND   #$C2
+            BNE   :SLK3       ;TOGGLE UNLOCKED --> LOCKED
+:SLK2       LDX   #$C3
+:SLK3       LDA   (POINT),Y
+            AND   #$20        ;ISOLATE BACKUP BIT
+            STA   (POINT),Y
+            TXA
+            ORA   (POINT),Y
+:SLK4       STA   (POINT),Y
+            RTS
+*
+:DOS33      LDY   #2
+            CMP   #$80
+            BNE   :DS1
+            LDA   (POINT),Y
+            EOR   #$80
+            JMP   :SLK4
+:DS1        AND   #$80
+            PHA
+            LDA   (POINT),Y
+            AND   #$7F
+            STA   (POINT),Y
+            PLA
+            ORA   (POINT),Y
+            JMP   :SLK4
+*
 CATLIBEND
