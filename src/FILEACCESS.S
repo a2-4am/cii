@@ -115,6 +115,8 @@ SETPNT      LDA   CBYTE,X
 *
 * MAKE A 1-BIT MASK FOR A BITMAP WORD
 * SECTOR # IN ACC ->
+* called from COPY, DISKMAP, FREES(DELLIB),
+* and UNDELETE
 *
 DOMASK      TAX
             LDA   #$00
@@ -134,7 +136,10 @@ STVTOC      LDA   #$11
             STA   RSECTR
             RTS
 *
-*
+* DOS?
+* read T00S00 and check for recognized DOS-shaped bootloader
+* called by Copy DOS (COPY) and Delete DOS (DELLIB)
+* 
 DOS?        LDX   #0
             JSR   PUTSEC
             STX   RTRACK
@@ -150,6 +155,7 @@ DOS?        LDX   #0
             DB    $8D,$0
             JMP   PRESS
 *
+* called by DOS? (above) and also CHANGEBOOT
 CHKDOS      LDA   #2
             STA   TEMP
 :CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
@@ -165,6 +171,7 @@ CHKDOS      LDA   #2
 *
 :DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
 *
+* called by DOS? (above) and also CHANGEBOOT
 PUTSEC      STX   RSECTR      ;SET SECTOR
             LDA   #>DATA
             STA   RPAGE       ;SET ADDR
@@ -172,58 +179,6 @@ PUTSEC      STX   RSECTR      ;SET SECTOR
             STA   RTRACK      ;SET TRACK
             STA   RCMND       ;SET COMMAND
             RTS
-*
-* INSERT SOURCE OR DESTINATION DISKS
-*
-*
-INSS        LDA   PDOS
-            STA   CURDOS
-:INSS0      JSR   INSS1
-            CMP   #1
-            BNE   :NOSWS      ;DIDN'T SWITCH
-            LDA   #>PPFX
-            LDY   #PPFX
-            LDX   #>VTOC1
-            JSR   SWCK
-            BCS   :INSS0
-:NOSWS      JMP   SETP
-*
-INSS1       LDA   ONLY1       ;IF ONLY 1:
-            BEQ   :SELECT
-            LDA   SDFLG
-            BPL   :SELECT
-            LDA   #0
-            STA   SDFLG
-            JSR   LOHERE
-            ASC   "Insert source disk",8D,00
-            JSR   INSCOM      ;WAIT FOR KEY
-            STA   PDOS        ;1
-:SELECT     RTS
-*
-INSD        LDA   SDOS
-            STA   CURDOS
-:INSD0      JSR   INSD1
-            CMP   #1
-            BNE   :NOSWP
-            LDA   #>SPFX
-            LDY   #SPFX
-            LDX   #>VTOC2
-            JSR   SWCK
-            BCS   :INSD0
-:NOSWP      JMP   SETS
-*
-INSD1       LDA   ONLY1
-            BEQ   :SELECT
-            LDA   SDFLG
-            BMI   :SELECT
-            LDA   #$FF
-            STA   SDFLG
-            JSR   PRINSTGT
-            STA   SDOS        ;1
-:SELECT     RTS
-PRINSTGT    JSR   LOHERE
-            ASC   "Insert target disk",8D,00
-            JMP   INSCOM
 *
 SDFLG       DB    $0
 *

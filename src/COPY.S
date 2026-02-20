@@ -2169,5 +2169,57 @@ COPY
             BCC   :DSLP1
             RTS
 *
+*
+* INSERT SOURCE OR DESTINATION DISKS
+*
+*
+INSS        LDA   PDOS
+            STA   CURDOS
+:INSS0      JSR   INSS1
+            CMP   #1
+            BNE   :NOSWS      ;DIDN'T SWITCH
+            LDA   #>PPFX
+            LDY   #PPFX
+            LDX   #>VTOC1
+            JSR   SWCK
+            BCS   :INSS0
+:NOSWS      JMP   SETP
+*
+INSS1       LDA   ONLY1       ;IF ONLY 1:
+            BEQ   :SELECT
+            LDA   SDFLG
+            BPL   :SELECT
+            LDA   #0
+            STA   SDFLG
+            JSR   LOHERE
+            ASC   "Insert source disk",8D,00
+            JSR   INSCOM      ;WAIT FOR KEY
+            STA   PDOS        ;1
+:SELECT     RTS
+*
+INSD        LDA   SDOS
+            STA   CURDOS
+:INSD0      JSR   INSD1
+            CMP   #1
+            BNE   :NOSWP
+            LDA   #>SPFX
+            LDY   #SPFX
+            LDX   #>VTOC2
+            JSR   SWCK
+            BCS   :INSD0
+:NOSWP      JMP   SETS
+*
+INSD1       LDA   ONLY1
+            BEQ   :SELECT
+            LDA   SDFLG
+            BMI   :SELECT
+            LDA   #$FF
+            STA   SDFLG
+            JSR   PRINSTGT
+            STA   SDOS        ;1
+:SELECT     RTS
+PRINSTGT    JSR   LOHERE
+            ASC   "Insert target disk",8D,00
+            JMP   INSCOM
+*
 COPYEND
-            ORG
