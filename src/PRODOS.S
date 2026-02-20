@@ -382,42 +382,6 @@ WRITBM      LDA   BM
 :TEMP       DB    $0
 *
 *
-PSPACE      LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
-                              ;that can use $2000 consecutive bytes for the
-                              ;entire bitmap
-            JSR   READBM
-            LDA   BMLEN
-            ASL
-            STA   :TEMP
-            LDY   #0
-            STY   FREEL
-            STY   FREEH
-:NXTBYTE    LDA   (POINT),Y
-            LDX   #7
-:NEXTBIT    LSR
-            BCC   :USED
-            INC   FREEL
-            BNE   :USED
-            INC   FREEH
-:USED       DEX
-            BPL   :NEXTBIT
-            INY
-            BNE   :NXTBYTE
-            INC   POINT+1
-            DEC   :TEMP
-            BNE   :NXTBYTE
-*
-            LDA   TOTBLK
-            SEC
-            SBC   FREEL
-            STA   USEDL
-            LDA   TOTBLK+1
-            SBC   FREEH
-            STA   USEDH
-            RTS
-:TEMP       DB    $0
-*
-*
 * SHOW CURRENT SLOT & DRIVE
 * AND/OR CURRENT PREFIX. (*PFX<>0)
 *

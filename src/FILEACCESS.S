@@ -104,44 +104,6 @@ CLRCAT      STA   POINT+1
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
 *
-*
-*
-* FIND FREE & USED SPACE IN VTOC
-* ACC=PAGE# OF VTOC ->
-*
-SPACE       BIT   DOSNOW
-            BPL   :DOS33
-            JMP   PSPACE      ;DO PRODOS
-*
-:DOS33      STA   POINT+1
-            LDA   #$38        ;BITMAP START
-            STA   POINT
-            LDA   #$00        ;CLEAR BUFFER
-            STA   FREEL
-            STA   FREEH
-            LDY   #$8B        ;BITMAP LENGTH
-:NXTBYTE    LDA   (POINT),Y
-            LDX   #$07
-:NEXTBIT    LSR               ;SHIFT BITS TO
-            BCC   :USED       ;FIND FREE
-            INC   FREEL       ;SECTORS
-            BNE   :USED
-            INC   FREEH
-:USED       DEX
-            BPL   :NEXTBIT
-            DEY
-            BNE   :NXTBYTE
-            SEC               ;SUBTRACT FROM
-            LDA   #$30        ;TOTAL # OF
-            SBC   FREEL       ;SECTORS TO
-            STA   USEDL       ;GET # USED
-            LDA   #2
-            SBC   FREEH
-            STA   USEDH
-            RTS
-*
-*
-*
 * PLACE INPUT FILE INTO ENTRY
 *   AT (*POINT)
 *

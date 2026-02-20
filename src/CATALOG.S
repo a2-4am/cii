@@ -314,4 +314,76 @@ CATALOG
             PLA
             JSR   HEXDC2
             JMP   PRT5LJ
+*
+* FIND FREE & USED SPACE IN VTOC
+* ACC=PAGE# OF VTOC ->
+*
+SPACE       EQU   *
+            BIT   DOSNOW
+            BPL   :DOS33
+            JMP   PSPACE      ;DO PRODOS
+*
+:DOS33      STA   POINT+1
+            LDA   #$38        ;BITMAP START
+            STA   POINT
+            LDA   #$00        ;CLEAR BUFFER
+            STA   FREEL
+            STA   FREEH
+            LDY   #$8B        ;BITMAP LENGTH
+:NXTBYTE    LDA   (POINT),Y
+            LDX   #$07
+:NEXTBIT    LSR               ;SHIFT BITS TO
+            BCC   :USED       ;FIND FREE
+            INC   FREEL       ;SECTORS
+            BNE   :USED
+            INC   FREEH
+:USED       DEX
+            BPL   :NEXTBIT
+            DEY
+            BNE   :NXTBYTE
+            SEC               ;SUBTRACT FROM
+            LDA   #$30        ;TOTAL # OF
+            SBC   FREEL       ;SECTORS TO
+            STA   USEDL       ;GET # USED
+            LDA   #2
+            SBC   FREEH
+            STA   USEDH
+            RTS
+*
+PSPACE      EQU   *
+            LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
+                              ;that can use $2000 consecutive bytes for the
+                              ;entire bitmap
+            JSR   READBM
+            LDA   BMLEN
+            ASL
+            STA   :TEMP
+            LDY   #0
+            STY   FREEL
+            STY   FREEH
+:NXTBYTE    LDA   (POINT),Y
+            LDX   #7
+:NEXTBIT    LSR
+            BCC   :USED
+            INC   FREEL
+            BNE   :USED
+            INC   FREEH
+:USED       DEX
+            BPL   :NEXTBIT
+            INY
+            BNE   :NXTBYTE
+            INC   POINT+1
+            DEC   :TEMP
+            BNE   :NXTBYTE
+*
+            LDA   TOTBLK
+            SEC
+            SBC   FREEL
+            STA   USEDL
+            LDA   TOTBLK+1
+            SBC   FREEH
+            STA   USEDH
+            RTS
+:TEMP       DB    $0
+*
 CATALOGEND
