@@ -298,7 +298,7 @@ WTBLK       LDA   #$81
 *
 *
 *
-*
+* called by CATALOG, DISKMAP, and UNDELETE
 READBM      STA   BM
             STA   RPAGE
             STA   POINT+1
@@ -353,26 +353,6 @@ TOTBLK      DB    $0,$0
 BMLEN       DB    $0
 BMBLK       DB    $0,$0
 *
-*
-WRITBM      LDA   BM
-            STA   RPAGE
-            LDA   BMLEN
-            STA   :TEMP
-            LDA   BMBLK
-            STA   BLKNUM
-            LDA   BMBLK+1
-            STA   BLKNUM+1
-:WTBM0      JSR   DOWBLK
-            INC   BLKNUM
-            BNE   :WTBM1
-            INC   BLKNUM+1
-:WTBM1      INC   RPAGE
-            INC   RPAGE
-            DEC   :TEMP
-            BNE   :WTBM0
-            RTS
-*
-:TEMP       DB    $0
 *
 *
 * SHOW CURRENT SLOT & DRIVE
@@ -454,27 +434,6 @@ PRVCOM      STA   UNIT
             STA   WNDTOP
             JMP   VLEFT
 :PFXLEN     DB    $0
-*
-*
-SRCHDR      LDA   #0
-            STA   SRCTAR
-PRVNMP      LDA   PDOS
-            STA   DOSNOW
-            LDX   #PPFX
-            LDY   #>PPFX
-            LDA   PUNIT
-            JMP   PRVCOM
-*
-SRCTAR      DB    $0
-*
-TARHDR      LDA   #$FF
-            STA   SRCTAR
-PRVNMS      LDA   SDOS
-            STA   DOSNOW
-            LDX   #SPFX
-            LDY   #>SPFX
-            LDA   SUNIT
-            JMP   PRVCOM
 *
 GETDAT      JSR   MLI
             DB    $82
@@ -1198,6 +1157,8 @@ TREES       LDA   #$FF
             BCS   SETS
             STA   SCURR
             RTS
+*
+SRCTAR      DB    $0
 *
 SETS        LDA   SUNIT
             STA   UNIT

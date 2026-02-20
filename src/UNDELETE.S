@@ -676,4 +676,25 @@ PUNDO0      EQU   *
 :BADNUM     DB    $0
 :MAYBE      DB    $0
 *
+WRITBM      EQU   *
+            LDA   BM
+            STA   RPAGE
+            LDA   BMLEN
+            STA   :TEMP
+            LDA   BMBLK
+            STA   BLKNUM
+            LDA   BMBLK+1
+            STA   BLKNUM+1
+:WTBM0      JSR   DOWBLK
+            INC   BLKNUM
+            BNE   :WTBM1
+            INC   BLKNUM+1
+:WTBM1      INC   RPAGE
+            INC   RPAGE
+            DEC   :TEMP
+            BNE   :WTBM0
+            RTS
+*
+:TEMP       DB    $0
+*
 UNDELEND

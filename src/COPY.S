@@ -2222,4 +2222,26 @@ PRINSTGT    JSR   LOHERE
             ASC   "Insert target disk",8D,00
             JMP   INSCOM
 *
+SRCHDR      EQU   *
+            LDA   #0
+            STA   SRCTAR
+PRVNMP      EQU   *
+            LDA   PDOS
+            STA   DOSNOW
+            LDX   #PPFX
+            LDY   #>PPFX
+            LDA   PUNIT
+            JMP   PRVCOM
+*
+TARHDR      EQU   *
+            LDA   #$FF
+            STA   SRCTAR
+PRVNMS      EQU   *
+            LDA   SDOS
+            STA   DOSNOW
+            LDX   #SPFX
+            LDY   #>SPFX
+            LDA   SUNIT
+            JMP   PRVCOM
+*
 COPYEND
