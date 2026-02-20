@@ -86,3 +86,9 @@
 *ALPHA
             JSR   MISCLIB     ; ensure library is decompressed
             JMP   ALPHAINTERNAL
+*RENAME
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   RENAMEINTERNAL
+*LOCK
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   LOCKINTERNAL

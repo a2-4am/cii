@@ -321,7 +321,9 @@ SETCLOCK    DS    6
 BOOTPG      DS    6
 VIEW        DS    6
 ALPHA       DS    6
-            DS    $30 ;free space here
+RENAME      DS    6
+LOCK        DS    6
+            DS    $24 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *
