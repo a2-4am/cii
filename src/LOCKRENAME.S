@@ -15,7 +15,8 @@ RENAME      LDA   #$03
 LOCK        LDA   #$02
             STA   STATE
 *
-REN2        JSR   COMTRE
+REN2        EQU   *
+            JSR   COMTRE
             JSR   CATDIS
             LDA   FILNUM
             BNE   :GOTFILS
