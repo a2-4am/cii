@@ -141,7 +141,7 @@ MEMCPY      MAC
 *
 :NOCHNG     JSR   MLI         ;GET BOOT PFX
             DB    $C7
-            DW    :BTLST
+            DW    :PFXLST
 *
 *
 * SETUP A2E, FLAG80, ISAUX
@@ -374,9 +374,6 @@ MEMCPY      MAC
 *
 :PFXLST     DB    $1
             DW    $280
-*
-:BTLST      DB    $1
-            DW    BTPFX
 *
 :RBLST      DB    $3
             DB    $B0

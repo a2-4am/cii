@@ -282,7 +282,6 @@ D3NOBOOT    =     $D000       ;DOS 3.3 no-boot sector data (in LC RAM bank 2)
             DUM   CODEADR-$200
 PRIM        DS    $100        ;used by PHRWTS during write
 SECOND      DS    $57         ;used by PHRWTS during write
-BTPFX       DS    $40
 ASYNC       DS    1           ;# OF SYNC TO WRITE
 *
 AINFO       DS    0           ;PHRWTS stuff:
@@ -319,7 +318,7 @@ SETCLOCK    DS    6
 BOOTPG      DS    6
 VIEW        DS    6
 ALPHA       DS    6
-            DS    2 ;free space here
+            DS    $42 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

@@ -800,13 +800,6 @@ PDSTRY      JSR   PUNLOK
             DW    FILE
 *
 *
-SETBUT      LDA   PFX
-            BNE   SETPFX
-            LDA   BOOTDV
-            STA   UNIT
-            JMP   UNTPFX
-*
-*
 *
 SETPFX      LDX   #PFX
             LDA   #>PFX

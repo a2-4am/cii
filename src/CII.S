@@ -32,7 +32,6 @@ MMXEND
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
-            ERR   MAINXEND>BTPFX  ;BTPFX clobbered before FILER is unpacked
 *
 RDDATAX7BEG
             ORG   RDDATA
