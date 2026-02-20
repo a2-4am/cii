@@ -503,19 +503,6 @@ SHOTM0      JSR   HEXDC1
             JMP   PRT2DG
 *
 *
-CKDEL       LDY   #0
-            LDA   (POINT),Y
-CKDEL1      BIT   DOSNOW
-            BMI   :PRODOS
-            ASL
-            RTS
-:PRODOS     CLC
-            AND   #$0F
-            BNE   :OUT
-            SEC
-:OUT        RTS
-*
-*
 *
 *
 NODOS3      JSR   DOSTYP

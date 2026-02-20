@@ -119,4 +119,17 @@ ALPHA
             JMP   FIXSUB
 :ALPHAQ     RTS
 *
+CKDEL       EQU   *
+            LDY   #0
+            LDA   (POINT),Y
+CKDEL1      BIT   DOSNOW
+            BMI   :PRODOS
+            ASL
+            RTS
+:PRODOS     CLC
+            AND   #$0F
+            BNE   :OUT
+            SEC
+:OUT        RTS
+*
 ALPHAEND
