@@ -232,7 +232,9 @@ MRKBLK      STX   POINT
             INC   BLKCNT+1
 :MRKOUT     PLA
             RTS
+* used by MRKBLK (above) but also DISKMAP
 BITS        DB    $80,$40,$20,$10,$08,$04,$02,$01
+* used by MRKBLK (above) but also DISKMAP
 BLKCNT      DB    $0,$0
 *
 * SWAP BOTTOM HALF AND TOP HALF OF INXDEX BLOCK
