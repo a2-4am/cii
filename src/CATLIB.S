@@ -335,6 +335,17 @@ MATCH       EQU   *
 :SP         DB    $0
 :XSAVE      DB    $0
 *
+GETTYP      EQU   *
+            BIT   DOSNOW
+            BPL   :DOS33
+            LDY   #$10
+            LDA   (POINT),Y
+            RTS
+:DOS33      LDY   #2
+            LDA   (POINT),Y
+            AND   #$7F
+            RTS
+*
 * CONVERT FILENAME TO CR FORMAT
 * CAN'T USE DOSNOW TO DETERMINE
 * FILENAME FORMAT

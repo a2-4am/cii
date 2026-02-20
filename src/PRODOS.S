@@ -503,17 +503,6 @@ SHOTM0      JSR   HEXDC1
             JMP   PRT2DG
 *
 *
-GETTYP      BIT   DOSNOW
-            BPL   :DOS33
-            LDY   #$10
-            LDA   (POINT),Y
-            RTS
-:DOS33      LDY   #2
-            LDA   (POINT),Y
-            AND   #$7F
-            RTS
-*
-*
 CKDEL       LDY   #0
             LDA   (POINT),Y
 CKDEL1      BIT   DOSNOW
