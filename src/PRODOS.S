@@ -730,6 +730,7 @@ GODEV       JMP   $0000
 *  RCMND  = 1 -> RD, 2 -> WT
 *  DIRBLK = STARTING BLOCK
 *
+* only called by DOCAT
 PDOCAT      LDA   RCMND
             CMP   #2
             BNE   :OUT
@@ -937,49 +938,12 @@ DODEV0      STA   DEVFLG
             STX   CURDVA
             RTS
 *
-DODVP1      JSR   HOME
-            LDA   #0
-* STA *PPFX
-* STA *PPFX+5
-            STA   DEVFLG
-            LDA   PPFX
-            ORA   #$80
-            STA   PPFX
-            JSR   PRHERE
-            ASC   "Select source device:"
-            DB    $0
-            LDA   CURDVP
-            JSR   JDODEV
-            STA   PUNIT
-            STX   CURDVP
-            RTS
-*
-DODVS1      JSR   HOME
-            JSR   DOWAIT
-            LDA   #0
-* STA *SPFX
-* STA *SPFX+5
-            STA   DEVFLG
-            LDA   SPFX
-            ORA   #$80
-            STA   SPFX
-            JSR   PRHERE
-            ASC   "Select target device:"
-            DB    $0
-            LDA   CURDVS
-            JSR   JDODEV
-            STA   SUNIT
-            STX   CURDVS
-            RTS
-*
 DOWAIT      LDX   #$03
 :WAITLP     LDA   #$C4
             JSR   WAIT
             DEX
             BNE   :WAITLP
             RTS
-*
-*
 *
 TREEA       JSR   DOSTYP
             LDA   #APFX

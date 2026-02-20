@@ -2244,4 +2244,42 @@ PRVNMS      EQU   *
             LDA   SUNIT
             JMP   PRVCOM
 *
+*
+DODVP1      EQU   *
+            JSR   HOME
+            LDA   #0
+* STA *PPFX
+* STA *PPFX+5
+            STA   DEVFLG
+            LDA   PPFX
+            ORA   #$80
+            STA   PPFX
+            JSR   PRHERE
+            ASC   "Select source device:"
+            DB    $0
+            LDA   CURDVP
+            JSR   JDODEV
+            STA   PUNIT
+            STX   CURDVP
+            RTS
+*
+DODVS1      EQU   *
+            JSR   HOME
+            JSR   DOWAIT
+            LDA   #0
+* STA *SPFX
+* STA *SPFX+5
+            STA   DEVFLG
+            LDA   SPFX
+            ORA   #$80
+            STA   SPFX
+            JSR   PRHERE
+            ASC   "Select target device:"
+            DB    $0
+            LDA   CURDVS
+            JSR   JDODEV
+            STA   SUNIT
+            STX   CURDVS
+            RTS
+*
 COPYEND
