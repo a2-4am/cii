@@ -86,7 +86,10 @@ MEMCPY      MAC
             LDA   #CIIRVER
             STA   IVERSION
 *
+* BUILD OUR DEVICE LIST
+*
             LDY   DEVCNT
+            LDX   #$00
 :GETDVLP    LDA   DEVLST,Y
             PHA
             AND   #$F0
