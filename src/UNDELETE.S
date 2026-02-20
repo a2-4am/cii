@@ -2,8 +2,8 @@
             DSK   ../build/UNDELETE.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/CHANGEBOOT.VARS
-            ORG   BOOTPGEND
+            PUT   ../build/DISKMAP.VARS
+            ORG   TSMAPEND
 UNDEL       
             ORG   *+3
 

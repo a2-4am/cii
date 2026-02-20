@@ -12,14 +12,10 @@
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELLIB.VARS
-            PUT   ../build/ALPHABETIZE.VARS
             PUT   ../build/VERIFY.VARS
-            PUT   ../build/VIEW.VARS
             PUT   ../build/DISKMAP.VARS
-            PUT   ../build/CHANGEBOOT.VARS
             PUT   ../build/UNDELETE.VARS
-            PUT   ../build/MAKESUB.VARS
-            PUT   ../build/SETCLOCK.VARS
+            PUT   ../build/MISCLIB.VARS
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
@@ -108,16 +104,6 @@ DELLIBX7BEG
             ORG
 DELLIBX7END
 *
-ALPHABETIZEX7BEG
-            ORG   ALPHA
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    ALPHAEND
-            PUTBIN  ../build/ALPHABETIZE.X7
-:X7END
-            ORG
-ALPHABETIZEX7END
-*
 VERIFYX7BEG
             ORG   VERIFY
             JSR   ZXMODULE
@@ -127,16 +113,6 @@ VERIFYX7BEG
 :X7END
             ORG
 VERIFYX7END
-*
-VIEWX7BEG
-            ORG   VIEW
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    VIEWEND
-            PUTBIN  ../build/VIEW.X7
-:X7END
-            ORG
-VIEWX7END
 *
 TSMAPX7BEG
             ORG   TSMAP
@@ -148,16 +124,6 @@ TSMAPX7BEG
             ORG
 TSMAPX7END
 *
-CHANGEBOOTX7BEG
-            ORG   BOOTPG
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    BOOTPGEND
-            PUTBIN  ../build/CHANGEBOOT.X7
-:X7END
-            ORG
-CHANGEBOOTX7END
-*
 UNDELETEX7BEG
             ORG   UNDEL
             JSR   ZXMODULE
@@ -168,27 +134,17 @@ UNDELETEX7BEG
             ORG
 UNDELETEX7END
 *
-MAKESUBX7BEG
-            ORG   MAKESUB
+MISCLIBX7BEG
+            ORG   MISCLIB
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    MAKESUBEND
-            PUTBIN  ../build/MAKESUB.X7
+            DA    MISCLIBEND
+            PUTBIN  ../build/MISCLIB.X7
 :X7END
             ORG
-MAKESUBX7END
+MISCLIBX7END
 *
-SETCLOCKX7BEG
-            ORG   SETCLOCK
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    SETCLOCKEND
-            PUTBIN  ../build/SETCLOCK.X7
-:X7END
-            ORG
-SETCLOCKX7END
-*
-            ERR   SETCLOCKX7END>$BEFF  ; can't clobber ProDOS global page
+            ERR   MISCLIBX7END>$BEFF  ; can't clobber ProDOS global page
 *
 DZX0BEG
             ORG   ZXMODULE

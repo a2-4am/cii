@@ -62,3 +62,18 @@
 *RDACNT
             JSR   CATLIB      ; ensure library is decompressed
             JMP   RDACNTINTERNAL
+*MAKESUB
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   MAKESUBINTERNAL
+*SETCLOCK
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   SETCLOCKINTERNAL
+*BOOTPG
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   BOOTPGINTERNAL
+*VIEW
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   VIEWINTERNAL
+*ALPHA
+            JSR   MISCLIB     ; ensure library is decompressed
+            JMP   ALPHAINTERNAL

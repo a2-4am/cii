@@ -753,9 +753,11 @@ PDOCAT      LDA   RCMND
             BNE   :WTMORE
 :OUT        RTS
 *
+* called by COPY FILE and MAKESUB
 MKDIR       LDA   #$0D
             BNE   PCTCOM
 *
+* called by COPY FILE
 PCREAT      LDA   #1
 PCTCOM      EQU   *
             STA   :STRTYP
@@ -915,7 +917,8 @@ DEVFLG      DB    $0
 DODEVF      LDA   #$FF
             DB    $2C
 DODEVP      LDA   #0
-DODEV0      STA   DEVFLG
+DODEV0      EQU   *
+            STA   DEVFLG
             JSR   HOME
             JSR   PRHERE
             ASC   "Select device:"

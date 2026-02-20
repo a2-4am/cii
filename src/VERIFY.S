@@ -2,8 +2,8 @@
             DSK   ../build/VERIFY.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/ALPHABETIZE.VARS
-            ORG   ALPHAEND
+            PUT   ../build/DELLIB.VARS
+            ORG   DELLIBEND
 VERIFY
             ORG   *+3
 

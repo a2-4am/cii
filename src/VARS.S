@@ -158,6 +158,7 @@ HDRIVE      =     $F1
 *
 *
 SOFAR       =     $110        ;110-11F
+VOLNAM      =     $120        ;120-12F
 *
 LINEIN      =     $200
 *
@@ -281,7 +282,6 @@ D3NOBOOT    =     $D000       ;DOS 3.3 no-boot sector data (in LC RAM bank 2)
             DUM   CODEADR-$200
 PRIM        DS    $100        ;used by PHRWTS during write
 SECOND      DS    $57         ;used by PHRWTS during write
-VOLNAM      DS    $10
 BTPFX       DS    $40
 ASYNC       DS    1           ;# OF SYNC TO WRITE
 *
@@ -314,7 +314,12 @@ DIVOUT      DS    6
 DIVEIN      DS    6
 INITCD      DS    6
 RDACNT      DS    6
-            DS    $10 ;free space here
+MAKESUB     DS    6
+SETCLOCK    DS    6
+BOOTPG      DS    6
+VIEW        DS    6
+ALPHA       DS    6
+            DS    2 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *
