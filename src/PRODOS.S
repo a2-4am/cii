@@ -515,7 +515,7 @@ BLK2ER      LDY   #0
             STA   BLKNUM
             JMP   ERROUT
 *
-*
+* called by COPY DISK, COPY DOS, COPY FILES, and QUIT
 UNTDEV      STA   UNIT
 *
 * [4am] clear GODEV ptr before starting
@@ -536,6 +536,7 @@ UNTDV0      LDX   NUMDEV
 *
             RTS
 :GOTIT      STX   CURDEV
+* fall through to DEVTYP
 *
 *
 * DEVTYP RETURNS INFO ON *CURDEV
@@ -554,6 +555,7 @@ UNTDV0      LDX   NUMDEV
 * ROM DEVICE: A = 2, X DEPENDS ON CsFE
 * RAM DEVICE: A = 3, X = $8B
 *
+* called by COPY DISK, DELETE DISK, DISK MAP, and VERIFY
 DEVTYP      LDX   CURDEV
 DVTYPX      LDA   #0
             STA   TMPPTR
