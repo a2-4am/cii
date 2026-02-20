@@ -8,14 +8,11 @@
             PUT   ../build/RDDATA.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/DODEV.VARS
-            PUT   ../build/DDISK.VARS
-            PUT   ../build/D1FILE.VARS
             PUT   ../build/DOTREE.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
-            PUT   ../build/DELETE.VARS
+            PUT   ../build/DELLIB.VARS
             PUT   ../build/ALPHABETIZE.VARS
-            PUT   ../build/FORMAT.VARS
             PUT   ../build/VERIFY.VARS
             PUT   ../build/VIEW.VARS
             PUT   ../build/DISKMAP.VARS
@@ -72,26 +69,6 @@ DODEVX7BEG
             ORG
 DODEVX7END
 *
-DDISKX7BEG
-            ORG   DDISK
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    DDISKEND
-            PUTBIN  ../build/DDISK.X7
-:X7END
-            ORG
-DDISKX7END
-*
-D1FILEX7BEG
-            ORG   D1FILE
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    D1FILEEND
-            PUTBIN  ../build/D1FILE.X7
-:X7END
-            ORG
-D1FILEX7END
-*
 DOTREEX7BEG
             ORG   DOTREE
             JSR   ZXMODULE
@@ -122,15 +99,15 @@ CATALOGX7BEG
             ORG
 CATALOGX7END
 *
-DELETEX7BEG
-            ORG   DELETE
+DELLIBX7BEG
+            ORG   DELLIB
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    DELETEEND
-            PUTBIN  ../build/DELETE.X7
+            DA    DELLIBEND
+            PUTBIN  ../build/DELLIB.X7
 :X7END
             ORG
-DELETEX7END
+DELLIBX7END
 *
 ALPHABETIZEX7BEG
             ORG   ALPHA
@@ -141,16 +118,6 @@ ALPHABETIZEX7BEG
 :X7END
             ORG
 ALPHABETIZEX7END
-*
-FORMATX7BEG
-            ORG   FORMAT
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    FORMATEND
-            PUTBIN  ../build/FORMAT.X7
-:X7END
-            ORG
-FORMATX7END
 *
 VERIFYX7BEG
             ORG   VERIFY
@@ -234,10 +201,7 @@ QUITX7END
             ERR   QUITEND>$BEFF  ; can't clobber ProDOS global page
 *
 DZX0BEG
-            ORG   INTRLV
-*INTRLV
-            DB    $0,$D,$B,$9,$7,$5,$3,$1
-            DB    $E,$C,$A,$8,$6,$4,$2,$F
+            ORG   ZXMODULE
             PUT   DZX0TURBO
             PUT   DISPATCH
             ORG

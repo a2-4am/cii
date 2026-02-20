@@ -22,17 +22,43 @@
             DW    SETCLOCK
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
-*JDDISK
-            JMP   DDISK
-*JD1FILE
-            JMP   D1FILE
+*DELETE
+            JSR   DELLIB      ; ensure library is decompressed
+            JMP   DELETEINTERNAL
+*FORMAT
+            JSR   DELLIB      ; ensure library is decompressed
+            JMP   FORMATINTERNAL
+*D1FILE
+            JSR   DELLIB      ; ensure library is decompressed
+            JMP   D1FILEINTERNAL
 *JDOTREE
             JMP   DOTREE
 *JDODEV
             JMP   DODEV
-*JMATCH
-            JSR   CATLIB      ; decompress
-            JMP   CATLIB+4
-*JCATLN1
-            JSR   CATLIB      ; decompress
-            JMP   CATLIB+7
+*CATLN1
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   CATLN1INTERNAL
+*CATDIS
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   CATDISINTERNAL
+*CDDOKEY
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   CDDOKEYINTERNAL
+*FILEQ
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   FILEQINTERNAL
+*UNMARK
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   UNMARKINTERNAL
+*DIVOUT
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   DIVOUTINTERNAL
+*DIVEIN
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   DIVEININTERNAL
+*INITCD
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   INITCDINTERNAL
+*RDACNT
+            JSR   CATLIB      ; ensure library is decompressed
+            JMP   RDACNTINTERNAL

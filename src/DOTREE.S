@@ -2,8 +2,8 @@
             DSK   ../build/DOTREE.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/D1FILE.VARS
-            ORG   D1FILEEND
+            PUT   ../build/DODEV.VARS
+            ORG   DODEVEND
 DOTREE      
             ORG   *+3
 *

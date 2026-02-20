@@ -2,8 +2,8 @@
             DSK   ../build/ALPHABETIZE.O
             PUT   VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/DELETE.VARS
-            ORG   DELETEEND
+            PUT   ../build/DELLIB.VARS
+            ORG   DELLIBEND
 ALPHA       
             ORG   *+3
 
@@ -104,6 +104,10 @@ ALPHA
             JSR   KYESC       ;YES:KEYPRESS.
             JMP   :COUNTIT    ;COUNT MORE.
 *
+:COUNT      DB    $0
+:LAST       DB    $0
+:LAST2      DB    $0
+*
 * ASK TO SAVE IT
 :DUNSEE     JSR   PRHERE
             DB    $8D
@@ -114,9 +118,5 @@ ALPHA
             BNE   :ALPHAQ
             JMP   FIXSUB
 :ALPHAQ     RTS
-*
-:COUNT      DB    $0
-:LAST       DB    $0
-:LAST2      DB    $0
 *
 ALPHAEND

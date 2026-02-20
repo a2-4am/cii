@@ -1064,7 +1064,7 @@ COPY
             BNE   :COMOUT0
 *
 :DONT       JSR   PCOUT
-            JSR   DODEL       ;UNMARK
+            JSR   UNMARK      ;UNMARK
 :COMOUT0    SEC
 :COMOUT     PHA
             PHP
@@ -1404,7 +1404,7 @@ COPY
             PHA
             STA   POINT+1
             LDA   #1
-            JSR   JD1FILE
+            JSR   D1FILE
             JSR   WRCAT2
             PLA
             STA   POINT2+1

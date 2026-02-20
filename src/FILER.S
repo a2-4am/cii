@@ -10,7 +10,6 @@ BOOTBEG
 BOOTEND
             PUT   PHRWTS      ;Page-aligned, timing-critical disk code
             PUT   FILEACCESS
-            PUT   FILELIST
             PUT   FMTFIX
             PUT   LINEINPUT
             PUT   IO

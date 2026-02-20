@@ -260,128 +260,6 @@ PNTFIL      LDX   #2
             DEC   POINT+1
             RTS
 *
-* PRDCNT
-*
-* INPUT
-*       DIRBLK,+1 = 1ST BLK OF DIR
-*       DIRADR    = BUFFER ADDR
-*       COUNT     = MAX. # OF DIR BLKS
-*                   ALLOWED
-*
-* OUTPUT
-*       RPAGE = NEXT AVAILABLE PAGE
-*
-PRDCNT      LDA   DIRBLK
-            STA   BLKNUM
-            LDA   DIRBLK+1
-            STA   BLKNUM+1
-            LDA   DIRADR
-            STA   RPAGE
-            STA   POINT+1
-            LDA   #0
-            STA   POINT
-            STA   NACTIV
-            JSR   RDBLK
-            BCS   :RDRERR
-*
-* MAKE SURE THIS IS REALLY THE FIRST
-* BLOCK OF THE DIRECTORY
-*
-            LDY   #0
-            LDA   (POINT),Y
-            INY
-            ORA   (POINT),Y
-            BEQ   :REALLY
-*
-* NOT THE FIRST BLOCK, SO BACK UP
-* TO PREVIOUS BLOCK AND CHECK AGAIN
-*
-            LDA   (POINT),Y
-            STA   DIRBLK+1
-            DEY
-            LDA   (POINT),Y
-            STA   DIRBLK
-            JMP   PRDCNT
-
-:RDDR2      JSR   RDBLK
-            BCS   :RDRERR
-*
-* SET UP BLKNUM FOR NEXT BLOCK OF DIR
-*
-:REALLY     LDY   #2
-            LDA   (POINT),Y
-            STA   BLKNUM
-            INY
-            LDA   (POINT),Y
-            STA   BLKNUM+1
-*
-* ADD FILE NAME ADDRESSES TO ARRAY
-*
-            LDY   #4
-:RDRLP      INY
-            BEQ   :NEXT
-            LDA   (POINT),Y
-            DEY
-            CMP   #0
-            BEQ   :SKIP       ;NEVER USED ENTRY
-            LDX   DELFLG
-            LDA   (POINT),Y
-            AND   #$0F
-            BNE   :ACTIVE
-*
-* INACTIVE (DELETED) ENTRY, USE IT?
-*
-            CPX   #$80
-            BEQ   :SKIP       ;WANT ACTIVE
-            BNE   :USEIT      ;ALWAYS
-*
-* ACTIVE ENTRY, USE IT?
-*
-:ACTIVE     CPX   #0
-            BEQ   :SKIP       ;WANT INACTIVE
-            LDA   (POINT),Y
-            AND   #$F0
-            CMP   #$E0
-            BCS   :SKIP       ;SUB HEADER
-*
-:USEIT      TYA
-            LDX   NACTIV
-            STA   CBYTE,X
-            LDA   POINT+1
-            STA   CSECTR,X
-            INC   NACTIV
-            BEQ   :UHOH       ;OVERFLOW
-:SKIP       TYA
-            CLC
-            ADC   #$27
-            TAY
-            BCC   :RDRLP
-            INC   POINT+1
-            INC   RPAGE
-            BNE   :RDRLP      ;ALWAYS
-*
-:NEXT       INC   POINT+1
-            INC   RPAGE
-            LDA   BLKNUM
-            ORA   BLKNUM+1
-            BEQ   :RDRDON     ;NO MORE BLOCKS
-            DEC   COUNT
-            BNE   :RDDR2      ;READ NEXT BLK
-*
-*
-*
-:RDRDON     LDA   RPAGE
-            STA   DATADR
-            CLC
-:RDRERR     RTS
-*
-*
-* MORE THAN 255 FILE NAMES FOUND
-*
-:UHOH       DEC   NACTIV
-            INC   RPAGE
-            BNE   :RDRDON     ;ALWAYS
-*
 *
 *
 DOWBLK      JSR   WTBLK
@@ -1177,7 +1055,7 @@ MLIERR      LDA   RRTN
             LDA   #FILE
             STA   POINT
             LDA   #1
-            JSR   JD1FILE
+            JSR   D1FILE
             JSR   WRCAT2
             LDA   #$48
 ERROU1      STA   RRTN

@@ -64,9 +64,6 @@ BOOTPG
             ASC   "No boot program to change",00
             JMP   PRESS
 *
-:NAMESEC    DB    $0
-:T0SECT     DB    $0
-*
 :CHKWRAPR   TXA
             CLC
             ADC   #4          ;9->D,7->B
@@ -76,5 +73,8 @@ BOOTPG
             LDX   #0
             LDY   #$FD
             JMP   CHKDOS
+*
+:NAMESEC    DB    $0
+:T0SECT     DB    $0
 *
 BOOTPGEND

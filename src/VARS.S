@@ -81,7 +81,7 @@ FLAG80      =     $77
 PFXADR      =     $78         ;2
 PINVFL      =     $7A
 *
-* 80 - 90 ALSO USED IN PHRWTS
+* 80 - 8F ALSO USED IN PHRWTS
 *
 CURMOM      =     $80
 BLKPTR      =     $81
@@ -98,12 +98,9 @@ DSPNUM      =     $8B
 CHMAX       =     $8C
 *
 COUNT       =     $A6
-*TERROR      =     $A7        ;[4am] unused
 CHOOZOPT    =     $A7         ;[4am] reuse unused address to store chosen menu index
 ISAUX       =     $A8
 A2E         =     $A9
-*
-FIRSTC      =     $AC
 *
 TEMP        =     $B3
 TEMP2       =     $B4
@@ -160,9 +157,9 @@ HSLOT       =     $F0
 HDRIVE      =     $F1
 *
 *
+SOFAR       =     $110        ;110-11F
 *
 LINEIN      =     $200
-IN20        =     $220
 *
 STACKX      =     $240        ;240-255
 STACKY      =     $256        ;256-26A
@@ -188,7 +185,7 @@ STRTYP      =     $3CF
 *
 * $3F0=APPLEVECTORS
 *
-SCREEN      =     $5A2
+SCREEN      =     $5A2        ;6 bytes, used by VIEW
 *
             DUM   $900
 STATUS      DS    $100        ;900
@@ -277,14 +274,15 @@ MMIOBUF     =     TOP10       ;4800 - $400 byte ProDOS buffer for MM
 MMSPOT      =     MMIOBUF+$400 ;4C00 - MM code sits after MM ProDOS buffer
 *
 *-------------------
-AUXMM       =     $0800       ;MM's home in aux memory
+AUXMM       =     $0800       ;Memory Manager home (in aux memory)
+D3NOBOOT    =     $D000       ;DOS 3.3 no-boot sector data (in LC RAM bank 2)
 *-------------------
 *
             DUM   CODEADR-$200
 PRIM        DS    $100        ;used by PHRWTS during write
 SECOND      DS    $57         ;used by PHRWTS during write
 VOLNAM      DS    $10
-BTPFX       DS    $50
+BTPFX       DS    $40
 ASYNC       DS    1           ;# OF SYNC TO WRITE
 *
 AINFO       DS    0           ;PHRWTS stuff:
@@ -294,24 +292,32 @@ ADRTRK      DS    1
 ADRVOL      DS    1
 *
 DSYNC       DS    1
-DRES        DS    1           ;Data checksum result
-            DS    1           ;[4am] remove unused AUXFLG
-TRKFLG      DS    1           ;Check track
 *
-SOFAR       DS    $10
-INTRLV      DS    $10
-*INTLV1      DS    $10        ;now in VERIFY
-*SECS        DS    $10        ;now in PHRWTS
 ZXMODULE    DS    ZXMODSZ
 ZXUNPACK    DS    ZXUNPSZ
 MENUTBL     DS    MENUTSZ
-JDDISK      DS    3
-JD1FILE     DS    3
+*
+* entry points for functions inside
+* compressed libraries
+*
+DELETE      DS    6
+FORMAT      DS    6
+D1FILE      DS    6
 JDOTREE     DS    3
 JDODEV      DS    3
-JMATCH      DS    6
-JCATLN1     DS    6
-            DS    $13         ;free space here
+CATLN1      DS    6
+CATDIS      DS    6
+CDDOKEY     DS    6
+FILEQ       DS    6
+UNMARK      DS    6
+DIVOUT      DS    6
+DIVEIN      DS    6
+INITCD      DS    6
+RDACNT      DS    6
+            DS    $10 ;free space here
+*
+* PHRWTS tables (now built in LOADER)
+*
 RDTR62      DS    $6A
 MIX1ST      DS    $40
 MIX2ND      DS    $40

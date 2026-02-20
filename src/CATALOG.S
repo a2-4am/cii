@@ -146,7 +146,7 @@ CATALOG
 :NOTDEL1    TXA               ;SPACE
             JSR   PCOUT
             JSR   PRSPC
-            JSR   JCATLN1     ;SEE LINE
+            JSR   CATLN1      ;SEE LINE
             JSR   :NEXTFIL
             BCC   :DELETED
             BCS   :GOALLD

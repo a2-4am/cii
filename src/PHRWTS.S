@@ -609,7 +609,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             BCS   :VERTRK4
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
-            AND   TRKFLG
+*            AND   TRKFLG
             BNE   :VERTRK4
             LDY   ADRSEC      ;HAVE WE READ
             LDA   SOFAR,Y     ;THIS SECTOR
@@ -655,7 +655,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             BCS   :RDTRK4
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
-            AND   TRKFLG
+*            AND   TRKFLG
             BNE   :RDTRK4
             LDY   ADRSEC      ;HAVE WE READ
             LDA   SOFAR,Y     ;THIS SECTOR
@@ -1052,7 +1052,7 @@ RDADDR      LDY   #$FC        ;INIT ERROR
             BCS   :BADSEC     ;BAD?
             LDA   ADRTRK      ;RIGHT TRACK?
             EOR   RTRACK
-            AND   TRKFLG
+*            AND   TRKFLG
             BNE   :BADTRK     ;NO:RESEEK.
             LDY   RSECTR
             LDA   INTRLV,Y
@@ -1109,3 +1109,6 @@ FAKTRK      JSR   :DRINDEX
 SECS
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
+INTRLV
+            DB    $0,$D,$B,$9,$7,$5,$3,$1
+            DB    $E,$C,$A,$8,$6,$4,$2,$F

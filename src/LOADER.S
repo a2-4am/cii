@@ -30,14 +30,11 @@ MEMCPY      MAC
             >>>   MEMCPY,TSMAPX7BEG;TSMAPX7END;TSMAP
             >>>   MEMCPY,VIEWX7BEG;VIEWX7END;VIEW
             >>>   MEMCPY,VERIFYX7BEG;VERIFYX7END;VERIFY
-            >>>   MEMCPY,FORMATX7BEG;FORMATX7END;FORMAT
             >>>   MEMCPY,ALPHABETIZEX7BEG;ALPHABETIZEX7END;ALPHA
-            >>>   MEMCPY,DELETEX7BEG;DELETEX7END;DELETE
+            >>>   MEMCPY,DELLIBX7BEG;DELLIBX7END;DELLIB
             >>>   MEMCPY,CATALOGX7BEG;CATALOGX7END;CATALOG
             >>>   MEMCPY,COPYX7BEG;COPYX7END;COPY
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
-            >>>   MEMCPY,D1FILEX7BEG;D1FILEX7END;D1FILE
-            >>>   MEMCPY,DDISKX7BEG;DDISKX7END;DDISK
             >>>   MEMCPY,DODEVX7BEG;DODEVX7END;DODEV
             >>>   MEMCPY,CATLIBX7BEG;CATLIBX7END;CATLIB
             >>>   MEMCPY,RDDATAX7BEG;RDDATAX7END;RDDATA
@@ -45,7 +42,7 @@ MEMCPY      MAC
 * Move interleave tables, unpacker, menu dispatch table,
 * and other global jump vectors into place
 *
-            >>>   MEMCPY,DZX0BEG;DZX0END;INTRLV
+            >>>   MEMCPY,DZX0BEG;DZX0END;ZXMODULE
 * Y=0 on exit from MEMCPY
             TYA               ;0
 *
@@ -285,15 +282,11 @@ MEMCPY      MAC
             STA   ASYNC
             LSR               ;A-->5
             STA   DSYNC
-            LDY   #$FF
-            STY   TRKFLG
-            INY               ;Y=0
+            LDY   #$00
             STY   DOSNOW
-*            STY   AUXFLG     ; unused
-*            STY   PSLOT       ;NO PRINTER.
             STY   FMT400K
 *
-* MOVE NOBOOT TO $D000
+* MOVE DOS 3.3 NO-BOOT SECTOR TO LC RAM BANK 2
 * (this was part of the code we just unpacked,
 * in a region we're about to reuse for the PHRWTS
 * data tables)
@@ -304,7 +297,7 @@ MEMCPY      MAC
             CPY   #BOOTEND-BOOTBEG
             BCC   :NBLP1
             LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
-:NBLP1      STA   $D000,Y
+:NBLP1      STA   D3NOBOOT,Y
             INY
             BNE   :NBLP
             LDA   $C082

@@ -2,77 +2,11 @@
 *       FILE ACCESS ROUTINES        *
 *************************************
 *
-*
-*
-****** NEW TRACK READ/WRITE STUFF ***
-*
-* *DELFLG=$80 FOR ACTIVE FILES
-*        =$00 FOR DELETED
-*
-RDACNT      BIT   DOSNOW
-            BPL   :ISDOS33    ;DOS 3.3 DISK
-*
-* IT'S A PRODOS DISK
-*
-            LDA   #>SDIR
-            STA   DIRADR
-            LDA   #$14
-            STA   COUNT
-            JMP   PRDCNT
-
-*
-:ISDOS33    LDA   #>DOSDAT    ;SET UP DATADR
-            STA   DATADR
-            LDA   #>CAT1
-            JSR   CLRCAT      ;ZERO CATALOG
-            LDX   #$00
-            STX   NACTIV      ;NO FILES YET
-            INX
-            STX   RCMND       ;READ COMMAND
-            LDX   #>VTOC1
-            JSR   DOVTOC      ;READ VTOC.
-*
-:SECTLP     LDY   #$01        ;FIND PTR TO
-            LDA   (POINT),Y   ;NEXT SECTOR
-            BEQ   :OUT        ;NIL PTR?
-            CMP   #$28
-            BCS   WDERR
-            STA   RTRACK      ;NO:SAVE TRACK
-            INY
-            LDA   (POINT),Y   ;& SECTOR
-            CMP   #$10
-            BCS   WDERR
-            STA   RSECTR
-            INC   RPAGE       ;NEXT PAGE
-            INC   POINT+1
-            JSR   PHRWTS      ;READ CATALOG
-            BCS   :OUT        ;BAD SECTOR?
-            LDY   #$0B
-:POSNLP     LDA   (POINT),Y
-            BEQ   :OUT        ;NO MORE FILES?
-            AND   #$80
-            EOR   DELFLG
-            BEQ   :NOTWANT    ;WANTED FILE?
-            TYA
-            LDX   NACTIV
-            STA   CBYTE,X     ;PUT INTO ARRAY
-            LDA   RPAGE
-            STA   CSECTR,X
-            INC   NACTIV
-:NOTWANT    TYA               ;NEXT FILE IN
-            CLC               ;SECTOR
-            ADC   #$23
-            TAY
-            BNE   :POSNLP     ;DONE SECTOR?
-            DEC   COUNT       ;ROOM 4 MORE?
-            BNE   :SECTLP
-:OUT        RTS
-*
-*
 RDCAT1      LDA   #>CAT1
             JSR   CLRCAT
             LDX   #>VTOC1
-RDCT1A      LDA   #$01
+RDCT1A      EQU   *
+            LDA   #$01
             BNE   DOCAT
 *
 RDCAT2      LDA   #>CAT2
@@ -83,7 +17,8 @@ RDCAT2      LDA   #>CAT2
 WRCAT1      LDX   #>VTOC1
             BNE   WRCT2A
 *
-WDERR       LDA   #$52
+WDERR       EQU   *
+            LDA   #$52
             JMP   ERROU1
 *
 WRCAT2      BIT   DOSNOW
@@ -91,8 +26,10 @@ WRCAT2      BIT   DOSNOW
             JMP   CLOSE
 *
 :DOS33      LDX   #>VTOC2
-WRCT2A      LDA   #2
-DOCAT       STA   RCMND
+WRCT2A      EQU   *
+            LDA   #2
+DOCAT       EQU   *
+            STA   RCMND
             BIT   DOSNOW
             BPL   :DOS33
             LDX   #>SDIR
@@ -716,22 +653,6 @@ GVCOM1      LDA   #$0F
             CLC
 :GVOUT      RTS
 *
-ZIPDOS      LDY   #$00
-            LDA   $C083
-:BOOTLP     LDA   $D000,Y
-            STA   DATA,Y
-            INY
-            BNE   :BOOTLP
-            LDA   $C082
-            STY   RTRACK      ;0
-            STY   RSECTR
-            INY
-            STY   DATA        ;1
-            LDA   #>DATA
-            STA   RPAGE
-            JMP   DORWTS
-*
-*
 *
 *
 * *FIXSUB IS CALLED BY LOCK/UNLOCK,
@@ -900,3 +821,23 @@ PATMOV      LDX   #$00
             BCC   :LOOP
             STX   FILNUM
             RTS
+*
+DIR?        LDY   #0
+            LDA   (POINT),Y
+            AND   #$F0
+            CMP   #$D0
+            BNE   :NOTDIR
+            LDY   #$10
+            LDA   (POINT),Y
+            CMP   #$0F
+            CLC
+            BEQ   :OUT
+:NOTDIR     SEC
+:OUT        RTS
+*
+* SHOW A LINE OF CATALOG
+CATLIN      PHA
+            JSR   PRSPC
+            JSR   PRSPC
+            PLA
+            JMP   CATLN1

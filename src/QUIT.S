@@ -71,7 +71,6 @@ QUIT
             DB    $65
             DW    :QUTLST
 :QUTLST     DB    $4
-            DB    $0,$00,$00,$0,$00,$00
 *
 QUITEND
             ORG
