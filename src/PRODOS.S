@@ -478,29 +478,14 @@ SHODAT      CMP   #0
             LDA   #"-"
             JSR   PCOUT
             LDA   :DATEMP
-            JMP   SHOTM0
+            JSR   HEXDC1
+            JMP   PRT2DG
 *
 :NODATE     JSR   PRHERE
             ASC   "<No Date>"
             DB    $0
             RTS
 :DATEMP     DB    $0
-*
-*
-SHTIM0      JSR   PRSPC
-            LDA   (POINT),Y
-            TAX
-            DEY
-            LDA   (POINT),Y
-            PHA
-            TXA
-            JSR   HEXDC1
-            JSR   PRT2RJ
-            LDA   #":"
-            JSR   PCOUT
-            PLA
-SHOTM0      JSR   HEXDC1
-            JMP   PRT2DG
 *
 *
 *

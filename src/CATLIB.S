@@ -1596,4 +1596,20 @@ SETLOK      EQU   *
             ORA   (POINT),Y
             JMP   :SLK4
 *
+SHTIM0      EQU   *
+            JSR   PRSPC
+            LDA   (POINT),Y
+            TAX
+            DEY
+            LDA   (POINT),Y
+            PHA
+            TXA
+            JSR   HEXDC1
+            JSR   PRT2RJ
+            LDA   #":"
+            JSR   PCOUT
+            PLA
+            JSR   HEXDC1
+            JMP   PRT2DG
+*
 CATLIBEND
