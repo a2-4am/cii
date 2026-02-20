@@ -2314,4 +2314,35 @@ SETP        EQU   *
 :NOT1       STA   DOSNOW
             RTS
 *
+TREES       EQU   *
+            LDA   #$FF
+            STA   SRCTAR
+            LDA   SUNIT
+            STA   UNIT
+            JSR   DOSTYP
+            STA   SDOS
+            LDA   #SPFX
+            STA   PFXADR
+            LDA   #>SPFX
+            STA   PFXADR+1
+            LDA   SCURR
+            JSR   JDOTREE
+            BCS   SETS
+            STA   SCURR
+            RTS
+*
+SETS        LDA   SUNIT
+            STA   UNIT
+            JSR   SETSD
+:SETS1      LDA   #>SPFX
+            LDX   #SPFX
+            JSR   STPFXC
+            LDA   SDOS
+            CMP   #1
+            BNE   :NOT1
+            JSR   DOSTYP
+            STA   SDOS
+:NOT1       STA   DOSNOW
+            RTS
+*
 COPYEND

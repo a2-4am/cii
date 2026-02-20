@@ -1016,38 +1016,7 @@ UNTPFX
 :SPLST      DB    $1
             DW    PFX
 *
-*
-TREES       LDA   #$FF
-            STA   SRCTAR
-            LDA   SUNIT
-            STA   UNIT
-            JSR   DOSTYP
-            STA   SDOS
-            LDA   #SPFX
-            STA   PFXADR
-            LDA   #>SPFX
-            STA   PFXADR+1
-            LDA   SCURR
-            JSR   JDOTREE
-            BCS   SETS
-            STA   SCURR
-            RTS
-*
 SRCTAR      DB    $0
-*
-SETS        LDA   SUNIT
-            STA   UNIT
-            JSR   SETSD
-:SETS1      LDA   #>SPFX
-            LDX   #SPFX
-            JSR   STPFXC
-            LDA   SDOS
-            CMP   #1
-            BNE   :NOT1
-            JSR   DOSTYP
-            STA   SDOS
-:NOT1       STA   DOSNOW
-            RTS
 *
 *
 * Setup HSLOT and HDRIVE from UNIT number passed in A
