@@ -809,11 +809,25 @@ ZIPDOS      EQU   *
             LDA   #$01
             STA   VTOC1
 :BMW1       JMP   DOWBLK
-
 *
 :TOTBLK     DB    $0,$0
 :TEMP       DB    $0
 :BITS       DB    $00,$80,$C0,$E0,$F0,$F8,$FC,$FE
+*
+PNTFIL0     EQU   *
+            LDA   #0
+PNTFIL      EQU   *
+            LDX   #2
+            LDY   #0
+:PFLP       STA   (POINT),Y
+            INY
+            BNE   :PFLP
+            INC   POINT+1
+            DEX
+            BNE   :PFLP
+            DEC   POINT+1
+            DEC   POINT+1
+            RTS
 *
 PBOOT       EQU   *
             PUTBIN  ../build/BOOTSEC.PRO.O

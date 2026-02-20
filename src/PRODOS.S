@@ -7,6 +7,8 @@
 *
 * ONLY THE FORMAT ROUTINE CARES ABOUT
 * THE CARRY STATUS RETURNED BY *DOSTYP.
+* called by COPY DISK, DELETE DISK(DELLIB),
+* FORMAT(DELLIB), SWCK
 *
 DOSTYP      LDA   #0
             STA   RRTN
@@ -130,7 +132,8 @@ DOSTYP      LDA   #0
 * NOT HAVE A STANDARD DIRECTORY
 * STRUCTURE (/RAM ONLY?).
 *
-*
+* called by COPY DISK, DELETE DISK(DELLIB),
+* UNDELETE, VERIFY
 GTBLKS      JSR   DEVTYP
             BCS   :RAM
             BEQ   :DISKII
@@ -170,7 +173,8 @@ GTBLKS      JSR   DEVTYP
             SEC
             RTS
 *
-ROMBLK      LDY   #$FC
+ROMBLK      EQU   *
+            LDY   #$FC
             LDA   (TMPPTR),Y  ;BLKS LO
             TAX
             INY
@@ -182,9 +186,11 @@ ROMBLK      LDY   #$FC
 *
 * GET TOTAL BLOCKS THRU STATUS REQUEST
 *
-NOTROM      LDA   #0
+NOTROM      EQU   *
+            LDA   #0
             JSR   SPLGO1
-GTBDON      CLC
+GTBDON      EQU   *
+            CLC
             RTS
 *
 *
@@ -196,6 +202,7 @@ GTBDON      CLC
 * RETURNS: BNE --> BLOCK WAS FREE
 *    BEQ --> BLOCK ALREADY IN USE
 *
+* called by DELETE DISK, UNDELETE
 MRKBLK      STX   POINT
             LSR
             ROR   POINT
@@ -230,6 +237,7 @@ BLKCNT      DB    $0,$0
 *
 * SWAP BOTTOM HALF AND TOP HALF OF INXDEX BLOCK
 *
+* called by D1FILE(DELLIB) and UNDELETE
 SWAPIB      STY   :SWAPIB1+2
             STY   :SWAPIB3+2
             INY
@@ -243,21 +251,6 @@ SWAPIB      STY   :SWAPIB1+2
 :SWAPIB4    STA   SIB+$100,Y
             INY
             BNE   :SWAPIB1
-            RTS
-*
-*
-*
-PNTFIL0     LDA   #0
-PNTFIL      LDX   #2
-            LDY   #0
-:PFLP       STA   (POINT),Y
-            INY
-            BNE   :PFLP
-            INC   POINT+1
-            DEX
-            BNE   :PFLP
-            DEC   POINT+1
-            DEC   POINT+1
             RTS
 *
 *
