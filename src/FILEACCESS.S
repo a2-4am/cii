@@ -113,26 +113,6 @@ SETPNT      LDA   CBYTE,X
             STA   POINT+1
             RTS
 *
-*
-* FREE A SECTOR ON *POINT - VTOC
-* T&S IN *TRACK & *SECTOR
-*
-FREES       LDA   TRACK
-            ASL
-            ASL
-            ADC   #$38
-            TAY
-            LDA   SECTOR
-            JSR   DOMASK
-            LDA   (POINT),Y
-            ORA   BITMSK
-            STA   (POINT),Y
-            INY
-            LDA   (POINT),Y
-            ORA   BITMSK+1
-            STA   (POINT),Y
-            RTS
-*
 * MAKE A 1-BIT MASK FOR A BITMAP WORD
 * SECTOR # IN ACC ->
 *

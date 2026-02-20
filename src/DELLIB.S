@@ -527,6 +527,26 @@ D1FILEINTERNAL
 :TSLPAG     DB    #>SRCTSL
             DB    #>DSTTSL
 *
+* FREE A SECTOR ON *POINT - VTOC
+* T&S IN *TRACK & *SECTOR
+*
+FREES       EQU   *
+            LDA   TRACK
+            ASL
+            ASL
+            ADC   #$38
+            TAY
+            LDA   SECTOR
+            JSR   DOMASK
+            LDA   (POINT),Y
+            ORA   BITMSK
+            STA   (POINT),Y
+            INY
+            LDA   (POINT),Y
+            ORA   BITMSK+1
+            STA   (POINT),Y
+            RTS
+*
 * DELETE DISK
 *
 DDISK       EQU   *
