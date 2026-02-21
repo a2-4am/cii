@@ -485,6 +485,12 @@ MNOTSUB     DS    1
 MNOFILES    DS    1
 MMTSUB      DS    1
 MINROOT     DS    1
+MINCDISK    DS    1
+MNODOS      DS    1
+MNODOS3     DS    1
+MNOPRO      DS    1
+MFLONLY     DS    1
+MNOSEL      DS    1
 *
 * READ and WRITE messages are enumerated
 * (WRITE must be READ+1)

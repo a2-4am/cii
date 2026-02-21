@@ -494,20 +494,8 @@ SHODAT      CMP   #0
 *
 NODOS3      JSR   DOSTYP
             BCS   BLK2ER
-            JSR   PRHERE
-            DB    $8D,$8D,$8D
-            ASC   "Not a DOS 3.3 function",8D,00
-            JMP   PRESS
-*
-FLONLY      JSR   PRHERE
-            DB    $8D,$8D,$8D
-            ASC   "Disk II function only",8D,00
-            JMP   PRESS
-*
-NOPRO       JSR   PRHERE
-            DB    $8D,$8D,$8D
-            ASC   "Not a ProDOS function",8D,00
-            JMP   PRESS
+            LDA   #MNODOS3
+            JMP   PRTPRS
 *
 BLK2ER      LDY   #0
             STY   BLKNUM+1

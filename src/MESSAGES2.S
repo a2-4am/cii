@@ -48,15 +48,38 @@ XERR47      ASC   "Subdirectory already exists"
             DB    $0
 XERR2F      ASC   "No disk in drive"
             DB    $0
-XINROOT     ASC   "Already in root "
-            DB    MDIR
-XNOTSUB     ASC   "Not a sub"
-            DB    MDIR
-XMTSUB      ASC   "Empty sub"
-            DB    MDIR
 XTOOLONG    DB    $8D,$8D
 XTOOLNG0    ASC   "Prefix too long"
             DB    $8D,$0
+XNOTSUB     ASC   "Not a sub"
+            DB    MDIR
+XNOFILES    DB    $8D
+            ASC   "No files"
+            DB    $8D
+            DB    $0
+XMTSUB      ASC   "Empty sub"
+            DB    MDIR
+XINROOT     ASC   "Already in root "
+            DB    MDIR
+XINCDISK    ASC   "Incorrect disk"
+            DB    $8D,$87,$0
+XNODOS      DB    $8D,$8D
+            ASC   "No DOS on disk"
+            DB    $8D,$0
+XNODOS3     DB    $8D,$8D,$8D
+            ASC   "Not a DOS 3.3 function"
+            DB    $8D,$0
+XNOPRO      DB    $8D,$8D,$8D
+            ASC   "Not a ProDOS function"
+            DB    $8D,$0
+XFLONLY     DB    $8D,$8D,$8D
+            ASC   "Disk II function only"
+            DB    $8D,$0
+XNOSEL      ASC   "No files selected"
+            DB    $0
+
+
+
 *
 XBLANK4     DB    $FF,$8D
 XBLANK3     DB    $FF,$8D,$FF,$8D,$FF
@@ -75,11 +98,6 @@ XSECTOR     ASC   "Sector $"
 XCRESC1     DB    $8D
 XCRESC      ASC   "[Return]-Continue, "
             DB    MESCEXIT
-*
-XNOFILES    DB    $8D
-            ASC   "No files"
-            DB    $8D
-            DB    $0
 *
 XERROR      ASC   "Error"
             DB    $0

@@ -151,11 +151,8 @@ DOS?        LDX   #0
             JSR   CHKDOS
             BCC   :NODOS
             RTS
-:NODOS      JSR   PRHERE
-            DB    $8D,$8D
-            ASC   "No DOS on disk"
-            DB    $8D,$0
-            JMP   PRESS
+:NODOS      LDA   #MNODOS
+            JMP   PRTPRS
 *
 * called by DOS? (above) and also CHANGEBOOT
 CHKDOS      LDA   #2
@@ -232,9 +229,8 @@ SWCK
             BCC   :SWCKLP
 :SWCKOUT    CLC
             RTS
-:BADSWP     JSR   LOHERE
-            ASC   "Incorrect disk"
-            DB    $8D,$87,$0
+:BADSWP     LDA   #MINCDISK
+            JSR   LOWMES
             JSR   INSCOM
             LDA   SDFLG
             EOR   #$FF

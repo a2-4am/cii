@@ -592,10 +592,15 @@ PRINT       CMP   #MSG2START
             JMP   :NEXT
 *
 * NO FILES SELECTED
-NOSEL       JSR   LOHERE
-            ASC   "No files selected"
-            DB    $0
-            JMP   PRESS
+NOSEL       JSR   LOWSET
+            LDA   #MNOSEL
+            DB    $2C
+* NOT A PRODOS FUNCTION
+NOPRO       LDA   #MNOPRO
+            DB    $2C
+* NOT A DISK II
+FLONLY      LDA   #MFLONLY
+            BNE   PRTPRS      ;(ALWAYS)
 *
 * NO FILES TO WORK WITH
 NOFIL0      LDA   #5

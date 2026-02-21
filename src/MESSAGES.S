@@ -73,6 +73,12 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    XNOFILES
             DW    XMTSUB
             DW    XINROOT
+            DW    XINCDISK
+            DW    XNODOS
+            DW    XNODOS3
+            DW    XNOPRO
+            DW    XFLONLY
+            DW    XNOSEL
             DW    XREAD
             DW    XWRITE
             DW    XBLANK4
@@ -93,7 +99,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
             DW    XERROR
             DW    XPRESS
 *
-            DW    XERR2B      ;47
+            DW    XERR2B
             DW    XERR44
             DW    XERR45
             DW    XERR44
