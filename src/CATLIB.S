@@ -410,60 +410,6 @@ TYPBYT      EQU   *
 :SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
 :SUBS1      ASC   "RAAAAAAAA"
 *
-* [4am] backported types from v9
-* $5A  CFG  Configuration
-* $AD  BDF  Apple IIgs BASIC Data
-* $BD  FST  Apple IIgs File System Translator
-* $E0  LBR  Archive (format in auxtype)
-*
-* and added new types based on online sources
-* https://www.kreativekorp.com/miscpages/a2info/filetypes.shtml
-* http://www.apple-iigs.info/techfiletype.php
-* https://public.websites.umich.edu/~archive/apple2/misc/programmers/filetypes.txt
-* $16  PFS  PFS Document
-* $2E  P8C  ProDOS 8 Code Module
-* $42  FTD  File Type Definitions
-* $50  GWP  Apple IIgs Word Processing
-* $51  GSS  Apple IIgs Spreadsheet
-* $52  GDB  Apple IIgs Database
-* $53  DRW  Object Oriented Graphics
-* $54  GDP  Apple IIgs Desktop Publishing
-* $55  HMD  HyperMedia
-* $58  HLP  Help File
-* $BC  LDF  Apple IIgs Generic Load File
-* $C2  ANI  PaintWorks Animation
-* $C3  PAL  PaintWorks Palette
-* $C5  OOG  Object-Oriented Graphics
-* $C7  CDV  Apple IIgs Control Panel
-* $D5  MUS  Music sequence
-* $D6  INS  Instrument
-* $D7  MDI  MIDI
-* $D8  SND  Apple IIgs Audio
-*
-TYPES       EQU   *
-            DB    $01,$02,$03,$04,$05,$06,$07,$08  ;00-07
-            DB    $09,$0A,$0B,$0C,$0F,$10,$11,$16  ;08-0F
-            DB    $19,$1A,$1B,$2E,$42,$50,$51,$52  ;10-17
-            DB    $53,$54,$55,$58,$5A,$AB,$AC,$AD  ;18-1F
-            DB    $B0,$B1,$B2,$B3,$B4,$B5,$B6,$B7  ;20-27
-            DB    $B8,$B9,$BA,$BB,$BC,$BD,$BF,$C0  ;28-2F
-            DB    $C1,$C2,$C3,$C5,$C7,$C8,$C9,$CA  ;30-37
-            DB    $D5,$D6,$D7,$D8,$E0,$E2,$EF,$F0  ;38-3F
-            DB    $F9,$FA,$FB,$FC,$FD,$FE,$FF  ;40-46
-*
-*                               1               2               3               4
-* Index #          0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456
-*
-*                  00000000000001111112455555555AAABBBBBBBBBBBBBBBCCCCCCCCCDDDDEEEFFFFFFFF
-* Filetype         123456789ABCF0169ABE20123458ABCD0123456789ABCDF01235789A567802F09ABCDEF
-*
-TYPE1       EQU   *
-            ASC   "BPPTPBFFBDWSDRRPAAAPFGGGDGHHCGTBSOLSRESTNCTDLFDPPAPOCFFIMIMSLDPCPIIBVRS"
-TYPE2       EQU   *
-            ASC   "ACTXDINOAAPOIPPFDWS8TWSDRDMLFSDDRBI1TXTSDDORDSONINAODONCUNDNBTAM1NVAAEY"
-TYPE3       EQU   *
-            ASC   "DDXTANTT33FSRDISBPPCDPSBWPDPGBFFCJB6LERFAALVFTCTCILGVNDNSSIDRSSD6TRSRLS"
-*
 * 'DO' THE CATALOG DISPLAY &
 * EVERYTHING THAT IT INVOLVES
 *
@@ -1586,5 +1532,60 @@ SHTIM0      EQU   *
             PLA
             JSR   HEXDC1
             JMP   PRT2DG
+*
+*
+* [4am] backported types from v9
+* $5A  CFG  Configuration
+* $AD  BDF  Apple IIgs BASIC Data
+* $BD  FST  Apple IIgs File System Translator
+* $E0  LBR  Archive (format in auxtype)
+*
+* and added new types based on online sources
+* https://www.kreativekorp.com/miscpages/a2info/filetypes.shtml
+* http://www.apple-iigs.info/techfiletype.php
+* https://public.websites.umich.edu/~archive/apple2/misc/programmers/filetypes.txt
+* $16  PFS  PFS Document
+* $2E  P8C  ProDOS 8 Code Module
+* $42  FTD  File Type Definitions
+* $50  GWP  Apple IIgs Word Processing
+* $51  GSS  Apple IIgs Spreadsheet
+* $52  GDB  Apple IIgs Database
+* $53  DRW  Object Oriented Graphics
+* $54  GDP  Apple IIgs Desktop Publishing
+* $55  HMD  HyperMedia
+* $58  HLP  Help File
+* $BC  LDF  Apple IIgs Generic Load File
+* $C2  ANI  PaintWorks Animation
+* $C3  PAL  PaintWorks Palette
+* $C5  OOG  Object-Oriented Graphics
+* $C7  CDV  Apple IIgs Control Panel
+* $D5  MUS  Music sequence
+* $D6  INS  Instrument
+* $D7  MDI  MIDI
+* $D8  SND  Apple IIgs Audio
+*
+TYPES       EQU   *
+            DB    $01,$02,$03,$04,$05,$06,$07,$08  ;00-07
+            DB    $09,$0A,$0B,$0C,$0F,$10,$11,$16  ;08-0F
+            DB    $19,$1A,$1B,$2E,$42,$50,$51,$52  ;10-17
+            DB    $53,$54,$55,$58,$5A,$AB,$AC,$AD  ;18-1F
+            DB    $B0,$B1,$B2,$B3,$B4,$B5,$B6,$B7  ;20-27
+            DB    $B8,$B9,$BA,$BB,$BC,$BD,$BF,$C0  ;28-2F
+            DB    $C1,$C2,$C3,$C5,$C7,$C8,$C9,$CA  ;30-37
+            DB    $D5,$D6,$D7,$D8,$E0,$E2,$EF,$F0  ;38-3F
+            DB    $F9,$FA,$FB,$FC,$FD,$FE,$FF  ;40-46
+*
+*                               1               2               3               4
+* Index #          0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456
+*
+*                  00000000000001111112455555555AAABBBBBBBBBBBBBBBCCCCCCCCCDDDDEEEFFFFFFFF
+* Filetype         123456789ABCF0169ABE20123458ABCD0123456789ABCDF01235789A567802F09ABCDEF
+*
+TYPE1       EQU   *
+            ASC   "BPPTPBFFBDWSDRRPAAAPFGGGDGHHCGTBSOLSRESTNCTDLFDPPAPOCFFIMIMSLDPCPIIBVRS"
+TYPE2       EQU   *
+            ASC   "ACTXDINOAAPOIPPFDWS8TWSDRDMLFSDDRBI1TXTSDDORDSONINAODONCUNDNBTAM1NVAAEY"
+TYPE3       EQU   *
+            ASC   "DDXTANTT33FSRDISBPPCDPSBWPDPGBFFCJB6LERFAALVFTCTCILGVNDNSSIDRSSD6TRSRLS"
 *
 CATLIBEND
