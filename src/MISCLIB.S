@@ -633,7 +633,8 @@ ALPHAINTERNAL
 CKDEL       EQU   *
             LDY   #0
             LDA   (POINT),Y
-CKDEL1      BIT   DOSNOW
+CKDEL1      EQU   *
+            BIT   DOSNOW
             BMI   :PRODOS
             ASL
             RTS

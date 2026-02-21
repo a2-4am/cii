@@ -2143,7 +2143,8 @@ COPY
 * INSERT SOURCE OR DESTINATION DISKS
 *
 *
-INSS        LDA   PDOS
+INSS        EQU   *
+            LDA   PDOS
             STA   CURDOS
 :INSS0      JSR   INSS1
             CMP   #1
@@ -2155,7 +2156,8 @@ INSS        LDA   PDOS
             BCS   :INSS0
 :NOSWS      JMP   SETP
 *
-INSS1       LDA   ONLY1       ;IF ONLY 1:
+INSS1       EQU   *
+            LDA   ONLY1       ;IF ONLY 1:
             BEQ   :SELECT
             LDA   SDFLG
             BPL   :SELECT
@@ -2167,7 +2169,8 @@ INSS1       LDA   ONLY1       ;IF ONLY 1:
             STA   PDOS        ;1
 :SELECT     RTS
 *
-INSD        LDA   SDOS
+INSD        EQU   *
+            LDA   SDOS
             STA   CURDOS
 :INSD0      JSR   INSD1
             CMP   #1
@@ -2179,7 +2182,8 @@ INSD        LDA   SDOS
             BCS   :INSD0
 :NOSWP      JMP   SETS
 *
-INSD1       LDA   ONLY1
+INSD1       EQU   *
+            LDA   ONLY1
             BEQ   :SELECT
             LDA   SDFLG
             BMI   :SELECT
@@ -2188,7 +2192,8 @@ INSD1       LDA   ONLY1
             JSR   PRINSTGT
             STA   SDOS        ;1
 :SELECT     RTS
-PRINSTGT    JSR   LOHERE
+PRINSTGT    EQU   *
+            JSR   LOHERE
             ASC   "Insert target disk",8D,00
             JMP   INSCOM
 *
@@ -2253,7 +2258,8 @@ DODVS1      EQU   *
             RTS
 *
 *
-TREEP       LDA   #0
+TREEP       EQU   *
+            LDA   #0
             STA   SRCTAR
             LDA   PUNIT
             STA   UNIT
@@ -2301,7 +2307,8 @@ TREES       EQU   *
             STA   SCURR
             RTS
 *
-SETS        LDA   SUNIT
+SETS        EQU   *
+            LDA   SUNIT
             STA   UNIT
             JSR   SETSD
 :SETS1      LDA   #>SPFX

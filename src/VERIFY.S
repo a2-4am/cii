@@ -437,7 +437,7 @@ CRIT2       EQU   *
             PLP
             RTS
 *
-INTLV1
+INTLV1      EQU   *
             DB    $0,$7,$E,$6,$D,$5,$C,$4
             DB    $B,$3,$A,$2,$9,$1,$8,$F
 VERIFYEND

@@ -62,7 +62,8 @@ MMFNUM      DS    1           ;ProDOS unitnum of memory RAMdisk.
 *
 * Private stuff starts here:
 *
-MM2         PHA               ;Save regs
+MM2         EQU   *
+            PHA               ;Save regs
             STX   :XTEMP1
             STY   :YTEMP1
             STA   $CFFF       ;(<-UDC in a GS likes this)
@@ -724,7 +725,8 @@ MM2         PHA               ;Save regs
 * If a RAMdisk, EQ=GS fuddyduddy RAMdisk, NE=other RAMdisk.
 * (Destroys Acc, preserves Xreg,Yreg)
 *
-RAMDCHK2    STX   :XTEMP2
+RAMDCHK2    EQU   *
+            STX   :XTEMP2
             STY   :YTEMP2
             LSR               ;Convert ProDOS unitnum into index
             LSR               ; into globalpage device table.
