@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/RDDATA.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             ORG   MAINEND
 RDDATA      
@@ -79,7 +80,8 @@ RDDATA
             STA   RBLKH,Y
 *
             INC   RELCNT
-            JSR   PHRWTS      ;READ DATA
+                              ;READ DATA
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCS   :ERROUT
             INC   RPAGE       ;NEXT PAGE
 :NEXTRD     INC   STSP        ;NEXT TS PAIR

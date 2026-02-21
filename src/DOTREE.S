@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/DOTREE.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DODEV.VARS
             ORG   DODEVEND

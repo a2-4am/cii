@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/CATLIB.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/RDDATA.VARS
             ORG   RDDATAEND
@@ -402,10 +403,10 @@ FTOCR       EQU   *
             STA   FILNAM-1,Y
             RTS
 *
-TYPCHR      EQU   *
-            ASC   "?BARSBAIT"
 TYPBYT      EQU   *
             DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
+TYPCHR      EQU   *
+            ASC   "?BARSBAIT"
 :TYPE       DB    $0
 :SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
 :SUBS1      ASC   "RAAAAAAAA"
@@ -1283,7 +1284,8 @@ RDACNTINTERNAL
             STA   RSECTR
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-            JSR   PHRWTS      ;READ CATALOG
+                              ;READ CATALOG
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCS   :OUT        ;BAD SECTOR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
@@ -1564,6 +1566,12 @@ SHTIM0      EQU   *
 * $D7  MDI  MIDI
 * $D8  SND  Apple IIgs Audio
 *
+*                               1               2               3               4
+* Index #          0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456
+*
+*                  00000000000001111112455555555AAABBBBBBBBBBBBBBBCCCCCCCCCDDDDEEEFFFFFFFF
+* Filetype         123456789ABCF0169ABE20123458ABCD0123456789ABCDF01235789A567802F09ABCDEF
+*
 TYPES       EQU   *
             DB    $01,$02,$03,$04,$05,$06,$07,$08  ;00-07
             DB    $09,$0A,$0B,$0C,$0F,$10,$11,$16  ;08-0F
@@ -1574,13 +1582,6 @@ TYPES       EQU   *
             DB    $C1,$C2,$C3,$C5,$C7,$C8,$C9,$CA  ;30-37
             DB    $D5,$D6,$D7,$D8,$E0,$E2,$EF,$F0  ;38-3F
             DB    $F9,$FA,$FB,$FC,$FD,$FE,$FF  ;40-46
-*
-*                               1               2               3               4
-* Index #          0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456
-*
-*                  00000000000001111112455555555AAABBBBBBBBBBBBBBBCCCCCCCCCDDDDEEEFFFFFFFF
-* Filetype         123456789ABCF0169ABE20123458ABCD0123456789ABCDF01235789A567802F09ABCDEF
-*
 TYPE1       EQU   *
             ASC   "BPPTPBFFBDWSDRRPAAAPFGGGDGHHCGTBSOLSRESTNCTDLFDPPAPOCFFIMIMSLDPCPIIBVRS"
 TYPE2       EQU   *

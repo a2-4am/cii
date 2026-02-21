@@ -182,9 +182,9 @@ $(FILERX): $(FILERO)
 	$(ZX0) "$(FILERO)" "$@"
 
 #
-# RDData module (requires Filer)(compressed)(self-decompressing)
+# RDData module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(RDDATAO): $(FILERVARS)
+$(RDDATAO): $(PHRWTSVARS) $(FILERVARS)
 	$(MERLIN) "$(SRCDIR)"/RDDATA.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -195,9 +195,9 @@ $(RDDATAX7): $(RDDATAO)
 	$(call X7,$(RDDATAO))
 
 #
-# Catalog Library module (requires Filer)(compressed)(self-decompressing)
+# Catalog Library module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(CATLIBO): $(FILERVARS) $(RDDATAVARS)
+$(CATLIBO): $(PHRWTSVARS) $(FILERVARS) $(RDDATAVARS)
 	$(MERLIN) "$(SRCDIR)"/CATLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -221,9 +221,9 @@ $(DODEVX7): $(DODEVO)
 	$(call X7,$(DODEVO))
 
 #
-# DoTree module (requires Filer)(compressed)(self-decompressing)
+# DoTree module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(DOTREEO): $(FILERVARS) $(DODEVVARS)
+$(DOTREEO): $(PHRWTSVARS) $(FILERVARS) $(DODEVVARS)
 	$(MERLIN) "$(SRCDIR)"/DOTREE.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -234,9 +234,9 @@ $(DOTREEX7): $(DOTREEO)
 	$(call X7,$(DOTREEO))
 
 #
-# Copy module (requires Filer)(compressed)(self-decompressing)
+# Copy module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(COPYO): $(FILERVARS) $(MMVARS) $(DOTREEVARS)
+$(COPYO): $(PHRWTSVARS) $(FILERVARS) $(MMVARS) $(DOTREEVARS)
 	$(MERLIN) "$(SRCDIR)"/COPY.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -260,9 +260,9 @@ $(CATALOGX7): $(CATALOGO)
 	$(call X7,$(CATALOGO))
 
 #
-# Delete module (requires Filer)(compressed)(self-decompressing)
+# Delete module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(DELLIBO): $(FILERVARS) $(CATALOGVARS) $(BOOTSECPROVARS)
+$(DELLIBO): $(PHRWTSVARS) $(FILERVARS) $(CATALOGVARS) $(BOOTSECPROVARS)
 	$(MERLIN) "$(SRCDIR)"/DELLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -273,9 +273,9 @@ $(DELLIBX7): $(DELLIBO)
 	$(call X7,$(DELLIBO))
 
 #
-# Verify module (requires Filer)(compressed)(self-decompressing)
+# Verify module (requires PHRWTS,Filer)(compressed)(self-decompressing)
 #
-$(VERIFYO): $(FILERVARS) $(DELLIBVARS)
+$(VERIFYO): $(PHRWTSVARS) $(FILERVARS) $(DELLIBVARS)
 	$(MERLIN) "$(SRCDIR)"/VERIFY.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 

@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/VERIFY.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DELLIB.VARS
             ORG   DELLIBEND
@@ -91,7 +92,8 @@ VERIFY
             STA   CH          ;BEING
             LDA   RTRACK      ;VERIFIED
             JSR   PHBYTE
-            JSR   PHRWTS      ;GO VERIFY
+                              ;GO VERIFY
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCC   :OK         ;ANY ERRORS?
 *
             LDA   #$03        ;SET WINDOW
@@ -220,7 +222,7 @@ VERIFY
             LDA   RSECTR
             CMP   #$10
             BCS   :VOUCH
-            JSR   PHRWTS
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCC   :V1FOUT
 :VOUCH      INC   :VERRORS
             BNE   :NOCARI2

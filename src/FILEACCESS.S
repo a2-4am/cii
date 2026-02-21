@@ -46,7 +46,8 @@ DOCAT       EQU   *
             STA   RSECTR
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-            JSR   PHRWTS      ;R/W CATALOG
+                              ;R/W CATALOG
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCS   :OUT        ;ERROR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
@@ -273,7 +274,8 @@ SET1A2      STA   CVTOC+$3C
             LDA   #2
             STA   RCMND
 *
-DORWTS      JSR   PHRWTS
+DORWTS
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCC   SWPRET
             JMP   ERROUT
 *
@@ -445,7 +447,8 @@ RDTSL1      LDA   RPAGE
             INC   TSLCTR
             BNE   :RDTS1
             INC   TSLCTR+1
-:RDTS1      JSR   PHRWTS      ;GET TSLIST
+:RDTS1                        ;GET TSLIST
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             LDA   #$0C        ;RESET SOURCE
             STA   STSP        ;TS POINTER
             PLA

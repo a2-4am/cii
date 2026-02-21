@@ -3,6 +3,13 @@
 *
 CIIRVER     =     $10         ;version 1.0
 *
+* Macros:
+*
+JSRMODULE   MAC
+            JSR   ]1
+            JSR   ]2
+            <<<
+*
 * Memory equates:
 *
 *  WARNING: ENHANCED APPLE //C CHANGES LOCATIONS
@@ -299,9 +306,6 @@ MENUTBL     DS    MENUTSZ
 * entry points for functions inside
 * compressed libraries
 *
-PHRWTS      DS    6
-RDDRIVE     DS    6
-FAKTRK      DS    6
 DELETE      DS    6
 FORMAT      DS    6
 D1FILE      DS    6
@@ -323,7 +327,7 @@ VIEW        DS    6
 ALPHA       DS    6
 RENAME      DS    6
 LOCK        DS    6
-            DS    $24 ;free space here
+            DS    54 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

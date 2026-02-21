@@ -22,15 +22,6 @@
             DW    SETCLOCK
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
-*PHRWTS
-            JSR   PHRWTSLIB   ; ensure library is decompressed
-            JMP   PHRWTSINTERNAL
-*RDDRIVE
-            JSR   PHRWTSLIB   ; ensure library is decompressed
-            JMP   RDDRIVEINTERNAL
-*FAKTRK
-            JSR   PHRWTSLIB   ; ensure library is decompressed
-            JMP   FAKTRKINTERNAL
 *DELETE
             JSR   DELLIB      ; ensure library is decompressed
             JMP   DELETEINTERNAL

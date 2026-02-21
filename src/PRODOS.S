@@ -108,7 +108,7 @@ DOSTYP      LDA   #0
             CMP   #0
             BNE   :SKIPFAK    ;NOT DOS
             LDA   #0
-            JSR   FAKTRK
+            >>>   JSRMODULE,PHRWTSLIB;FAKTRKINTERNAL
 :SKIPFAK    LDX   :BUFF
             PLP
             LDA   DOSNOW
@@ -956,7 +956,7 @@ UNTPFX
             BEQ   :NOTDSK2    ;NO DRIVE
             BIT   DOSNOW
             BMI   :NOTDSK2
-            JSR   RDDRIVE
+            >>>   JSRMODULE,PHRWTSLIB;RDDRIVEINTERNAL
 :NOTDSK2    LDA   ADRVOL
             STA   PFX+5
             CLC

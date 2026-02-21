@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/DELLIB.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/CATALOG.VARS
             ORG   CATALOGEND
@@ -304,10 +305,12 @@ FORMATINTERNAL
 *
 :DODSK2     LDA   #$40        ;RATCHET!
             STA   RCMND       ;(SETS TRK 0)
-            JSR   PHRWTS      ;DON'T CARE IF ERROR
+                              ;DON'T CARE IF ERROR
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             LDA   #$04        ;FORMAT COMMAND
             STA   RCMND
-:FORMLP     JSR   PHRWTS      ;FORMAT TRK.
+:FORMLP                       ;FORMAT TRK.
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCC   :FORMOK     ;ERROR?
             LDA   RRTN        ;YES:
             CMP   #$2B        ;WP?

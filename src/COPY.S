@@ -1,6 +1,7 @@
             TYP   BIN
             DSK   ../build/COPY.O
             PUT   VARS
+            PUT   ../build/PHRWTS.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/DOTREE.VARS
@@ -658,7 +659,8 @@ COPY
             BCC   :GORWTS1
             INC   BLKNUM+1
 *
-:GORWTS1    JSR   PHRWTS      ;GO RWTS.
+:GORWTS1                      ;GO RWTS.
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
             BCC   :GORWTSQ    ;ERROR?
 :RWERR      LDA   RRTN        ;YES: WRITE-
             CMP   #$2B        ;PROTECTED?
