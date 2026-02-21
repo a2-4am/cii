@@ -244,6 +244,7 @@ MEMCPY      MAC
 *
 * Copy more self-decompressing modules into place
 *
+            >>>   MEMCPY,MESSAGES2X7BEG;MESSAGES2X7END;MESSAGES2
             >>>   MEMCPY,PHRWTSX7BEG;PHRWTSX7END;PHRWTSLIB
 *
 * Check for //e

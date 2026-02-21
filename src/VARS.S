@@ -388,3 +388,143 @@ SIZEERR     EQU   $81         ;Request exceeds end of memory.
 TRANSERR    EQU   $82         ;Not all requested bytes were transferred.
 HNDERR      EQU   $83         ;Handle in zero page invalid (overwritten!)
 NOMEMERR    EQU   $84         ;No memory found in OPEN call.
+*
+* Message IDs
+* Some are opaque, others are enumerated.
+* Read the comments!
+*
+            DUM   0
+* message IDs for top-level menu items (must be first)
+MCOPY       DS    1
+MCATALOG    DS    1
+MDELETE     DS    1
+MLOCK       DS    1
+MRENAME     DS    1
+MALPHA      DS    1
+MFORMAT     DS    1
+MVERIFY     DS    1
+MVIEW       DS    1
+MTSMAP      DS    1
+MNEWBOOT    DS    1
+MUNDEL      DS    1
+MMKDIR      DS    1
+MNEWDATE    DS    1
+MQUIT       DS    1
+*
+* Message IDs used by each submenu are listed in
+* the LAST, FIRST, and CHOICE tables in MENUS.
+* Each submenu's messages are enumerated within
+* the submenu. Only reorder them as a group.
+*
+* FORMAT submenu
+*
+MPRODOS     DS    1           ;0F MENU 5 (was 7)
+MDOS33      DS    1
+*
+* COPY submenu
+*
+MCOPFILE    DS    1           ;11 MENU 6 (was 8)
+MDISK       DS    1
+MDSKWFMT    DS    1
+MCOPDOS     DS    1
+*
+* CATALOG submenu
+*
+MNORMAL     DS    1           ;15 MENU 1
+MWLENGTH    DS    1
+MWDELETE    DS    1
+MWHIDDEN    DS    1
+*
+* VERIFY submenu
+*
+MVERFILE    DS    1           ;19 MENU 3
+MVERDISK    DS    1
+MSPEED      DS    1
+*
+* VIEW submenu
+*
+MVALUES     DS    1           ;1C MENU 4
+MTEXT       DS    1
+*
+* DELETE submenu
+*
+MDELFILE    DS    1           ;1E MENU 2
+MDELDISK    DS    1
+MDELDOS     DS    1
+*
+* RENAME submenu
+*
+MFILES      DS    1           ;21 MENU 7 (was 9)
+MVOLUME     DS    1           ;22
+*
+* QUIT submenu
+*
+MQPRODOS    DS    1           ;23 MENU 8
+MMONITOR    DS    1           ;24
+MREBOOT     DS    1           ;25
+*
+MHEADER     DS    1
+MDASH17     DS    1
+MDASHES     DS    1
+MDIR        DS    1
+MMORE       DS    1
+*
+* Remaining messages are stored in MESSAGES2 compressed module.
+* Messages IDs continue sequentially. PRINT routine takes care of
+* decompressing the module when necessary.
+*
+MSG2START   DS    0
+*
+MEFGOESC    DS    1
+MFNGOESC    DS    1
+MESCEXIT    DS    1
+*
+MTOOLONG    DS    1
+MTOOLNG0    DS    1
+MNOTSUB     DS    1
+MNOFILES    DS    1
+MMTSUB      DS    1
+MINROOT     DS    1
+*
+* READ and WRITE messages are enumerated
+* (WRITE must be READ+1)
+MREAD       DS    1
+MWRITE      DS    1
+*
+MBLANK4     DS    1
+MBLANK3     DS    1
+MSLOT       DS    1
+MPRESS1     DS    1
+MFILE       DS    1
+*
+* PSTATE messages are enumerated
+MPSTATE0    DS    1
+MPSTATE1    DS    1
+MPSTATE2    DS    1
+MPSTATE3    DS    1
+MPSTAT45    DS    1
+            DS    1
+*
+MTRACK      DS    1
+MSECTOR     DS    1
+MCRESC      DS    1
+MCRESC1     DS    1
+MERROR      DS    1
+MPRESS      DS    1
+*
+* Enumerated error messages handled by OUCH/ERRMSG
+*
+MERRENUM    DS    1           ;47
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DS    1
+            DEND

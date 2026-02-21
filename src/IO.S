@@ -565,7 +565,10 @@ LINE24      PHA
 * MESSAGE PRINTER
 * MESSAGE # IN ACC ->
 *
-PRINT       ASL               ;LOOK-UP &
+PRINT       CMP   #MSG2START
+            BCC   :PRINT1
+            JSR   MESSAGES2   ;decompress extra messages
+:PRINT1     ASL               ;LOOK-UP &
             TAY
             LDA   MESSAG,Y    ;POINT AT
             STA   MESPNT      ;MESSAGE

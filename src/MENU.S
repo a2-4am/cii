@@ -260,6 +260,18 @@ CLOSE       JSR   MLI
             RTS
 :CLSLST     DB    $1,$0
 *
+HOTKEYS     EQU   *
+            ASC   "XCDLRAFYVMBU/EQ"  ; main menu
+            ASC   "PD"        ; FORMAT submenu
+            ASC   "FDWO"      ; COPY submenu
+            ASC   "NFDH"      ; CATALOG submenu
+            ASC   "FDS"       ; VERIFY submenu
+            ASC   "VT"        ; VIEW submenu
+            ASC   "FDO"       ; DELETE submenu
+            ASC   "FV"        ; RENAME submenu
+            ASC   "QMR"       ; QUIT submenu
+
+*
 * Menu/submenu IDs for CHOOZ
 *
             DUM   0
@@ -274,7 +286,8 @@ CLOSE       JSR   MLI
 :UQUIT      DS    1
             DEND
 *
-SUBMNIDX    DB    :UCOPY      ; COPY
+SUBMNIDX    EQU   *
+            DB    :UCOPY      ; COPY
             DB    :UCATALOG   ; CATALOG
             DB    :UDELETE    ; DELETE
             DB    $FF         ; LOCK (no submenu)

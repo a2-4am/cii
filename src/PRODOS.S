@@ -526,7 +526,8 @@ UNTDEV      STA   UNIT
             LDA   #0
             STA   GODEV+1
             STA   GODEV+2
-UNTDV0      LDX   NUMDEV
+UNTDV0      EQU   *
+            LDX   NUMDEV
 :LOOP       LDA   UNIT
             EOR   DVICES,X
             AND   #$F0

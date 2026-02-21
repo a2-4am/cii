@@ -5,6 +5,7 @@
             PUT   VARS        ;assorted equates for everybody
             PUT   ../build/MM.VARS
             PUT   ../build/PHRWTS.VARS
+            PUT   ../build/MESSAGES2.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/RDDATA.VARS
             PUT   ../build/CATLIB.VARS
@@ -44,6 +45,16 @@ PHRWTSX7BEG
 :X7END
             ORG
 PHRWTSX7END
+*
+MESSAGES2X7BEG
+            ORG   MESSAGES2
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    MESSAGES2END
+            PUTBIN  ../build/MESSAGES2.X7
+:X7END
+            ORG
+MESSAGES2X7END
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
