@@ -23,63 +23,44 @@
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
 *DELETE
-            JSR   DELLIB      ; ensure library is decompressed
-            JMP   DELETEINTERNAL
+            >>>   JMPMODULE,DELLIB;DELETEINTERNAL
 *FORMAT
-            JSR   DELLIB      ; ensure library is decompressed
-            JMP   FORMATINTERNAL
+            >>>   JMPMODULE,DELLIB;FORMATINTERNAL
 *D1FILE
-            JSR   DELLIB      ; ensure library is decompressed
-            JMP   D1FILEINTERNAL
+            >>>   JMPMODULE,DELLIB;D1FILEINTERNAL
 *JDOTREE
             JMP   DOTREE
 *JDODEV
             JMP   DODEV
 *CATLN1
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   CATLN1INTERNAL
+            >>>   JMPMODULE,CATLIB;CATLN1INTERNAL
 *CATDIS
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   CATDISINTERNAL
+            >>>   JMPMODULE,CATLIB;CATDISINTERNAL
 *CDDOKEY
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   CDDOKEYINTERNAL
+            >>>   JMPMODULE,CATLIB;CDDOKEYINTERNAL
 *FILEQ
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   FILEQINTERNAL
+            >>>   JMPMODULE,CATLIB;FILEQINTERNAL
 *UNMARK
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   UNMARKINTERNAL
+            >>>   JMPMODULE,CATLIB;UNMARKINTERNAL
 *DIVOUT
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   DIVOUTINTERNAL
+            >>>   JMPMODULE,CATLIB;DIVOUTINTERNAL
 *DIVEIN
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   DIVEININTERNAL
+            >>>   JMPMODULE,CATLIB;DIVEININTERNAL
 *INITCD
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   INITCDINTERNAL
+            >>>   JMPMODULE,CATLIB;INITCDINTERNAL
 *RDACNT
-            JSR   CATLIB      ; ensure library is decompressed
-            JMP   RDACNTINTERNAL
+            >>>   JMPMODULE,CATLIB;RDACNTINTERNAL
 *MAKESUB
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   MAKESUBINTERNAL
+            >>>   JMPMODULE,MISCLIB;MAKESUBINTERNAL
 *SETCLOCK
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   SETCLOCKINTERNAL
+            >>>   JMPMODULE,MISCLIB;SETCLOCKINTERNAL
 *BOOTPG
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   BOOTPGINTERNAL
+            >>>   JMPMODULE,MISCLIB;BOOTPGINTERNAL
 *VIEW
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   VIEWINTERNAL
+            >>>   JMPMODULE,MISCLIB;VIEWINTERNAL
 *ALPHA
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   ALPHAINTERNAL
+            >>>   JMPMODULE,MISCLIB;ALPHAINTERNAL
 *RENAME
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   RENAMEINTERNAL
+            >>>   JMPMODULE,MISCLIB;RENAMEINTERNAL
 *LOCK
-            JSR   MISCLIB     ; ensure library is decompressed
-            JMP   LOCKINTERNAL
+            >>>   JMPMODULE,MISCLIB;LOCKINTERNAL

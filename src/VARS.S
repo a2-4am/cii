@@ -9,6 +9,10 @@ JSRMODULE   MAC
             JSR   ]1
             JSR   ]2
             <<<
+JMPMODULE   MAC
+            JSR   ]1
+            JMP   ]2
+            <<<
 *
 * Memory equates:
 *
