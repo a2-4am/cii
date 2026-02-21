@@ -197,7 +197,7 @@ SWPCHK      LDA   DOSNOW
             LDX   #>VTOC1
             JSR   SWCK
             BCS   :SWPCHK0
-SWPRET      RTS
+            RTS
 * alternate entry point also called by COPY FILES
 SWCK
 * -> A/Y points to prefix
@@ -285,7 +285,7 @@ DORWTS      JSR   PHRWTS
 * called by RDDATA
 RDTSL       JSR   RDTSL1
             BCS   ERR1
-            RTS
+SWPRET      RTS
 *
 * called by RDDATA and DISKMAP
 FNDBLK      JSR   FNBLK1
