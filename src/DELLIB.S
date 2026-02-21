@@ -271,10 +271,7 @@ FORMATINTERNAL
             JSR   DEVTYP
             CMP   #1          ;/RAM?
             BEQ   :DOITNOW    ;YES
-*GETVOL     
-            JSR   PRHERE
-            ASC   8D,8D,"V",00
-            JSR   GVCOM       ;GET VOL NAME
+            JSR   GETVNM      ;GET VOL NAME
             BCS   :GOFOUT     ;ABORT
 *
 *

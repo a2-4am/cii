@@ -1024,38 +1024,8 @@ COPY
 :GODUP2     JMP   :DUP2
 *
 :NEWNAME    JSR   PCOUT
-            JSR   PRHERE
-            DB    $8D
-            ASC   "New name?"
-            DB    $FF,$8D,$FF,$00
-            LDA   #$16
-            JSR   VLEFT
-            LDA   #$0A
-            STA   CH
-            LDA   #$0F
-            BIT   DOSNOW
-            BMI   :NEWPRO
-            LDA   #$1E
-:NEWPRO     STA   LINLIM
-            JSR   GETLN       ;GET IT
+            JSR   GETNFNM     ;GET NEW FILENAME
             BCS   :GODUP2     ;ESC ABORT
-            STX   FILE
-            LDY   #0
-:NEWLOOP    LDA   LINEIN,Y
-            BIT   DOSNOW
-            BPL   :NEW33
-            AND   #$7F
-:NEW33      STA   FILE+$1,Y
-            INY
-            CPY   FILE
-            BCC   :NEWLOOP
-:NEWLP1     CPY   #$1E
-            BCS   :NEWOUT
-            LDA   #$A0
-            STA   FILE+$1,Y
-            INY
-            BNE   :NEWLP1     ;ALWAYS
-:NEWOUT     CLC
             BCC   :COMOUT
 *
 *

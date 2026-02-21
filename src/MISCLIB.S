@@ -30,19 +30,9 @@ MAKESUBINTERNAL
             BMI   :MK0
             JMP   NODOS3
 *
-:MK0        JSR   PRHERE
-            DB    $8D
-            ASC   "Subdirectory name: "
-            DB    $0
-            JSR   GVCOM1
+:MK0        JSR   GETDNM      ;GET DIRECTORY NAME
             BCS   :OUT
-            LDY   #0
-:MKLOOP     LDA   VOLNAM,Y
-            BEQ   :MK2
-            STA   FILE+$1,Y
-            INY
-            BNE   :MKLOOP
-:MK2        TYA
+            TYA
             STA   FILE
             LDA   #$0F
             STA   FTYPE
@@ -683,10 +673,7 @@ REN2        EQU   *
 * RENAME VOLUME
 *
 RENVOL      EQU   *
-*NEWVOL
-            JSR   PRHERE
-            ASC   8D,8D,"New v",00
-            JSR   GVCOM
+            JSR   GETNVNM     ;GET NEW VOL NAME
             BCS   :RENVOLQ
             JSR   RDBLK2
             LDY   #0

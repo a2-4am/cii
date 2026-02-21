@@ -1,7 +1,136 @@
 *
-* LINE INPUT - LINE AT LOC $200
+* PROMPT FOR DIRECTORY NAME
 *
-GETLN       LDX   #$00
+* RETURNS: BCC --> |FILE| CONTAINS DIRECTORY NAME
+*          BCS --> USER CANCELED
+GETDNM
+            JSR   PRHERE
+            ASC   8D,"Subdirectory name: ",00
+            JSR   GVCOM1
+            BCS   :MK2        ;ESC ABORT
+            LDY   #0
+:MKLOOP     LDA   VOLNAM,Y
+            BEQ   :MK2
+            STA   FILE+$1,Y
+            INY
+            BNE   :MKLOOP
+:MK2        RTS
+*
+* PROMPT FOR FILENAME PATTERN
+*
+* RETURNS: BCC --> |LINEIN| CONTAINS FILENAME PATTERN
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
+GETPAT      JSR   LOHERE
+            ASC   "Enter filename (,opt. filetypes)",8D,"? ",00
+            LDA   #$24        ;PATTERN LIMIT
+            BNE   GETLN0      ;ALWAYS
+*
+* PROMPT FOR 1 FILENAME
+*
+* RETURNS: BCC --> |LINEIN| CONTAINS FILENAME
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
+GET1FNM     JSR   LOHERE
+            ASC   "Enter filename (one file)",8D,"? ",00
+            LDA   #$1E        ;DOS FILENAME LIMIT
+            BIT   DOSNOW
+            BPL   GETLN0
+            LDA   #$0F        ;PRODOS FILENAME LIMIT
+GETLN0      EQU   *
+            STA   LINLIM
+            JMP   GETLN
+*
+* PROMPT FOR NEW FILENAME
+*
+* RETURNS: BCC --> |FILE| CONTAINS NEW FILENAME
+*          BCS --> USER CANCELED
+GETNFNM
+            JSR   PRHERE
+            ASC   8D,"New name?",FF,8D,FF,00
+            LDA   #$16
+            JSR   VLEFT
+            LDA   #$0A
+            STA   CH
+            LDA   #$0F
+            BIT   DOSNOW
+            BMI   :NEWPRO
+            LDA   #$1E
+:NEWPRO     STA   LINLIM
+            JSR   GETLN       ;GET IT
+            BCS   :NEWX       ;ESC ABORT
+            STX   FILE
+            LDY   #0
+:NEWLOOP    LDA   LINEIN,Y
+            BIT   DOSNOW
+            BPL   :NEW33
+            AND   #$7F
+:NEW33      STA   FILE+$1,Y
+            INY
+            CPY   FILE
+            BCC   :NEWLOOP
+:NEWLP1     CPY   #$1E
+            BCS   :NEWOUT
+            LDA   #$A0
+            STA   FILE+$1,Y
+            INY
+            BNE   :NEWLP1     ;ALWAYS
+:NEWOUT     CLC
+:NEWX       RTS
+*
+* PROMPT FOR VOLUME NAME
+*
+* RETURNS: BCC --> |VOLNAM| CONTAINS VOLUME NAME
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
+GETVNM
+            JSR   PRHERE
+            ASC   8D,8D,"V",00
+            JMP   GVCOM       ;GET VOL NAME
+*
+* PROMPT FOR NEW VOLUME NAME
+*
+* RETURNS: BCC --> |VOLNAM| CONTAINS VOLUME NAME
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
+GETNVNM
+            JSR   PRHERE
+            ASC   8D,8D,"New v",00
+*            JMP   GVCOM       ;GET VOL NAME
+* fall through to GVCOM
+*
+* Prompt for volume name
+* [4am] caller now displays first letter 'v' or 'V'
+GVCOM       EQU   *
+            JSR   PRHERE
+            ASC   "olume name: /",00
+GVCOM1      EQU   *
+            LDA   #$0F
+            STA   LINLIM
+            JSR   GETLN
+            BCS   :GVOUT
+            LDY   #0
+            LDX   #0
+:DOIT1      LDA   LINEIN,Y
+            CMP   #$8D
+            BNE   :DOIT2
+            LDA   #0
+            BEQ   :DOIT3
+:DOIT2      INY
+            AND   #$7F
+:DOIT3      STA   VOLNAM,X
+            INX
+            CPX   #$10
+            BCC   :DOIT1
+            LDA   VOLNAM
+            BEQ   :GVOUT      ;C IS SET
+            LDA   #0
+            STA   VOLNAM+$0F
+            CLC
+:GVOUT      RTS
+*
+* LINE INPUT
+*
+* RETURNS: BCC --> |LINEIN| CONTAINS INPUT
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
+GETLN       EQU   *
+            LDX   #$00
             BEQ   :GETLN1     ;ALWAYS
 :BEEP       JSR   BELL
 :GETLN1     JSR   CASKEY
@@ -22,7 +151,7 @@ GETLN       LDX   #$00
             STA   LINEIN,X
             JSR   PCOUT
             INX
-            JMP   :GETLN1
+            BNE   :GETLN1     ;ALWAYS
 *
 :RIGHT      LDY   CH
             LDA   (BASL),Y
@@ -38,11 +167,12 @@ GETLN       LDX   #$00
             PHA
             JSR   CLREOL
             PLA
-            LDX   :TEMP
-            SEC
-            BEQ   :ESC        ;CR ONLY
+            LDX   :TEMP       ;LENGTH
+            BEQ   :ESC        ;CR ONLY, NO INPUT
             CLC
-:ESC        RTS
+            RTS
+:ESC        SEC
+            RTS
 *
 :CKLEGAL    CMP   #$C1
             BCC   :CKLEG1
@@ -109,4 +239,3 @@ GETLN       LDX   #$00
             BNE   :ISLEGAL    ;ALWAYS
 :TEMP       DB    $0
 *
-

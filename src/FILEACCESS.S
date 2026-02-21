@@ -479,37 +479,6 @@ SPLGO1      STA   $42
             LDA   $C082
             RTS
 *
-* Prompt for volume name
-* [4am] caller now displays first letter 'v' or 'V'
-* called by FORMAT(DELLIB) and RENAME VOLUME
-GVCOM       JSR   PRHERE
-            ASC   "olume name: /"
-            DB    $0
-* alternate entry point called by MAKESUB
-GVCOM1      LDA   #$0F
-            STA   LINLIM
-            JSR   GETLN
-            BCS   :GVOUT
-            LDY   #0
-            LDX   #0
-:DOIT1      LDA   LINEIN,Y
-            CMP   #$8D
-            BNE   :DOIT2
-            LDA   #0
-            BEQ   :DOIT3
-:DOIT2      INY
-            AND   #$7F
-:DOIT3      STA   VOLNAM,X
-            INX
-            CPX   #$10
-            BCC   :DOIT1
-            LDA   VOLNAM
-            BEQ   :GVOUT      ;C IS SET
-            LDA   #0
-            STA   VOLNAM+$0F
-            CLC
-:GVOUT      RTS
-*
 *
 *
 * *FIXSUB IS CALLED BY LOCK/UNLOCK,

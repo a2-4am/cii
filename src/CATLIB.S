@@ -807,7 +807,7 @@ CPYNUM      EQU   *
 :TEMP       DB    $0
 *
 CPYENT      EQU   *
-            JSR   GETPAT
+            JSR   GETPAT      ;GET FILENAME PATTERN
             BCS   :OUT
             LDA   #$00
             STA   CURR
@@ -864,17 +864,11 @@ PATTRN      EQU   *
 NOPATT      EQU   *
             LDA   CURR
             STA   LASTM
-            JSR   LOHERE
-            ASC   "Enter filename (one file)"
-            DB    $8D
-            ASC   "?"
-            DB    $0
-*
-            JSR   GETFNM      ;GET FILENAME
+            JSR   GET1FNM     ;GET 1 FILENAME
             BCS   :OUT
             LDA   #$00
             STA   CURR
-:LOOP       JSR   MATCH ;MATCH:ALL DONE
+:LOOP       JSR   MATCH       ;MATCH:ALL DONE
             BCC   :OUT
             JSR   SEECAT
             JSR   SCROLF      ;NO MATCH:
@@ -941,7 +935,7 @@ NEWNAM      EQU   *
             DB    #$8D
             ASC   "as? "
             DB    $0
-            JSR   GETFNM      ;GET NEW NAME
+            JSR   GETNFNM     ;GET NEW FILENAME
             BCS   :OUT
             JSR   PLACE       ;CHECK & PLACE
             LDX   CURR
@@ -951,25 +945,6 @@ NEWNAM      EQU   *
             STA   FILNUM      ;FLAG IT
 :OUT        LDA   #MPSTATE3
             JMP   LOWMES
-*
-* GET FILE NAME
-*
-GETFNM      EQU   *
-            LDA   #$1E        ;DOS FILENAME LIMIT
-            BIT   DOSNOW
-            BPL   GETLN0
-            LDA   #$0F        ;PRODOS FILENAME LIMIT
-GETLN0      EQU   *
-            STA   LINLIM
-            JMP   GETLN
-*
-GETPAT      EQU   *
-            LDA   CURR
-            STA   LASTM
-            JSR   LOHERE
-            ASC   "Enter filename (,opt. filetypes)",8D,"? ",00
-            LDA   #$24        ;PATTERN LIMIT
-            BNE   GETLN0      ;ALWAYS
 *
 * SEE FILE QUEUE
 *
