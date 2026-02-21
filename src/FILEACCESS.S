@@ -80,6 +80,8 @@ DOVTOC      STX   RPAGE       ;SET PAGE
             RTS
 *
 * CLEAR CATALOG SECTORS
+* called by RDACNT(CATLIB), DELETE DISK(DELLIB),
+* RDCAT1, and RDCAT2 (above)
 CLRCAT      STA   POINT+1
             LDA   #$00
             STA   POINT
@@ -182,7 +184,25 @@ PUTSEC      STX   RSECTR      ;SET SECTOR
 *
 SDFLG       DB    $0
 *
-SWCK        STA   PFXADR+1
+* SWAP CHECK
+* to the best of our ability, ensure that the correct
+* disk is in the drive
+*
+* called by COPY FILES, DELETE FILES, DISK MAP,
+* BOOTPG, VIEW FILES, UNDELETE, and VERIFY FILES
+SWPCHK      LDA   DOSNOW
+            STA   CURDOS
+:SWPCHK0    LDA   #>PFX
+            LDY   #PFX
+            LDX   #>VTOC1
+            JSR   SWCK
+            BCS   :SWPCHK0
+SWPRET      RTS
+* alternate entry point also called by COPY FILES
+SWCK
+* -> A/Y points to prefix
+* -> X is high byte of VTOC buffer
+            STA   PFXADR+1
             STY   PFXADR
             STX   :VTOC
             JSR   DOSTYP
@@ -249,15 +269,6 @@ SWCK        STA   PFXADR+1
             RTS
 :VTOC       DB    $0
 :LEN        DB    $0
-*
-SWPCHK      LDA   DOSNOW
-            STA   CURDOS
-:SWPCHK0    LDA   #>PFX
-            LDY   #PFX
-            LDX   #>VTOC1
-            JSR   SWCK
-            BCS   :SWPCHK0
-SWPRET      RTS
 *
 SET1A2      STA   CVTOC+$3C
             STA   CVTOC+$3D
