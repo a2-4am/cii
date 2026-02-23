@@ -1,14 +1,46 @@
             TYP   BIN
-            DSK   ../build/RDDATA.O
+            DSK   ../build/READLIB.O
             PUT   VARS
             PUT   ../build/PHRWTS.VARS
-            PUT   ../build/FILER.VARS
-            ORG   MAINEND
-RDDATA      
-            ORG   *+3
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            ORG   IOEND
+
+**********************************
+*      FILE READING LIBRARY      *
+* RDTSL - read track/sector list *
+* OPNSRC - open source file      *
+* OPNFIL - open file             *
+* RDDATA - read file data        *
+* CURPNT - set POINT to sector   *
+* SETPNT - set POINT from catalog*
+*          array                 *
+**********************************
+
+*
+*
+* READ TSLIST & UPDATE SECTOR POINTER
+RDTSL       LDA   RPAGE
+            PHA
+            LDA   #>SRCTSL    ;READ INTO
+            STA   RPAGE       ;TSLIST AREA
+            INC   TSLCTR
+            BNE   :RDTS1
+            INC   TSLCTR+1
+:RDTS1                        ;GET TSLIST
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            LDA   #$0C        ;RESET SOURCE
+            STA   STSP        ;TS POINTER
+            PLA
+            STA   RPAGE
+            RTS
+*
 *
 * READ SOURCE DATA
 *
+RDDATAERR1  EQU   *
+            JMP   ERROUT
+RDDATA      
             LDY   RELCNT
             BEQ   :RDD1
             LDA   RBLKL-1,Y
@@ -33,6 +65,7 @@ RDDATA
             LDA   SRCTSL+2
             STA   RSECTR
             JSR   RDTSL       ;READ IT
+            BCS   RDDATAERR1
 *
 :RDMORE     LDX   STSP
             LDA   SRCTSL,X    ;NONZERO TS
@@ -82,7 +115,7 @@ RDDATA
             INC   RELCNT
                               ;READ DATA
             >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
-            BCS   :ERROUT
+            BCS   RDDATAERR2
             INC   RPAGE       ;NEXT PAGE
 :NEXTRD     INC   STSP        ;NEXT TS PAIR
             INC   STSP
@@ -101,7 +134,8 @@ RDDATA
 :TEMP1      DB    $0
 :TEMP2      DB    $0
 :SUM        DB    $0,$0
-:ERROUT     JMP   ERROUT
+RDDATAERR2  EQU   *
+            JMP   ERROUT
 *
 :RDPRODOS   LDA   DATADR
             STA   :TEMP
@@ -127,8 +161,10 @@ RDDATA
             INC   RELCNT
             INC   :TEMP
             INC   :TEMP
-:READ2      JSR   FNDBLK
+:READ2      JSR   FNBLK1
             BCS   :GOTEOF
+            CMP   #$FF
+            BEQ   :ERROUT2
             LDA   :TEMP
             CMP   HIMEM
             BCC   :READLP
@@ -175,4 +211,100 @@ RDDATA
 :BUFF       DB    $0,$0
 :BLKNUM     DB    $0,$0
 *
-RDDATAEND
+*
+*-------------------------------------
+*
+* OPEN SOURCE FILE
+* called by CATALOG, COPY, DISKMAP, and VIEW
+OPNSRC      JSR   OPNFIL
+            BCS   :ERR1
+            RTS
+:ERR1       JMP   ERROUT
+*
+* called by OPNSRC (above) and VERIFY
+OPNFIL      JSR   CURPNT      ;POINT TO FILE
+            BIT   DOSNOW
+            BPL   :DOS33
+*
+:PRODOS     LDY   #$11
+            LDA   (POINT),Y   ;KEY BLK LO
+            STA   BLKNUM
+            INY
+            LDA   (POINT),Y   ;KEY BLK HI
+            STA   BLKNUM+1
+            LDY   #$0F
+:NAMELP     LDA   (POINT),Y
+            STA   FILE,Y
+            DEY
+            BPL   :NAMELP
+            LDA   FILE
+            PHA
+            AND   #$0F
+            STA   FILE
+            PLA
+            AND   #$F0
+            STA   STRTYP
+            CMP   #$10
+            BEQ   :OPENDAT
+            CMP   #$20
+            BEQ   :OPENIB
+            CMP   #$30
+            BNE   :OPENDAT    ;SUBDIRECTORY
+*
+:OPENMIB    LDA   #>SMIB
+            STA   RPAGE
+            JSR   RDBLK
+            BCS   :ERR
+            LDA   SMIB
+            STA   BLKNUM
+            LDA   SMIB+$100
+            STA   BLKNUM+1
+:OPENIB     LDA   #>SIB
+            STA   RPAGE
+            JSR   RDBLK
+            BCS   :ERR
+            LDA   SIB
+            STA   BLKNUM
+            LDA   SIB+$100
+            STA   BLKNUM+1
+:OPENDAT    LDA   #0
+            STA   MIBPTR
+            STA   IBPTR
+            STA   RELCNT
+            CLC
+:ERR        RTS
+*
+:DOS33      LDA   #$10
+            STA   STRTYP
+            LDY   #$FF
+            STY   TSLCTR
+            STY   TSLCTR+1
+            LDY   #0
+            LDA   (POINT),Y
+            STA   RTRACK
+            INY
+            LDA   (POINT),Y
+            STA   RSECTR
+            INY
+:DNMLP      LDA   (POINT),Y
+            STA   FILE-2,Y
+            INY
+            CPY   #$21
+            BCC   :DNMLP
+            LDA   #$1E
+            STA   FILE        ;LENGTH
+            LDA   #$01
+            STA   RCMND
+            JMP   RDTSL
+*
+*
+* SET POINTER FROM CATALOG ARRAY
+*
+CURPNT      LDX   CURR
+SETPNT      LDA   CBYTE,X
+            STA   POINT
+            LDA   CSECTR,X
+            STA   POINT+1
+            RTS
+*
+READLIBEND

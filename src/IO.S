@@ -1,3 +1,11 @@
+            TYP   BIN
+            DSK   ../build/IO.O
+            PUT   VARS
+            PUT   ../build/MESSAGES2.VARS
+            PUT   ../build/MESSAGES.VARS
+            PUT   ../build/PRODOS.VARS
+            ORG   PRODOSEND
+
 *
 ***********************************
 *                                 *
@@ -617,7 +625,7 @@ PRTPRS      JSR   PRINT
 PRESS       LDA   #MPRESS
             JSR   PRINT
             JSR   GETKEY
-KYESX       JMP   FILER
+KYESX       JMP   ($3F2)
 *
 * GET CHARACTER, CHECK ESC
 *
@@ -691,16 +699,16 @@ ERRMSG      LDA   RRTN
 CROUT2      JSR   CROUT
             JMP   CROUT
 *
+WDERR       LDA   #$52
+ERROU1      STA   RRTN
+ERROUT      JSR   CROUT
+            JSR   OUCH
+            JMP   ($3F2)
+*
 OUCH        JSR   HOME
             JSR   ERRMSG
             JSR   CROUT
-*LDA LEVEL
-*PHA
-*LDA #1
-*STA LEVEL
             JSR   CLOSE
-*PLA
-*STA LEVEL
             LDA   #MPRESS
             JSR   PRINT
 *           JMP   GETKEY
@@ -719,3 +727,50 @@ GETKEY      BIT   KBDSTB
             SBC   #$20
 :LOWQ       RTS
 *
+CLOSE       JSR   MLI
+            DB    $CC
+            DW    :CLSLST
+            RTS
+:CLSLST     DB    $1,$0
+*
+SHDAT0      JSR   PRSPC
+            LDA   (POINT),Y
+            TAX
+            DEY
+            LDA   (POINT),Y
+SHODAT      CMP   #0
+            BEQ   :NODATE
+            PHA
+            STX   :DATEMP
+            AND   #$1F
+            JSR   HEXDC1
+            JSR   PRT2DG      ;WAS PRT2RJ
+            LDA   #"-"
+            JSR   PCOUT
+            PLA
+            LSR   :DATEMP
+            ROR
+            LSR
+            LSR
+            LSR
+            LSR
+            TAX
+            LDA   MONTH1-1,X
+            JSR   PCOUT
+            LDA   MONTH2-1,X
+            JSR   PCOUT
+            LDA   MONTH3-1,X
+            JSR   PCOUT
+            LDA   #"-"
+            JSR   PCOUT
+            LDA   :DATEMP
+            JSR   HEXDC1
+            JMP   PRT2DG
+*
+:NODATE     JSR   PRHERE
+            ASC   "<No Date>"
+            DB    $0
+            RTS
+:DATEMP     DB    $0
+*
+IOEND

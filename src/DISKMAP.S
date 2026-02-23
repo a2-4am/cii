@@ -1,6 +1,10 @@
             TYP   BIN
             DSK   ../build/DISKMAP.O
             PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/VERIFY.VARS
             ORG   VERIFYEND
@@ -31,6 +35,7 @@ TSMAP
             JSR   PRINT       ;CR OR ESC
             JSR   KYESC
             JMP   :CBITMAP
+:MAPERR     JMP   ERROUT
 *
 :GOTFILS    
 *            JSR   ASKPR?
@@ -40,6 +45,7 @@ TSMAP
             LDA   #>DATA
             STA   HIMEM
             JSR   READBM
+            BCS   :MAPERR     ;[4am] READBM now returns C=1 on error
 :CBIT33     JSR   HOME
             JSR   PRHERE
             ASC   "   TRACK           1               2",8D
@@ -124,7 +130,7 @@ TSMAP
             JSR   KYESC
             LDA   NACTIV
             BNE   :CONTIN
-            JMP   FILER
+            JMP   ($3F2)
 *
 *
 * DISPLAY MAP FOR EACH FILE
@@ -200,7 +206,7 @@ TSMAP
             LDA   BLKNUM
             LDY   BLKNUM+1
             JSR   :PLOPBLK
-            JSR   FNDBLK
+            JSR   FNBLK1
             BCC   :PRO1
             BCS   :NXTFILE
 *

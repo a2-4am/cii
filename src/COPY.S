@@ -2,10 +2,14 @@
             DSK   ../build/COPY.O
             PUT   VARS
             PUT   ../build/PHRWTS.VARS
+            PUT   ../build/DRIVE35.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/MM.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/DOTREE.VARS
-            PUT   ../build/RDDATA.VARS
             ORG   DOTREEEND
 COPY
             ORG   *+3
@@ -274,7 +278,7 @@ COPY
                               ;/!\ This routine sets hard-coded addresses offset
                               ;from CVTOC and writes to disk w/o reading, so the
                               ;target disk VTOC has to be in memory already
-            JMP   FILER
+            JMP   ($3F2)
 *
 :RDVTOC     LDA   #1
             STA   RCMND
@@ -591,7 +595,7 @@ COPY
             DB    0
             JSR   RDKEY
             JSR   CLOSEMM     ;(Close the MM)
-            JMP   FILER       ;& abandon ship.
+            JMP   ($3F2)      ;& abandon ship.
 *
 *
 *

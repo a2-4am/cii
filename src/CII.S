@@ -6,8 +6,8 @@
             PUT   ../build/MM.VARS
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/MESSAGES2.VARS
+            PUT   ../build/MESSAGES.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/RDDATA.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/DODEV.VARS
             PUT   ../build/DOTREE.VARS
@@ -59,15 +59,12 @@ MESSAGES2X7END
             PUTBIN  ../build/FILER.X
 MAINXEND
 *
-RDDATAX7BEG
-            ORG   RDDATA
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    RDDATAEND
-            PUTBIN  ../build/RDDATA.X7
-:X7END
+DZX0BEG
+            ORG   ZXMODULE
+            PUT   DZX0TURBO
+            PUT   DISPATCH
             ORG
-RDDATAX7END
+DZX0END
 *
 CATLIBX7BEG
             ORG   CATLIB
@@ -170,11 +167,3 @@ MISCLIBX7BEG
 MISCLIBX7END
 *
             ERR   MISCLIBX7END>$BEFF  ; can't clobber ProDOS global page
-*
-DZX0BEG
-            ORG   ZXMODULE
-            PUT   DZX0TURBO
-            PUT   DISPATCH
-            ORG
-DZX0END
-*

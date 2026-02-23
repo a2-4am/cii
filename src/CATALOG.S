@@ -1,9 +1,11 @@
             TYP   BIN
             DSK   ../build/CATALOG.O
             PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
-            PUT   ../build/RDDATA.VARS
             ORG   COPYEND
 CATALOG
             ORG   *+3
@@ -39,20 +41,11 @@ CATALOG
 :TRY80      JSR   COL80
 :CATCONT    JSR   TOP1
             JSR   PRVNM
-*            JSR   ASKPR?      ;PRINTER ON?
-*            LDA   PSLOT
-*            BEQ   :SKIP2
-*            JSR   HOME
 :SKIP2      JSR   RDACNT      ;GET CATALOG
             LDA   #$80
             STA   DELFLG      ;RESET DELETE
             LDA   #0
             STA   :COUNT      ;CR COUNTER
-*            LDA   PRNTR?      ;YES PRINTER?
-*            BEQ   :CHOOSE
-*            JSR   HOME
-*            JSR   PRON        ;PRINTER ON
-*            JSR   :CROUNT
 :CHOOSE     JSR   TOP1        ;3/6/87 (WAS TOP1A)
             JSR   PRVNM
             BIT   DOSNOW
@@ -355,6 +348,7 @@ PSPACE      EQU   *
                               ;that can use $2000 consecutive bytes for the
                               ;entire bitmap
             JSR   READBM
+            BCS   :CATERR     ;[4am] READBM now returns C=1 on error
             LDA   BMLEN
             ASL
             STA   :TEMP
@@ -385,5 +379,6 @@ PSPACE      EQU   *
             STA   USEDH
             RTS
 :TEMP       DB    $0
+:CATERR     JMP   ERROUT
 *
 CATALOGEND

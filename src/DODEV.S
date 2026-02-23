@@ -1,6 +1,9 @@
             TYP   BIN
             DSK   ../build/DODEV.O
             PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/CATLIB.VARS
             ORG   CATLIBEND

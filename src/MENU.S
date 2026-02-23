@@ -84,7 +84,7 @@ CHOOZ0
             JSR   :CHOOZ1     ; yes display submenu
             BCS   CHOOZ0      ; no selection from submenu
 :JUMP       JSR   $1000       ; fake address, modified above
-            JMP   FILER
+            JMP   ($3F2)
 *
 :CHOOZ1     JSR   CHOPOS
             JSR   PRHERE
@@ -253,12 +253,6 @@ CLOSEMM     BIT   MMISOPEN
             STA   MMISOPEN
 :CLOSMMQ    RTS
 *
-*
-CLOSE       JSR   MLI
-            DB    $CC
-            DW    :CLSLST
-            RTS
-:CLSLST     DB    $1,$0
 *
 HOTKEYS     EQU   *
             ASC   "XCDLRAFYVMBU/EQ"  ; main menu

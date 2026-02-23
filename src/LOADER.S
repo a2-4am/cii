@@ -32,7 +32,6 @@ MEMCPY      MAC
             >>>   MEMCPY,DOTREEX7BEG;DOTREEX7END;DOTREE
             >>>   MEMCPY,DODEVX7BEG;DODEVX7END;DODEV
             >>>   MEMCPY,CATLIBX7BEG;CATLIBX7END;CATLIB
-            >>>   MEMCPY,RDDATAX7BEG;RDDATAX7END;RDDATA
 *
 * Move interleave tables, unpacker, menu dispatch table,
 * and other global jump vectors into place
@@ -372,7 +371,7 @@ MEMCPY      MAC
             STA   $3F3
             EOR   #$A5
             STA   $3F4
-            JMP   FILER       ;GO START
+            JMP   ($3F2)      ;GO START
 *
 :PFXLST     DB    $1
             DW    $280

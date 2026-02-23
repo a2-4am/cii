@@ -17,10 +17,6 @@ RDCAT2      LDA   #>CAT2
 WRCAT1      LDX   #>VTOC1
             BNE   WRCT2A
 *
-WDERR       EQU   *
-            LDA   #$52
-            JMP   ERROU1
-*
 WRCAT2      BIT   DOSNOW
             BPL   :DOS33
             JMP   CLOSE
@@ -61,433 +57,51 @@ DOCAT       EQU   *
             BNE   :SECTLP
 :OUT        RTS
 *
-* READ/WRITE VTOC, READY FOR CATALOG
 *
-DOVTOC      STX   RPAGE       ;SET PAGE
-            STX   POINT+1
-            JSR   STVTOC      ;RETURNS A=0
-            STA   POINT
-            STA   RSECTR      ;SECTOR 0
-            LDA   #$0F        ;UP TO 15
-            STA   COUNT       ;CATALOG PAGES
-            JSR   DORWTS      ;R/W VTOC.
-            LDY   #$35
-            LDA   (POINT),Y
-            CMP   #$10
-            BNE   WDERR
-            LDY   #1
-            LDA   (POINT),Y
-            BEQ   WDERR
-            RTS
 *
-* CLEAR CATALOG SECTORS
-* called by RDACNT(CATLIB), DELETE DISK(DELLIB),
-* RDCAT1, and RDCAT2 (above)
-CLRCAT      STA   POINT+1
-            LDA   #$00
-            STA   POINT
-            TAY
-            LDX   #$0E
-:NXTSECT    STA   (POINT),Y
-            INY
-            CPX   #$00
-            BEQ   :NOLINK
-            LDA   #$11
-:NOLINK     STA   (POINT),Y   ;TRACK LINK
-            INY
-            TXA
-            STA   (POINT),Y   ;SECTOR LINK
-            INY
-            LDA   #$00
-:ZEROLP     STA   (POINT),Y   ;ZEROS
-            INY
-            BNE   :ZEROLP
-            INC   POINT+1
-            DEX
-            BPL   :NXTSECT    ;BACK FOR MORE
-            RTS
+* PDOCAT
+*   READ OR WRITE PRODOS DIRECTORY
 *
-* SET POINTER FROM CATALOG ARRAY
+*   INPUT
+*  DIRADR = BUFFER HI ADDR
+*  RCMND  = 1 -> RD, 2 -> WT
+*  DIRBLK = STARTING BLOCK
 *
-CURPNT      LDX   CURR
-SETPNT      LDA   CBYTE,X
-            STA   POINT
-            LDA   CSECTR,X
+* only called by DOCAT
+PDOCAT      LDA   RCMND
+            CMP   #2
+            BNE   :OUT
+*
+:DOWRT      LDA   DIRBLK
+            STA   BLKNUM
+            LDA   DIRBLK+1
+            STA   BLKNUM+1
+            LDA   DIRADR
+            STA   RPAGE
             STA   POINT+1
-            RTS
-*
-* MAKE A 1-BIT MASK FOR A BITMAP WORD
-* SECTOR # IN ACC ->
-* called from COPY, DISKMAP, FREES(DELLIB),
-* and UNDELETE
-*
-DOMASK      TAX
-            LDA   #$00
-            STA   BITMSK+1
-            STA   BITMSK
-            SEC
-:NEXT       ROL   BITMSK+1
-            ROL   BITMSK
-            DEX
-            BPL   :NEXT
-:OUT        RTS
-*
-*
-STVTOC      LDA   #$11
-            STA   RTRACK
-            LDA   #$00
-            STA   RSECTR
-            RTS
-*
-* DOS?
-* read T00S00 and check for recognized DOS-shaped bootloader
-* called by Copy DOS (COPY) and Delete DOS (DELLIB)
-* 
-DOS?        LDX   #0
-            JSR   PUTSEC
-            STX   RTRACK
-            JSR   DORWTS
-            LDX   #3
-            LDY   #1
-            JSR   CHKDOS
-            BCC   :NODOS
-            RTS
-:NODOS      LDA   #MNODOS
-            JMP   PRTPRS
-*
-* called by DOS? (above) and also CHANGEBOOT
-CHKDOS      LDA   #2
-            STA   TEMP
-:CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
-            CMP   :DOSPAT,X   ;TO VERIFY
-            SEC
-            BNE   :NO         ;DOS IS THERE
-            INX
-            INY
-            DEC   TEMP
-            BPL   :CHECKLP
-            CLC
-:NO         RTS
-*
-:DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
-*
-* called by DOS? (above) and also CHANGEBOOT
-PUTSEC      STX   RSECTR      ;SET SECTOR
-            LDA   #>DATA
-            STA   RPAGE       ;SET ADDR
-            LDA   #$01
-            STA   RTRACK      ;SET TRACK
-            STA   RCMND       ;SET COMMAND
-            RTS
-*
-SDFLG       DB    $0
-*
-* SWAP CHECK
-* to the best of our ability, ensure that the correct
-* disk is in the drive
-*
-* called by COPY FILES, DELETE FILES, DISK MAP,
-* BOOTPG, VIEW FILES, UNDELETE, and VERIFY FILES
-SWPCHK      LDA   DOSNOW
-            STA   CURDOS
-:SWPCHK0    LDA   #>PFX
-            LDY   #PFX
-            LDX   #>VTOC1
-            JSR   SWCK
-            BCS   :SWPCHK0
-            RTS
-* alternate entry point also called by COPY FILES
-SWCK
-* -> A/Y points to prefix
-* -> X is high byte of VTOC buffer
-            STA   PFXADR+1
-            STY   PFXADR
-            STX   :VTOC
-            JSR   DOSTYP
-            LDA   CURDOS
-            CMP   #1
-            BEQ   :SWCK0
-            EOR   DOSNOW
-            BNE   :BADSWP     ;NOT SAME DOS
-:SWCK0      LDA   DOSNOW
-            BPL   :DOSCK
-            LDY   #0
-            LDA   (PFXADR),Y
-            BEQ   :SWCKOUT    ;DON'T CHECK
-            BMI   :SWCKOUT
-            LDA   VOLNMS,X
-            AND   #$0F
-            CLC
-            ADC   #2
-            STA   :LEN
-            LDY   #2
-:SWCKLP     LDA   (PFXADR),Y
-            CMP   VOLNMS+$1,X
-            BNE   :BADSWP
-            INY
-            INX
-            CPY   :LEN
-            BCC   :SWCKLP
-:SWCKOUT    CLC
-            RTS
-:BADSWP     LDA   #MINCDISK
-            JSR   LOWMES
-            JSR   INSCOM
-            LDA   SDFLG
-            EOR   #$FF
-            STA   SDFLG
-            SEC
-            RTS
-*
-:DOSCK      LDA   :VTOC
-            STA   MESPNT+1
-            LDY   #0
-            STY   MESPNT
-            INY
-            LDA   (MESPNT),Y
-            BEQ   :SWCKOUT    ;DON'T CHECK
-            JSR   STVTOC
-            LDA   #$01
-            STA   RCMND
-            LDA   RPAGE
-            PHA
-            LDA   #>CVTOC
-            STA   RPAGE
-            JSR   DORWTS
-            PLA
-            STA   RPAGE
-            LDY   #$00
-:LOOPCHK    LDA   (MESPNT),Y
-            CMP   CVTOC,Y
-            BNE   :BADSWP
-            DEY
-            BNE   :LOOPCHK
-            CLC
-            RTS
-:VTOC       DB    $0
-:LEN        DB    $0
-*
-SET1A2      STA   CVTOC+$3C
-            STA   CVTOC+$3D
-            STA   CVTOC+$40
-            STA   CVTOC+$41
-            LDA   #2
-            STA   RCMND
-*
-DORWTS
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
-            BCC   SWPRET
-            JMP   ERROUT
-*
-* READ TSLIST & UPDATE SECTOR POINTER
-* called by RDDATA
-RDTSL       JSR   RDTSL1
-            BCS   ERR1
-SWPRET      RTS
-*
-* called by RDDATA and DISKMAP
-FNDBLK      JSR   FNBLK1
-            BCC   :FND1
-:ERR?       CMP   #$FF
-            BEQ   ERR1
-            SEC
-:FND1       RTS
-ERR1        JMP   ERROUT
-*
-* called by FNDBLK (above) and VERIFY
-FNBLK1      LDA   STRTYP      ;IF SAPLING,
-            CMP   #$10        ; RETURN EOF
-            BEQ   :FNDEOF
-            CMP   #$D0
-            BEQ   :SUBDIR
-:CKINDX     INC   IBPTR
-            BEQ   :CKTREE
-:LOOKDAT    LDX   IBPTR
-            LDA   SIB,X
-            STA   BLKNUM
-            ORA   SIB+$100,X
-            BEQ   :CKINDX     ;NO ENTRY
-            LDA   SIB+$100,X
-            STA   BLKNUM+1
-            CLC
-            RTS
-*
-* INDEX BLOCK USED UP
-*
-:CKTREE     LDA   STRTYP
-            CMP   #$30
-            BNE   :FNDEOF     ;NOT TREE
-:CKMSTR     INC   MIBPTR
-            LDX   MIBPTR
-            BMI   :FNDEOF
-            LDA   SMIB,X
-            STA   BLKNUM
-            ORA   SMIB+$100,X
-            BEQ   :CKMSTR
-            LDA   SMIB+$100,X
-            STA   BLKNUM+1
-            LDA   #>SIB
-            STA   RPAGE
-            JSR   RDBLK
-            BCC   :LOOKDAT
-            LDA   #$FF
-            DB    $CD
-:FNDEOF     LDA   #0
-:ERR        SEC
-            RTS
-*
-:SUBDIR     LDA   #0
-            STA   RADR
-            JSR   RDBLK
-            LDA   #$FF
-            BCS   :ERR
-            LDY   #2
-            LDA   (RADR),Y
-            STA   BLKNUM
-            INY
-            LDA   (RADR),Y
-            STA   BLKNUM+1
-            ORA   BLKNUM
-            BEQ   :FNDEOF     ;END OF SUBDIR
-*
-* CARRY ALREADY CLEAR
-*
-*CLC
-            RTS
-*
-*
-*-------------------------------------
-*
-* OPEN SOURCE FILE
-* called by CATALOG, COPY, DISKMAP, and VIEW
-OPNSRC      JSR   OPNFIL
-            BCS   ERR1
-            RTS
-*
-* called by OPNSRC (above) and VERIFY
-OPNFIL      JSR   CURPNT      ;POINT TO FILE
-            BIT   DOSNOW
-            BPL   :DOS33
-*
-:PRODOS     LDY   #$11
-            LDA   (POINT),Y   ;KEY BLK LO
-            STA   BLKNUM
-            INY
-            LDA   (POINT),Y   ;KEY BLK HI
-            STA   BLKNUM+1
-            LDY   #$0F
-:NAMELP     LDA   (POINT),Y
-            STA   FILE,Y
-            DEY
-            BPL   :NAMELP
-            LDA   FILE
-            PHA
-            AND   #$0F
-            STA   FILE
-            PLA
-            AND   #$F0
-            STA   STRTYP
-            CMP   #$10
-            BEQ   :OPENDAT
-            CMP   #$20
-            BEQ   :OPENIB
-            CMP   #$30
-            BNE   :OPENDAT    ;SUBDIRECTORY
-*
-:OPENMIB    LDA   #>SMIB
-            STA   RPAGE
-            JSR   RDBLK
-            BCS   :ERR
-            LDA   SMIB
-            STA   BLKNUM
-            LDA   SMIB+$100
-            STA   BLKNUM+1
-:OPENIB     LDA   #>SIB
-            STA   RPAGE
-            JSR   RDBLK
-            BCS   :ERR
-            LDA   SIB
-            STA   BLKNUM
-            LDA   SIB+$100
-            STA   BLKNUM+1
-:OPENDAT    LDA   #0
-            STA   MIBPTR
-            STA   IBPTR
-            STA   RELCNT
-            CLC
-:ERR        RTS
-*
-:DOS33      LDA   #$10
-            STA   STRTYP
-            LDY   #$FF
-            STY   TSLCTR
-            STY   TSLCTR+1
-            LDY   #0
-            LDA   (POINT),Y
-            STA   RTRACK
-            INY
-            LDA   (POINT),Y
-            STA   RSECTR
-            INY
-:DNMLP      LDA   (POINT),Y
-            STA   FILE-2,Y
-            INY
-            CPY   #$21
-            BCC   :DNMLP
-            LDA   #$1E
-            STA   FILE        ;LENGTH
-            LDA   #$01
-            STA   RCMND       ;FALL THRU...
-*
-* called by RDTSL (above) and VERIFY
-RDTSL1      LDA   RPAGE
-            PHA
-            LDA   #>SRCTSL    ;READ INTO
-            STA   RPAGE       ;TSLIST AREA
-            INC   TSLCTR
-            BNE   :RDTS1
-            INC   TSLCTR+1
-:RDTS1                        ;GET TSLIST
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
-            LDA   #$0C        ;RESET SOURCE
-            STA   STSP        ;TS POINTER
-            PLA
-            STA   RPAGE
-            RTS
-*
-*
-*
-INCPT2      LDA   POINT2
-            CLC
-            ADC   #$10
-            STA   POINT2
-            BCC   IP3
-            INC   POINT2+1
-IP3         RTS
-*
-*
-* SmartPort Format
-* called by COPY, FORMAT(DELLIB), and QUIT
-*
-SPLFRM      LDA   #3
-SPLGO1      STA   $42
-            LDA   UNIT
-            STA   $43
             LDA   #0
-            STA   $46
-            STA   $47
-            STA   $44
-            LDA   #>FILBUF
-            STA   $45
-            LDA   GODEV+2
-            CMP   #$D0
-            BCC   :SKIP1
-            LDA   $C08B
-            LDA   $C08B
-:SKIP1      JSR   GODEV
-            STA   RRTN        ;4/5/86
-            LDA   $C082
-            RTS
+            STA   POINT
+:WTMORE     JSR   DOWBLK
+            LDY   #2
+            LDA   (POINT),Y
+            STA   BLKNUM      ;NEXT BLOCK
+            INY
+            LDA   (POINT),Y
+            STA   BLKNUM+1
+            INC   POINT+1
+            INC   POINT+1
+            INC   RPAGE
+            INC   RPAGE
+*
+* DON'T WRITE MORE THAN 20 BLOCKS
+* (260 FILES) OF DIRECTORY
+*
+            LDY   RPAGE
+            CPY   #$3C
+            BCS   :OUT
+            ORA   BLKNUM
+            BNE   :WTMORE
+:OUT        RTS
 *
 *
 *
@@ -637,47 +251,370 @@ COMH00      JSR   TOP1
             JMP   PRVNM
 OPTCHS      DB    $0
 *
-* SLIDE SELECTED FILES TO TOP OF
-* STATUS ARRAY (ARROW FLAGGED)
-*
-* called by COPY, DELETE, UNDELETE, and
-* VERIFY after files have been selected
-* in the catalog display and the user
-* has asked to begin the process
-*
-PATMOV      LDX   #$00
-            LDY   #$00
-:LOOP       LDA   STATUS,Y
-            BEQ   :NEXT
-            STA   STATUS,X
-            LDA   CBYTE,Y
-            STA   CBYTE,X
-            LDA   CSECTR,Y
-            STA   CSECTR,X
-            INX
-:NEXT       INY
-            CPY   NACTIV
-            BCC   :LOOP
-            STX   FILNUM
-            RTS
-*
-* called by DIVEIN(DELLIB) and DISKMAP
-DIR?        LDY   #0
-            LDA   (POINT),Y
-            AND   #$F0
-            CMP   #$D0
-            BNE   :NOTDIR
-            LDY   #$10
-            LDA   (POINT),Y
-            CMP   #$0F
-            CLC
-            BEQ   :OUT
-:NOTDIR     SEC
-:OUT        RTS
-*
 * SHOW A LINE OF CATALOG
 CATLIN      PHA
             JSR   PRSPC
             JSR   PRSPC
             PLA
             JMP   CATLN1
+*
+*
+*
+* SHOW CURRENT SLOT & DRIVE
+* AND/OR CURRENT PREFIX. (*PFX<>0)
+*
+* RETURNS WITH CV = 3, CH = 0
+*
+PRVNM       LDX   #PFX
+            LDY   #>PFX
+            LDA   UNIT
+PRVCOM      STA   UNIT
+            STX   TMPPTR
+            STY   TMPPTR+1
+            LDA   #0
+            JSR   TABV
+            LDA   CHOICE
+            BNE   :CONTIN     ;CMD NOT COPY
+            LDA   SDCH
+            SEC
+            SBC   #8
+            STA   CH
+            LDA   SRCTAR
+            BNE   :NOTSRC
+            JSR   PRHERE
+            ASC   "Source:"
+            DB    $0
+            JMP   :CONTIN
+*
+:NOTSRC     CMP   #$FF
+            BNE   :CONTIN
+            JSR   PRHERE
+            ASC   "Target:"
+            DB    $0
+*
+:CONTIN     LDA   SDCH
+            STA   CH
+            LDA   UNIT
+            JSR   SEEDEV
+:SKIPCR     LDA   #1
+            JSR   VLEFT
+            LDY   #0
+            STY   HEXNUM+1
+            LDA   (TMPPTR),Y
+            STA   :PFXLEN
+            BMI   :BLNKLP     ;NO PFX
+            BIT   DOSNOW
+            BPL   :SDDOS33
+            CMP   #0
+            BEQ   :BLNKLP
+            BNE   :SDPRODOS
+*
+:SDDOS33    LDY   #5
+            LDA   (TMPPTR),Y
+            BEQ   :BLNKLP
+            STA   HEXNUM
+            JSR   PRHERE
+            ASC   "Disk Volume "
+            DB    $0
+            JSR   HEXDEC
+            JSR   PRTLZ
+            LDY   #$14
+            BNE   :BLNKLP     ;ALWAYS
+*
+:SDPRODOS   INY
+            LDA   (TMPPTR),Y
+            ORA   #$80
+            JSR   PCOUT
+            CPY   :PFXLEN
+            BCC   :SDPRODOS
+:BLNKLP     INY
+            LDA   #$A0
+            JSR   PCOUT
+            CPY   #$42
+            BCC   :BLNKLP
+:NOPFX      LDA   #3
+            STA   WNDTOP
+            JMP   VLEFT
+:PFXLEN     DB    $0
+*
+NODOS3      JSR   DOSTYP
+            BCS   BLK2ER
+            LDA   #MNODOS3
+            JMP   PRTPRS
+*
+BLK2ER      LDY   #0
+            STY   BLKNUM+1
+            DEY
+            STY   DOSNOW
+            LDA   #2
+            STA   BLKNUM
+            JMP   ERROUT
+*
+TREEA       JSR   DOSTYP
+            LDA   #APFX
+            STA   PFXADR
+            LDA   #>APFX
+            STA   PFXADR+1
+            LDA   ACURR
+            JSR   JDOTREE
+            BCS   SETA        ;I/O ERROR
+            STA   ACURR
+            RTS
+SETA        JSR   DOSTYP
+            LDA   UNIT
+*           JMP   UNTPFX
+* falls through to UNTPFX
+*
+* SET PREFIX TO UNIT IN A REG
+*
+UNTPFX
+            LDA   UNIT
+            STA   :UNIT
+* BIT *DOSNOW
+* BPL DOS33
+            JSR   MLI
+            DB    $C5
+            DW    :ONLST
+            LDA   PFX+1
+            AND   #$0F
+            BNE   :PRODOS
+:DOS33      LDA   #0
+            STA   ADRVOL
+            STA   PFX
+            LDA   PFX+2
+            CMP   #$28
+            BEQ   :NOTDSK2    ;NO DRIVE
+            BIT   DOSNOW
+            BMI   :NOTDSK2
+            >>>   JSRMODULE,PHRWTSLIB;RDDRIVEINTERNAL
+:NOTDSK2    LDA   ADRVOL
+            STA   PFX+5
+            CLC
+            RTS
+*
+:ONLST      DB    $2
+:UNIT       DB    $0
+            DW    PFX+1
+*
+:PRODOS     LDA   PFX+1
+            AND   #$0F
+            TAY
+            INY
+            STY   PFX
+            LDA   #$2F        ;"/"
+            STA   PFX+1
+            JSR   MLI
+            DB    $C6
+            DW    :SPLST
+            STA   RRTN
+            RTS
+*
+:SPLST      DB    $1
+            DW    PFX
+*
+SRCTAR      DB    $0
+*
+*
+*
+* CHECK IF WE ARE DIVING IN TO OR OUT
+* OF THE STARTING DIRECTORY. IF SO,
+* RESTORE OR SAVE *STATUS, *CBYTE,
+* *CSECTR,*FILNUM
+*
+* called by COPY FILES and DELETE FILES(DELLIB)
+DIVECK      BCS   :GOOUT
+            LDA   SP
+            CMP   #1
+            BNE   :DVCK00
+            LDX   #>STATUS
+            LDY   HIMEM
+            DEY
+            DEY
+            DEY
+            STY   :MYHI
+            LDA   FILNUM
+            STA   :SAVE1
+            LDA   #4
+            STA   TOPDIF
+            JSR   :DVCK0
+            LDA   HIMEM       ;8/27/86
+            JSR   SETHIM      ;8/27/86
+:DVCK00     JMP   :DVINIT
+*
+:GOOUT      LDA   SP
+            BNE   :DVINIT
+            JSR   :DVINIT
+            LDX   :MYHI
+            LDY   #>STATUS
+            LDA   :SAVE1
+            STA   FILNUM
+            LDA   #0
+            STA   TOPDIF
+*
+:DVCK0      STX   POINT+1
+            STY   MESPNT+1
+            LDY   #0
+            STY   MESPNT
+            STY   POINT
+            LDX   #3
+:DCKLP      LDA   (POINT),Y
+            STA   (MESPNT),Y
+            INY
+            BNE   :DCKLP
+            INC   POINT+1
+            INC   MESPNT+1
+            DEX
+            BNE   :DCKLP
+            RTS
+:SAVE1      DB    $0
+:MYHI       DB    $0
+*
+*
+* INITIALIZE THINGS AFTER DIVING IN TO
+* OR OUT OF A SUBDIRECTORY
+*
+:DVINIT     LDA   CURR
+            PHA
+            JSR   INITCD
+            PLA
+            STA   CURR
+            JSR   RDACNT
+            LDA   NACTIV
+            STA   FILNUM
+            SEC
+            BEQ   :DVINT1     ;NO FILES
+            LDX   #0
+:CFLP2      INX
+            TXA
+            STA   STATUS-1,X
+            CPX   NACTIV
+            BCC   :CFLP2
+            CLC
+:DVINT1     RTS
+*
+* called by COPY DISK, COPY FILE, DELETE FILE
+SETHIM      SEC
+            SBC   DATADR
+            AND   #$FE
+            CLC
+            ADC   DATADR
+            SEC
+            SBC   TOPDIF      ;0 OR 3
+            STA   HIMEM
+            RTS
+*
+PDSTRY      JSR   PUNLOK
+            JSR   DOMLI
+            DB    $C1
+            DW    :DESLST
+            RTS
+:DESLST     DB    $1
+            DW    FILE
+*
+PLOK        LDA   #$1
+            DB    $2C
+PUNLOK      LDA   #$C3
+            STA   :TEMP+1
+            JSR   GTINFO
+:TEMP       LDA   #1
+            STA   INFLST+3
+*
+* FALL INTO STINFO
+*
+*
+STINFO      LDA   #7
+            STA   INFLST
+            JSR   DOMLI
+            DB    $C3
+            DW    INFLST
+            RTS
+*
+GTINFO      LDA   #$0A
+            STA   INFLST
+            JSR   DOMLI
+            DB    $C4
+            DW    INFLST
+            RTS
+
+INFLST      DB    $A
+            DW    FILE
+            DB    $0
+            DB    $0
+            DB    $0,$0
+            DB    $0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+*
+*
+DOMLI       PLA
+            STA   :ADDR+1
+            PLA
+            STA   :ADDR+2
+            LDY   #3
+:ADDR       LDA   $1000,Y
+            STA   :LIST-1,Y
+            DEY
+            BNE   :ADDR
+            LDA   :LIST
+            STA   LASTOP
+            JSR   MLI
+:LIST       DB    $0,$0,$0
+            STA   RRTN
+            BCS   MLIERR
+            LDA   :ADDR+1
+            CLC
+            ADC   #4
+            STA   :ADDR+1
+            BCC   :SKIP
+            INC   :ADDR+2
+:SKIP       JMP   (:ADDR+$1)
+LASTOP      DB    $0
+*
+*
+MLIERR      LDA   RRTN
+            CMP   #$48        ;DISK FULL?
+            BNE   :ERROU2     ;NOPE
+*
+* DELETE INCOMPLETELY COPIED FILE
+*
+            JSR   CLOSE       ;CLOSE IT
+            LDA   #>FILE
+            STA   POINT+1
+            LDA   #FILE
+            STA   POINT
+            LDA   #1
+            JSR   D1FILE
+            JSR   WRCAT2
+            LDA   #$48
+            JMP   ERROU1
+:ERROU2     JMP   ERROUT
+*
+*
+*
+*
+DEVFLG      DB    $0
+DODEVF      LDA   #$FF
+            DB    $2C
+DODEVP      LDA   #0
+DODEV0      EQU   *
+            STA   DEVFLG
+            JSR   HOME
+            JSR   PRHERE
+            ASC   "Select device:"
+            DB    $0
+            LDA   CURDVA
+            JSR   JDODEV
+            STX   CURDVA
+            RTS
+*
+* called by COPY FILE and DELETE FILE(DELLIB)
+DOWAIT      LDX   #$03
+:WAITLP     LDA   #$C4
+            JSR   WAIT
+            DEX
+            BNE   :WAITLP
+            RTS
+*

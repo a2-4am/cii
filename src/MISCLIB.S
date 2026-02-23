@@ -1,8 +1,12 @@
             TYP   BIN
             DSK   ../build/MISCLIB.O
             PUT   VARS
+            PUT   ../build/MESSAGES.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/RDDATA.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/UNDELETE.VARS
             ORG   UNDELEND
 MISCLIB
@@ -677,6 +681,7 @@ RENVOL      EQU   *
             JSR   GETNVNM     ;GET NEW VOL NAME
             BCS   :RENVOLQ
             JSR   RDBLK2
+            BCS   :RENERR
             LDY   #0
 :RNLOOP     LDA   VOLNAM,Y
             BEQ   :RN2
@@ -689,5 +694,6 @@ RENVOL      EQU   *
             STA   VTOC1+4
             JMP   DOWBLK
 :RENVOLQ    RTS
+:RENERR     JMP   ERROUT
 *
 MISCLIBEND

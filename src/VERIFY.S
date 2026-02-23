@@ -2,6 +2,10 @@
             DSK   ../build/VERIFY.O
             PUT   VARS
             PUT   ../build/PHRWTS.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DELLIB.VARS
             ORG   DELLIBEND
@@ -195,7 +199,7 @@ VERIFY
             STA   RTRACK
             LDA   SRCTSL+2
             STA   RSECTR
-            JSR   RDTSL1
+            JSR   RDTSL
 :GOTTSL     LDA   #>DATA
             STA   RPAGE
 :RDMORE     LDX   STSP

@@ -1,3 +1,8 @@
+            TYP   BIN
+            DSK   ../build/DRIVE35.O
+            PUT   VARS
+            PUT   ../build/MESSAGES.VARS
+            ORG   MESSAGESEND
 *
 *
 * Called after the format, and at Reset time.
@@ -127,4 +132,5 @@ SET35       LSR               ;0dss s000
             DUM   $800        ;(not used during copy)
 :STATLST    DS    $19
             DEND
-
+*
+DRIVE35END

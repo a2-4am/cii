@@ -1,3 +1,9 @@
+            TYP   BIN
+            DSK   ../build/MESSAGES.O
+            PUT   VARS
+            PUT   ../build/MESSAGES2.VARS
+            ORG   MESSAGES2END
+MESSAGES
 ***********************************
 *                                 *
 *          MESSAGES               *
@@ -205,3 +211,5 @@ DASHES      ASC   "-----------------------"
 MONTH1      ASC   "JFMAMJJASOND"
 MONTH2      ASC   "AEAPAUUUECOE"
 MONTH3      ASC   "NBRRYNLGPTVC"
+*
+MESSAGESEND

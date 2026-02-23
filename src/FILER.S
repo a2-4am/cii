@@ -4,14 +4,22 @@
             PUT   ../build/MM.VARS
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/MESSAGES2.VARS
+            PUT   ../build/MESSAGES.VARS
+            PUT   ../build/DRIVE35.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
 *
             ORG   MESSAGES2END
 *
-            PUT   MESSAGES
+            PUTBIN ../build/MESSAGES.O
+            PUTBIN ../build/DRIVE35.O
+            PUTBIN ../build/PRODOS.O
+            PUTBIN ../build/IO.O
+            PUTBIN ../build/READLIB.O
+            PUTBIN ../build/DISKLIB.O
             PUT   FILEACCESS
-            PUT   FMTFIX
             PUT   LINEINPUT
-            PUT   IO
-            PUT   PRODOS
             PUT   MENU
 MAINEND                       ;where image of main program ends

@@ -2,6 +2,9 @@
             DSK   ../build/DOTREE.O
             PUT   VARS
             PUT   ../build/PHRWTS.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DODEV.VARS
             ORG   DODEVEND
@@ -591,5 +594,14 @@ DOTREE
 *
 :ATROOT     CLC
             RTS
+*
+INCPT2      EQU   *
+            LDA   POINT2
+            CLC
+            ADC   #$10
+            STA   POINT2
+            BCC   IP3
+            INC   POINT2+1
+IP3         RTS
 *
 DOTREEEND

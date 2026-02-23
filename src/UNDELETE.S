@@ -1,6 +1,10 @@
             TYP   BIN
             DSK   ../build/UNDELETE.O
             PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DISKMAP.VARS
             ORG   TSMAPEND
@@ -462,11 +466,14 @@ SWAPEM      EQU   *
 *
 ********************************
 *
+PUNDOERR    EQU   *
+            JMP   ERROUT
 PUNDO0      EQU   *
             LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
                               ;that can use $2000 consecutive bytes for the
                               ;entire bitmap
             JSR   READBM      ;READ IN ENTIRE BITMAP
+            BCS   PUNDOERR    ;[4am] READBM now returns C=1 on error
             JSR   CURPNT
 *
 * FIGURE OUT HOW LONG FILENAME IS

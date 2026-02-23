@@ -2,14 +2,17 @@
             DSK   ../build/CATLIB.O
             PUT   VARS
             PUT   ../build/PHRWTS.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/RDDATA.VARS
-            ORG   RDDATAEND
+            ORG   MAINEND
 CATLIB
             ORG   *+3
 
 **********************************
-*        CATALOG LIBRARY         *
+*    CATALOG DISPLAY LIBRARY     *
 * CATLN1 - display 1 catalog line*
 * CATDIS - display file list     *
 * CDDOKEY - file list key handler*
@@ -470,7 +473,7 @@ CATDS2      EQU   *
             BEQ   :GO1
             CMP   #$AC        ;","
             BEQ   :GO1
-            JMP   FILER
+            JMP   ($3F2)
 :GO1        JSR   DO1
             JMP   CATDS1
 *
