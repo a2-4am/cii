@@ -704,4 +704,11 @@ WRITBM      EQU   *
 *
 :TEMP       DB    $0
 *
+RDCAT1      EQU   *
+            LDA   #>CAT1
+            JSR   CLRCAT
+            LDX   #>VTOC1
+            LDA   #$01
+            JMP   DOCAT
+*
 UNDELEND

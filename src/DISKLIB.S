@@ -14,6 +14,7 @@
 * FNDBLK - find block (w/error)  *
 * DOVTOC - read/write VTOC       *
 * CLRCAT - clear catalog sectors *
+* DOCAT - read/write catalog     *
 * DOMASK - make a bitmap mask    *
 * STVTOC - setup for R/W VTOC    *
 * DOS? - read T00S00, is DOS boot?*
@@ -88,6 +89,89 @@ CLRCAT      STA   POINT+1
             DEX
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
+*
+* READ OR WRITE CATALOG
+*
+* TAKES VTOC PAGE IN X
+* TAKES RWTS COMMAND (1 OR 2) IN A
+*
+DOCAT
+            STA   RCMND
+            BIT   DOSNOW
+            BPL   :DOS33
+            LDX   #>SDIR
+            STX   DIRADR
+            JMP   PDOCAT
+*
+:DOS33      JSR   DOVTOC      ;R/W VTOC.
+:SECTLP     LDY   #$01        ;FIND PTR TO
+            LDA   (POINT),Y   ;NEXT SECTOR
+            BEQ   :OUT        ;NIL PTR?
+            STA   RTRACK      ;NO:SAVE TRACK
+            INY
+            LDA   (POINT),Y   ;& SECTOR
+            STA   RSECTR
+            INC   RPAGE       ;NEXT PAGE
+            INC   POINT+1
+                              ;R/W CATALOG
+            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            BCS   :OUT        ;ERROR?
+            LDY   #$0B
+:POSNLP     LDA   (POINT),Y
+            BEQ   :OUT        ;NO MORE FILES?
+            TYA
+            CLC
+            ADC   #$23        ;NEXT FILE
+            TAY
+            BNE   :POSNLP     ;DONE SECTOR?
+            DEC   COUNT       ;ROOM 4 MORE?
+            BNE   :SECTLP
+:OUT        RTS
+*
+*
+*
+* PDOCAT
+*   READ OR WRITE PRODOS DIRECTORY
+*
+*   INPUT
+*  DIRADR = BUFFER HI ADDR
+*  RCMND  = 1 -> RD, 2 -> WT
+*  DIRBLK = STARTING BLOCK
+PDOCAT      EQU   *
+            LDA   RCMND
+            CMP   #2
+            BNE   :OUT
+*
+:DOWRT      LDA   DIRBLK
+            STA   BLKNUM
+            LDA   DIRBLK+1
+            STA   BLKNUM+1
+            LDA   DIRADR
+            STA   RPAGE
+            STA   POINT+1
+            LDA   #0
+            STA   POINT
+:WTMORE     JSR   DOWBLK
+            LDY   #2
+            LDA   (POINT),Y
+            STA   BLKNUM      ;NEXT BLOCK
+            INY
+            LDA   (POINT),Y
+            STA   BLKNUM+1
+            INC   POINT+1
+            INC   POINT+1
+            INC   RPAGE
+            INC   RPAGE
+*
+* DON'T WRITE MORE THAN 20 BLOCKS
+* (260 FILES) OF DIRECTORY
+*
+            LDY   RPAGE
+            CPY   #$3C
+            BCS   :OUT
+            ORA   BLKNUM
+            BNE   :WTMORE
+:OUT        RTS
 *
 * MAKE A 1-BIT MASK FOR A BITMAP WORD
 * SECTOR # IN ACC ->

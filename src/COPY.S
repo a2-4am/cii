@@ -2328,4 +2328,11 @@ SETS        EQU   *
 :NOT1       STA   DOSNOW
             RTS
 *
+RDCAT2      EQU   *
+            LDA   #>CAT2
+            JSR   CLRCAT
+            LDX   #>VTOC2
+            LDA   #$01
+            JMP   DOCAT
+*
 COPYEND
