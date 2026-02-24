@@ -68,7 +68,8 @@ DOCAT       EQU   *
 *  DIRBLK = STARTING BLOCK
 *
 * only called by DOCAT
-PDOCAT      LDA   RCMND
+PDOCAT      EQU   *
+            LDA   RCMND
             CMP   #2
             BNE   :OUT
 *
