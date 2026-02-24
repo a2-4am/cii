@@ -39,7 +39,7 @@ DOTREE
             STA   DSPNUM
             LDA   UNIT
             JSR   SETSD
-            JSR   UNTPFX
+            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
             BIT   DOSNOW
             BMI   :DOTREE0
             LDY   #5

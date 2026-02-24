@@ -9,7 +9,7 @@ PHRWTSLIB
 * ******** PHIL'S RWTS ***********
 * PHRWTS - RWTS main entry point *
 * FAKTRK - set RWTS track #      *
-* RDDRIVE - verify disk in drive *
+* UNTPFX - set prefix to unit    *
 **********************************
 *
 * [4am] Lots of timing-critical disk code in here,
@@ -1127,12 +1127,27 @@ FAKTRKINTERNAL
             PLA
             RTS
 *
-* RDDRIVE
-* Turn on drive and try to read an address field,
-* then turn off the drive again
 *
-* called by UNTPFX
-RDDRIVEINTERNAL
+*
+* SET PREFIX TO UNIT IN A REG
+*
+UNTPFX
+            LDA   UNIT
+            STA   :UNIT
+            JSR   MLI
+            DB    $C5
+            DW    :ONLST
+            LDA   PFX+1
+            AND   #$0F
+            BNE   :PRODOS
+:DOS33      LDA   #0
+            STA   ADRVOL
+            STA   PFX
+            LDA   PFX+2
+            CMP   #$28
+            BEQ   :NOTDSK2    ;NO DRIVE
+            BIT   DOSNOW
+            BMI   :NOTDSK2
             LDA   HDRIVE
             CLC
             ADC   HSLOT
@@ -1142,7 +1157,30 @@ RDDRIVEINTERNAL
             LDA   $C089,X     ;MOTOR ON
             JSR   RDADDR
             LDA   $C088,X
+:NOTDSK2    LDA   ADRVOL
+            STA   PFX+5
+            CLC
             RTS
+*
+:ONLST      DB    $2
+:UNIT       DB    $0
+            DW    PFX+1
+*
+:PRODOS     LDA   PFX+1
+            AND   #$0F
+            TAY
+            INY
+            STY   PFX
+            LDA   #$2F        ;"/"
+            STA   PFX+1
+            JSR   MLI
+            DB    $C6
+            DW    :SPLST
+            STA   RRTN
+            RTS
+*
+:SPLST      DB    $1
+            DW    PFX
 *
 INTRLV      EQU   *
             DB    $0,$D,$B,$9,$7,$5,$3,$1

@@ -309,7 +309,7 @@ COPY
             STA   UNIT
             JSR   DOSTYP
             STA   PDOS
-            JSR   UNTPFX      ;SETUP PFX
+            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
             LDY   #$3F
 :IDLP       LDA   PFX,Y
             STA   PPFX,Y
@@ -729,7 +729,7 @@ COPY
             JSR   INSD
             JSR   SETS
             JSR   CT1
-            JSR   UNTPFX
+            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
             JSR   TARHDR
             JSR   PRVNM
 *

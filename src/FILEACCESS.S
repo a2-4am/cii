@@ -362,55 +362,7 @@ TREEA       JSR   DOSTYP
             RTS
 SETA        JSR   DOSTYP
             LDA   UNIT
-*           JMP   UNTPFX
-* falls through to UNTPFX
-*
-* SET PREFIX TO UNIT IN A REG
-*
-UNTPFX
-            LDA   UNIT
-            STA   :UNIT
-* BIT *DOSNOW
-* BPL DOS33
-            JSR   MLI
-            DB    $C5
-            DW    :ONLST
-            LDA   PFX+1
-            AND   #$0F
-            BNE   :PRODOS
-:DOS33      LDA   #0
-            STA   ADRVOL
-            STA   PFX
-            LDA   PFX+2
-            CMP   #$28
-            BEQ   :NOTDSK2    ;NO DRIVE
-            BIT   DOSNOW
-            BMI   :NOTDSK2
-            >>>   JSRMODULE,PHRWTSLIB;RDDRIVEINTERNAL
-:NOTDSK2    LDA   ADRVOL
-            STA   PFX+5
-            CLC
-            RTS
-*
-:ONLST      DB    $2
-:UNIT       DB    $0
-            DW    PFX+1
-*
-:PRODOS     LDA   PFX+1
-            AND   #$0F
-            TAY
-            INY
-            STY   PFX
-            LDA   #$2F        ;"/"
-            STA   PFX+1
-            JSR   MLI
-            DB    $C6
-            DW    :SPLST
-            STA   RRTN
-            RTS
-*
-:SPLST      DB    $1
-            DW    PFX
+            >>>   JMPMODULE,PHRWTSLIB;UNTPFX
 *
 SRCTAR      DB    $0
 *
@@ -599,7 +551,6 @@ DEVFLG      DB    $0
 DODEVF      LDA   #$FF
             DB    $2C
 DODEVP      LDA   #0
-DODEV0      EQU   *
             STA   DEVFLG
             JSR   HOME
             JSR   PRHERE
