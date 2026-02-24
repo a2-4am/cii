@@ -669,6 +669,7 @@ STPFXC      STA   TMPPTR+1
 :PFXLST     DB    $1
             DW    PFX
 *
+* GET DATE VIA PRODOS MLI
 *
 GETDAT      JSR   MLI
             DB    $82
