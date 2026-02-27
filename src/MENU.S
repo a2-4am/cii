@@ -13,8 +13,28 @@ FILER       LDX   #$FF
             JSR   PNORML
             JSR   VDINIT      ;[4am] also sets ALTCHARSET
             JSR   GETDAT
-            JSR   CLOSEMM     ;Close MM in case of Reset.
 *
+* Close MM if it appears to be open.
+* [4am] This is now the only place that checks this,
+* so it is inlined. If COPY used Memory Manager, it
+* will still be 'open' (MMISOPEN) and decompressed in
+* main memory (at MMSPOT) -- even if the operation
+* completed normally. In previous versions, COPY tried
+* to ensure MM was always closed before returning, only
+* to immediately jump to FILER, which had to check MM
+* again anyway because the user could have pressed
+* [Ctrl-Reset] during a COPY operation and bypassed the
+* cleanup.
+*
+*CLOSEMM
+            BIT   MMISOPEN
+            BPL   :CLOSMMQ
+            LDA   #MMCLOSE
+            STA   MMCMD
+            JSR   MM
+            LDA   #0
+            STA   MMISOPEN
+:CLOSMMQ
             JSR   FMTFIX
             LDA   #0
             STA   FMT400K
@@ -211,21 +231,6 @@ QUIT        LDX   CHOOZOPT
             DB    $65
             DW    :QUTLST
 :QUTLST     DB    $4
-*
-*
-*
-* Close MM if it appears to be open.
-*
-CLOSEMM     EQU   *
-            BIT   MMISOPEN
-            BPL   :CLOSMMQ
-            LDA   #MMCLOSE
-            STA   MMCMD
-            JSR   MM
-            LDA   #0
-            STA   MMISOPEN
-:CLOSMMQ    RTS
-*
 *
 HOTKEYS     EQU   *
             ASC   "XCDLRAFYVMBU/EQ"  ; main menu
