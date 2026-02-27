@@ -208,8 +208,4 @@ DASHES      ASC   "-----------------------"
 :DASH17     ASC   "-----------------"
             DB    $0
 *
-MONTH1      ASC   "JFMAMJJASOND"
-MONTH2      ASC   "AEAPAUUUECOE"
-MONTH3      ASC   "NBRRYNLGPTVC"
-*
 MESSAGESEND

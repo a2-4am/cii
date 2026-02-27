@@ -3,6 +3,7 @@
             PUT   VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
@@ -16,7 +17,6 @@ TSMAP
 ************************************
 *
             JSR   COMHDR
-*DOC00E
             BIT   A2E
             BPL   :C00EQ
             STA   $C00E

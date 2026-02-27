@@ -29,7 +29,6 @@
 * DEVTYP - get current device info*
 * DVTYPX - get device info       *
 * GODEV - vector to device info  *
-* GETDAT - get date              *
 **********************************
 
 *
@@ -154,10 +153,10 @@ SPLGO1      EQU   *
 * called by COPY DISK, COPY DOS, COPY FILES, and QUIT
 UNTDEV      STA   UNIT
 *
+* alternate entry point called by DOSTYP(DISKLIB)
+UNTDV0      LDA   #0
 * [4am] clear GODEV ptr before starting
 * so caller can tell if it didn't work
-*
-UNTDV0      LDA   #0
             STA   GODEV+1
             STA   GODEV+2
             LDX   NUMDEV
@@ -668,18 +667,5 @@ STPFXC      STA   TMPPTR+1
 :OUT        RTS
 :PFXLST     DB    $1
             DW    PFX
-*
-* GET DATE VIA PRODOS MLI
-*
-GETDAT      JSR   MLI
-            DB    $82
-            DB    $0,$0
-            LDY   #3
-:LOOP       LDA   DATE,Y
-            STA   CRTDAT,Y
-            STA   MODDAT,Y
-            DEY
-            BPL   :LOOP
-            RTS
 *
 PRODOSEND

@@ -26,16 +26,6 @@ BOOTBEG
             PUTBIN  ../build/BOOTSEC.33.O
 BOOTEND
 *
-MMXBEG
-            ORG   MMSPOT
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    MMEND
-            PUTBIN  ../build/MM.X7
-:X7END
-            ORG
-MMXEND
-*
 PHRWTSX7BEG
             ORG   PHRWTSADR
             JSR   ZXMODULE
@@ -58,6 +48,16 @@ MESSAGES2X7END
 *
             PUTBIN  ../build/FILER.X
 MAINXEND
+*
+MMXBEG
+            ORG   MMSPOT
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    MMEND
+            PUTBIN  ../build/MM.X7
+:X7END
+            ORG
+MMXEND
 *
 DZX0BEG
             ORG   ZXMODULE

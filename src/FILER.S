@@ -8,6 +8,7 @@
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
 *
@@ -17,6 +18,7 @@
             PUTBIN ../build/DRIVE35.O
             PUTBIN ../build/PRODOS.O
             PUTBIN ../build/IO.O
+            PUTBIN ../build/UILIB.O
             PUTBIN ../build/READLIB.O
             PUTBIN ../build/DISKLIB.O
             PUT   FILEACCESS

@@ -51,6 +51,8 @@ PRODOSO=$(BUILDDIR)/PRODOS.O
 PRODOSVARS=$(BUILDDIR)/PRODOS.VARS.S
 IOO=$(BUILDDIR)/IO.O
 IOVARS=$(BUILDDIR)/IO.VARS.S
+UILIBO=$(BUILDDIR)/UILIB.O
+UILIBVARS=$(BUILDDIR)/UILIB.VARS.S
 READLIBO=$(BUILDDIR)/READLIB.O
 READLIBVARS=$(BUILDDIR)/READLIB.VARS.S
 DISKLIBO=$(BUILDDIR)/DISKLIB.O
@@ -212,14 +214,25 @@ $(PRODOSVARS): $(PRODOSO)
 
 #
 # I/O module
-# contains text and error handling routines
+# contains low-level text handling routines
 #
-$(IOO): $(PRODOSVARS)
+$(IOO): $(PRODOSVARS) $(MESSAGESVARS) $(MESSAGES2VARS)
 	$(MERLIN) "$(SRCDIR)"/IO.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
 $(IOVARS): $(IOO)
 	$(call VARS,!/;VARS;/,$(IOO))
+
+#
+# UILIB module
+# contains higher-level text and error handling routines
+#
+$(UILIBO): $(PRODOSVARS) $(IOVARS)
+	$(MERLIN) "$(SRCDIR)"/UILIB.S > "$(BUILDLOG)"
+	$(call POSTMERLIN)
+
+$(UILIBVARS): $(UILIBO)
+	$(call VARS,!/;VARS;/,$(UILIBO))
 
 #
 # DISKLIB
@@ -248,7 +261,7 @@ $(FILERX): $(FILERO)
 # READLIB module
 # File-reading routines
 #
-$(READLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS)
+$(READLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(UILIBVARS)
 	$(MERLIN) "$(SRCDIR)"/READLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 

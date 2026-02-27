@@ -4,6 +4,7 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             ORG   READLIBEND
 
@@ -494,4 +495,12 @@ DIR?        LDY   #0
             BEQ   :OUT
 :NOTDIR     SEC
 :OUT        RTS
+*
+*
+NODOS3      JSR   DOSTYP
+            BCS   :BLK2ER
+            LDA   #MNODOS3
+            JMP   PRTPRS
+:BLK2ER     JMP   BLK2ER
+*
 DISKLIBEND

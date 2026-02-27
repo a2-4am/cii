@@ -5,10 +5,11 @@
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/FILER.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/MM.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/FILER.VARS
             PUT   ../build/DOTREE.VARS
             ORG   DOTREEEND
 COPY

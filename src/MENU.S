@@ -176,34 +176,6 @@ MENU        LDA   #4          ;assume VTAB 4
 :OPTNUM     DB    $0
 :LASTKEY    DB    $0
 *
-* Menus: (USE THE NAMED IDS LISTED IN MESSAGES)
-*  0 Main
-*  1 Catalog
-*  2 Delete
-*  3 Verify
-*  4 View
-*  5 Format
-*  6 Copy
-*  7 Rename
-*
-*  Menu:          0       1          2         3        4       5        6         7         8
-LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS+1,MVOLUME+1,MREBOOT+1
-FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
-CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
-*
-* CLEAR SCREEN AND DISPLAY FUNCTION TITLE
-TOP1        JSR   HOME
-            LDA   #0
-            STA   WNDTOP
-            JSR   TABV
-            LDA   CHOICE      ;FUNCTION NAME
-            JSR   PRINT
-            JSR   PRSPC
-            LDA   OPTCHS
-            BMI   :TOP1A
-            JSR   PRINT
-:TOP1A      RTS
-*
 QUIT        LDX   CHOOZOPT
             BEQ   :QUIT1
             DEX

@@ -159,7 +159,6 @@ COMHDR      JSR   DODEVP
 
 COMH00      JSR   TOP1
             JMP   PRVNM
-OPTCHS      DB    $0
 *
 * SHOW A LINE OF CATALOG
 CATLIN      PHA
@@ -169,96 +168,6 @@ CATLIN      PHA
             JMP   CATLN1
 *
 *
-*
-* SHOW CURRENT SLOT & DRIVE
-* AND/OR CURRENT PREFIX. (*PFX<>0)
-*
-* RETURNS WITH CV = 3, CH = 0
-*
-PRVNM       LDX   #PFX
-            LDY   #>PFX
-            LDA   UNIT
-PRVCOM      STA   UNIT
-            STX   TMPPTR
-            STY   TMPPTR+1
-            LDA   #0
-            JSR   TABV
-            LDA   CHOICE
-            BNE   :CONTIN     ;CMD NOT COPY
-            LDA   SDCH
-            SEC
-            SBC   #8
-            STA   CH
-            LDA   SRCTAR
-            BNE   :NOTSRC
-            JSR   PRHERE
-            ASC   "Source:"
-            DB    $0
-            JMP   :CONTIN
-*
-:NOTSRC     CMP   #$FF
-            BNE   :CONTIN
-            JSR   PRHERE
-            ASC   "Target:"
-            DB    $0
-*
-:CONTIN     LDA   SDCH
-            STA   CH
-            LDA   UNIT
-            JSR   SEEDEV
-:SKIPCR     LDA   #1
-            JSR   VLEFT
-            LDY   #0
-            STY   HEXNUM+1
-            LDA   (TMPPTR),Y
-            STA   :PFXLEN
-            BMI   :BLNKLP     ;NO PFX
-            BIT   DOSNOW
-            BPL   :SDDOS33
-            CMP   #0
-            BEQ   :BLNKLP
-            BNE   :SDPRODOS
-*
-:SDDOS33    LDY   #5
-            LDA   (TMPPTR),Y
-            BEQ   :BLNKLP
-            STA   HEXNUM
-            JSR   PRHERE
-            ASC   "Disk Volume "
-            DB    $0
-            JSR   HEXDEC
-            JSR   PRTLZ
-            LDY   #$14
-            BNE   :BLNKLP     ;ALWAYS
-*
-:SDPRODOS   INY
-            LDA   (TMPPTR),Y
-            ORA   #$80
-            JSR   PCOUT
-            CPY   :PFXLEN
-            BCC   :SDPRODOS
-:BLNKLP     INY
-            LDA   #$A0
-            JSR   PCOUT
-            CPY   #$42
-            BCC   :BLNKLP
-:NOPFX      LDA   #3
-            STA   WNDTOP
-            JMP   VLEFT
-:PFXLEN     DB    $0
-*
-NODOS3      JSR   DOSTYP
-            BCS   BLK2ER
-            LDA   #MNODOS3
-            JMP   PRTPRS
-*
-BLK2ER      LDY   #0
-            STY   BLKNUM+1
-            DEY
-            STY   DOSNOW
-            LDA   #2
-            STA   BLKNUM
-            JMP   ERROUT
 *
 TREEA       JSR   DOSTYP
             LDA   #APFX
@@ -273,8 +182,6 @@ TREEA       JSR   DOSTYP
 SETA        JSR   DOSTYP
             LDA   UNIT
             >>>   JMPMODULE,PHRWTSLIB;UNTPFX
-*
-SRCTAR      DB    $0
 *
 *
 *
@@ -454,22 +361,6 @@ MLIERR      LDA   RRTN
             JMP   ERROU1
 :ERROU2     JMP   ERROUT
 *
-*
-*
-*
-DEVFLG      DB    $0
-DODEVF      LDA   #$FF
-            DB    $2C
-DODEVP      LDA   #0
-            STA   DEVFLG
-            JSR   HOME
-            JSR   PRHERE
-            ASC   "Select device:"
-            DB    $0
-            LDA   CURDVA
-            JSR   JDODEV
-            STX   CURDVA
-            RTS
 *
 * called by COPY FILE and DELETE FILE(DELLIB)
 DOWAIT      LDX   #$03

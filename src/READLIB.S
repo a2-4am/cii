@@ -4,7 +4,8 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
-            ORG   IOEND
+            PUT   ../build/UILIB.VARS
+            ORG   UILIBEND
 
 **********************************
 *      FILE READING LIBRARY      *

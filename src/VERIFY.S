@@ -4,6 +4,7 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS
@@ -263,6 +264,89 @@ VERIFY
 :VERRORS    DB    $0,$0
 *
 *
+*
+************************************
+*    DISK SPEED CRITICAL CODE      *
+************************************
+*
+CRIT1       EQU   *
+            PHP
+            SEI
+            LDA   #$1D        ;INIT HIBYTE
+            STA   TEMP        ;OF COUNTER.
+            LDA   #$FF        ;WP CHECK DONE
+            STA   $C08F,X     ;WRITE MODE.
+            CMP   $C08C,X
+            PHA
+            PLA
+            NOP
+            LDA   #$FF
+]SPOT       =     *
+:NOPAGE     PHA
+            PLA
+:LOOP       JSR   :WRITE7
+            DEY
+            BNE   :NOPAGE
+            DEC   TEMP
+            BNE   :LOOP
+            CMP   $00
+            JSR   :WRITE5
+            PHA
+            PLA
+            NOP
+            NOP
+            LDY   #5
+:D5LOOP     LDA   #$D5
+            NOP
+            NOP
+            JSR   :WRITE0
+            DEY
+            BNE   :D5LOOP
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+            LDA   #$FF
+            JSR   :WRITE5
+            LDA   $C08E,X
+            LDA   $C08C,X
+            PLP
+:WRTS       RTS
+*
+:WRITE7     NOP
+:WRITE5     NOP
+            CMP   $00
+:WRITE0     STA   $C08D,X
+            CMP   $C08C,X
+            RTS
+*
+CRIT2       EQU   *
+            PHP
+            SEI
+            LDY   #$00        ;INIT COUNT
+            STY   HEXNUM+1
+            LDX   HSLOT
+]SPOT       =     *
+:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
+            BPL   :LOOPD5
+            CMP   #$D5
+            BNE   :LOOPD5
+:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
+            BPL   :NOTD5
+            CMP   #$D5
+            BEQ   :NOTD5
+:LOOP1      PHA               ;20 U-SEC LOOP
+            PLA
+:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
+            CMP   #$D5        ;DONE COUNTING?
+            BEQ   :DONE
+            INY
+            BNE   :LOOP1
+            INC   HEXNUM+1
+            BNE   :LOOP2
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+:DONE       STY   HEXNUM
+            PLP
+            RTS
+*
+*
 **********  DISK SPEED  *************
 *
 :SPEED1     JSR   CROUT
@@ -359,89 +443,6 @@ VERIFY
 *
 :SHIFTER    DB    $00,$00
 :DIVER      DB    $3E,$05
-*
-*
-*
-************************************
-*    DISK SPEED CRITICAL CODE      *
-************************************
-*
-CRIT1       EQU   *
-            PHP
-            SEI
-            LDA   #$1D        ;INIT HIBYTE
-            STA   TEMP        ;OF COUNTER.
-            LDA   #$FF        ;WP CHECK DONE
-            STA   $C08F,X     ;WRITE MODE.
-            CMP   $C08C,X
-            PHA
-            PLA
-            NOP
-            LDA   #$FF
-]SPOT       =     *
-:NOPAGE     PHA
-            PLA
-:LOOP       JSR   :WRITE7
-            DEY
-            BNE   :NOPAGE
-            DEC   TEMP
-            BNE   :LOOP
-            CMP   $00
-            JSR   :WRITE5
-            PHA
-            PLA
-            NOP
-            NOP
-            LDY   #5
-:D5LOOP     LDA   #$D5
-            NOP
-            NOP
-            JSR   :WRITE0
-            DEY
-            BNE   :D5LOOP
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-            LDA   #$FF
-            JSR   :WRITE5
-            LDA   $C08E,X
-            LDA   $C08C,X
-            PLP
-:WRTS       RTS
-*
-:WRITE7     NOP
-:WRITE5     NOP
-            CMP   $00
-:WRITE0     STA   $C08D,X
-            CMP   $C08C,X
-            RTS
-*
-CRIT2       EQU   *
-            PHP
-            SEI
-            LDY   #$00        ;INIT COUNT
-            STY   HEXNUM+1
-            LDX   HSLOT
-]SPOT       =     *
-:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
-            BPL   :LOOPD5
-            CMP   #$D5
-            BNE   :LOOPD5
-:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
-            BPL   :NOTD5
-            CMP   #$D5
-            BEQ   :NOTD5
-:LOOP1      PHA               ;20 U-SEC LOOP
-            PLA
-:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
-            CMP   #$D5        ;DONE COUNTING?
-            BEQ   :DONE
-            INY
-            BNE   :LOOP1
-            INC   HEXNUM+1
-            BNE   :LOOP2
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-:DONE       STY   HEXNUM
-            PLP
-            RTS
 *
 INTLV1      EQU   *
             DB    $0,$7,$E,$6,$D,$5,$C,$4
