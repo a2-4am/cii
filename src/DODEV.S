@@ -5,7 +5,6 @@
             PUT   ../build/IO.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/FILER.VARS
             PUT   ../build/CATLIB.VARS
             ORG   CATLIBEND
 DODEV
