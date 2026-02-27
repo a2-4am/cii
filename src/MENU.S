@@ -79,7 +79,9 @@ FILER       LDX   #$FF
             LDX   #$00        ;MAIN MENU
             STX   RADR
             STX   TOPDIF
-CHOOZ0
+* falls through to CHOOZ0
+*
+CHOOZ0      EQU   *
             JSR   CHOPOS
             JSR   PRHERE
             ASC   "Use hotkey or",FF,8D
@@ -90,7 +92,6 @@ CHOOZ0
             JSR   CHOOZ
             LDX   #$FF
             STX   OPTCHS
-*
             TAX
             ASL
             TAY
@@ -110,8 +111,10 @@ CHOOZ0
             JSR   PRHERE
             DB    $FF,$8D,$FF,$8D
             ASC   "Select option:",FF,8D,00
+* falls through to CHOOZ
 *
-CHOOZ       JSR   MENU
+CHOOZ       EQU   *
+            JSR   MENU
 :LOOP1      JSR   GETKEY
             CMP   #$9B
             BNE   :NOTESC
@@ -168,7 +171,8 @@ CHOOZ       JSR   MENU
             JMP   CHOOZ
 *
 * DISPLAY MENU
-MENU        LDA   #4          ;assume VTAB 4
+MENU        EQU   *
+            LDA   #4          ;assume VTAB 4
             CPX   #0          ;is main menu (X=0)?
             BEQ   :USE4       ;Y->VTAB 4
             ASL               ;N->VTAB 8
