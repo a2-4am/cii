@@ -202,9 +202,10 @@ COPY
             JSR   INIT
             JMP   :DSKWRT     ;Go do another write pass.
 *
-:COPYQ      LDA   #0
-            STA   FMT400K
-            JMP   CLOSEMM
+:COPYQ      RTS               ;[4am] closing Memory Manager and resetting FMT400K
+*            LDA   #0         ;is handled by caller
+*            STA   FMT400K
+*            JMP   CLOSEMM
 *
 *
 *
