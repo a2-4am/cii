@@ -216,7 +216,8 @@ QUIT        LDX   CHOOZOPT
 *
 * Close MM if it appears to be open.
 *
-CLOSEMM     BIT   MMISOPEN
+CLOSEMM     EQU   *
+            BIT   MMISOPEN
             BPL   :CLOSMMQ
             LDA   #MMCLOSE
             STA   MMCMD

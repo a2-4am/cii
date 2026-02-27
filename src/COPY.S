@@ -596,7 +596,9 @@ COPY
             ASC   "Try copying again..."
             DB    0
             JSR   RDKEY
-            JSR   CLOSEMM     ;(Close the MM)
+                              ;[4am] closing Memory Manager is handled by
+                              ;FILER
+*            JSR   CLOSEMM     ;(Close the MM)
             JMP   ($3F2)      ;& abandon ship.
 *
 *
