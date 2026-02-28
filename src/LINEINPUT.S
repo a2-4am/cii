@@ -2,7 +2,7 @@
 * PROMPT FOR DIRECTORY NAME
 *
 * RETURNS: BCC --> |FILE| CONTAINS DIRECTORY NAME
-*          BCS --> USER CANCELED
+*          BCS --> USER CANCELED (ESC) OR NO INPUT
 GETDNM
             JSR   PRHERE
             ASC   8D,"Subdirectory name: ",00

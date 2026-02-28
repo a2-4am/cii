@@ -1,5 +1,13 @@
-*
-*
+            TYP   BIN
+            DSK   ../build/MENU.O
+            PUT   VARS
+            PUT   ../build/MM.VARS
+            PUT   ../build/MESSAGES.VARS
+            PUT   ../build/DRIVE35.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            ORG   IOEND
+
 *************************************
 *                                   *
 *           MENU STUFF              *
@@ -278,3 +286,5 @@ SUBMNIDX    EQU   *
             DB    $FF         ; MAKESUB (no submenu)
             DB    $FF         ; SETCLOCK (no submenu)
             DB    :UQUIT      ; QUIT
+*
+MENUEND

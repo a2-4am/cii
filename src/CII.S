@@ -7,6 +7,7 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/MESSAGES2.VARS
             PUT   ../build/MESSAGES.VARS
+            PUT   ../build/MENU.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/DODEV.VARS
