@@ -4,8 +4,8 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/MENU.VARS
-            ORG   MENUEND
+            PUT   ../build/LINEINPUT.VARS
+            ORG   LINEINPUTEND
 
 * TOP1      clear screen and display function title
 * DODEVF

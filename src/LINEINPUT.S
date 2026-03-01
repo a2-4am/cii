@@ -1,3 +1,10 @@
+            TYP   BIN
+            DSK   ../build/LINEINPUT.O
+            PUT   VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/MENU.VARS
+            ORG   MENUEND
+
 *
 * PROMPT FOR DIRECTORY NAME
 *
@@ -239,3 +246,4 @@ GETLN       EQU   *
             BNE   :ISLEGAL    ;ALWAYS
 :TEMP       DB    $0
 *
+LINEINPUTEND

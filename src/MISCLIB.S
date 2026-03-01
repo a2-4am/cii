@@ -4,6 +4,7 @@
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/LINEINPUT.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/READLIB.VARS
