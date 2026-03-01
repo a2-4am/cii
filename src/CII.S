@@ -10,7 +10,6 @@
             PUT   ../build/MENU.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/CATLIB.VARS
-            PUT   ../build/DOTREE.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELLIB.VARS
@@ -65,16 +64,6 @@ DZX0BEG
             PUT   DISPATCH
             ORG
 DZX0END
-*
-DOTREEX7BEG
-            ORG   DOTREE
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    DOTREEEND
-            PUTBIN  ../build/DOTREE.X7
-:X7END
-            ORG
-DOTREEX7END
 *
 CATLIBX7BEG
             ORG   CATLIB

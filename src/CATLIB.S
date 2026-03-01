@@ -9,8 +9,8 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/DOTREE.VARS
-            ORG   DOTREEEND
+            PUT   ../build/TREELIB.VARS
+            ORG   TREELIBEND
 CATLIB
             ORG   *+3
             RTS

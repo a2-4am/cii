@@ -2287,7 +2287,7 @@ TREEP       EQU   *
             LDA   #>PPFX
             STA   PFXADR+1
             LDA   PCURR
-            JSR   JDOTREE
+            JSR   DOTREE
             BCS   SETP
             STA   PCURR
             RTS
@@ -2319,7 +2319,7 @@ TREES       EQU   *
             LDA   #>SPFX
             STA   PFXADR+1
             LDA   SCURR
-            JSR   JDOTREE
+            JSR   DOTREE
             BCS   SETS
             STA   SCURR
             RTS
