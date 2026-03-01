@@ -30,6 +30,15 @@
 * DVTYPX - get device info       *
 * GODEV - vector to device info  *
 * INFLST - data for ST/GTINFO    *
+* CURPNT - set POINT to sector   *
+* SETPNT - set POINT from catalog*
+*          array                 *
+* DOMASK - make a bitmap mask    *
+* STVTOC - setup for R/W VTOC    *
+* PUTSEC - write sector to T01   *
+* CHKDOS - buffer is DOS boot?   *
+* PATMOV - reorder STATUS array  *
+* DIR? - *POINT is directory?    *
 **********************************
 
 *
@@ -689,5 +698,94 @@ SETPNT      LDA   CBYTE,X
             LDA   CSECTR,X
             STA   POINT+1
             RTS
+*
+*
+* MAKE A 1-BIT MASK FOR A BITMAP WORD
+* SECTOR # IN ACC ->
+* called from COPY, DISKMAP, FREES(DELLIB),
+* and UNDELETE
+*
+DOMASK      TAX
+            LDA   #$00
+            STA   BITMSK+1
+            STA   BITMSK
+            SEC
+:NEXT       ROL   BITMSK+1
+            ROL   BITMSK
+            DEX
+            BPL   :NEXT
+:OUT        RTS
+*
+*
+STVTOC      LDA   #$11
+            STA   RTRACK
+            LDA   #$00
+            STA   RSECTR
+            RTS
+*
+* called by DOS? and also CHANGEBOOT
+PUTSEC      STX   RSECTR      ;SET SECTOR
+            LDA   #>DATA
+            STA   RPAGE       ;SET ADDR
+            LDA   #$01
+            STA   RTRACK      ;SET TRACK
+            STA   RCMND       ;SET COMMAND
+            RTS
+*
+* called by DOS? and also CHANGEBOOT
+CHKDOS      LDA   #2
+            STA   TEMP
+:CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
+            CMP   :DOSPAT,X   ;TO VERIFY
+            SEC
+            BNE   :NO         ;DOS IS THERE
+            INX
+            INY
+            DEC   TEMP
+            BPL   :CHECKLP
+            CLC
+:NO         RTS
+*
+:DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
+*
+*
+*
+* SLIDE SELECTED FILES TO TOP OF
+* STATUS ARRAY (ARROW FLAGGED)
+*
+* called by COPY, DELETE, UNDELETE, and
+* VERIFY after files have been selected
+* in the catalog display and the user
+* has asked to begin the process
+*
+PATMOV      LDX   #$00
+            LDY   #$00
+:LOOP       LDA   STATUS,Y
+            BEQ   :NEXT
+            STA   STATUS,X
+            LDA   CBYTE,Y
+            STA   CBYTE,X
+            LDA   CSECTR,Y
+            STA   CSECTR,X
+            INX
+:NEXT       INY
+            CPY   NACTIV
+            BCC   :LOOP
+            STX   FILNUM
+            RTS
+*
+* called by DIVEIN(CATLIB) and DISKMAP
+DIR?        LDY   #0
+            LDA   (POINT),Y
+            AND   #$F0
+            CMP   #$D0
+            BNE   :NOTDIR
+            LDY   #$10
+            LDA   (POINT),Y
+            CMP   #$0F
+            CLC
+            BEQ   :OUT
+:NOTDIR     SEC
+:OUT        RTS
 *
 PRODOSEND

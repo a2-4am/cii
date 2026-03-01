@@ -45,7 +45,12 @@ _MAKESUB    EQU   *
             JSR   COMTRE
             BIT   DOSNOW
             BMI   :MK0
-            JMP   NODOS3
+NODOS3      EQU   *
+            JSR   DOSTYP
+            BCS   :BLK2ER
+            LDA   #MNODOS3
+            JMP   PRTPRS
+:BLK2ER     JMP   BLK2ER
 *
 :MK0        JSR   GETDNM      ;GET DIRECTORY NAME
             BCS   :OUT

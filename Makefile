@@ -280,7 +280,7 @@ $(DISKLIBVARS): $(DISKLIBO)
 	$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 $(DISKLIBX7): $(DISKLIBO)
-	$(call X7,$(DISKLIBO),23)
+	$(call X7,$(DISKLIBO),16)
 
 #
 # TREELIB module (compressed)(self-decompressing)

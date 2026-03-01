@@ -16,19 +16,12 @@ DISKLIB
 * WRCAT1
 * WRCAT2
 * DOCAT - read/write catalog     *
-* DOMASK - make a bitmap mask    *
-* STVTOC - setup for R/W VTOC    *
 * DOS? - read T00S00, is DOS boot?*
-* CHKDOS - buffer is DOS boot?   *
-* PUTSEC - write sector to T01   *
 * SET1A2 - mark T01+T02 in VTOC  *
 * DORWTS - call PHRWTS (w/error) *
 * SWPCHK - is correct disk? w/err*
 * SWCK - verify is correct disk  *
 * DOSTYP - ProDOS or DOS?        *
-* PATMOV - reorder STATUS array  *
-* DIR? - *POINT is directory?    *
-* NODOS3 - error handler         *
 * RDTSL - read track/sector list *
 * OPNSRC - open source file      *
 * OPNFIL - open file             *
@@ -40,19 +33,12 @@ CLRCAT      >>>   JMPMODULE,DECOMPRESS;_CLRCAT
 WRCAT1      >>>   JMPMODULE,DECOMPRESS;_WRCAT1
 WRCAT2      >>>   JMPMODULE,DECOMPRESS;_WRCAT2
 DOCAT       >>>   JMPMODULE,DECOMPRESS;_DOCAT
-DOMASK      >>>   JMPMODULE,DECOMPRESS;_DOMASK
-STVTOC      >>>   JMPMODULE,DECOMPRESS;_STVTOC
 DOS?        >>>   JMPMODULE,DECOMPRESS;_DOS?
-CHKDOS      >>>   JMPMODULE,DECOMPRESS;_CHKDOS
-PUTSEC      >>>   JMPMODULE,DECOMPRESS;_PUTSEC
 SET1A2      >>>   JMPMODULE,DECOMPRESS;_SET1A2
 DORWTS      >>>   JMPMODULE,DECOMPRESS;_DORWTS
 SWPCHK      >>>   JMPMODULE,DECOMPRESS;_SWPCHK
 SWCK        >>>   JMPMODULE,DECOMPRESS;_SWCK
 DOSTYP      >>>   JMPMODULE,DECOMPRESS;_DOSTYP
-PATMOV      >>>   JMPMODULE,DECOMPRESS;_PATMOV
-DIR?        >>>   JMPMODULE,DECOMPRESS;_DIR?
-NODOS3      >>>   JMPMODULE,DECOMPRESS;_NODOS3
 RDTSL       >>>   JMPMODULE,DECOMPRESS;_RDTSL
 OPNSRC      >>>   JMPMODULE,DECOMPRESS;_OPNSRC
 OPNFIL      >>>   JMPMODULE,DECOMPRESS;_OPNFIL
@@ -218,31 +204,6 @@ PDOCAT      EQU   *
             BNE   :WTMORE
 :OUT        RTS
 *
-* MAKE A 1-BIT MASK FOR A BITMAP WORD
-* SECTOR # IN ACC ->
-* called from COPY, DISKMAP, FREES(DELLIB),
-* and UNDELETE
-*
-_DOMASK     EQU   *
-            TAX
-            LDA   #$00
-            STA   BITMSK+1
-            STA   BITMSK
-            SEC
-:NEXT       ROL   BITMSK+1
-            ROL   BITMSK
-            DEX
-            BPL   :NEXT
-:OUT        RTS
-*
-*
-_STVTOC     EQU   *
-            LDA   #$11
-            STA   RTRACK
-            LDA   #$00
-            STA   RSECTR
-            RTS
-*
 * DOS?
 * read T00S00 and check for recognized DOS-shaped bootloader
 * called by Copy DOS (COPY) and Delete DOS (DELLIB)
@@ -259,33 +220,6 @@ _DOS?       EQU   *
             RTS
 :NODOS      LDA   #MNODOS
             JMP   PRTPRS
-*
-* called by DOS? (above) and also CHANGEBOOT
-_CHKDOS     EQU   *
-            LDA   #2
-            STA   TEMP
-:CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
-            CMP   :DOSPAT,X   ;TO VERIFY
-            SEC
-            BNE   :NO         ;DOS IS THERE
-            INX
-            INY
-            DEC   TEMP
-            BPL   :CHECKLP
-            CLC
-:NO         RTS
-*
-:DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
-*
-* called by DOS? and also CHANGEBOOT
-_PUTSEC     EQU   *
-            STX   RSECTR      ;SET SECTOR
-            LDA   #>DATA
-            STA   RPAGE       ;SET ADDR
-            LDA   #$01
-            STA   RTRACK      ;SET TRACK
-            STA   RCMND       ;SET COMMAND
-            RTS
 *
 _SET1A2     EQU   *
             STA   CVTOC+$3C
@@ -506,54 +440,6 @@ _DOSTYP     EQU   *
 :BUFF       DW    VOLNMS
 :TEMP       DB    $0
 *
-*
-*
-* SLIDE SELECTED FILES TO TOP OF
-* STATUS ARRAY (ARROW FLAGGED)
-*
-* called by COPY, DELETE, UNDELETE, and
-* VERIFY after files have been selected
-* in the catalog display and the user
-* has asked to begin the process
-*
-_PATMOV     EQU   *
-            LDX   #$00
-            LDY   #$00
-:LOOP       LDA   STATUS,Y
-            BEQ   :NEXT
-            STA   STATUS,X
-            LDA   CBYTE,Y
-            STA   CBYTE,X
-            LDA   CSECTR,Y
-            STA   CSECTR,X
-            INX
-:NEXT       INY
-            CPY   NACTIV
-            BCC   :LOOP
-            STX   FILNUM
-            RTS
-*
-* called by DIVEIN(CATLIB) and DISKMAP
-_DIR?       EQU   *
-            LDY   #0
-            LDA   (POINT),Y
-            AND   #$F0
-            CMP   #$D0
-            BNE   :NOTDIR
-            LDY   #$10
-            LDA   (POINT),Y
-            CMP   #$0F
-            CLC
-            BEQ   :OUT
-:NOTDIR     SEC
-:OUT        RTS
-*
-_NODOS3     EQU   *
-            JSR   DOSTYP
-            BCS   :BLK2ER
-            LDA   #MNODOS3
-            JMP   PRTPRS
-:BLK2ER     JMP   BLK2ER
 *
 *
 * READ TSLIST & UPDATE SECTOR POINTER
