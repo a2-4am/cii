@@ -29,6 +29,7 @@ BOOTEND
 *
 PHRWTSX7BEG
             ORG   PHRWTSADR
+            PUTBIN ../build/PHRWTS.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    PHRWTSEND

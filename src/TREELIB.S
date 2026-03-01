@@ -76,7 +76,7 @@ TREEA       >>>   JSRMODULE,DISKLIB;DOSTYP
             RTS
 SETA        >>>   JSRMODULE,DISKLIB;DOSTYP
             LDA   UNIT
-            >>>   JMPMODULE,PHRWTSLIB;UNTPFX
+            JMP   UNTPFX
 *
 *
 * DOTREE
@@ -105,7 +105,7 @@ DOTREE
             STA   DSPNUM
             LDA   UNIT
             JSR   SETSD
-            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
+            JSR   UNTPFX
             BIT   DOSNOW
             BMI   :DOTREE0
             LDY   #5

@@ -3,14 +3,18 @@
             PUT   VARS
             ORG   PHRWTSADR
 PHRWTSLIB
-            ORG   *+3
-            RTS
-
 * ******** PHIL'S RWTS ***********
 * PHRWTS - RWTS main entry point *
 * FAKTRK - set RWTS track #      *
 * UNTPFX - set prefix to unit    *
 **********************************
+PHRWTS      >>>   JMPMODULE,DECOMPRESS;_PHRWTS
+FAKTRK      >>>   JMPMODULE,DECOMPRESS;_FAKTRK
+UNTPFX      >>>   JMPMODULE,DECOMPRESS;_UNTPFX
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
+
 *
 * [4am] Lots of timing-critical disk code in here,
 * so there are tons of assembler directives to
@@ -256,7 +260,7 @@ PHRWTSLIB
 :GOODAT     RTS
 *
 *
-PHRWTSINTERNAL
+_PHRWTS     EQU   *
             PHP
             SEI
             JSR   :RWTS
@@ -704,7 +708,7 @@ RDADDR      EQU   *
 *
 :RESEEK     LDA   ADRTRK      ;SAY YOU'RE ON
             ASL               ;TRACK THE ADR
-            JSR   FAKTRKINTERNAL ;FIELD THINKS,
+            JSR   _FAKTRK     ;FIELD THINKS,
             LDA   RTRACK      ;THEN SEEK TO
 *
 * FALL INTO SEEK
@@ -929,7 +933,7 @@ RDADDR      EQU   *
             PHA               ;YOU'RE ON A
             ASL               ;HIGHER TRACK,
             ADC   #$10
-            JSR   FAKTRKINTERNAL
+            JSR   _FAKTRK
             LDA   #$00        ;THEN SEEK 0
             JSR   :SEEK       ;TO RATCHET.
             PLA
@@ -1012,7 +1016,7 @@ RDADDR      EQU   *
             CMP   #$40        ;IF RATCHET:
             BNE   :GOSTART
             LDA   #$60
-            JSR   FAKTRKINTERNAL ;SAY TRK 48
+            JSR   _FAKTRK     ;SAY TRK 48
             LDA   #$00
             STA   RTRACK      ;SET TRK 0
 :GOSTART    JSR   :START      ;START UP
@@ -1109,7 +1113,7 @@ RDADDR      EQU   *
 *
 * TELL RWTS WHAT TRACK IT'S ON
 *
-FAKTRKINTERNAL
+_FAKTRK     EQU   *
             JSR   :DRINDEX
             STA   $478,X      ;STORE IN TABLE
             RTS
@@ -1131,7 +1135,7 @@ FAKTRKINTERNAL
 *
 * SET PREFIX TO UNIT IN A REG
 *
-UNTPFX
+_UNTPFX     EQU   *
             LDA   UNIT
             STA   :UNIT
             JSR   MLI

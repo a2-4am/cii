@@ -1372,8 +1372,7 @@ RDACNT      BIT   DOSNOW
             STA   RSECTR
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-                              ;READ CATALOG
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS      ;READ CATALOG
             BCS   :OUT        ;BAD SECTOR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y

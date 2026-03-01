@@ -124,8 +124,7 @@ DOCAT
             STA   RSECTR
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
-                              ;R/W CATALOG
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS      ;R/W CATALOG
             BCS   :OUT        ;ERROR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
@@ -255,8 +254,7 @@ SET1A2      STA   CVTOC+$3C
             LDA   #2
             STA   RCMND
 * falls through to DORWTS
-DORWTS
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+DORWTS      JSR   PHRWTS
             BCS   DISKLIBERR
             RTS
 *
@@ -453,7 +451,7 @@ DOSTYP      LDA   #0
             CMP   #0
             BNE   :SKIPFAK    ;NOT DOS
             LDA   #0
-            >>>   JSRMODULE,PHRWTSLIB;FAKTRKINTERNAL
+            JSR   FAKTRK
 :SKIPFAK    LDX   :BUFF
             PLP
             LDA   DOSNOW

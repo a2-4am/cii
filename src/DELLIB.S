@@ -321,12 +321,10 @@ FORMATINTERNAL
 *
 :DODSK2     LDA   #$40        ;RATCHET!
             STA   RCMND       ;(SETS TRK 0)
-                              ;DON'T CARE IF ERROR
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS      ;DON'T CARE IF ERROR
             LDA   #$04        ;FORMAT COMMAND
             STA   RCMND
-:FORMLP                       ;FORMAT TRK.
-            JSR   PHRWTSINTERNAL
+:FORMLP     JSR   PHRWTS      ;FORMAT TRK.
             BCC   :FORMOK     ;ERROR?
             LDA   RRTN        ;YES:
             CMP   #$2B        ;WP?

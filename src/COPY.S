@@ -317,7 +317,7 @@ COPY
             STA   UNIT
             JSR   DOSTYP
             STA   PDOS
-            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
+            JSR   UNTPFX
             LDY   #$3F
 :IDLP       LDA   PFX,Y
             STA   PPFX,Y
@@ -673,8 +673,7 @@ COPY
             BCC   :GORWTS1
             INC   BLKNUM+1
 *
-:GORWTS1                      ;GO RWTS.
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+:GORWTS1    JSR   PHRWTS      ;GO RWTS.
             BCC   :GORWTSQ    ;ERROR?
 :RWERR      LDA   RRTN        ;YES: WRITE-
             CMP   #$2B        ;PROTECTED?
@@ -740,7 +739,7 @@ COPY
             JSR   INSD
             JSR   SETS
             >>>   JSRMODULE,TREELIB;CT1
-            >>>   JSRMODULE,PHRWTSLIB;UNTPFX
+            JSR   UNTPFX
             JSR   TARHDR
             JSR   PRVNM
 *

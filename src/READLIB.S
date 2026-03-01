@@ -20,8 +20,9 @@
 **********************************
 
 *
-*
 * READ TSLIST & UPDATE SECTOR POINTER
+*
+* called by RDDATA and also VERIFY
 RDTSL       LDA   RPAGE
             PHA
             LDA   #>SRCTSL    ;READ INTO
@@ -29,8 +30,7 @@ RDTSL       LDA   RPAGE
             INC   TSLCTR
             BNE   :RDTS1
             INC   TSLCTR+1
-:RDTS1                        ;GET TSLIST
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+:RDTS1      JSR   PHRWTS      ;GET TSLIST
             LDA   #$0C        ;RESET SOURCE
             STA   STSP        ;TS POINTER
             PLA
@@ -115,8 +115,7 @@ RDDATA
             STA   RBLKH,Y
 *
             INC   RELCNT
-                              ;READ DATA
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS      ;READ DATA
             BCS   RDDATAERR2
             INC   RPAGE       ;NEXT PAGE
 :NEXTRD     INC   STSP        ;NEXT TS PAIR

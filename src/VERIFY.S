@@ -101,7 +101,7 @@ VERIFY
             LDA   RTRACK      ;VERIFIED
             JSR   PHBYTE
                               ;GO VERIFY
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS
             BCC   :OK         ;ANY ERRORS?
 *
             LDA   #$03        ;SET WINDOW
@@ -231,7 +231,7 @@ VERIFY
             LDA   RSECTR
             CMP   #$10
             BCS   :VOUCH
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTS
             BCC   :V1FOUT
 :VOUCH      INC   :VERRORS
             BNE   :NOCARI2

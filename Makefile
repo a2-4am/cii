@@ -22,9 +22,9 @@ CADIUS=cadius
 # (does not affect format, so unpacker still works)
 ZX0=zx0 -b
 
-# macro to compress file with ZX0 then transpose first 7 bytes to end of file
+# macro to compress file with ZX0 then transpose first N bytes to end of file
 # (used for self-decompressing modules)
-X7 = ($(ZX0) "$1" "$@" && dd if="$@" of="$@.HEAD" bs=1 count=7 && dd if="$@" of="$@.TAIL" bs=1 skip=7 && cat "$@.TAIL" "$@.HEAD" > "$@")
+X7 = (dd if="$1" of="$1.JMP" bs=1 count=$$((6*$2)) && dd if="$1" of="$1.O" bs=1 skip=$$((6*$2)) && $(ZX0) "$1.O" "$@" && dd if="$@" of="$@.HEAD" bs=1 count=7 && dd if="$@" of="$@.TAIL" bs=1 skip=7 && cat "$@.TAIL" "$@.HEAD" > "$@")
 
 SRCDIR=src
 SOURCES=$(wildcard src/*.S)
@@ -121,7 +121,7 @@ $(MMO): $(BUILDDIR)
 	$(call POSTMERLIN)
 
 $(MMX7): $(MMO)
-	$(call X7,$(MMO))
+	$(call X7,$(MMO),0)
 
 $(MMVARS): $(MMO)
 	$(call VARS,/;MM.CII.S;/,$(MMO))
@@ -167,7 +167,7 @@ $(PHRWTSVARS): $(PHRWTSO)
 	$(call VARS,/;PHRWTS.S;/,$(PHRWTSO))
 
 $(PHRWTSX7): $(PHRWTSO)
-	$(call X7,$(PHRWTSO))
+	$(call X7,$(PHRWTSO),3)
 
 #
 # MESSAGES2 module (compressed)(self-decompressing)
@@ -181,7 +181,7 @@ $(MESSAGES2VARS): $(MESSAGES2O)
 	$(call VARS,/;MESSAGES2.S;/,$(MESSAGES2O))
 
 $(MESSAGES2X7): $(MESSAGES2O)
-	$(call X7,$(MESSAGES2O))
+	$(call X7,$(MESSAGES2O),0)
 
 #
 # MESSAGES module
@@ -282,7 +282,7 @@ $(DISKLIBVARS): $(DISKLIBO)
 	$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 $(DISKLIBX7): $(DISKLIBO)
-	$(call X7,$(DISKLIBO))
+	$(call X7,$(DISKLIBO),0)
 
 #
 # TREELIB module (compressed)(self-decompressing)
@@ -295,7 +295,7 @@ $(TREELIBVARS): $(TREELIBO)
 	$(call VARS,!/;VARS;/,$(TREELIBO))
 
 $(TREELIBX7): $(TREELIBO)
-	$(call X7,$(TREELIBO))
+	$(call X7,$(TREELIBO),0)
 
 #
 # Filer (compressed)
@@ -332,7 +332,7 @@ $(CATLIBVARS): $(CATLIBO)
 	$(call VARS,/;CATLIB.S;/,$(CATLIBO))
 
 $(CATLIBX7): $(CATLIBO)
-	$(call X7,$(CATLIBO))
+	$(call X7,$(CATLIBO),0)
 
 #
 # Copy module (compressed)(self-decompressing)
@@ -345,7 +345,7 @@ $(COPYVARS): $(COPYO)
 	$(call VARS,/;COPY.S;/,$(COPYO))
 
 $(COPYX7): $(COPYO)
-	$(call X7,$(COPYO))
+	$(call X7,$(COPYO),0)
 
 #
 # Catalog module (compressed)(self-decompressing)
@@ -358,7 +358,7 @@ $(CATALOGVARS): $(CATALOGO)
 	$(call VARS,/;CATALOG.S;/,$(CATALOGO))
 
 $(CATALOGX7): $(CATALOGO)
-	$(call X7,$(CATALOGO))
+	$(call X7,$(CATALOGO),0)
 
 #
 # Delete module (compressed)(self-decompressing)
@@ -371,7 +371,7 @@ $(DELLIBVARS): $(DELLIBO)
 	$(call VARS,/;DELLIB.S;/,$(DELLIBO))
 
 $(DELLIBX7): $(DELLIBO)
-	$(call X7,$(DELLIBO))
+	$(call X7,$(DELLIBO),0)
 
 #
 # Verify module (compressed)(self-decompressing)
@@ -384,7 +384,7 @@ $(VERIFYVARS): $(VERIFYO)
 	$(call VARS,/;VERIFY.S;/,$(VERIFYO))
 
 $(VERIFYX7): $(VERIFYO)
-	$(call X7,$(VERIFYO))
+	$(call X7,$(VERIFYO),0)
 
 #
 # Disk Map module (compressed)(self-decompressing)
@@ -397,7 +397,7 @@ $(DISKMAPVARS): $(DISKMAPO)
 	$(call VARS,/;DISKMAP.S;/,$(DISKMAPO))
 
 $(DISKMAPX7): $(DISKMAPO)
-	$(call X7,$(DISKMAPO))
+	$(call X7,$(DISKMAPO),0)
 
 #
 # Undelete module (compressed)(self-decompressing)
@@ -410,7 +410,7 @@ $(UNDELETEVARS): $(UNDELETEO)
 	$(call VARS,/;UNDELETE.S;/,$(UNDELETEO))
 
 $(UNDELETEX7): $(UNDELETEO)
-	$(call X7,$(UNDELETEO))
+	$(call X7,$(UNDELETEO),0)
 
 #
 # Miscellaneous module (compressed)(self-decompressing)
@@ -425,7 +425,7 @@ $(MISCLIBVARS): $(MISCLIBO)
 	$(call VARS,/;MISCLIB.S;/,$(MISCLIBO))
 
 $(MISCLIBX7): $(MISCLIBO)
-	$(call X7,$(MISCLIBO))
+	$(call X7,$(MISCLIBO),0)
 
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
