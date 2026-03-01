@@ -29,7 +29,6 @@ BOOTEND
 *
 PHRWTSX7BEG
             ORG   PHRWTSADR
-            PUTBIN ../build/PHRWTS.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    PHRWTSEND
@@ -65,11 +64,20 @@ DZX0BEG
             ORG   ZXMODULE
             PUT   DZX0TURBO
             PUT   DISPATCH
+            ERR   *#JPHRWTS
+            PUTBIN ../build/PHRWTS.O.JMP
+            ERR   *#JDELLIB
+            PUTBIN ../build/DELLIB.O.JMP
+            ERR   *#JMISCLIB
+            PUTBIN ../build/MISCLIB.O.JMP
+            ERR   *#JTREELIB
+            PUTBIN ../build/TREELIB.O.JMP
             ORG
 DZX0END
 *
 DISKLIBX7BEG
             ORG   DISKLIB
+            PUTBIN ../build/DISKLIB.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    DISKLIBEND
@@ -90,6 +98,7 @@ TREELIBX7END
 *
 CATLIBX7BEG
             ORG   CATLIB
+            PUTBIN ../build/CATLIB.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    CATLIBEND

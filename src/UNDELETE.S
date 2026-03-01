@@ -18,17 +18,14 @@ UNDEL
 *        UNDELETE FILES            *
 ************************************
 *
-            JSR   TREELIB     ;decompress TREELIB module
             JSR   COMTRE
             LDY   #0
             STY   DELFLG
             INY
             STY   STATE
-            JSR   CATLIB      ;decompress CATLIB module
             JSR   CATDIS
             LDA   #$80
             STA   DELFLG
-            JSR   DISKLIB     ;decompress DISKLIB module
             JSR   PATMOV
             LDA   FILNUM
             BNE   :GOTFILS

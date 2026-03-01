@@ -29,6 +29,7 @@
 * DEVTYP - get current device info*
 * DVTYPX - get device info       *
 * GODEV - vector to device info  *
+* INFLST - data for ST/GTINFO    *
 **********************************
 
 *
@@ -666,5 +667,17 @@ STPFXC      STA   TMPPTR+1
 :OUT        RTS
 :PFXLST     DB    $1
             DW    PFX
+*
+INFLST      DB    $A
+            DW    FILE
+            DB    $0
+            DB    $0
+            DB    $0,$0
+            DB    $0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
 *
 PRODOSEND

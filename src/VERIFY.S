@@ -19,7 +19,6 @@ VERIFY
 *           VERIFY OPTIONS          *
 *************************************
 *
-            JSR   TREELIB     ;decompress TREELIB module
             LDA   CHOOZOPT
             BNE   :NOTFIL
             JSR   COMTRE
@@ -90,7 +89,7 @@ VERIFY
             JSR   PRINT
             LDA   #$40        ;RATCHET!
             STA   RCMND       ;(SETS TRK 0)
-            >>>   JSRMODULE,DISKLIB;DORWTS
+            JSR   DORWTS
             LDA   #$10        ;SET VERIFY
             STA   RCMND
 :TRACKLP    JSR   CKESC
@@ -144,9 +143,8 @@ VERIFY
 ************  VERIFY FILES  ********
 :VFILES     LDA   #$01
             STA   STATE
-                              ;SELECT FILES
-            >>>   JSRMODULE,CATLIB;CATDIS
-            >>>   JSRMODULE,DISKLIB;PATMOV
+            JSR   CATDIS      ;SELECT FILES
+            JSR   PATMOV
             LDA   FILNUM
             BNE   :GOTFILS
             JMP   NOSEL
@@ -269,109 +267,6 @@ VERIFY
 *
 *
 *
-**********  DISK SPEED  *************
-*
-:SPEED1     JSR   CROUT
-            JSR   DEVTYP
-            BEQ   :DOSPEED
-            JMP   FLONLY
-*
-:DOSPEED    JSR   PRHERE
-            DB    $8D,$8D,$8D
-            ASC   "Insert a blank disk in ",00
-            LDA   UNIT
-            JSR   SEEDEV
-            JSR   CROUT2
-            LDA   #MCRESC
-            JSR   PRINT
-            JSR   KYESC
-            JSR   HOME
-            LDA   #$40        ;RATCHET!
-            STA   RCMND
-                              ;(This call will enforce UDC 5.25 mode)
-            >>>   JSRMODULE,DISKLIB;DORWTS
-            LDA   #$22
-            STA   RTRACK
-            LDA   #$00
-            STA   RCMND       ;SEEK TRK $22
-            JSR   DORWTS
-            LDX   HSLOT
-            LDA   $C089,X     ;MOTOR BACK ON
-            LDA   $C08D,X
-            LDA   $C08E,X     ;WP CHECK
-            BPL   :OK2
-            LDA   $C08C,X     ;FAILED:
-            LDA   $C088,X     ;MOTOR OFF,
-            LDA   #$2B
-            STA   RRTN
-            JMP   OUCH
-*
-:OK2        JSR   CRIT1       ;ELSE WRITE
-            JSR   PRHERE
-            DB    $8D,$8D,$8D
-            ASC   "Drive speed should be between 198.0 ms.",8D
-            ASC   "and 202.0 ms.",8D,8D
-            ASC   "Drive speed is       ms.",8D,8D
-            ASC   "([Esc]-Exit)",00
-:TEST       JSR   CRIT2       ;TIME IT.
-            ASL   HEXNUM
-            ROL   HEXNUM+1    ; * 2.
-            LDA   HEXNUM+1    ;TOO BIG?
-            BMI   :TEST       ;TRY AGAIN.
-            STA   :SHIFTER+1
-            LDA   HEXNUM
-            STA   :SHIFTER
-            LDA   #$3E        ; / $1.053E
-            STA   :DIVER      ;=/  1.020477
-            LDA   #$05
-            STA   :DIVER+1
-            LDX   #$10
-:DIVLP      LSR   :SHIFTER+1  ;SHIFT DIVDEND
-            ROR   :SHIFTER    ;BIT SMALLER
-            ASL   :DIVER      ;DIVISOR BIT
-            ROL   :DIVER+1    ;TO KNOCK OFF?
-            BCC   :DIVNEXT    ;NO.
-            LDA   HEXNUM      ;YES:SUBTRACT.
-            SBC   :SHIFTER
-            STA   HEXNUM
-            LDA   HEXNUM+1
-            SBC   :SHIFTER+1
-            STA   HEXNUM+1
-:DIVNEXT    DEX
-            BNE   :DIVLP
-            JSR   HEXDEC      ;-> 20,000
-            LDA   #$09
-            JSR   TABV
-            LDA   #$0F
-            STA   CH
-            LDY   #3
-:HEXLP      LDA   DIGIT+1,Y
-            JSR   PHHEX
-            DEY
-            BNE   :HEXLP
-            LDA   #"."
-            JSR   PCOUT
-            LDA   DIGIT+1
-            JSR   PHHEX
-            LDA   $C000       ;ESC?
-            CMP   #$9B
-            BNE   :TEST       ;NOT YET...
-            STA   $C010
-*LDX RSLOT
-            LDX   HSLOT
-            LDA   $C088,X     ;MOTOR OFF.
-            RTS
-*
-*
-:SHIFTER    DB    $00,$00
-:DIVER      DB    $3E,$05
-*
-INTLV1      EQU   *
-            DB    $0,$7,$E,$6,$D,$5,$C,$4
-            DB    $B,$3,$A,$2,$9,$1,$8,$F
-*
-*
-*
 *
 ************************************
 *    DISK SPEED CRITICAL CODE      *
@@ -453,5 +348,107 @@ CRIT2       EQU   *
 :DONE       STY   HEXNUM
             PLP
             RTS
+*
+*
+*
+**********  DISK SPEED  *************
+*
+:SPEED1     JSR   CROUT
+            JSR   DEVTYP
+            BEQ   :DOSPEED
+            JMP   FLONLY
+*
+:DOSPEED    JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Insert a blank disk in ",00
+            LDA   UNIT
+            JSR   SEEDEV
+            JSR   CROUT2
+            LDA   #MCRESC
+            JSR   PRINT
+            JSR   KYESC
+            JSR   HOME
+            LDA   #$40        ;RATCHET!
+            STA   RCMND
+            JSR   DORWTS      ;(This call will enforce UDC 5.25 mode)
+            LDA   #$22
+            STA   RTRACK
+            LDA   #$00
+            STA   RCMND       ;SEEK TRK $22
+            JSR   DORWTS
+            LDX   HSLOT
+            LDA   $C089,X     ;MOTOR BACK ON
+            LDA   $C08D,X
+            LDA   $C08E,X     ;WP CHECK
+            BPL   :OK2
+            LDA   $C08C,X     ;FAILED:
+            LDA   $C088,X     ;MOTOR OFF,
+            LDA   #$2B
+            STA   RRTN
+            JMP   OUCH
+*
+:OK2        JSR   CRIT1       ;ELSE WRITE
+            JSR   PRHERE
+            DB    $8D,$8D,$8D
+            ASC   "Drive speed should be between 198.0 ms.",8D
+            ASC   "and 202.0 ms.",8D,8D
+            ASC   "Drive speed is       ms.",8D,8D
+            ASC   "([Esc]-Exit)",00
+:TEST       JSR   CRIT2       ;TIME IT.
+            ASL   HEXNUM
+            ROL   HEXNUM+1    ; * 2.
+            LDA   HEXNUM+1    ;TOO BIG?
+            BMI   :TEST       ;TRY AGAIN.
+            STA   :SHIFTER+1
+            LDA   HEXNUM
+            STA   :SHIFTER
+            LDA   #$3E        ; / $1.053E
+            STA   :DIVER      ;=/  1.020477
+            LDA   #$05
+            STA   :DIVER+1
+            LDX   #$10
+:DIVLP      LSR   :SHIFTER+1  ;SHIFT DIVDEND
+            ROR   :SHIFTER    ;BIT SMALLER
+            ASL   :DIVER      ;DIVISOR BIT
+            ROL   :DIVER+1    ;TO KNOCK OFF?
+            BCC   :DIVNEXT    ;NO.
+            LDA   HEXNUM      ;YES:SUBTRACT.
+            SBC   :SHIFTER
+            STA   HEXNUM
+            LDA   HEXNUM+1
+            SBC   :SHIFTER+1
+            STA   HEXNUM+1
+:DIVNEXT    DEX
+            BNE   :DIVLP
+            JSR   HEXDEC      ;-> 20,000
+            LDA   #$09
+            JSR   TABV
+            LDA   #$0F
+            STA   CH
+            LDY   #3
+:HEXLP      LDA   DIGIT+1,Y
+            JSR   PHHEX
+            DEY
+            BNE   :HEXLP
+            LDA   #"."
+            JSR   PCOUT
+            LDA   DIGIT+1
+            JSR   PHHEX
+            LDA   $C000       ;ESC?
+            CMP   #$9B
+            BNE   :TEST       ;NOT YET...
+            STA   $C010
+*LDX RSLOT
+            LDX   HSLOT
+            LDA   $C088,X     ;MOTOR OFF.
+            RTS
+*
+*
+:SHIFTER    DB    $00,$00
+:DIVER      DB    $3E,$05
+*
+INTLV1      EQU   *
+            DB    $0,$7,$E,$6,$D,$5,$C,$4
+            DB    $B,$3,$A,$2,$9,$1,$8,$F
 *
 VERIFYEND

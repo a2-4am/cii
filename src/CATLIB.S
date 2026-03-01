@@ -12,9 +12,6 @@
             PUT   ../build/TREELIB.VARS
             ORG   TREELIBEND
 CATLIB
-            ORG   *+3
-            RTS
-
 **********************************
 *    CATALOG DISPLAY LIBRARY     *
 * CATLIN - display catalog line  *
@@ -35,10 +32,28 @@ CATLIB
 * TYPES - recognized filetypes   *
 * PLACE - input file into entry  *
 **********************************
+CATLIN      >>>   JMPMODULE,DECOMPRESS;_CATLIN
+CATLN1      >>>   JMPMODULE,DECOMPRESS;_CATLN1
+CATDIS      >>>   JMPMODULE,DECOMPRESS;_CATDIS
+CDDOKEY     >>>   JMPMODULE,DECOMPRESS;_CDDOKEY
+FILEQ       >>>   JMPMODULE,DECOMPRESS;_FILEQ
+UNMARK      >>>   JMPMODULE,DECOMPRESS;_UNMARK
+DIVEIN      >>>   JMPMODULE,DECOMPRESS;_DIVEIN
+DIVOUT      >>>   JMPMODULE,DECOMPRESS;_DIVOUT
+DIVECK      >>>   JMPMODULE,DECOMPRESS;_DIVECK
+INITCD      >>>   JMPMODULE,DECOMPRESS;_INITCD
+RDACNT      >>>   JMPMODULE,DECOMPRESS;_RDACNT
+SETHIM      >>>   JMPMODULE,DECOMPRESS;_SETHIM
+DOWAIT      >>>   JMPMODULE,DECOMPRESS;_DOWAIT
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
+
 *
 *
 * SHOW A LINE OF CATALOG
-CATLIN      PHA
+_CATLIN     EQU   *
+            PHA
             JSR   PRSPC
             JSR   PRSPC
             PLA
@@ -47,7 +62,8 @@ CATLIN      PHA
 *
 * ENTRY POINT TO DISPLAY 1 CATALOG LINE
 *
-CATLN1      PHA
+_CATLN1     EQU   *
+            PHA
             LDX   SHOW        ;SET *POINT
             JSR   SETPNT
             PLA
@@ -431,7 +447,8 @@ TYPBYT      EQU   *
 * 'DO' THE CATALOG DISPLAY &
 * EVERYTHING THAT IT INVOLVES
 *
-CATDIS      JSR   INITCD
+_CATDIS     EQU   *
+            JSR   INITCD
             LDA   #0
             STA   SP
             JSR   RDACNT
@@ -507,7 +524,8 @@ SCROLF      EQU   *
 * entry point called by this module
 * and VIEW
 *
-CDDOKEY     JSR   SEECAT
+_CDDOKEY    EQU   *
+            JSR   SEECAT
             JSR   CHKKEY      ;GET CHARACTER
             STA   :TEMP
             BNE   :NOTARO
@@ -523,7 +541,7 @@ CDDOKEY     JSR   SEECAT
             BNE   :DOLOOK     ;ALWAYS
 *
 :BSCROL     LDX   CURR        ;BACKWARD
-            BEQ   CDDOKEY     ;SCROLL
+            BEQ   _CDDOKEY    ;SCROLL
             DEX
             STX   CURR
             JMP   CDDOKEY
@@ -548,7 +566,7 @@ CDDOKEY     JSR   SEECAT
             DEX
             BPL   :NXTCHAR
             CMP   #"D"
-            BNE   CDDOKEY     ;NOT FOUND
+            BNE   _CDDOKEY    ;NOT FOUND
             LDX   #3          ;ALLOW D=U
 *
 :INDEX      CPX   #6
@@ -575,7 +593,7 @@ CDDOKEY     JSR   SEECAT
             LDA   (POINT),Y
             STA   :JUMP+2
 :JUMP       JSR   $1000
-            BCC   CDDOKEY
+            BCC   _CDDOKEY
             CMP   #$FF
             BNE   :OUT
             JMP   CATDS1      ;DIR CHANGE
@@ -920,7 +938,8 @@ NEWNAM      EQU   *
 * by the operation rather than by
 * user interaction.
 *
-FILEQ       LDA   FILNUM
+_FILEQ      EQU   *
+            LDA   FILNUM
             STA   NACTIV
             LDA   #$FF
             DB    $2C         ;HIDE LDA #0
@@ -1053,7 +1072,8 @@ CSTAT       EQU   *
             JSR   HEXDEC      ;CVRT TO DEC
             JMP   PRT3RJ
 *
-UNMARK      LDY   CURR        ;IS SOMETHING
+_UNMARK     EQU   *
+            LDY   CURR        ;IS SOMETHING
             LDA   STATUS,Y    ;THERE?
             BEQ   :NOPE
             LDX   #$FF        ;YES: LOOP
@@ -1075,7 +1095,8 @@ UNMARK      LDY   CURR        ;IS SOMETHING
 * after operating on all the relevant files
 * in a subdirectory
 *
-DIVOUT      LDA   #0
+_DIVOUT     EQU   *
+            LDA   #0
             DB    $2C         ;HIDE LDA #$FF
 *
 * 'DIVE OUT' of subdirectory (interactive)
@@ -1179,8 +1200,9 @@ ST8MSG      EQU   *
 * deleting a subdirectory, and from
 * DISKMAP while entering a subdirectory
 *
-DIVEIN      JSR   CURPNT
-            >>>   JSRMODULE,DISKLIB;DIR?
+_DIVEIN     EQU   *
+            JSR   CURPNT
+            JSR   DIR?
             BCS   :NOTDIR
             LDY   #$11
             LDA   (POINT),Y
@@ -1231,7 +1253,8 @@ DIVEIN      JSR   CURPNT
 * *CSECTR,*FILNUM
 *
 * called by COPY FILES and DELETE FILES(DELLIB)
-DIVECK      BCS   :GOOUT
+_DIVECK     EQU   *
+            BCS   :GOOUT
             LDA   SP
             CMP   #1
             BNE   :DVCK00
@@ -1307,7 +1330,8 @@ DIVECK      BCS   :GOOUT
 * from DIVECK after diving into or out of
 * a subdirectory, also from VIEW
 *
-INITCD      LDA   #$00
+_INITCD     EQU   *
+            LDA   #$00
             STA   CURR
             STA   FILNUM
             STA   GO
@@ -1335,7 +1359,8 @@ INITCD      LDA   #$00
 * *DELFLG=$80 FOR ACTIVE FILES
 *        =$00 FOR DELETED
 *
-RDACNT      BIT   DOSNOW
+_RDACNT     EQU   *
+            BIT   DOSNOW
             BPL   :ISDOS33    ;DOS 3.3 DISK
 *
 * IT'S A PRODOS DISK
@@ -1350,8 +1375,7 @@ RDACNT      BIT   DOSNOW
 :ISDOS33    LDA   #>DOSDAT    ;SET UP DATADR
             STA   DATADR
             LDA   #>CAT1
-                              ;ZERO CATALOG
-            >>>   JSRMODULE,DISKLIB;CLRCAT
+            JSR   CLRCAT      ;ZERO CATALOG
             LDX   #$00
             STX   NACTIV      ;NO FILES YET
             INX
@@ -1624,7 +1648,8 @@ SHTIM0      EQU   *
 *
 *
 * called by COPY DISK, COPY FILE, DELETE FILE
-SETHIM      SEC
+_SETHIM     EQU   *
+            SEC
             SBC   DATADR
             AND   #$FE
             CLC
@@ -1636,7 +1661,8 @@ SETHIM      SEC
 *
 *
 * called by COPY FILE and DELETE FILE(DELLIB)
-DOWAIT      LDX   #$03
+_DOWAIT     EQU   *
+            LDX   #$03
 :WAITLP     LDA   #$C4
             JSR   WAIT
             DEX

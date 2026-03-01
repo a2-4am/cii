@@ -11,11 +11,6 @@
             PUT   ../build/CATLIB.VARS
             PUT   ../build/TREELIB.VARS
             PUT   ../build/UNDELETE.VARS
-            ORG   UNDELEND
-MISCLIB
-            ORG   *+3
-            RTS
-
 ************************************
 *      MISCELLANEOUS LIBRARY       *
 * MAKESUB - Create Subdirectory    *
@@ -28,13 +23,27 @@ MISCLIB
 * private:                         *
 * FIXSUB - LOCK/REN/ALPHA cleanup  *
 ************************************
+            ORG   JMISCLIB
+MAKESUB     >>>   JMPMODULE,DECOMPRESS;_MAKESUB
+SETCLOCK    >>>   JMPMODULE,DECOMPRESS;_SETCLOCK
+BOOTPG      >>>   JMPMODULE,DECOMPRESS;_BOOTPG
+VIEW        >>>   JMPMODULE,DECOMPRESS;_VIEW
+ALPHA       >>>   JMPMODULE,DECOMPRESS;_ALPHA
+RENAME      >>>   JMPMODULE,DECOMPRESS;_RENAME
+LOCK        >>>   JMPMODULE,DECOMPRESS;_LOCK
+            ORG   UNDELEND
+MISCLIB
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
+
 *
 ************************************
 *           MAKE DIRECTORY         *
 ************************************
 *
-MAKESUBINTERNAL
-            >>>   JSRMODULE,TREELIB;COMTRE
+_MAKESUB    EQU   *
+            JSR   COMTRE
             BIT   DOSNOW
             BMI   :MK0
             JMP   NODOS3
@@ -62,7 +71,7 @@ MAKESUBINTERNAL
 *
 * SET CLOCK (interactively)
 *
-SETCLOCKINTERNAL
+_SETCLOCK   EQU   *
             LDA   #$16
             JSR   VLEFT
             LDA   DATE
@@ -250,16 +259,15 @@ SETCLOCKINTERNAL
 *     CHANGE BOOTING PROGRAM       *
 ************************************
 *
-BOOTPGINTERNAL
-            >>>   JSRMODULE,TREELIB;COMHDR
+_BOOTPG     EQU   *
+            JSR   COMHDR
             LDA   #$04
             STA   STATE
             BIT   DOSNOW
             BPL   :DOS33
             JMP   NOPRO
 *
-:DOS33      JSR   DISKLIB     ;decompress DISKLIB module
-            LDX   #9          ;CHECK T01S09
+:DOS33      LDX   #9          ;CHECK T01S09
             JSR   :CHKWRAPR   ;FOR DOS
             BCC   :GOTSECT
             LDX   #7          ;CHECK T01S07
@@ -267,8 +275,7 @@ BOOTPGINTERNAL
             BCS   :NODOS
 :GOTSECT    LDA   RSECTR      ;REAL DOS:
             STA   :NAMESEC
-                              ;SELECT NEW
-            >>>   JSRMODULE,CATLIB;CATDIS
+            JSR   CATDIS      ;SELECT NEW
             JSR   SWPCHK
             JSR   CURPNT      ;BOOT PROGRAM
             LDY   #$20
@@ -323,11 +330,11 @@ BOOTPGINTERNAL
 *           VIEW FILES             *
 ************************************
 *
-VIEWINTERNAL
-            >>>   JSRMODULE,TREELIB;COMTRE
+_VIEW       EQU   *
+            JSR   COMTRE
             LDA   #$05
             STA   STATE
-            >>>   JSRMODULE,CATLIB;INITCD
+            JSR   INITCD
             JSR   RDACNT
             LDA   NACTIV
             BNE   :NEXTFIL
@@ -349,8 +356,7 @@ VIEWINTERNAL
             LDA   #5
             STA   WNDTOP
             JSR   :SEEFILE    ;FILENAME
-                              ;CHECK DISK
-            >>>   JSRMODULE,DISKLIB;SWPCHK
+            JSR   SWPCHK      ;CHECK DISK
             JSR   OPNSRC      ;OPEN FILE
             LDA   #$FF
             STA   :RDFLAG
@@ -397,7 +403,7 @@ VIEWINTERNAL
 * PRINT PAGE OF VIEW DATA
 :PAGE       LDA   :RDFLAG     ;NEED TO READ
             BEQ   :GOTDATA    ;DATA?
-            >>>   JSRMODULE,DISKLIB;SWPCHK
+            JSR   SWPCHK
             JSR   RDDATA      ;READ IT
             LDA   #$00
             STA   :RDFLAG     ;CLEAR FLAG
@@ -533,12 +539,11 @@ VIEWINTERNAL
 *       ALPHABETIZE CATALOG        *
 ************************************
 *
-ALPHAINTERNAL
-            >>>   JSRMODULE,TREELIB;COMTRE
+_ALPHA      EQU   *
+            JSR   COMTRE
             LDA   #$01
             STA   DELFLG
-                              ;READ FILES
-            >>>   JSRMODULE,CATLIB;RDACNT
+            JSR   RDACNT      ;READ FILES
             LDA   NACTIV
             BEQ   :NOFILES
             LDX   #$FF
@@ -662,8 +667,7 @@ CKDEL1      EQU   *
 *          & RENAME              *
 **********************************
 *
-RENAMEINTERNAL
-            JSR   TREELIB     ;decompress TREELIB module
+_RENAME     EQU   *
             LDA   #$03
             STA   STATE
             LDA   CHOOZOPT
@@ -673,13 +677,13 @@ RENAMEINTERNAL
             BMI   RENVOL
             JMP   NODOS3
 *
-LOCKINTERNAL
+_LOCK       EQU   *
             LDA   #$02
             STA   STATE
 *
 REN2        EQU   *
             JSR   COMTRE
-            >>>   JSRMODULE,CATLIB;CATDIS
+            JSR   CATDIS
             LDA   FILNUM
             BNE   :GOTFILS
             JMP   NOSEL
@@ -715,7 +719,7 @@ RENVOL      EQU   *
 * PARENT POINTERS ARE UPDATED.
 *
 FIXSUB      EQU   *
-            >>>   JSRMODULE,DISKLIB;SWPCHK
+            JSR   SWPCHK
             BIT   DOSNOW
             BPL   :FXSB1      ;NOT PRODOS
 *

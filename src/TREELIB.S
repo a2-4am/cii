@@ -7,11 +7,6 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            ORG   DISKLIBEND
-
-TREELIB
-            ORG   *+3
-            RTS
 
 **********************************
 *          TREE LIBRARY          *
@@ -23,6 +18,19 @@ TREELIB
 * SETA
 * DOTREE
 **********************************
+            ORG   JTREELIB
+COMTRE      >>>   JMPMODULE,DECOMPRESS;_COMTRE
+CT1         >>>   JMPMODULE,DECOMPRESS;_CT1
+COMHDR      >>>   JMPMODULE,DECOMPRESS;_COMHDR
+COMH00      >>>   JMPMODULE,DECOMPRESS;_COMH00
+TREEA       >>>   JMPMODULE,DECOMPRESS;_TREEA
+SETA        >>>   JMPMODULE,DECOMPRESS;_SETA
+DOTREE      >>>   JMPMODULE,DECOMPRESS;_DOTREE
+            ORG   DISKLIBEND
+TREELIB
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
 
 *
 *
@@ -30,10 +38,12 @@ TREELIB
 * Choose ProDOS device then choose directory
 * called by ALPHABETIZE, DELETE(DELLIB),
 * RENAME FILES, MAKESUB, UNDELETE, VERIFY, and VIEW
-COMTRE      JSR   DODEVP
+_COMTRE     EQU   *
+            JSR   DODEVP
             JSR   TREEA
             JSR   COMH00
-CT1         BIT   DOSNOW
+_CT1        EQU   *
+            BIT   DOSNOW
             BPL   :CTOUT      ;DOS 3.3
             LDA   RRTN
             BEQ   :CTOUT      ;NO ERROR
@@ -51,30 +61,33 @@ CT1         BIT   DOSNOW
 *
 :CTERR1     JMP   WDERR
 *
-COMHDR      JSR   DODEVP
+_COMHDR     EQU   *
+            JSR   DODEVP
             JSR   SETA
             JSR   COMH00
             LDA   CHOICE
             CMP   #MVERIFY    ;VERIFY DISK?
-            BNE   CT1         ;NO
+            BNE   _CT1        ;NO
             RTS
-
-COMH00      JSR   TOP1
+*
+_COMH00     EQU   *
+            JSR   TOP1
             JMP   PRVNM
 *
-*
-*
-TREEA       >>>   JSRMODULE,DISKLIB;DOSTYP
+_TREEA      EQU   *
+            JSR   DOSTYP
             LDA   #APFX
             STA   PFXADR
             LDA   #>APFX
             STA   PFXADR+1
             LDA   ACURR
             JSR   DOTREE
-            BCS   SETA        ;I/O ERROR
+            BCS   _SETA       ;I/O ERROR
             STA   ACURR
             RTS
-SETA        >>>   JSRMODULE,DISKLIB;DOSTYP
+*
+_SETA       EQU   *
+            JSR   DOSTYP
             LDA   UNIT
             JMP   UNTPFX
 *
@@ -95,7 +108,7 @@ SETA        >>>   JSRMODULE,DISKLIB;DOSTYP
 * DIRBLK,+1= BLK # OF SUBDIR
 *
 * CALLS SETPFX AND SETSD
-DOTREE      
+_DOTREE     EQU   *
             PHA
             LDY   FLAG80      ;FF OR 0
             INY

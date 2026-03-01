@@ -22,7 +22,6 @@ COPY
 *             COPY             *
 ********************************
 *
-            JSR   DISKLIB     ;decompress DISKLIB module
             LDA   #>TOPMEM
             STA   HIMEM
             LDY   #0
@@ -80,8 +79,7 @@ COPY
 *
 :ITSDISK    LDA   #MDISK      ;Set to say DISK, not DISK W/ FORMAT
             STA   OPTCHS      ; cuz DISK W/ FORMAT doesn't fit on screen.
-                              ;Say it.
-            >>>   JSRMODULE,TREELIB;COMH00
+            JSR   COMH00      ;Say it.
             JSR   :INSDSK
             LDA   #0
             STA   :PASSNUM
@@ -233,8 +231,7 @@ COPY
 :NOPRO      JSR   HOME
             JMP   NOPRO
 *
-:ITSDOS                       ;COPY DOS  SLOT: s DRIVE: d
-            >>>   JSRMODULE,TREELIB;COMH00
+:ITSDOS     JSR   COMH00      ;COPY DOS  SLOT: s DRIVE: d
             JSR   SRCHDR
             LDA   PUNIT
             JSR   UNTDEV
@@ -729,16 +726,15 @@ COPY
             JSR   TREEP
             JSR   TOP1
             JSR   SRCHDR
-            >>>   JSRMODULE,TREELIB;CT1
-                              ;SELECT FILES
-            >>>   JSRMODULE,CATLIB;CATDIS
+            JSR   CT1
+            JSR   CATDIS      ;SELECT FILES
             LDA   FILNUM
             BEQ   :NONE
 *
             JSR   TARHDR
             JSR   INSD
             JSR   SETS
-            >>>   JSRMODULE,TREELIB;CT1
+            JSR   CT1
             JSR   UNTPFX
             JSR   TARHDR
             JSR   PRVNM
@@ -809,7 +805,7 @@ COPY
 * ANTICIPATE PRODOS --> DOS COPY
 *
             LDA   #>TOP11
-            >>>   JSRMODULE,CATLIB;SETHIM
+            JSR   SETHIM
 *
 :CPYFILE    LDA   KBD         ;CHECK FOR ESC
             CMP   #$9B
@@ -817,8 +813,7 @@ COPY
             JSR   SRCHDR
             JSR   INSS
             JSR   SRCHDR
-                              ;UPDATE FILEQ
-            >>>   JSRMODULE,CATLIB;FILEQ
+            JSR   FILEQ       ;UPDATE FILEQ
             JSR   OPNSRC      ;OPEN & READ
             BIT   PDOS
             BPL   :CPF0       ;SRC = DOS
@@ -890,9 +885,9 @@ COPY
 *
             JSR   SRCHDR
             JSR   INSS
-            >>>   JSRMODULE,CATLIB;DIVEIN
+            JSR   DIVEIN
             CLC
-            >>>   JSRMODULE,CATLIB;DIVECK
+            JSR   DIVECK
             JSR   SRCHDR
             JSR   :TARDIN
             LDX   #$FF
@@ -912,10 +907,10 @@ COPY
             BPL   :INROOT     ;DOS 3.3
             JSR   SRCHDR
             JSR   INSS
-            >>>   JSRMODULE,CATLIB;DIVOUT
+            JSR   DIVOUT
             BCS   :INROOT     ;IN ROOT
             SEC
-            >>>   JSRMODULE,CATLIB;DIVECK
+            JSR   DIVECK
             JSR   SRCHDR
             JSR   :TARDOUT
             JMP   :FIN2
@@ -1052,7 +1047,7 @@ COPY
 *
 :DONT       JSR   PCOUT
                               ;UNMARK
-            >>>   JSRMODULE,CATLIB;UNMARK
+            JSR   UNMARK
 :COMOUT0    SEC
 :COMOUT     PHA
             PHP
@@ -1086,7 +1081,7 @@ COPY
             JMP   :ODOS33
 *
 :OPRODOS    LDA   #>TOPMEM
-            >>>   JSRMODULE,CATLIB;SETHIM
+            JSR   SETHIM
 *
             JSR   CURPNT
             LDA   #0
@@ -1199,7 +1194,7 @@ COPY
 :DOCRT1     BCC   :OPNDES1
             CMP   #$47
             BNE   :ERR
-            >>>   JSRMODULE,DELLIB;GTINFO
+            JSR   GTINFO
             LDA   INFLST+3
             AND   #$C2
             EOR   #$C2
@@ -1209,8 +1204,7 @@ COPY
             JSR   :DUP
             BCC   :DOCREAT    ;CHANGED NAME
             BEQ   :NODO
-                              ;COPY ANYWAY
-            >>>   JSRMODULE,DELLIB;PDSTRY
+            JSR   PDSTRY      ;COPY ANYWAY
             JMP   :DOCREAT
 *
 :OPNDES1    JSR   DOMLI       ;OPEN FILE
@@ -1233,7 +1227,7 @@ COPY
             DB    $0
 *
 :ODOS33     LDA   #>TOP10
-            >>>   JSRMODULE,CATLIB;SETHIM
+            JSR   SETHIM
             BIT   PDOS
             BPL   :DOS2DOS    ;DOS --> DOS
             DEC   HIMEM       ;PRODOS -> DOS
@@ -1393,7 +1387,7 @@ COPY
             PHA
             STA   POINT+1
             LDA   #1
-            >>>   JSRMODULE,DELLIB;D1FILE
+            JSR   D1FILE
             JSR   WRCAT2
             PLA
             STA   POINT2+1
@@ -1609,7 +1603,7 @@ COPY
 :SKIPEOF    JSR   DOMLI
             DB    $CC
             DW    :CLSLST
-            >>>   JSRMODULE,DELLIB;GTINFO
+            JSR   GTINFO
             LDA   ACCESS
             STA   INFLST+3
             LDY   #3
@@ -1617,7 +1611,7 @@ COPY
             STA   INFLST+$0A,Y
             DEY
             BPL   :MDTLP
-            >>>   JSRMODULE,DELLIB;STINFO
+            JSR   STINFO
 :D2P6       RTS
 *
 *
@@ -2259,7 +2253,7 @@ DODVP1      EQU   *
 *
 DODVS1      EQU   *
             JSR   HOME
-            >>>   JSRMODULE,CATLIB;DOWAIT
+            JSR   DOWAIT
             LDA   #0
 * STA *SPFX
 * STA *SPFX+5
@@ -2289,7 +2283,7 @@ TREEP       EQU   *
             LDA   #>PPFX
             STA   PFXADR+1
             LDA   PCURR
-            >>>   JSRMODULE,TREELIB;DOTREE
+            JSR   DOTREE
             BCS   SETP
             STA   PCURR
             RTS
@@ -2321,7 +2315,7 @@ TREES       EQU   *
             LDA   #>SPFX
             STA   PFXADR+1
             LDA   SCURR
-            >>>   JSRMODULE,TREELIB;DOTREE
+            JSR   DOTREE
             BCS   SETS
             STA   SCURR
             RTS

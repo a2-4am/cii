@@ -18,7 +18,7 @@ TSMAP
 *            DISK MAP              *
 ************************************
 *
-            >>>   JSRMODULE,TREELIB;COMHDR
+            JSR   COMHDR
             BIT   A2E
             BPL   :C00EQ
             STA   $C00E
@@ -28,8 +28,7 @@ TSMAP
             JMP   FLONLY      ;NOT DISK II
 *
 :DISKII     JSR   CROUT2
-                              ;READ CATALOG
-            >>>   JSRMODULE,CATLIB;RDACNT
+            JSR   RDACNT      ;READ CATALOG
             LDA   NACTIV      ;ANY FILES?
             BNE   :GOTFILS
             LDA   #MNOFILES   ;'NO FILES'
@@ -85,7 +84,6 @@ TSMAP
             LDY   #$00        ;TRACK INDEX
 :TRKLP      LDA   #$06        ;POSITION EACH
             JSR   TABV        ;TRACK
-            JSR   DISKLIB     ;decompress DISKLIB module
             LDA   #$00
             STA   SECTOR      ;SECTOR INDEX
 :SECTLP     BIT   DOSNOW

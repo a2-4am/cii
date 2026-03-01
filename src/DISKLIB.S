@@ -7,11 +7,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/READLIB.VARS
             ORG   READLIBEND
-
 DISKLIB
-            ORG   *+3
-            RTS
-
 **********************************
 *          DISK LIBRARY          *
 * DOWBLK - write block (w/error) *
@@ -32,9 +28,36 @@ DISKLIB
 * DOSTYP - ProDOS or DOS?        *
 * PATMOV - reorder STATUS array  *
 * DIR? - *POINT is directory?    *
+* NODOS3 - error handler         *
 **********************************
+DOWBLK      >>>   JMPMODULE,DECOMPRESS;_DOWBLK
+DOVTOC      >>>   JMPMODULE,DECOMPRESS;_DOVTOC
+CLRCAT      >>>   JMPMODULE,DECOMPRESS;_CLRCAT
+WRCAT1      >>>   JMPMODULE,DECOMPRESS;_WRCAT1
+WRCAT2      >>>   JMPMODULE,DECOMPRESS;_WRCAT2
+DOCAT       >>>   JMPMODULE,DECOMPRESS;_DOCAT
+DOMASK      >>>   JMPMODULE,DECOMPRESS;_DOMASK
+STVTOC      >>>   JMPMODULE,DECOMPRESS;_STVTOC
+DOS?        >>>   JMPMODULE,DECOMPRESS;_DOS?
+CHKDOS      >>>   JMPMODULE,DECOMPRESS;_CHKDOS
+PUTSEC      >>>   JMPMODULE,DECOMPRESS;_PUTSEC
+SET1A2      >>>   JMPMODULE,DECOMPRESS;_SET1A2
+DORWTS      >>>   JMPMODULE,DECOMPRESS;_DORWTS
+SWPCHK      >>>   JMPMODULE,DECOMPRESS;_SWPCHK
+SWCK        >>>   JMPMODULE,DECOMPRESS;_SWCK
+DOSTYP      >>>   JMPMODULE,DECOMPRESS;_DOSTYP
+PATMOV      >>>   JMPMODULE,DECOMPRESS;_PATMOV
+DIR?        >>>   JMPMODULE,DECOMPRESS;_DIR?
+NODOS3      >>>   JMPMODULE,DECOMPRESS;_NODOS3
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
 
-DOWBLK      JSR   WTBLK
+*
+* WRITE BLOCK, WITH ERROR HANDLING
+*
+_DOWBLK     EQU   *
+            JSR   WTBLK
             BCS   :ERROUT
             RTS
 :ERROUT     JMP   ERROUT
@@ -43,7 +66,8 @@ DOWBLK      JSR   WTBLK
 * READ/WRITE VTOC, READY FOR CATALOG
 *
 * TAKES PAGE IN X
-DOVTOC      STX   RPAGE       ;SET PAGE
+_DOVTOC     EQU   *
+            STX   RPAGE       ;SET PAGE
             STX   POINT+1
             JSR   STVTOC      ;RETURNS A=0
             STA   POINT
@@ -65,7 +89,8 @@ DOVTOC      STX   RPAGE       ;SET PAGE
 * CLEAR CATALOG SECTORS
 * called by RDACNT(CATLIB), DELETE DISK(DELLIB),
 * RDCAT1, and RDCAT2
-CLRCAT      STA   POINT+1
+_CLRCAT     EQU   *
+            STA   POINT+1
             LDA   #$00
             STA   POINT
             TAY
@@ -89,11 +114,13 @@ CLRCAT      STA   POINT+1
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
 *
-WRCAT1      LDX   #>VTOC1
+_WRCAT1     EQU   *
+            LDX   #>VTOC1
             LDA   #$02
-            BNE   DOCAT       ;ALWAYS
+            BNE   _DOCAT      ;ALWAYS
 *
-WRCAT2      BIT   DOSNOW
+_WRCAT2     EQU   *
+            BIT   DOSNOW
             BPL   :DOS33
             JMP   CLOSE       ;NO JUST CLEAN UP
 :DOS33      LDX   #>VTOC2     ;YES WRITE CATALOG
@@ -106,7 +133,7 @@ WRCAT2      BIT   DOSNOW
 * TAKES VTOC PAGE IN X
 * TAKES RWTS COMMAND (1 OR 2) IN A
 *
-DOCAT
+_DOCAT      EQU   *
             STA   RCMND
             BIT   DOSNOW
             BPL   :DOS33
@@ -188,7 +215,8 @@ PDOCAT      EQU   *
 * called from COPY, DISKMAP, FREES(DELLIB),
 * and UNDELETE
 *
-DOMASK      TAX
+_DOMASK     EQU   *
+            TAX
             LDA   #$00
             STA   BITMSK+1
             STA   BITMSK
@@ -200,7 +228,8 @@ DOMASK      TAX
 :OUT        RTS
 *
 *
-STVTOC      LDA   #$11
+_STVTOC     EQU   *
+            LDA   #$11
             STA   RTRACK
             LDA   #$00
             STA   RSECTR
@@ -210,7 +239,8 @@ STVTOC      LDA   #$11
 * read T00S00 and check for recognized DOS-shaped bootloader
 * called by Copy DOS (COPY) and Delete DOS (DELLIB)
 * 
-DOS?        LDX   #0
+_DOS?       EQU   *
+            LDX   #0
             JSR   PUTSEC
             STX   RTRACK
             JSR   DORWTS
@@ -223,7 +253,8 @@ DOS?        LDX   #0
             JMP   PRTPRS
 *
 * called by DOS? (above) and also CHANGEBOOT
-CHKDOS      LDA   #2
+_CHKDOS     EQU   *
+            LDA   #2
             STA   TEMP
 :CHECKLP    LDA   DATA,Y      ;MATCH PATTERN
             CMP   :DOSPAT,X   ;TO VERIFY
@@ -239,7 +270,8 @@ CHKDOS      LDA   #2
 :DOSPAT     DB    $E0,$00,$F0,$A6,$2B,$BD
 *
 * called by DOS? and also CHANGEBOOT
-PUTSEC      STX   RSECTR      ;SET SECTOR
+_PUTSEC     EQU   *
+            STX   RSECTR      ;SET SECTOR
             LDA   #>DATA
             STA   RPAGE       ;SET ADDR
             LDA   #$01
@@ -247,14 +279,16 @@ PUTSEC      STX   RSECTR      ;SET SECTOR
             STA   RCMND       ;SET COMMAND
             RTS
 *
-SET1A2      STA   CVTOC+$3C
+_SET1A2     EQU   *
+            STA   CVTOC+$3C
             STA   CVTOC+$3D
             STA   CVTOC+$40
             STA   CVTOC+$41
             LDA   #2
             STA   RCMND
 * falls through to DORWTS
-DORWTS      JSR   PHRWTS
+_DORWTS     EQU   *
+            JSR   PHRWTS
             BCS   DISKLIBERR
             RTS
 *
@@ -267,7 +301,8 @@ DISKLIBERR  EQU   *
 *
 * called by COPY FILES, DELETE FILES, DISK MAP,
 * BOOTPG, VIEW FILES, UNDELETE, and VERIFY FILES
-SWPCHK      LDA   DOSNOW
+_SWPCHK     EQU   *
+            LDA   DOSNOW
             STA   CURDOS
 :SWPCHK0    LDA   #>PFX
             LDY   #PFX
@@ -276,7 +311,7 @@ SWPCHK      LDA   DOSNOW
             BCS   :SWPCHK0
             RTS
 * alternate entry point also called by COPY FILES
-SWCK
+_SWCK       EQU   *
 * -> A/Y points to prefix
 * -> X is high byte of VTOC buffer
             STA   PFXADR+1
@@ -353,7 +388,8 @@ SWPRET      EQU   *
 *
 * called by COPY DISK, DELETE DISK(DELLIB),
 * FORMAT(DELLIB), SWCK
-DOSTYP      LDA   #0
+_DOSTYP     EQU   *
+            LDA   #0
             STA   RRTN
             LDA   UNIT
             STA   :UNIT
@@ -472,7 +508,8 @@ DOSTYP      LDA   #0
 * in the catalog display and the user
 * has asked to begin the process
 *
-PATMOV      LDX   #$00
+_PATMOV     EQU   *
+            LDX   #$00
             LDY   #$00
 :LOOP       LDA   STATUS,Y
             BEQ   :NEXT
@@ -489,7 +526,8 @@ PATMOV      LDX   #$00
             RTS
 *
 * called by DIVEIN(CATLIB) and DISKMAP
-DIR?        LDY   #0
+_DIR?       EQU   *
+            LDY   #0
             LDA   (POINT),Y
             AND   #$F0
             CMP   #$D0
@@ -502,8 +540,8 @@ DIR?        LDY   #0
 :NOTDIR     SEC
 :OUT        RTS
 *
-*
-NODOS3      JSR   DOSTYP
+_NODOS3     EQU   *
+            JSR   DOSTYP
             BCS   :BLK2ER
             LDA   #MNODOS3
             JMP   PRTPRS

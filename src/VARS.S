@@ -5,10 +5,6 @@ CIIRVER     =     $10         ;version 1.0
 *
 * Macros:
 *
-JSRMODULE   MAC
-            JSR   ]1
-            JSR   ]2
-            <<<
 JMPMODULE   MAC
             JSR   ]1
             JMP   ]2
@@ -307,20 +303,11 @@ DSYNC       DS    1
 ZXMODULE    DS    ZXMODSZ
 ZXUNPACK    DS    ZXUNPSZ
 MENUTBL     DS    MENUTSZ
-*
-* entry points for functions inside
-* compressed libraries
-*
-DELETE      DS    6
-FORMAT      DS    6
-MAKESUB     DS    6
-SETCLOCK    DS    6
-BOOTPG      DS    6
-VIEW        DS    6
-ALPHA       DS    6
-RENAME      DS    6
-LOCK        DS    6
-            DS    120 ;free space here
+JPHRWTS     DS    6*3
+JDELLIB     DS    6*7
+JMISCLIB    DS    6*7
+JTREELIB    DS    6*7
+            DS    30 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

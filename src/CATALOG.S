@@ -17,8 +17,6 @@ CATALOG
 *          CATALOG DISK          *
 **********************************
 *
-            JSR   TREELIB     ;decompress TREELIB module
-            JSR   CATLIB      ;decompress CATLIB module
             LDA   CHOOZOPT
             CMP   #$02
             BNE   :NOTDEL

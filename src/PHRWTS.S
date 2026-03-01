@@ -1,16 +1,17 @@
             TYP   BIN
             DSK   ../build/PHRWTS.O
             PUT   VARS
-            ORG   PHRWTSADR
-PHRWTSLIB
 * ******** PHIL'S RWTS ***********
 * PHRWTS - RWTS main entry point *
 * FAKTRK - set RWTS track #      *
 * UNTPFX - set prefix to unit    *
 **********************************
+            ORG   JPHRWTS
 PHRWTS      >>>   JMPMODULE,DECOMPRESS;_PHRWTS
 FAKTRK      >>>   JMPMODULE,DECOMPRESS;_FAKTRK
 UNTPFX      >>>   JMPMODULE,DECOMPRESS;_UNTPFX
+            ORG   PHRWTSADR
+PHRWTSLIB
 DECOMPRESS  EQU   *
             ORG   *+3
             RTS
@@ -708,7 +709,7 @@ RDADDR      EQU   *
 *
 :RESEEK     LDA   ADRTRK      ;SAY YOU'RE ON
             ASL               ;TRACK THE ADR
-            JSR   _FAKTRK     ;FIELD THINKS,
+            JSR   FAKTRK      ;FIELD THINKS,
             LDA   RTRACK      ;THEN SEEK TO
 *
 * FALL INTO SEEK
@@ -933,7 +934,7 @@ RDADDR      EQU   *
             PHA               ;YOU'RE ON A
             ASL               ;HIGHER TRACK,
             ADC   #$10
-            JSR   _FAKTRK
+            JSR   FAKTRK
             LDA   #$00        ;THEN SEEK 0
             JSR   :SEEK       ;TO RATCHET.
             PLA
@@ -1016,7 +1017,7 @@ RDADDR      EQU   *
             CMP   #$40        ;IF RATCHET:
             BNE   :GOSTART
             LDA   #$60
-            JSR   _FAKTRK     ;SAY TRK 48
+            JSR   FAKTRK      ;SAY TRK 48
             LDA   #$00
             STA   RTRACK      ;SET TRK 0
 :GOSTART    JSR   :START      ;START UP

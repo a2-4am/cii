@@ -11,31 +11,36 @@
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
-            ORG   CATLIBEND
-DELLIB
-            ORG   *+3
-            RTS
-
 *******************************
 *         DELETE LIBRARY      *
 * DELETE - option entry point *
 * FORMAT - option entry point *
 * D1FILE - delete 1 file      *
 * PDSTRY - destroy file via MLI*
-* PUNLOK - unlock file via MLI*
 * STINFO - set info via MLI   *
 * GTINFO - get info via MLI   *
-* INFLST - data for ST/GTINFO *
 * DOMLI - MLI w/err           *
 *private:                     *
 * DDISK - delete disk (DOS+VTOC)*
 * ZIPDOS - install DOS33 boot *
 * PBOOT - ProDOS boot data    *
 *******************************
+            ORG   JDELLIB
+DELETE      >>>   JMPMODULE,DECOMPRESS;_DELETE
+FORMAT      >>>   JMPMODULE,DECOMPRESS;_FORMAT
+D1FILE      >>>   JMPMODULE,DECOMPRESS;_D1FILE
+PDSTRY      >>>   JMPMODULE,DECOMPRESS;_PDSTRY
+STINFO      >>>   JMPMODULE,DECOMPRESS;_STINFO
+GTINFO      >>>   JMPMODULE,DECOMPRESS;_GTINFO
+DOMLI       >>>   JMPMODULE,DECOMPRESS;_DOMLI
+            ORG   CATLIBEND
+DELLIB
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
+
 *
-DELETEINTERNAL
-            JSR   TREELIB     ;decompress TREELIB module
-            JSR   DISKLIB     ;decompress DISKLIB module
+_DELETE     EQU   *
             LDA   CHOOZOPT
             BNE   :NOTFILZ
             JSR   COMTRE
@@ -129,8 +134,7 @@ DELETEINTERNAL
 *********  DELETE FILES  ***********
 :DFILES     LDA   #$01
             STA   STATE       ;STATE=1
-                              ;DISPLAY
-            >>>   JSRMODULE,CATLIB;CATDIS
+            JSR   CATDIS      ;DISPLAY
             JSR   PATMOV
             LDA   FILNUM      ;ANY FILES?
             BNE   :GOTFILS
@@ -194,7 +198,7 @@ DELETEINTERNAL
 *          FORMAT DISK         *
 ********************************
 *
-FORMATINTERNAL
+_FORMAT     EQU   *
             LDA   CHOOZOPT
             BEQ   :FPRODOS
             LDA   #$FF
@@ -202,7 +206,7 @@ FORMATINTERNAL
             STA   :TEMP
             STA   DOSNOW
             JSR   DODEVF
-            >>>   JSRMODULE,TREELIB;COMH00
+            JSR   COMH00
             LDA   UNIT
             JSR   SETSD
             JSR   DEVTYP
@@ -233,7 +237,7 @@ FORMATINTERNAL
 *
 * CHECK IF ALREADY FORMATTED
 *
-            >>>   JSRMODULE,DISKLIB;DOSTYP
+            JSR   DOSTYP
             STX   :XTEMP
             BCS   :DOIT       ;UNREADABLE
             LDX   CURDEV
@@ -353,7 +357,8 @@ FORMATINTERNAL
 * called by Delete operation
 * and after failed Copy File operation
 *
-D1FILE      STA   :TEMP
+_D1FILE     EQU   *
+            STA   :TEMP
             LDY   #$00
             LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW
@@ -504,8 +509,7 @@ D1FILE      STA   :TEMP
             INY
             STY   RCMND       ;1
             JSR   FREES       ;FREE TSLIST
-:NXTSECT                      ;READ TSLIST
-            >>>   JSRMODULE,DISKLIB;DORWTS
+:NXTSECT    JSR   DORWTS      ;READ TSLIST
             LDY   #$0C
             STY   :COUNT
 :NXTPAIR    LDY   :COUNT      ;LOOP THROUGH
@@ -551,7 +555,7 @@ FREES       EQU   *
             ADC   #$38
             TAY
             LDA   SECTOR
-            >>>   JSRMODULE,DISKLIB;DOMASK
+            JSR   DOMASK
             LDA   (POINT),Y
             ORA   BITMSK
             STA   (POINT),Y
@@ -561,7 +565,8 @@ FREES       EQU   *
             STA   (POINT),Y
             RTS
 *
-PDSTRY      JSR   PUNLOK
+_PDSTRY     EQU   *
+            JSR   PUNLOK
             JSR   DOMLI
             DB    $C1
             DW    :DESLST
@@ -576,35 +581,27 @@ PUNLOK      EQU   *
 :TEMP       LDA   #1
             STA   INFLST+3
 * FALL INTO STINFO
-STINFO      LDA   #7
+_STINFO     EQU   *
+            LDA   #7
             STA   INFLST
             JSR   DOMLI
             DB    $C3
             DW    INFLST
             RTS
 *
-GTINFO      LDA   #$0A
+_GTINFO     EQU   *
+            LDA   #$0A
             STA   INFLST
             JSR   DOMLI
             DB    $C4
             DW    INFLST
             RTS
 
-INFLST      DB    $A
-            DW    FILE
-            DB    $0
-            DB    $0
-            DB    $0,$0
-            DB    $0
-            DB    $0,$0
-            DB    $0,$0
-            DB    $0,$0
-            DB    $0,$0
-            DB    $0,$0
 *
 * DO MLI COMMAND, WITH EXTRA HANDLING ON ERROR
 *
-DOMLI       PLA
+_DOMLI      EQU   *
+            PLA
             STA   :ADDR+1
             PLA
             STA   :ADDR+2
@@ -643,7 +640,7 @@ MLIERR      EQU   *
             STA   POINT
             LDA   #1
             JSR   D1FILE
-            >>>   JSRMODULE,DISKLIB;WRCAT2
+            JSR   WRCAT2
             LDA   #$48
             JMP   ERROU1
 :ERROU2     JMP   ERROUT
@@ -699,8 +696,7 @@ DDISK       EQU   *
             STX   VTOC1+3
             LDA   #>CAT1
             STA   RPAGE
-:LOOP                         ;WRITE ENTIRE
-            >>>   JSRMODULE,DISKLIB;DORWTS
+:LOOP       JSR   DORWTS      ;WRITE ENTIRE
             INC   RPAGE       ;TRACK
             DEC   RSECTR
             BNE   :LOOP
@@ -726,7 +722,7 @@ ZIPDOS      EQU   *
             STY   DATA        ;1
             LDA   #>DATA
             STA   RPAGE
-            >>>   JMPMODULE,DISKLIB;DORWTS
+            JMP   DORWTS
 *
 * DELETE PRODOS DISK
 *
@@ -900,7 +896,7 @@ ZIPDOS      EQU   *
             LDA   :TEMP
             CMP   #7
             BCS   :MARKIT
-            >>>   JSRMODULE,DISKLIB;DOWBLK
+            JSR   DOWBLK
 :MARKDN     RTS
 :ERROUT     JMP   ERROUT
 *

@@ -282,7 +282,7 @@ $(DISKLIBVARS): $(DISKLIBO)
 	$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 $(DISKLIBX7): $(DISKLIBO)
-	$(call X7,$(DISKLIBO),0)
+	$(call X7,$(DISKLIBO),19)
 
 #
 # TREELIB module (compressed)(self-decompressing)
@@ -295,7 +295,7 @@ $(TREELIBVARS): $(TREELIBO)
 	$(call VARS,!/;VARS;/,$(TREELIBO))
 
 $(TREELIBX7): $(TREELIBO)
-	$(call X7,$(TREELIBO),0)
+	$(call X7,$(TREELIBO),7)
 
 #
 # Filer (compressed)
@@ -332,7 +332,7 @@ $(CATLIBVARS): $(CATLIBO)
 	$(call VARS,/;CATLIB.S;/,$(CATLIBO))
 
 $(CATLIBX7): $(CATLIBO)
-	$(call X7,$(CATLIBO),0)
+	$(call X7,$(CATLIBO),13)
 
 #
 # Copy module (compressed)(self-decompressing)
@@ -371,7 +371,7 @@ $(DELLIBVARS): $(DELLIBO)
 	$(call VARS,/;DELLIB.S;/,$(DELLIBO))
 
 $(DELLIBX7): $(DELLIBO)
-	$(call X7,$(DELLIBO),0)
+	$(call X7,$(DELLIBO),7)
 
 #
 # Verify module (compressed)(self-decompressing)
@@ -425,7 +425,7 @@ $(MISCLIBVARS): $(MISCLIBO)
 	$(call VARS,/;MISCLIB.S;/,$(MISCLIBO))
 
 $(MISCLIBX7): $(MISCLIBO)
-	$(call X7,$(MISCLIBO),0)
+	$(call X7,$(MISCLIBO),7)
 
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
