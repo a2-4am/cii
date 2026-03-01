@@ -4,6 +4,7 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
+            PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/FILER.VARS

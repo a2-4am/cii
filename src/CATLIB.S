@@ -5,6 +5,7 @@
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
             PUT   ../build/LINEINPUT.VARS
+            PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
@@ -408,10 +409,10 @@ FTOCR       EQU   *
             STA   FILNAM-1,Y
             RTS
 *
-TYPBYT      EQU   *
-            DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
 TYPCHR      EQU   *
             ASC   "?BARSBAIT"
+TYPBYT      EQU   *
+            DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
 :TYPE       DB    $0
 :SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
 :SUBS1      ASC   "RAAAAAAAA"

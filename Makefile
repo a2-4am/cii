@@ -51,6 +51,8 @@ PRODOSO=$(BUILDDIR)/PRODOS.O
 PRODOSVARS=$(BUILDDIR)/PRODOS.VARS.S
 IOO=$(BUILDDIR)/IO.O
 IOVARS=$(BUILDDIR)/IO.VARS.S
+ERRORSO=$(BUILDDIR)/ERRORS.O
+ERRORSVARS=$(BUILDDIR)/ERRORS.VARS.S
 LINEINPUTO=$(BUILDDIR)/LINEINPUT.O
 LINEINPUTVARS=$(BUILDDIR)/LINEINPUT.VARS.S
 UILIBO=$(BUILDDIR)/UILIB.O
@@ -220,7 +222,7 @@ $(PRODOSVARS): $(PRODOSO)
 # I/O module
 # contains low-level text handling routines
 #
-$(IOO): $(PRODOSVARS) $(MESSAGESVARS) $(MESSAGES2VARS)
+$(IOO): $(MESSAGES2VARS) $(MESSAGESVARS) $(PRODOSVARS)
 	$(MERLIN) "$(SRCDIR)"/IO.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -228,10 +230,21 @@ $(IOVARS): $(IOO)
 	$(call VARS,!/;VARS;/,$(IOO))
 
 #
+# ERRORS
+# contains error handling routines
+#
+$(ERRORSO): $(IOVARS) $(LINEINPUTVARS)
+	$(MERLIN) "$(SRCDIR)"/ERRORS.S > "$(BUILDLOG)"
+	$(call POSTMERLIN)
+
+$(ERRORSVARS): $(ERRORSO)
+	$(call VARS,!/;VARS;/,$(ERRORSO))
+
+#
 # LINEINPUT module
 # contains text input handling routines
 #
-$(LINEINPUTO): $(IOVARS)
+$(LINEINPUTO): $(IOVARS) $(MENUVARS)
 	$(MERLIN) "$(SRCDIR)"/LINEINPUT.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -242,7 +255,7 @@ $(LINEINPUTVARS): $(LINEINPUTO)
 # MENU module
 # contains main menu and submenu routines
 #
-$(MENUO): $(MMVARS) $(MESSAGESVARS) $(PRODOSVARS) $(IOVARS) $(DRIVE35VARS)
+$(MENUO): $(MMVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS)
 	$(MERLIN) "$(SRCDIR)"/MENU.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -251,9 +264,9 @@ $(MENUVARS): $(MENUO)
 
 #
 # UILIB module
-# contains higher-level text and error handling routines
+# contains higher-level text routines
 #
-$(UILIBO): $(PRODOSVARS) $(MESSAGESVARS) $(IOVARS) $(LINEINPUTVARS)
+$(UILIBO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS)
 	$(MERLIN) "$(SRCDIR)"/UILIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -263,7 +276,7 @@ $(UILIBVARS): $(UILIBO)
 #
 # DISKLIB
 #
-$(DISKLIBO): $(MESSAGESVARS) $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(READLIBVARS)
+$(DISKLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(READLIBVARS)
 	$(MERLIN) "$(SRCDIR)"/DISKLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -271,9 +284,9 @@ $(DISKLIBVARS): $(DISKLIBO)
 	$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 #
-# Filer (requires Memory Manager, DOS 3.3 Boot Sector)(compressed)
+# Filer (compressed)
 #
-$(FILERO): $(BOOTSEC33VARS) $(PHRWTSVARS) $(MESSAGES2VARS) $(IOVARS) $(MENUVARS) $(READLIBVARS) $(DISKLIBVARS)
+$(FILERO): $(BOOTSEC33VARS) $(PHRWTSVARS) $(MESSAGES2VARS) $(MESSAGESVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS) $(MENUVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS)
 	$(MERLIN) "$(SRCDIR)"/FILER.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -287,7 +300,7 @@ $(FILERX): $(FILERO)
 # READLIB module
 # File-reading routines
 #
-$(READLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(UILIBVARS)
+$(READLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS)
 	$(MERLIN) "$(SRCDIR)"/READLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -295,9 +308,9 @@ $(READLIBVARS): $(READLIBO)
 	$(call VARS,/;READLIB.S;/,$(READLIBO))
 
 #
-# Catalog Library module (requires PHRWTS,Filer)(compressed)(self-decompressing)
+# Catalog Library module (compressed)(self-decompressing)
 #
-$(CATLIBO): $(PHRWTSVARS) $(FILERVARS)
+$(CATLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(LINEINPUTVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS)
 	$(MERLIN) "$(SRCDIR)"/CATLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -308,9 +321,9 @@ $(CATLIBX7): $(CATLIBO)
 	$(call X7,$(CATLIBO))
 
 #
-# DoDev module (requires Filer)(compressed)(self-decompressing)
+# DoDev module (compressed)(self-decompressing)
 #
-$(DODEVO): $(FILERVARS) $(CATLIBVARS)
+$(DODEVO): $(PRODOSVARS) $(IOVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS)
 	$(MERLIN) "$(SRCDIR)"/DODEV.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -321,9 +334,9 @@ $(DODEVX7): $(DODEVO)
 	$(call X7,$(DODEVO))
 
 #
-# DoTree module (requires PHRWTS,Filer)(compressed)(self-decompressing)
+# DoTree module (compressed)(self-decompressing)
 #
-$(DOTREEO): $(PHRWTSVARS) $(FILERVARS) $(DODEVVARS)
+$(DOTREEO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(FILERVARS) $(DODEVVARS)
 	$(MERLIN) "$(SRCDIR)"/DOTREE.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -334,9 +347,9 @@ $(DOTREEX7): $(DOTREEO)
 	$(call X7,$(DOTREEO))
 
 #
-# Copy module (requires PHRWTS,Filer)(compressed)(self-decompressing)
+# Copy module (compressed)(self-decompressing)
 #
-$(COPYO): $(PHRWTSVARS) $(FILERVARS) $(MMVARS) $(DOTREEVARS)
+$(COPYO): $(PHRWTSVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS) $(LINEINPUTVARS) $(ERRORSVARS) $(UILIBVARS) $(MMVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(DOTREEVARS)
 	$(MERLIN) "$(SRCDIR)"/COPY.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -347,9 +360,9 @@ $(COPYX7): $(COPYO)
 	$(call X7,$(COPYO))
 
 #
-# Catalog module (requires Filer)(compressed)(self-decompressing)
+# Catalog module (compressed)(self-decompressing)
 #
-$(CATALOGO): $(FILERVARS) $(COPYVARS)
+$(CATALOGO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(FILERVARS) $(COPYVARS)
 	$(MERLIN) "$(SRCDIR)"/CATALOG.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -360,9 +373,9 @@ $(CATALOGX7): $(CATALOGO)
 	$(call X7,$(CATALOGO))
 
 #
-# Delete module (requires PHRWTS,Filer)(compressed)(self-decompressing)
+# Delete module (compressed)(self-decompressing)
 #
-$(DELLIBO): $(PHRWTSVARS) $(FILERVARS) $(CATALOGVARS) $(BOOTSECPROVARS)
+$(DELLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(LINEINPUTVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(CATALOGVARS) $(BOOTSECPROVARS)
 	$(MERLIN) "$(SRCDIR)"/DELLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -373,9 +386,9 @@ $(DELLIBX7): $(DELLIBO)
 	$(call X7,$(DELLIBO))
 
 #
-# Verify module (requires PHRWTS,Filer)(compressed)(self-decompressing)
+# Verify module (compressed)(self-decompressing)
 #
-$(VERIFYO): $(PHRWTSVARS) $(FILERVARS) $(DELLIBVARS)
+$(VERIFYO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(DELLIBVARS)
 	$(MERLIN) "$(SRCDIR)"/VERIFY.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -386,9 +399,9 @@ $(VERIFYX7): $(VERIFYO)
 	$(call X7,$(VERIFYO))
 
 #
-# Disk Map module (requires Filer)(compressed)(self-decompressing)
+# Disk Map module (compressed)(self-decompressing)
 #
-$(DISKMAPO): $(FILERVARS) $(VERIFYVARS)
+$(DISKMAPO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(VERIFYVARS)
 	$(MERLIN) "$(SRCDIR)"/DISKMAP.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -399,9 +412,9 @@ $(DISKMAPX7): $(DISKMAPO)
 	$(call X7,$(DISKMAPO))
 
 #
-# Undelete module (requires Filer)(compressed)(self-decompressing)
+# Undelete module (compressed)(self-decompressing)
 #
-$(UNDELETEO): $(FILERVARS) $(DISKMAPVARS)
+$(UNDELETEO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(DISKMAPVARS)
 	$(MERLIN) "$(SRCDIR)"/UNDELETE.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -412,11 +425,11 @@ $(UNDELETEX7): $(UNDELETEO)
 	$(call X7,$(UNDELETEO))
 
 #
-# Miscellaneous module (requires Filer,RDDATA)(compressed)(self-decompressing)
+# Miscellaneous module (compressed)(self-decompressing)
 # contains several less-common features like
 # Make Subdirectory, Change Boot Program, Alphabetize Catalog, &c.
 #
-$(MISCLIBO): $(FILERVARS) $(RDDATAVARS) $(UNDELETEVARS)
+$(MISCLIBO): $(PRODOSVARS) $(IOVARS) $(LINEINPUTVARS) $(ERRORSVARS) $(UILIBVARS) $(READLIBVARS) $(DISKLIBVARS) $(FILERVARS) $(UNDELETEVARS)
 	$(MERLIN) "$(SRCDIR)"/MISCLIB.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 

@@ -2,7 +2,6 @@
             DSK   ../build/MENU.O
             PUT   VARS
             PUT   ../build/MM.VARS
-            PUT   ../build/MESSAGES.VARS
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
