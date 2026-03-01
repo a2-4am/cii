@@ -7,7 +7,6 @@
             PUT   ../build/LINEINPUT.VARS
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
-            PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/TREELIB.VARS
             ORG   TREELIBEND

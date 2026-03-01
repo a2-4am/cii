@@ -9,7 +9,6 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/MM.VARS
-            PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/TREELIB.VARS

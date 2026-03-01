@@ -5,7 +5,7 @@
             PUT   ../build/IO.VARS
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
-            PUT   ../build/READLIB.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/TREELIB.VARS
             PUT   ../build/COPY.VARS

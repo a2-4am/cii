@@ -63,7 +63,7 @@ WTBLK       LDA   #$81
 :BUFFHI     DB    $0
 :BLKNUM     DB    $0,$0
 *
-* called by READLIB and VERIFY
+* called by DISKLIB and VERIFY
 FNBLK1      LDA   STRTYP      ;IF SAPLING,
             CMP   #$10        ; RETURN EOF
             BEQ   :FNDEOF
@@ -679,5 +679,15 @@ INFLST      DB    $A
             DB    $0,$0
             DB    $0,$0
             DB    $0,$0
+*
+*
+* SET POINTER FROM CATALOG ARRAY
+*
+CURPNT      LDX   CURR
+SETPNT      LDA   CBYTE,X
+            STA   POINT
+            LDA   CSECTR,X
+            STA   POINT+1
+            RTS
 *
 PRODOSEND

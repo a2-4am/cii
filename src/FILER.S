@@ -11,7 +11,6 @@
             PUT   ../build/LINEINPUT.VARS
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
-            PUT   ../build/READLIB.VARS
 *
             ORG   MESSAGES2END
 *
@@ -23,5 +22,4 @@
             PUTBIN ../build/LINEINPUT.O
             PUTBIN ../build/ERRORS.O
             PUTBIN ../build/UILIB.O
-            PUTBIN ../build/READLIB.O
 MAINEND                       ;where image of main program ends
