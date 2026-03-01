@@ -10,8 +10,8 @@
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/DELLIB.VARS
-            ORG   DELLIBEND
+            PUT   ../build/CATALOG.VARS
+            ORG   CATALOGEND
 VERIFY
             ORG   *+3
 

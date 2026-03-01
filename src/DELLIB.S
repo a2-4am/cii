@@ -11,8 +11,7 @@
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/CATALOG.VARS
-            ORG   CATALOGEND
+            ORG   CATLIBEND
 DELLIB
             ORG   *+3
             RTS
@@ -22,7 +21,13 @@ DELLIB
 * DELETE - option entry point *
 * FORMAT - option entry point *
 * D1FILE - delete 1 file      *
-* private:                    *
+* PDSTRY - destroy file via MLI*
+* PUNLOK - unlock file via MLI*
+* STINFO - set info via MLI   *
+* GTINFO - get info via MLI   *
+* INFLST - data for ST/GTINFO *
+* DOMLI - MLI w/err           *
+*private:                     *
 * DDISK - delete disk (DOS+VTOC)*
 * ZIPDOS - install DOS33 boot *
 * PBOOT - ProDOS boot data    *
@@ -153,7 +158,8 @@ DELETEINTERNAL
 *
 :SKIPCK     JSR   CURPNT
             LDA   #>TOP10     ;2/16/87
-            JSR   SETHIM      ;2/16/87
+                              ;2/16/87
+            >>>   JSRMODULE,CATLIB;SETHIM
             LDA   #$00        ;SET CATALOG1
             JSR   D1FILEINTERNAL ;DELETE A FILE
             LDA   $C000
@@ -181,7 +187,7 @@ DELETEINTERNAL
 :ABORT      BIT   DOSNOW
             BMI   :JDOWAIT    ;PRODOS
             JSR   WRCAT1      ;WRITE TRACK
-:JDOWAIT    JMP   DOWAIT
+:JDOWAIT    >>>   JMPMODULE,CATLIB;DOWAIT
 *
 ********************************
 *          FORMAT DISK         *
@@ -555,6 +561,93 @@ FREES       EQU   *
             ORA   BITMSK+1
             STA   (POINT),Y
             RTS
+*
+PDSTRY      JSR   PUNLOK
+            JSR   DOMLI
+            DB    $C1
+            DW    :DESLST
+            RTS
+:DESLST     DB    $1
+            DW    FILE
+*
+PUNLOK      EQU   *
+            LDA   #$C3
+            STA   :TEMP+1
+            JSR   GTINFO
+:TEMP       LDA   #1
+            STA   INFLST+3
+* FALL INTO STINFO
+STINFO      LDA   #7
+            STA   INFLST
+            JSR   DOMLI
+            DB    $C3
+            DW    INFLST
+            RTS
+*
+GTINFO      LDA   #$0A
+            STA   INFLST
+            JSR   DOMLI
+            DB    $C4
+            DW    INFLST
+            RTS
+
+INFLST      DB    $A
+            DW    FILE
+            DB    $0
+            DB    $0
+            DB    $0,$0
+            DB    $0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+            DB    $0,$0
+*
+* DO MLI COMMAND, WITH EXTRA HANDLING ON ERROR
+*
+DOMLI       PLA
+            STA   :ADDR+1
+            PLA
+            STA   :ADDR+2
+            LDY   #3
+:ADDR       LDA   $1000,Y
+            STA   :LIST-1,Y
+            DEY
+            BNE   :ADDR
+            LDA   :LIST
+            STA   LASTOP
+            JSR   MLI
+:LIST       DB    $0,$0,$0
+            STA   RRTN
+            BCS   MLIERR
+            LDA   :ADDR+1
+            CLC
+            ADC   #4
+            STA   :ADDR+1
+            BCC   :SKIP
+            INC   :ADDR+2
+:SKIP       JMP   (:ADDR+$1)
+LASTOP      DB    $0
+*
+*
+MLIERR      EQU   *
+            LDA   RRTN
+            CMP   #$48        ;DISK FULL?
+            BNE   :ERROU2     ;NOPE
+*
+* DELETE INCOMPLETELY COPIED FILE
+*
+            JSR   CLOSE       ;CLOSE IT
+            LDA   #>FILE
+            STA   POINT+1
+            LDA   #FILE
+            STA   POINT
+            LDA   #1
+            JSR   D1FILE
+            JSR   WRCAT2
+            LDA   #$48
+            JMP   ERROU1
+:ERROU2     JMP   ERROUT
 *
 * DELETE DISK
 *

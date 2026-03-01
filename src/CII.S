@@ -67,16 +67,6 @@ DZX0BEG
             ORG
 DZX0END
 *
-CATLIBX7BEG
-            ORG   CATLIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    CATLIBEND
-            PUTBIN  ../build/CATLIB.X7
-:X7END
-            ORG
-CATLIBX7END
-*
 DODEVX7BEG
             ORG   DODEV
             JSR   ZXMODULE
@@ -97,6 +87,26 @@ DOTREEX7BEG
             ORG
 DOTREEX7END
 *
+CATLIBX7BEG
+            ORG   CATLIB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    CATLIBEND
+            PUTBIN  ../build/CATLIB.X7
+:X7END
+            ORG
+CATLIBX7END
+*
+DELLIBX7BEG
+            ORG   DELLIB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DELLIBEND
+            PUTBIN  ../build/DELLIB.X7
+:X7END
+            ORG
+DELLIBX7END
+*
 COPYX7BEG
             ORG   COPY
             JSR   ZXMODULE
@@ -116,16 +126,6 @@ CATALOGX7BEG
 :X7END
             ORG
 CATALOGX7END
-*
-DELLIBX7BEG
-            ORG   DELLIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    DELLIBEND
-            PUTBIN  ../build/DELLIB.X7
-:X7END
-            ORG
-DELLIBX7END
 *
 VERIFYX7BEG
             ORG   VERIFY

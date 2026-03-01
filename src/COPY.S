@@ -13,8 +13,8 @@
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
-            PUT   ../build/DOTREE.VARS
-            ORG   DOTREEEND
+            PUT   ../build/DELLIB.VARS
+            ORG   DELLIBEND
 COPY
             ORG   *+3
 *
@@ -807,7 +807,7 @@ COPY
 * ANTICIPATE PRODOS --> DOS COPY
 *
             LDA   #>TOP11
-            JSR   SETHIM
+            >>>   JSRMODULE,CATLIB;SETHIM
 *
 :CPYFILE    LDA   KBD         ;CHECK FOR ESC
             CMP   #$9B
@@ -1084,7 +1084,7 @@ COPY
             JMP   :ODOS33
 *
 :OPRODOS    LDA   #>TOPMEM
-            JSR   SETHIM
+            >>>   JSRMODULE,CATLIB;SETHIM
 *
             JSR   CURPNT
             LDA   #0
@@ -1197,7 +1197,7 @@ COPY
 :DOCRT1     BCC   :OPNDES1
             CMP   #$47
             BNE   :ERR
-            JSR   GTINFO
+            >>>   JSRMODULE,DELLIB;GTINFO
             LDA   INFLST+3
             AND   #$C2
             EOR   #$C2
@@ -1207,7 +1207,8 @@ COPY
             JSR   :DUP
             BCC   :DOCREAT    ;CHANGED NAME
             BEQ   :NODO
-            JSR   PDSTRY      ;COPY ANYWAY
+                              ;COPY ANYWAY
+            >>>   JSRMODULE,DELLIB;PDSTRY
             JMP   :DOCREAT
 *
 :OPNDES1    JSR   DOMLI       ;OPEN FILE
@@ -1230,7 +1231,7 @@ COPY
             DB    $0
 *
 :ODOS33     LDA   #>TOP10
-            JSR   SETHIM
+            >>>   JSRMODULE,CATLIB;SETHIM
             BIT   PDOS
             BPL   :DOS2DOS    ;DOS --> DOS
             DEC   HIMEM       ;PRODOS -> DOS
@@ -1606,7 +1607,7 @@ COPY
 :SKIPEOF    JSR   DOMLI
             DB    $CC
             DW    :CLSLST
-            JSR   GTINFO
+            >>>   JSRMODULE,DELLIB;GTINFO
             LDA   ACCESS
             STA   INFLST+3
             LDY   #3
@@ -1614,7 +1615,7 @@ COPY
             STA   INFLST+$0A,Y
             DEY
             BPL   :MDTLP
-            JSR   STINFO
+            >>>   JSRMODULE,DELLIB;STINFO
 :D2P6       RTS
 *
 *
@@ -2256,7 +2257,7 @@ DODVP1      EQU   *
 *
 DODVS1      EQU   *
             JSR   HOME
-            JSR   DOWAIT
+            >>>   JSRMODULE,CATLIB;DOWAIT
             LDA   #0
 * STA *SPFX
 * STA *SPFX+5

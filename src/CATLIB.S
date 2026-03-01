@@ -9,8 +9,8 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/DOTREE.VARS
+            ORG   DOTREEEND
 CATLIB
             ORG   *+3
             RTS
@@ -28,6 +28,8 @@ CATLIB
 * DIVECK - save/restore subdir state*
 * INITCD - (re)init list display *
 * RDACNT - read catalog from disk*
+* SETHIM
+* DOWAIT
 *private:                        *
 * MATCH - pattern matcher        *
 * TYPES - recognized filetypes   *
@@ -1619,6 +1621,27 @@ SHTIM0      EQU   *
             PLA
             JSR   HEXDC1
             JMP   PRT2DG
+*
+*
+* called by COPY DISK, COPY FILE, DELETE FILE
+SETHIM      SEC
+            SBC   DATADR
+            AND   #$FE
+            CLC
+            ADC   DATADR
+            SEC
+            SBC   TOPDIF      ;0 OR 3
+            STA   HIMEM
+            RTS
+*
+*
+* called by COPY FILE and DELETE FILE(DELLIB)
+DOWAIT      LDX   #$03
+:WAITLP     LDA   #$C4
+            JSR   WAIT
+            DEX
+            BNE   :WAITLP
+            RTS
 *
 *
 * [4am] backported types from v9
