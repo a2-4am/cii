@@ -63,6 +63,7 @@ MMXEND
 DZX0BEG
             ORG   ZXMODULE
             PUT   DZX0TURBO
+            ERR   *#MENUTBL
             PUT   DISPATCH
             ERR   *#JPHRWTS
             PUTBIN ../build/PHRWTS.O.JMP
