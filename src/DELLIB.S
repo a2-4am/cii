@@ -161,7 +161,7 @@ DELETEINTERNAL
                               ;2/16/87
             >>>   JSRMODULE,CATLIB;SETHIM
             LDA   #$00        ;SET CATALOG1
-            JSR   D1FILEINTERNAL ;DELETE A FILE
+            JSR   D1FILE      ;DELETE A FILE
             LDA   $C000
             CMP   #$9B
             BEQ   :ABORT
@@ -354,8 +354,7 @@ FORMATINTERNAL
 * called by Delete operation
 * and after failed Copy File operation
 *
-D1FILEINTERNAL
-            STA   :TEMP
+D1FILE      STA   :TEMP
             LDY   #$00
             LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW

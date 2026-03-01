@@ -1391,7 +1391,7 @@ COPY
             PHA
             STA   POINT+1
             LDA   #1
-            JSR   D1FILE
+            >>>   JSRMODULE,DELLIB;D1FILE
             JSR   WRCAT2
             PLA
             STA   POINT2+1
