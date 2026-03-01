@@ -5,8 +5,8 @@
             PUT   ../build/IO.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/FILER.VARS
-            ORG   MAINEND
+            PUT   ../build/TREELIB.VARS
+            ORG   TREELIBEND
 DODEV
             ORG   *+3
 

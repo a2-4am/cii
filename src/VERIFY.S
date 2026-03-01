@@ -9,7 +9,7 @@
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
-            PUT   ../build/FILER.VARS
+            PUT   ../build/TREELIB.VARS
             PUT   ../build/CATALOG.VARS
             ORG   CATALOGEND
 VERIFY

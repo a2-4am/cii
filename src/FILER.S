@@ -13,6 +13,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/TREELIB.VARS
 *
             ORG   MESSAGES2END
 *
@@ -26,5 +27,5 @@
             PUTBIN ../build/UILIB.O
             PUTBIN ../build/READLIB.O
             PUTBIN ../build/DISKLIB.O
-            PUT   FILEACCESS
+            PUTBIN ../build/TREELIB.O
 MAINEND                       ;where image of main program ends

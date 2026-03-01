@@ -7,7 +7,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/FILER.VARS
+            PUT   ../build/TREELIB.VARS
             PUT   ../build/DODEV.VARS
             ORG   DODEVEND
 DOTREE      

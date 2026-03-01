@@ -7,7 +7,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/CATLIB.VARS
-            PUT   ../build/FILER.VARS
+            PUT   ../build/TREELIB.VARS
             PUT   ../build/COPY.VARS
             ORG   COPYEND
 CATALOG

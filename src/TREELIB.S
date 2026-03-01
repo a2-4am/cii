@@ -1,6 +1,23 @@
-*************************************
-*       FILE ACCESS ROUTINES        *
-*************************************
+            TYP   BIN
+            DSK   ../build/TREELIB.O
+            PUT   VARS
+            PUT   ../build/PHRWTS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/ERRORS.VARS
+            PUT   ../build/UILIB.VARS
+            PUT   ../build/DISKLIB.VARS
+            ORG   DISKLIBEND
+
+**********************************
+*          TREE LIBRARY          *
+* COMTRE
+* CT1
+* COMHDR
+* COMH00
+* TREEA
+* SETA
+**********************************
+
 *
 *
 * COMMON TREE
@@ -54,3 +71,5 @@ TREEA       JSR   DOSTYP
 SETA        JSR   DOSTYP
             LDA   UNIT
             >>>   JMPMODULE,PHRWTSLIB;UNTPFX
+*
+TREELIBEND

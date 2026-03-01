@@ -9,8 +9,8 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
-            PUT   ../build/FILER.VARS
             ORG   CATLIBEND
 DELLIB
             ORG   *+3
