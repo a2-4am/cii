@@ -1180,7 +1180,7 @@ ST8MSG      EQU   *
 * DISKMAP while entering a subdirectory
 *
 DIVEIN      JSR   CURPNT
-            JSR   DIR?
+            >>>   JSRMODULE,DISKLIB;DIR?
             BCS   :NOTDIR
             LDY   #$11
             LDA   (POINT),Y
@@ -1350,7 +1350,8 @@ RDACNT      BIT   DOSNOW
 :ISDOS33    LDA   #>DOSDAT    ;SET UP DATADR
             STA   DATADR
             LDA   #>CAT1
-            JSR   CLRCAT      ;ZERO CATALOG
+                              ;ZERO CATALOG
+            >>>   JSRMODULE,DISKLIB;CLRCAT
             LDX   #$00
             STX   NACTIV      ;NO FILES YET
             INX

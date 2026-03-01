@@ -62,8 +62,7 @@ WTBLK       LDA   #$81
 :BUFFHI     DB    $0
 :BLKNUM     DB    $0,$0
 *
-*
-* called by FNDBLK and VERIFY
+* called by READLIB and VERIFY
 FNBLK1      LDA   STRTYP      ;IF SAPLING,
             CMP   #$10        ; RETURN EOF
             BEQ   :FNDEOF

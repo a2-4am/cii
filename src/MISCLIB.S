@@ -258,7 +258,8 @@ BOOTPGINTERNAL
             BPL   :DOS33
             JMP   NOPRO
 *
-:DOS33      LDX   #9          ;CHECK T01S09
+:DOS33      JSR   DISKLIB     ;decompress DISKLIB module
+            LDX   #9          ;CHECK T01S09
             JSR   :CHKWRAPR   ;FOR DOS
             BCC   :GOTSECT
             LDX   #7          ;CHECK T01S07
@@ -327,7 +328,7 @@ VIEWINTERNAL
             LDA   #$05
             STA   STATE
             >>>   JSRMODULE,CATLIB;INITCD
-            >>>   JSRMODULE,CATLIB;RDACNT
+            JSR   RDACNT
             LDA   NACTIV
             BNE   :NEXTFIL
             JMP   NOFIL0
@@ -338,8 +339,7 @@ VIEWINTERNAL
             JSR   HOME
             LDA   #MPSTAT45
             JSR   LOWMES
-                              ;CAT DISPLAY
-            >>>   JSRMODULE,CATLIB;CDDOKEY     
+            JSR   CDDOKEY     ;CAT DISPLAY
             JSR   HOME        ;VIEW FILES
 *
             LDA   #4
@@ -349,7 +349,8 @@ VIEWINTERNAL
             LDA   #5
             STA   WNDTOP
             JSR   :SEEFILE    ;FILENAME
-            JSR   SWPCHK      ;CHECK DISK
+                              ;CHECK DISK
+            >>>   JSRMODULE,DISKLIB;SWPCHK
             JSR   OPNSRC      ;OPEN FILE
             LDA   #$FF
             STA   :RDFLAG
@@ -396,7 +397,7 @@ VIEWINTERNAL
 * PRINT PAGE OF VIEW DATA
 :PAGE       LDA   :RDFLAG     ;NEED TO READ
             BEQ   :GOTDATA    ;DATA?
-            JSR   SWPCHK
+            >>>   JSRMODULE,DISKLIB;SWPCHK
             JSR   RDDATA      ;READ IT
             LDA   #$00
             STA   :RDFLAG     ;CLEAR FLAG
@@ -615,8 +616,7 @@ ALPHAINTERNAL
             JSR   CKDEL       ;DELETED?
             BCS   :NXTFILE    ;YES:DONT SHOW
             LDA   #$FF        ;SHORT DISPLAY
-                              ;NO:SHOW
-            >>>   JSRMODULE,CATLIB;CATLIN
+            JSR   CATLIN      ;NO:SHOW
             JSR   CROUT
             DEC   :COUNT      ;& COUNT
 :NXTFILE    INC   SHOW        ;NEXT FILE
@@ -663,11 +663,12 @@ CKDEL1      EQU   *
 **********************************
 *
 RENAMEINTERNAL
+            JSR   TREELIB     ;decompress TREELIB module
             LDA   #$03
             STA   STATE
             LDA   CHOOZOPT
             BEQ   REN2        ;RENAME FILES
-            >>>   JSRMODULE,TREELIB;COMHDR
+            JSR   COMHDR
             BIT   DOSNOW
             BMI   RENVOL
             JMP   NODOS3
@@ -677,7 +678,7 @@ LOCKINTERNAL
             STA   STATE
 *
 REN2        EQU   *
-            >>>   JSRMODULE,TREELIB;COMTRE
+            JSR   COMTRE
             >>>   JSRMODULE,CATLIB;CATDIS
             LDA   FILNUM
             BNE   :GOTFILS
@@ -701,7 +702,8 @@ RENVOL      EQU   *
 :RN2        TYA
             ORA   #$F0
             STA   VTOC1+4
-            JMP   DOWBLK
+            JSR   WTBLK
+            BCS   :RENERR
 :RENVOLQ    RTS
 :RENERR     JMP   ERROUT
 *
@@ -713,7 +715,7 @@ RENVOL      EQU   *
 * PARENT POINTERS ARE UPDATED.
 *
 FIXSUB      EQU   *
-            JSR   SWPCHK
+            >>>   JSRMODULE,DISKLIB;SWPCHK
             BIT   DOSNOW
             BPL   :FXSB1      ;NOT PRODOS
 *

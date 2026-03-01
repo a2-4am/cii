@@ -19,12 +19,13 @@ VERIFY
 *           VERIFY OPTIONS          *
 *************************************
 *
+            JSR   TREELIB     ;decompress TREELIB module
             LDA   CHOOZOPT
             BNE   :NOTFIL
-            >>>   JSRMODULE,TREELIB;COMTRE
+            JSR   COMTRE
             JMP   :VFILES
 *
-:NOTFIL     >>>   JSRMODULE,TREELIB;COMHDR
+:NOTFIL     JSR   COMHDR
             DEC   CHOOZOPT    ;JUMP TO
             BEQ   :VDISK      ;OPTION
             JMP   :SPEED1
@@ -89,7 +90,7 @@ VERIFY
             JSR   PRINT
             LDA   #$40        ;RATCHET!
             STA   RCMND       ;(SETS TRK 0)
-            JSR   DORWTS
+            >>>   JSRMODULE,DISKLIB;DORWTS
             LDA   #$10        ;SET VERIFY
             STA   RCMND
 :TRACKLP    JSR   CKESC
@@ -145,7 +146,7 @@ VERIFY
             STA   STATE
                               ;SELECT FILES
             >>>   JSRMODULE,CATLIB;CATDIS
-            JSR   PATMOV
+            >>>   JSRMODULE,DISKLIB;PATMOV
             LDA   FILNUM
             BNE   :GOTFILS
             JMP   NOSEL
@@ -155,7 +156,7 @@ VERIFY
             STA   :VERRORS
             STA   :VERRORS+1
             STA   CURR
-:VFILELP    >>>   JSRMODULE,CATLIB;FILEQ
+:VFILELP    JSR   FILEQ
             JSR   :V1FILE
             JSR   CKESC
             INC   CURR
@@ -267,6 +268,7 @@ VERIFY
 :VERRORS    DB    $0,$0
 *
 *
+*
 **********  DISK SPEED  *************
 *
 :SPEED1     JSR   CROUT
@@ -286,13 +288,13 @@ VERIFY
             JSR   HOME
             LDA   #$40        ;RATCHET!
             STA   RCMND
-            JSR   DORWTS      ;(This call will enforce UDC 5.25 mode)
+                              ;(This call will enforce UDC 5.25 mode)
+            >>>   JSRMODULE,DISKLIB;DORWTS
             LDA   #$22
             STA   RTRACK
             LDA   #$00
             STA   RCMND       ;SEEK TRK $22
             JSR   DORWTS
-*LDX RSLOT
             LDX   HSLOT
             LDA   $C089,X     ;MOTOR BACK ON
             LDA   $C08D,X

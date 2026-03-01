@@ -9,6 +9,7 @@
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/MENU.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/DISKLIB.VARS
             PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/COPY.VARS
@@ -65,6 +66,16 @@ DZX0BEG
             PUT   DISPATCH
             ORG
 DZX0END
+*
+DISKLIBX7BEG
+            ORG   DISKLIB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    DISKLIBEND
+            PUTBIN  ../build/DISKLIB.X7
+:X7END
+            ORG
+DISKLIBX7END
 *
 TREELIBX7BEG
             ORG   TREELIB
@@ -156,4 +167,4 @@ MISCLIBX7BEG
             ORG
 MISCLIBX7END
 *
-            ERR   MISCLIBX7END>$BEFF  ; can't clobber ProDOS global page
+            ERR   MISCLIBEND>$BEFF  ; can't clobber ProDOS global page

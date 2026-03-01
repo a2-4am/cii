@@ -85,6 +85,7 @@ TSMAP
             LDY   #$00        ;TRACK INDEX
 :TRKLP      LDA   #$06        ;POSITION EACH
             JSR   TABV        ;TRACK
+            JSR   DISKLIB     ;decompress DISKLIB module
             LDA   #$00
             STA   SECTOR      ;SECTOR INDEX
 :SECTLP     BIT   DOSNOW
@@ -238,17 +239,16 @@ TSMAP
             BEQ   :DO1
             CMP   #$AC        ;","
             BNE   :NXTFILE
-:DO2        >>>   JSRMODULE,CATLIB;DIVOUT
+:DO2        JSR   DIVOUT
             BCS   :ERR1
-:COM1       
-            >>>   JSRMODULE,CATLIB;RDACNT
+:COM1       JSR   RDACNT
             LDA   NACTIV
             BEQ   :MTSUB
             JMP   :CONTIN1
 *
 :GOFILP     JMP   :FILELP
 *
-:DO1        >>>   JSRMODULE,CATLIB;DIVEIN
+:DO1        JSR   DIVEIN
             BCC   :COM1
 :ERR1       JSR   LINE24
             JSR   GETKEY
@@ -424,4 +424,3 @@ SECS        EQU   *
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
 TSMAPEND
-            ORG

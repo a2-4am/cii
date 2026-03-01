@@ -22,6 +22,7 @@ COPY
 *             COPY             *
 ********************************
 *
+            JSR   DISKLIB     ;decompress DISKLIB module
             LDA   #>TOPMEM
             STA   HIMEM
             LDY   #0

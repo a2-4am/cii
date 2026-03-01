@@ -64,7 +64,7 @@ COMH00      JSR   TOP1
 *
 *
 *
-TREEA       JSR   DOSTYP
+TREEA       >>>   JSRMODULE,DISKLIB;DOSTYP
             LDA   #APFX
             STA   PFXADR
             LDA   #>APFX
@@ -74,7 +74,7 @@ TREEA       JSR   DOSTYP
             BCS   SETA        ;I/O ERROR
             STA   ACURR
             RTS
-SETA        JSR   DOSTYP
+SETA        >>>   JSRMODULE,DISKLIB;DOSTYP
             LDA   UNIT
             >>>   JMPMODULE,PHRWTSLIB;UNTPFX
 *

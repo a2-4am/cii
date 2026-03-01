@@ -8,11 +8,13 @@
             PUT   ../build/READLIB.VARS
             ORG   READLIBEND
 
+DISKLIB
+            ORG   *+3
+            RTS
+
 **********************************
 *          DISK LIBRARY          *
-* DORBLK - read block (w/error)  *
 * DOWBLK - write block (w/error) *
-* FNDBLK - find block (w/error)  *
 * DOVTOC - read/write VTOC       *
 * CLRCAT - clear catalog sectors *
 * WRCAT1
@@ -25,7 +27,6 @@
 * PUTSEC - write sector to T01   *
 * SET1A2 - mark T01+T02 in VTOC  *
 * DORWTS - call PHRWTS (w/error) *
-* SDFLG - used by SWCK           *
 * SWPCHK - is correct disk? w/err*
 * SWCK - verify is correct disk  *
 * DOSTYP - ProDOS or DOS?        *
@@ -33,16 +34,11 @@
 * DIR? - *POINT is directory?    *
 **********************************
 
-*
 DOWBLK      JSR   WTBLK
-            BCS   DORBER
+            BCS   :ERROUT
             RTS
+:ERROUT     JMP   ERROUT
 *
-DORBLK      JSR   RDBLK
-            BCS   DORBER
-            RTS
-DORBER      EQU   *
-            JMP   ERROUT
 *
 * READ/WRITE VTOC, READY FOR CATALOG
 *
@@ -266,8 +262,6 @@ DORWTS
 *
 DISKLIBERR  EQU   *
             JMP   ERROUT
-*
-SDFLG       DB    $0
 *
 * SWAP CHECK
 * to the best of our ability, ensure that the correct

@@ -38,6 +38,7 @@ NACTIV      =     $10
 DELFLG      =     $11
 HEXNUM      =     $12         ;3
 *PRNTR?      =     $15
+SDFLG       =     $15         ;[4am] reuse unused address
 SECTOR      =     $16
 CPYDIG      =     $17         ;3 Insert-digits in COPY FILES display.
 * RAMFactor incorrectly uses zp location $19 during Smartport

@@ -14,8 +14,8 @@
 
 local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
 local last_line = {
-  "COPY%.OBJ0",
-  "BOOT13",
+  "A672",
+  "A3072",
   "SECTORS FREE"
 }
 local expected_files = {

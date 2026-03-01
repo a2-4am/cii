@@ -18,20 +18,23 @@ UNDEL
 *        UNDELETE FILES            *
 ************************************
 *
-            >>>   JSRMODULE,TREELIB;COMTRE
+            JSR   TREELIB     ;decompress TREELIB module
+            JSR   COMTRE
             LDY   #0
             STY   DELFLG
             INY
             STY   STATE
-            >>>   JSRMODULE,CATLIB;CATDIS
+            JSR   CATLIB      ;decompress CATLIB module
+            JSR   CATDIS
             LDA   #$80
             STA   DELFLG
+            JSR   DISKLIB     ;decompress DISKLIB module
             JSR   PATMOV
             LDA   FILNUM
             BNE   :GOTFILS
             JMP   NOSEL
 :GOTFILS    JSR   SWPCHK
-            >>>   JSRMODULE,TREELIB;COMH00
+            JSR   COMH00
             LDA   #$00
             STA   :BADNUM
             STA   :MAYBE
@@ -40,7 +43,7 @@ UNDEL
 * ATTEMPT REGULAR UNDELETE OF DOS
 * AND PRODOS FILES
 *
-:UNLOOP     >>>   JSRMODULE,CATLIB;FILEQ
+:UNLOOP     JSR   FILEQ
             JSR   :UNDO
             JSR   CKESC
             INC   CURR
@@ -57,10 +60,10 @@ UNDEL
 * 'MAYBE' FILES.
 *
 *
-            >>>   JSRMODULE,TREELIB;COMH00
+            JSR   COMH00
             LDA   #0
             STA   CURR
-:SMARTLP    >>>   JSRMODULE,CATLIB;FILEQ
+:SMARTLP    JSR   FILEQ
             LDX   CURR
             LDA   STATUS,X
             CMP   #$FE

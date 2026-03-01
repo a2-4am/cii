@@ -34,12 +34,14 @@ DELLIB
 *******************************
 *
 DELETEINTERNAL
+            JSR   TREELIB     ;decompress TREELIB module
+            JSR   DISKLIB     ;decompress DISKLIB module
             LDA   CHOOZOPT
             BNE   :NOTFILZ
-            >>>   JSRMODULE,TREELIB;COMTRE
+            JSR   COMTRE
             JMP   :DFILES
 *
-:NOTFILZ    >>>   JSRMODULE,TREELIB;COMHDR
+:NOTFILZ    JSR   COMHDR
             LDA   CHOOZOPT
             CMP   #$02
             BEQ   :DDOS
@@ -117,7 +119,7 @@ DELETEINTERNAL
             JSR   PCOUT
             CMP   #"Y"
             BNE   :READY3
-            >>>   JSRMODULE,TREELIB;SETA
+            JSR   SETA
             JSR   PRVNM
             JSR   HOME
             LDA   #0
@@ -138,7 +140,7 @@ DELETEINTERNAL
             LDY   #$00        ;INIT COUNTER
             STY   SP
             STY   CURR
-:DFILELP    >>>   JSRMODULE,CATLIB;FILEQ
+:DFILELP    JSR   FILEQ
             JSR   CURPNT
             BIT   DOSNOW
             BPL   :SKIPCK     ;DOS 3.3
@@ -147,9 +149,9 @@ DELETEINTERNAL
             AND   #$F0
             CMP   #$D0
             BNE   :SKIPCK     ;NOT SUBDIR
-            >>>   JSRMODULE,CATLIB;DIVEIN
+            JSR   DIVEIN
             CLC
-            >>>   JSRMODULE,CATLIB;DIVECK
+            JSR   DIVECK
             JSR   PRVNM
             JSR   SETPFX
             LDX   #$FF
@@ -158,8 +160,7 @@ DELETEINTERNAL
 *
 :SKIPCK     JSR   CURPNT
             LDA   #>TOP10     ;2/16/87
-                              ;2/16/87
-            >>>   JSRMODULE,CATLIB;SETHIM
+            JSR   SETHIM      ;2/16/87
             LDA   #$00        ;SET CATALOG1
             JSR   D1FILE      ;DELETE A FILE
             LDA   $C000
@@ -171,23 +172,23 @@ DELETEINTERNAL
             BCC   :DFILELP
             BIT   DOSNOW
             BPL   :ABORT
-            >>>   JSRMODULE,CATLIB;DIVOUT
+            JSR   DIVOUT
             BCS   :ABORT
             LDA   SP
             BEQ   :DFIL2
             LDA   #0
             STA   CURR
 :DFIL2      SEC
-            >>>   JSRMODULE,CATLIB;DIVECK
+            JSR   DIVECK
             JSR   PRVNM
             JSR   SETPFX
-            >>>   JSRMODULE,CATLIB;FILEQ
+            JSR   FILEQ
             JMP   :SKIPCK
 *
 :ABORT      BIT   DOSNOW
             BMI   :JDOWAIT    ;PRODOS
             JSR   WRCAT1      ;WRITE TRACK
-:JDOWAIT    >>>   JMPMODULE,CATLIB;DOWAIT
+:JDOWAIT    JMP   DOWAIT
 *
 ********************************
 *          FORMAT DISK         *
@@ -232,7 +233,7 @@ FORMATINTERNAL
 *
 * CHECK IF ALREADY FORMATTED
 *
-            JSR   DOSTYP
+            >>>   JSRMODULE,DISKLIB;DOSTYP
             STX   :XTEMP
             BCS   :DOIT       ;UNREADABLE
             LDX   CURDEV
@@ -325,7 +326,7 @@ FORMATINTERNAL
             LDA   #$04        ;FORMAT COMMAND
             STA   RCMND
 :FORMLP                       ;FORMAT TRK.
-            >>>   JSRMODULE,PHRWTSLIB;PHRWTSINTERNAL
+            JSR   PHRWTSINTERNAL
             BCC   :FORMOK     ;ERROR?
             LDA   RRTN        ;YES:
             CMP   #$2B        ;WP?
@@ -505,7 +506,8 @@ D1FILE      STA   :TEMP
             INY
             STY   RCMND       ;1
             JSR   FREES       ;FREE TSLIST
-:NXTSECT    JSR   DORWTS      ;READ TSLIST
+:NXTSECT                      ;READ TSLIST
+            >>>   JSRMODULE,DISKLIB;DORWTS
             LDY   #$0C
             STY   :COUNT
 :NXTPAIR    LDY   :COUNT      ;LOOP THROUGH
@@ -551,7 +553,7 @@ FREES       EQU   *
             ADC   #$38
             TAY
             LDA   SECTOR
-            JSR   DOMASK
+            >>>   JSRMODULE,DISKLIB;DOMASK
             LDA   (POINT),Y
             ORA   BITMSK
             STA   (POINT),Y
@@ -643,7 +645,7 @@ MLIERR      EQU   *
             STA   POINT
             LDA   #1
             JSR   D1FILE
-            JSR   WRCAT2
+            >>>   JSRMODULE,DISKLIB;WRCAT2
             LDA   #$48
             JMP   ERROU1
 :ERROU2     JMP   ERROUT
@@ -699,7 +701,8 @@ DDISK       EQU   *
             STX   VTOC1+3
             LDA   #>CAT1
             STA   RPAGE
-:LOOP       JSR   DORWTS      ;WRITE ENTIRE
+:LOOP                         ;WRITE ENTIRE
+            >>>   JSRMODULE,DISKLIB;DORWTS
             INC   RPAGE       ;TRACK
             DEC   RSECTR
             BNE   :LOOP
@@ -725,7 +728,7 @@ ZIPDOS      EQU   *
             STY   DATA        ;1
             LDA   #>DATA
             STA   RPAGE
-            JMP   DORWTS
+            >>>   JMPMODULE,DISKLIB;DORWTS
 *
 * DELETE PRODOS DISK
 *
@@ -890,7 +893,8 @@ ZIPDOS      EQU   *
             STA   BLKNUM
             LDA   #>VTOC1
             STA   BM
-            JSR   DORBLK
+            JSR   RDBLK
+            BCS   :ERROUT
 :MARKIT     LDX   :TEMP       ;BLK LO
             LDA   #0          ;BLK HI
             JSR   MRKBLK
@@ -898,8 +902,9 @@ ZIPDOS      EQU   *
             LDA   :TEMP
             CMP   #7
             BCS   :MARKIT
-            JSR   DOWBLK
+            >>>   JSRMODULE,DISKLIB;DOWBLK
 :MARKDN     RTS
+:ERROUT     JMP   ERROUT
 *
 :BMWBLK     LDA   BLKNUM
             CMP   #6

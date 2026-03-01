@@ -17,6 +17,8 @@ CATALOG
 *          CATALOG DISK          *
 **********************************
 *
+            JSR   TREELIB     ;decompress TREELIB module
+            JSR   CATLIB      ;decompress CATLIB module
             LDA   CHOOZOPT
             CMP   #$02
             BNE   :NOTDEL
@@ -25,11 +27,11 @@ CATALOG
 :NOTDEL     LDA   #$FF
             STA   OPTCHS
             JSR   DODEVP
-            >>>   JSRMODULE,TREELIB;TREEA
+            JSR   TREEA
             LDA   RRTN
             BEQ   :MAYBE80
-            >>>   JSRMODULE,TREELIB;COMH00
-            >>>   JSRMODULE,TREELIB;CT1
+            JSR   COMH00
+            JSR   CT1
 *
 * Only CATALOG W/FILE LENGTHS uses 80-column
 * mode now. Other catalogs are 40-column, but
@@ -44,8 +46,7 @@ CATALOG
 :TRY80      JSR   COL80
 :CATCONT    JSR   TOP1
             JSR   PRVNM
-:SKIP2                        ;GET CATALOG
-            >>>   JSRMODULE,CATLIB;RDACNT
+:SKIP2      JSR   RDACNT      ;GET CATALOG
             LDA   #$80
             STA   DELFLG      ;RESET DELETE
             LDA   #0
@@ -112,14 +113,14 @@ CATALOG
             BCC   :HID2
 *
 :SKIPHID    LDA   CHOOZOPT
-            >>>   JSRMODULE,CATLIB;CATLIN
+            JSR   CATLIN
             JSR   :NEXTFIL
             BCC   :HID1
             BCS   :GOALLD
 *
 * NORMAL CATALOG
 :NORMAL     LDA   CHOOZOPT
-            >>>   JSRMODULE,CATLIB;CATLIN
+            JSR   CATLIN
             JSR   :NEXTFIL
             BCC   :NORMAL
 :GOALLD     JMP   :ALLDONE
@@ -143,8 +144,7 @@ CATALOG
 :NOTDEL1    TXA               ;SPACE
             JSR   PCOUT
             JSR   PRSPC
-                              ;SEE LINE
-            >>>   JSRMODULE,CATLIB;CATLN1
+            JSR   CATLN1      ;SEE LINE
             JSR   :NEXTFIL
             BCC   :DELETED
             BCS   :GOALLD
@@ -160,7 +160,7 @@ CATALOG
             LDA   #>DATPAG
             STA   HIMEM
 :FILELP4    
-            >>>   JSRMODULE,CATLIB;CATLIN
+            JSR   CATLIN
             LDA   SHOW
             STA   CURR
             LDY   #$02
