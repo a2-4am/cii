@@ -7,6 +7,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/VERIFY.VARS
             ORG   VERIFYEND
@@ -27,7 +28,8 @@ TSMAP
             JMP   FLONLY      ;NOT DISK II
 *
 :DISKII     JSR   CROUT2
-            JSR   RDACNT      ;READ CATALOG
+                              ;READ CATALOG
+            >>>   JSRMODULE,CATLIB;RDACNT
             LDA   NACTIV      ;ANY FILES?
             BNE   :GOTFILS
             LDA   #MNOFILES   ;'NO FILES'
@@ -236,16 +238,17 @@ TSMAP
             BEQ   :DO1
             CMP   #$AC        ;","
             BNE   :NXTFILE
-:DO2        JSR   DIVOUT
+:DO2        >>>   JSRMODULE,CATLIB;DIVOUT
             BCS   :ERR1
-:COM1       JSR   RDACNT
+:COM1       
+            >>>   JSRMODULE,CATLIB;RDACNT
             LDA   NACTIV
             BEQ   :MTSUB
             JMP   :CONTIN1
 *
 :GOFILP     JMP   :FILELP
 *
-:DO1        JSR   DIVEIN
+:DO1        >>>   JSRMODULE,CATLIB;DIVEIN
             BCC   :COM1
 :ERR1       JSR   LINE24
             JSR   GETKEY

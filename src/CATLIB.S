@@ -13,9 +13,11 @@
             ORG   MAINEND
 CATLIB
             ORG   *+3
+            RTS
 
 **********************************
 *    CATALOG DISPLAY LIBRARY     *
+* CATLIN - display catalog line  *
 * CATLN1 - display 1 catalog line*
 * CATDIS - display file list     *
 * CDDOKEY - file list key handler*
@@ -23,6 +25,7 @@ CATLIB
 * UNMARK - unmark file           *
 * DIVEIN - enter subdirectory    *
 * DIVOUT - leave subdirectory    *
+* DIVECK - save/restore subdir state*
 * INITCD - (re)init list display *
 * RDACNT - read catalog from disk*
 *private:                        *
@@ -31,12 +34,18 @@ CATLIB
 * PLACE - input file into entry  *
 **********************************
 *
-            RTS
+*
+* SHOW A LINE OF CATALOG
+CATLIN      PHA
+            JSR   PRSPC
+            JSR   PRSPC
+            PLA
+*            JMP   CATLN1
+* fall through to CATLN1
 *
 * ENTRY POINT TO DISPLAY 1 CATALOG LINE
 *
-CATLN1INTERNAL
-            PHA
+CATLN1      PHA
             LDX   SHOW        ;SET *POINT
             JSR   SETPNT
             PLA
@@ -420,11 +429,10 @@ TYPBYT      EQU   *
 * 'DO' THE CATALOG DISPLAY &
 * EVERYTHING THAT IT INVOLVES
 *
-CATDISINTERNAL
-            JSR   INITCDINTERNAL
+CATDIS      JSR   INITCD
             LDA   #0
             STA   SP
-            JSR   RDACNTINTERNAL
+            JSR   RDACNT
             LDA   NACTIV
             BNE   CATDS2
             JSR   CROUT
@@ -434,10 +442,10 @@ CATDISINTERNAL
 CATDS1      EQU   *
             LDA   CURR
             PHA
-            JSR   INITCDINTERNAL
+            JSR   INITCD
             PLA
             STA   CURR
-            JSR   RDACNTINTERNAL
+            JSR   RDACNT
 CATDS2      EQU   *
             LDA   NACTIV
             BEQ   :NOFILES
@@ -445,7 +453,7 @@ CATDS2      EQU   *
             CMP   #$04
             BEQ   :BOOTMES
             JSR   ST8MSG
-            JMP   CDDOKEYINTERNAL
+            JMP   CDDOKEY
 *
 :BOOTMES    LDA   #MFILE
             JSR   LOWMES
@@ -464,7 +472,7 @@ CATDS2      EQU   *
             DB    $8D,$0
             LDA   #MPSTAT45
             JSR   PRINT
-            JMP   CDDOKEYINTERNAL
+            JMP   CDDOKEY
 *
 :NOFILES    JSR   CROUT
             LDA   #MNOFILES
@@ -497,8 +505,7 @@ SCROLF      EQU   *
 * entry point called by this module
 * and VIEW
 *
-CDDOKEYINTERNAL
-            JSR   SEECAT
+CDDOKEY     JSR   SEECAT
             JSR   CHKKEY      ;GET CHARACTER
             STA   :TEMP
             BNE   :NOTARO
@@ -514,13 +521,13 @@ CDDOKEYINTERNAL
             BNE   :DOLOOK     ;ALWAYS
 *
 :BSCROL     LDX   CURR        ;BACKWARD
-            BEQ   CDDOKEYINTERNAL ;SCROLL
+            BEQ   CDDOKEY     ;SCROLL
             DEX
             STX   CURR
-            JMP   CDDOKEYINTERNAL
+            JMP   CDDOKEY
 *
 :FSCROL     JSR   SCROLF      ;FORWARD
-            JMP   CDDOKEYINTERNAL ;SCROLL
+            JMP   CDDOKEY     ;SCROLL
 *
 :LOOKUP     LDA   :TEMP
             CMP   #"G"
@@ -539,7 +546,7 @@ CDDOKEYINTERNAL
             DEX
             BPL   :NXTCHAR
             CMP   #"D"
-            BNE   CDDOKEYINTERNAL ;NOT FOUND
+            BNE   CDDOKEY     ;NOT FOUND
             LDX   #3          ;ALLOW D=U
 *
 :INDEX      CPX   #6
@@ -566,7 +573,7 @@ CDDOKEYINTERNAL
             LDA   (POINT),Y
             STA   :JUMP+2
 :JUMP       JSR   $1000
-            BCC   CDDOKEYINTERNAL
+            BCC   CDDOKEY
             CMP   #$FF
             BNE   :OUT
             JMP   CATDS1      ;DIR CHANGE
@@ -611,7 +618,7 @@ CDDOKEYINTERNAL
             DW    DO2
 * STATE 4
 * CHANGE BOOT PROGRAM
-            DW    CDDOKEYINTERNAL
+            DW    CDDOKEY
             DW    NIL
             DW    NOPATT
             DW    NIL
@@ -781,7 +788,7 @@ CPYENT      EQU   *
             JMP   LOWMES
 *
 CPYDEL      EQU   *
-            JSR   UNMARKINTERNAL
+            JSR   UNMARK
             BEQ   :CPYDEL0    ;NOTHING THERE
             DEC   FILNUM
 :CPYDEL0    JSR   SEECAT
@@ -911,8 +918,7 @@ NEWNAM      EQU   *
 * by the operation rather than by
 * user interaction.
 *
-FILEQINTERNAL
-            LDA   FILNUM
+FILEQ       LDA   FILNUM
             STA   NACTIV
             LDA   #$FF
             DB    $2C         ;HIDE LDA #0
@@ -974,7 +980,7 @@ SEECAT      EQU   *
             STA   CURRV
 :NOTCURR    JSR   CSTAT
             LDA   #$FF
-            JSR   CATLN1INTERNAL ;DISPLAY LINE
+            JSR   CATLN1      ;DISPLAY LINE
             JSR   PNORML      ;SET NORMAL
             JSR   CROUT
             INC   SHOW        ;NEXT ENTRY
@@ -1045,8 +1051,7 @@ CSTAT       EQU   *
             JSR   HEXDEC      ;CVRT TO DEC
             JMP   PRT3RJ
 *
-UNMARKINTERNAL
-            LDY   CURR        ;IS SOMETHING
+UNMARK      LDY   CURR        ;IS SOMETHING
             LDA   STATUS,Y    ;THERE?
             BEQ   :NOPE
             LDX   #$FF        ;YES: LOOP
@@ -1068,8 +1073,7 @@ UNMARKINTERNAL
 * after operating on all the relevant files
 * in a subdirectory
 *
-DIVOUTINTERNAL
-            LDA   #0
+DIVOUT      LDA   #0
             DB    $2C         ;HIDE LDA #$FF
 *
 * 'DIVE OUT' of subdirectory (interactive)
@@ -1149,7 +1153,7 @@ DO1         EQU   *
 DO2         EQU   *
             BIT   DOSNOW
             BPL   NIL0
-            JSR   DIVEININTERNAL
+            JSR   DIVEIN
 DO1A        EQU   *
             BCS   :ERR2
             SEC
@@ -1173,8 +1177,7 @@ ST8MSG      EQU   *
 * deleting a subdirectory, and from
 * DISKMAP while entering a subdirectory
 *
-DIVEININTERNAL
-            JSR   CURPNT
+DIVEIN      JSR   CURPNT
             JSR   DIR?
             BCS   :NOTDIR
             LDY   #$11
@@ -1219,13 +1222,90 @@ DIVEININTERNAL
             RTS
 *
 *
+*
+* CHECK IF WE ARE DIVING IN TO OR OUT
+* OF THE STARTING DIRECTORY. IF SO,
+* RESTORE OR SAVE *STATUS, *CBYTE,
+* *CSECTR,*FILNUM
+*
+* called by COPY FILES and DELETE FILES(DELLIB)
+DIVECK      BCS   :GOOUT
+            LDA   SP
+            CMP   #1
+            BNE   :DVCK00
+            LDX   #>STATUS
+            LDY   HIMEM
+            DEY
+            DEY
+            DEY
+            STY   :MYHI
+            LDA   FILNUM
+            STA   :SAVE1
+            LDA   #4
+            STA   TOPDIF
+            JSR   :DVCK0
+            LDA   HIMEM       ;8/27/86
+            JSR   SETHIM      ;8/27/86
+:DVCK00     JMP   :DVINIT
+*
+:GOOUT      LDA   SP
+            BNE   :DVINIT
+            JSR   :DVINIT
+            LDX   :MYHI
+            LDY   #>STATUS
+            LDA   :SAVE1
+            STA   FILNUM
+            LDA   #0
+            STA   TOPDIF
+*
+:DVCK0      STX   POINT+1
+            STY   MESPNT+1
+            LDY   #0
+            STY   MESPNT
+            STY   POINT
+            LDX   #3
+:DCKLP      LDA   (POINT),Y
+            STA   (MESPNT),Y
+            INY
+            BNE   :DCKLP
+            INC   POINT+1
+            INC   MESPNT+1
+            DEX
+            BNE   :DCKLP
+            RTS
+:SAVE1      DB    $0
+:MYHI       DB    $0
+*
+*
+* INITIALIZE THINGS AFTER DIVING IN TO
+* OR OUT OF A SUBDIRECTORY
+*
+:DVINIT     LDA   CURR
+            PHA
+            JSR   INITCD
+            PLA
+            STA   CURR
+            JSR   RDACNT
+            LDA   NACTIV
+            STA   FILNUM
+            SEC
+            BEQ   :DVINT1     ;NO FILES
+            LDX   #0
+:CFLP2      INX
+            TXA
+            STA   STATUS-1,X
+            CPX   NACTIV
+            BCC   :CFLP2
+            CLC
+:DVINT1     RTS
+*
+*
 * INITIALIZES CATALOG DISPLAY
 * called from catalog display, but also
 * from DIVECK after diving into or out of
 * a subdirectory, also from VIEW
 *
-INITCDINTERNAL
-            LDA   #$00
+INITCD      LDA   #$00
             STA   CURR
             STA   FILNUM
             STA   GO
@@ -1253,8 +1333,7 @@ INITCDINTERNAL
 * *DELFLG=$80 FOR ACTIVE FILES
 *        =$00 FOR DELETED
 *
-RDACNTINTERNAL
-            BIT   DOSNOW
+RDACNT      BIT   DOSNOW
             BPL   :ISDOS33    ;DOS 3.3 DISK
 *
 * IT'S A PRODOS DISK

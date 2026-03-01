@@ -315,15 +315,6 @@ FORMAT      DS    6
 D1FILE      DS    6
 JDOTREE     DS    3
 JDODEV      DS    3
-CATLN1      DS    6
-CATDIS      DS    6
-CDDOKEY     DS    6
-FILEQ       DS    6
-UNMARK      DS    6
-DIVOUT      DS    6
-DIVEIN      DS    6
-INITCD      DS    6
-RDACNT      DS    6
 MAKESUB     DS    6
 SETCLOCK    DS    6
 BOOTPG      DS    6
@@ -331,7 +322,7 @@ VIEW        DS    6
 ALPHA       DS    6
 RENAME      DS    6
 LOCK        DS    6
-            DS    54 ;free space here
+            DS    108 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

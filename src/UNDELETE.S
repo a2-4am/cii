@@ -7,6 +7,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DISKMAP.VARS
             ORG   TSMAPEND
@@ -22,7 +23,7 @@ UNDEL
             STY   DELFLG
             INY
             STY   STATE
-            JSR   CATDIS
+            >>>   JSRMODULE,CATLIB;CATDIS
             LDA   #$80
             STA   DELFLG
             JSR   PATMOV
@@ -39,7 +40,7 @@ UNDEL
 * ATTEMPT REGULAR UNDELETE OF DOS
 * AND PRODOS FILES
 *
-:UNLOOP     JSR   FILEQ
+:UNLOOP     >>>   JSRMODULE,CATLIB;FILEQ
             JSR   :UNDO
             JSR   CKESC
             INC   CURR
@@ -59,7 +60,7 @@ UNDEL
             JSR   COMH00
             LDA   #0
             STA   CURR
-:SMARTLP    JSR   FILEQ
+:SMARTLP    >>>   JSRMODULE,CATLIB;FILEQ
             LDX   CURR
             LDA   STATUS,X
             CMP   #$FE

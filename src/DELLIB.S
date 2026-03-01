@@ -9,6 +9,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/CATALOG.VARS
             ORG   CATALOGEND
@@ -121,7 +122,8 @@ DELETEINTERNAL
 *********  DELETE FILES  ***********
 :DFILES     LDA   #$01
             STA   STATE       ;STATE=1
-            JSR   CATDIS      ;DISPLAY
+                              ;DISPLAY
+            >>>   JSRMODULE,CATLIB;CATDIS
             JSR   PATMOV
             LDA   FILNUM      ;ANY FILES?
             BNE   :GOTFILS
@@ -131,7 +133,7 @@ DELETEINTERNAL
             LDY   #$00        ;INIT COUNTER
             STY   SP
             STY   CURR
-:DFILELP    JSR   FILEQ
+:DFILELP    >>>   JSRMODULE,CATLIB;FILEQ
             JSR   CURPNT
             BIT   DOSNOW
             BPL   :SKIPCK     ;DOS 3.3
@@ -140,9 +142,9 @@ DELETEINTERNAL
             AND   #$F0
             CMP   #$D0
             BNE   :SKIPCK     ;NOT SUBDIR
-            JSR   DIVEIN
+            >>>   JSRMODULE,CATLIB;DIVEIN
             CLC
-            JSR   DIVECK
+            >>>   JSRMODULE,CATLIB;DIVECK
             JSR   PRVNM
             JSR   SETPFX
             LDX   #$FF
@@ -163,17 +165,17 @@ DELETEINTERNAL
             BCC   :DFILELP
             BIT   DOSNOW
             BPL   :ABORT
-            JSR   DIVOUT
+            >>>   JSRMODULE,CATLIB;DIVOUT
             BCS   :ABORT
             LDA   SP
             BEQ   :DFIL2
             LDA   #0
             STA   CURR
 :DFIL2      SEC
-            JSR   DIVECK
+            >>>   JSRMODULE,CATLIB;DIVECK
             JSR   PRVNM
             JSR   SETPFX
-            JSR   FILEQ
+            >>>   JSRMODULE,CATLIB;FILEQ
             JMP   :SKIPCK
 *
 :ABORT      BIT   DOSNOW

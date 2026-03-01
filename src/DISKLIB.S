@@ -496,7 +496,7 @@ PATMOV      LDX   #$00
             STX   FILNUM
             RTS
 *
-* called by DIVEIN(DELLIB) and DISKMAP
+* called by DIVEIN(CATLIB) and DISKMAP
 DIR?        LDY   #0
             LDA   (POINT),Y
             AND   #$F0

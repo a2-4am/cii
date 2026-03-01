@@ -11,6 +11,7 @@
             PUT   ../build/MM.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/DOTREE.VARS
             ORG   DOTREEEND
@@ -727,7 +728,8 @@ COPY
             JSR   TOP1
             JSR   SRCHDR
             JSR   CT1
-            JSR   CATDIS      ;SELECT FILES
+                              ;SELECT FILES
+            >>>   JSRMODULE,CATLIB;CATDIS
             LDA   FILNUM
             BEQ   :NONE
 *
@@ -813,7 +815,8 @@ COPY
             JSR   SRCHDR
             JSR   INSS
             JSR   SRCHDR
-            JSR   FILEQ       ;UPDATE FILEQ
+                              ;UPDATE FILEQ
+            >>>   JSRMODULE,CATLIB;FILEQ
             JSR   OPNSRC      ;OPEN & READ
             BIT   PDOS
             BPL   :CPF0       ;SRC = DOS
@@ -885,9 +888,9 @@ COPY
 *
             JSR   SRCHDR
             JSR   INSS
-            JSR   DIVEIN
+            >>>   JSRMODULE,CATLIB;DIVEIN
             CLC
-            JSR   DIVECK
+            >>>   JSRMODULE,CATLIB;DIVECK
             JSR   SRCHDR
             JSR   :TARDIN
             LDX   #$FF
@@ -907,10 +910,10 @@ COPY
             BPL   :INROOT     ;DOS 3.3
             JSR   SRCHDR
             JSR   INSS
-            JSR   DIVOUT
+            >>>   JSRMODULE,CATLIB;DIVOUT
             BCS   :INROOT     ;IN ROOT
             SEC
-            JSR   DIVECK
+            >>>   JSRMODULE,CATLIB;DIVECK
             JSR   SRCHDR
             JSR   :TARDOUT
             JMP   :FIN2
@@ -1046,7 +1049,8 @@ COPY
             BNE   :COMOUT0
 *
 :DONT       JSR   PCOUT
-            JSR   UNMARK      ;UNMARK
+                              ;UNMARK
+            >>>   JSRMODULE,CATLIB;UNMARK
 :COMOUT0    SEC
 :COMOUT     PHA
             PHP

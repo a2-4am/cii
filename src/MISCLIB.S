@@ -8,6 +8,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/UNDELETE.VARS
             ORG   UNDELEND
@@ -265,7 +266,8 @@ BOOTPGINTERNAL
             BCS   :NODOS
 :GOTSECT    LDA   RSECTR      ;REAL DOS:
             STA   :NAMESEC
-            JSR   CATDIS      ;SELECT NEW
+                              ;SELECT NEW
+            >>>   JSRMODULE,CATLIB;CATDIS
             JSR   SWPCHK
             JSR   CURPNT      ;BOOT PROGRAM
             LDY   #$20
@@ -324,8 +326,8 @@ VIEWINTERNAL
             JSR   COMTRE
             LDA   #$05
             STA   STATE
-            JSR   INITCD
-            JSR   RDACNT
+            >>>   JSRMODULE,CATLIB;INITCD
+            >>>   JSRMODULE,CATLIB;RDACNT
             LDA   NACTIV
             BNE   :NEXTFIL
             JMP   NOFIL0
@@ -336,7 +338,8 @@ VIEWINTERNAL
             JSR   HOME
             LDA   #MPSTAT45
             JSR   LOWMES
-            JSR   CDDOKEY     ;CAT DISPLAY
+                              ;CAT DISPLAY
+            >>>   JSRMODULE,CATLIB;CDDOKEY     
             JSR   HOME        ;VIEW FILES
 *
             LDA   #4
@@ -533,7 +536,8 @@ ALPHAINTERNAL
             JSR   COMTRE
             LDA   #$01
             STA   DELFLG
-            JSR   RDACNT      ;READ FILES
+                              ;READ FILES
+            >>>   JSRMODULE,CATLIB;RDACNT
             LDA   NACTIV
             BEQ   :NOFILES
             LDX   #$FF
@@ -611,7 +615,8 @@ ALPHAINTERNAL
             JSR   CKDEL       ;DELETED?
             BCS   :NXTFILE    ;YES:DONT SHOW
             LDA   #$FF        ;SHORT DISPLAY
-            JSR   CATLIN      ;NO:SHOW
+                              ;NO:SHOW
+            >>>   JSRMODULE,CATLIB;CATLIN
             JSR   CROUT
             DEC   :COUNT      ;& COUNT
 :NXTFILE    INC   SHOW        ;NEXT FILE
@@ -673,7 +678,7 @@ LOCKINTERNAL
 *
 REN2        EQU   *
             JSR   COMTRE
-            JSR   CATDIS
+            >>>   JSRMODULE,CATLIB;CATDIS
             LDA   FILNUM
             BNE   :GOTFILS
             JMP   NOSEL

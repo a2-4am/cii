@@ -6,6 +6,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/READLIB.VARS
+            PUT   ../build/CATLIB.VARS
             PUT   ../build/FILER.VARS
             PUT   ../build/COPY.VARS
             ORG   COPYEND
@@ -43,7 +44,8 @@ CATALOG
 :TRY80      JSR   COL80
 :CATCONT    JSR   TOP1
             JSR   PRVNM
-:SKIP2      JSR   RDACNT      ;GET CATALOG
+:SKIP2                        ;GET CATALOG
+            >>>   JSRMODULE,CATLIB;RDACNT
             LDA   #$80
             STA   DELFLG      ;RESET DELETE
             LDA   #0
@@ -110,14 +112,14 @@ CATALOG
             BCC   :HID2
 *
 :SKIPHID    LDA   CHOOZOPT
-            JSR   CATLIN
+            >>>   JSRMODULE,CATLIB;CATLIN
             JSR   :NEXTFIL
             BCC   :HID1
             BCS   :GOALLD
 *
 * NORMAL CATALOG
 :NORMAL     LDA   CHOOZOPT
-            JSR   CATLIN
+            >>>   JSRMODULE,CATLIB;CATLIN
             JSR   :NEXTFIL
             BCC   :NORMAL
 :GOALLD     JMP   :ALLDONE
@@ -141,7 +143,8 @@ CATALOG
 :NOTDEL1    TXA               ;SPACE
             JSR   PCOUT
             JSR   PRSPC
-            JSR   CATLN1      ;SEE LINE
+                              ;SEE LINE
+            >>>   JSRMODULE,CATLIB;CATLN1
             JSR   :NEXTFIL
             BCC   :DELETED
             BCS   :GOALLD
@@ -156,7 +159,8 @@ CATALOG
             STA   DATADR
             LDA   #>DATPAG
             STA   HIMEM
-:FILELP4    JSR   CATLIN
+:FILELP4    
+            >>>   JSRMODULE,CATLIB;CATLIN
             LDA   SHOW
             STA   CURR
             LDY   #$02

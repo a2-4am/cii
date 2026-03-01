@@ -39,13 +39,6 @@ COMHDR      JSR   DODEVP
 COMH00      JSR   TOP1
             JMP   PRVNM
 *
-* SHOW A LINE OF CATALOG
-CATLIN      PHA
-            JSR   PRSPC
-            JSR   PRSPC
-            PLA
-            JMP   CATLN1
-*
 *
 *
 TREEA       JSR   DOSTYP
@@ -61,84 +54,6 @@ TREEA       JSR   DOSTYP
 SETA        JSR   DOSTYP
             LDA   UNIT
             >>>   JMPMODULE,PHRWTSLIB;UNTPFX
-*
-*
-*
-* CHECK IF WE ARE DIVING IN TO OR OUT
-* OF THE STARTING DIRECTORY. IF SO,
-* RESTORE OR SAVE *STATUS, *CBYTE,
-* *CSECTR,*FILNUM
-*
-* called by COPY FILES and DELETE FILES(DELLIB)
-DIVECK      BCS   :GOOUT
-            LDA   SP
-            CMP   #1
-            BNE   :DVCK00
-            LDX   #>STATUS
-            LDY   HIMEM
-            DEY
-            DEY
-            DEY
-            STY   :MYHI
-            LDA   FILNUM
-            STA   :SAVE1
-            LDA   #4
-            STA   TOPDIF
-            JSR   :DVCK0
-            LDA   HIMEM       ;8/27/86
-            JSR   SETHIM      ;8/27/86
-:DVCK00     JMP   :DVINIT
-*
-:GOOUT      LDA   SP
-            BNE   :DVINIT
-            JSR   :DVINIT
-            LDX   :MYHI
-            LDY   #>STATUS
-            LDA   :SAVE1
-            STA   FILNUM
-            LDA   #0
-            STA   TOPDIF
-*
-:DVCK0      STX   POINT+1
-            STY   MESPNT+1
-            LDY   #0
-            STY   MESPNT
-            STY   POINT
-            LDX   #3
-:DCKLP      LDA   (POINT),Y
-            STA   (MESPNT),Y
-            INY
-            BNE   :DCKLP
-            INC   POINT+1
-            INC   MESPNT+1
-            DEX
-            BNE   :DCKLP
-            RTS
-:SAVE1      DB    $0
-:MYHI       DB    $0
-*
-*
-* INITIALIZE THINGS AFTER DIVING IN TO
-* OR OUT OF A SUBDIRECTORY
-*
-:DVINIT     LDA   CURR
-            PHA
-            JSR   INITCD
-            PLA
-            STA   CURR
-            JSR   RDACNT
-            LDA   NACTIV
-            STA   FILNUM
-            SEC
-            BEQ   :DVINT1     ;NO FILES
-            LDX   #0
-:CFLP2      INX
-            TXA
-            STA   STATUS-1,X
-            CPX   NACTIV
-            BCC   :CFLP2
-            CLC
-:DVINT1     RTS
 *
 * called by COPY DISK, COPY FILE, DELETE FILE
 SETHIM      SEC
@@ -222,7 +137,8 @@ DOMLI       PLA
 LASTOP      DB    $0
 *
 *
-MLIERR      LDA   RRTN
+MLIERR      EQU   *
+            LDA   RRTN
             CMP   #$48        ;DISK FULL?
             BNE   :ERROU2     ;NOPE
 *
