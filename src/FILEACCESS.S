@@ -2,17 +2,6 @@
 *       FILE ACCESS ROUTINES        *
 *************************************
 *
-WRCAT1      LDX   #>VTOC1
-            LDA   #$02
-            JMP   DOCAT
-*
-WRCAT2      BIT   DOSNOW
-            BPL   :DOS33
-            JMP   CLOSE       ;NO JUST CLEAN UP
-:DOS33      LDX   #>VTOC2     ;YES WRITE CATALOG
-            LDA   #$02
-            JMP   DOCAT
-*
 *
 *
 * *FIXSUB IS CALLED BY LOCK/UNLOCK,

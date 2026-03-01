@@ -15,6 +15,8 @@
 * FNDBLK - find block (w/error)  *
 * DOVTOC - read/write VTOC       *
 * CLRCAT - clear catalog sectors *
+* WRCAT1
+* WRCAT2
 * DOCAT - read/write catalog     *
 * DOMASK - make a bitmap mask    *
 * STVTOC - setup for R/W VTOC    *
@@ -90,6 +92,18 @@ CLRCAT      STA   POINT+1
             DEX
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
+*
+WRCAT1      LDX   #>VTOC1
+            LDA   #$02
+            BNE   DOCAT       ;ALWAYS
+*
+WRCAT2      BIT   DOSNOW
+            BPL   :DOS33
+            JMP   CLOSE       ;NO JUST CLEAN UP
+:DOS33      LDX   #>VTOC2     ;YES WRITE CATALOG
+            LDA   #$02
+*            JMP   DOCAT
+* fall through to DOCAT
 *
 * READ OR WRITE CATALOG
 *

@@ -408,10 +408,10 @@ FTOCR       EQU   *
             STA   FILNAM-1,Y
             RTS
 *
-TYPCHR      EQU   *
-            ASC   "?BARSBAIT"
 TYPBYT      EQU   *
             DB    $00,$40,$20,$10,$08,$04,$02,$01,$00
+TYPCHR      EQU   *
+            ASC   "?BARSBAIT"
 :TYPE       DB    $0
 :SUBS       DB    $04,$06,$FC,$FD,$FB,$FA,$B4,$B5,$B6
 :SUBS1      ASC   "RAAAAAAAA"
