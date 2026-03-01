@@ -21,10 +21,10 @@ VERIFY
 *
             LDA   CHOOZOPT
             BNE   :NOTFIL
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             JMP   :VFILES
 *
-:NOTFIL     JSR   COMHDR
+:NOTFIL     >>>   JSRMODULE,TREELIB;COMHDR
             DEC   CHOOZOPT    ;JUMP TO
             BEQ   :VDISK      ;OPTION
             JMP   :SPEED1

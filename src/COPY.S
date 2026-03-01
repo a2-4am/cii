@@ -79,7 +79,8 @@ COPY
 *
 :ITSDISK    LDA   #MDISK      ;Set to say DISK, not DISK W/ FORMAT
             STA   OPTCHS      ; cuz DISK W/ FORMAT doesn't fit on screen.
-            JSR   COMH00      ;Say it.
+                              ;Say it.
+            >>>   JSRMODULE,TREELIB;COMH00
             JSR   :INSDSK
             LDA   #0
             STA   :PASSNUM
@@ -231,7 +232,8 @@ COPY
 :NOPRO      JSR   HOME
             JMP   NOPRO
 *
-:ITSDOS     JSR   COMH00      ;COPY DOS  SLOT: s DRIVE: d
+:ITSDOS                       ;COPY DOS  SLOT: s DRIVE: d
+            >>>   JSRMODULE,TREELIB;COMH00
             JSR   SRCHDR
             LDA   PUNIT
             JSR   UNTDEV
@@ -727,7 +729,7 @@ COPY
             JSR   TREEP
             JSR   TOP1
             JSR   SRCHDR
-            JSR   CT1
+            >>>   JSRMODULE,TREELIB;CT1
                               ;SELECT FILES
             >>>   JSRMODULE,CATLIB;CATDIS
             LDA   FILNUM
@@ -736,7 +738,7 @@ COPY
             JSR   TARHDR
             JSR   INSD
             JSR   SETS
-            JSR   CT1
+            >>>   JSRMODULE,TREELIB;CT1
             >>>   JSRMODULE,PHRWTSLIB;UNTPFX
             JSR   TARHDR
             JSR   PRVNM
@@ -2287,7 +2289,7 @@ TREEP       EQU   *
             LDA   #>PPFX
             STA   PFXADR+1
             LDA   PCURR
-            JSR   DOTREE
+            >>>   JSRMODULE,TREELIB;DOTREE
             BCS   SETP
             STA   PCURR
             RTS
@@ -2319,7 +2321,7 @@ TREES       EQU   *
             LDA   #>SPFX
             STA   PFXADR+1
             LDA   SCURR
-            JSR   DOTREE
+            >>>   JSRMODULE,TREELIB;DOTREE
             BCS   SETS
             STA   SCURR
             RTS

@@ -9,6 +9,7 @@
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/MENU.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
@@ -64,6 +65,16 @@ DZX0BEG
             PUT   DISPATCH
             ORG
 DZX0END
+*
+TREELIBX7BEG
+            ORG   TREELIB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    TREELIBEND
+            PUTBIN  ../build/TREELIB.X7
+:X7END
+            ORG
+TREELIBX7END
 *
 CATLIBX7BEG
             ORG   CATLIB

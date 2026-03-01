@@ -9,6 +9,10 @@
             PUT   ../build/DISKLIB.VARS
             ORG   DISKLIBEND
 
+TREELIB
+            ORG   *+3
+            RTS
+
 **********************************
 *          TREE LIBRARY          *
 * COMTRE
@@ -664,6 +668,7 @@ INCPT2      EQU   *
             STA   POINT2
             BCC   IP3
             INC   POINT2+1
-IP3         RTS
+IP3         EQU   *
+            RTS
 *
 TREELIBEND

@@ -18,7 +18,7 @@ TSMAP
 *            DISK MAP              *
 ************************************
 *
-            JSR   COMHDR
+            >>>   JSRMODULE,TREELIB;COMHDR
             BIT   A2E
             BPL   :C00EQ
             STA   $C00E

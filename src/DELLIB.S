@@ -36,10 +36,10 @@ DELLIB
 DELETEINTERNAL
             LDA   CHOOZOPT
             BNE   :NOTFILZ
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             JMP   :DFILES
 *
-:NOTFILZ    JSR   COMHDR
+:NOTFILZ    >>>   JSRMODULE,TREELIB;COMHDR
             LDA   CHOOZOPT
             CMP   #$02
             BEQ   :DDOS
@@ -117,7 +117,7 @@ DELETEINTERNAL
             JSR   PCOUT
             CMP   #"Y"
             BNE   :READY3
-            JSR   SETA
+            >>>   JSRMODULE,TREELIB;SETA
             JSR   PRVNM
             JSR   HOME
             LDA   #0
@@ -201,7 +201,7 @@ FORMATINTERNAL
             STA   :TEMP
             STA   DOSNOW
             JSR   DODEVF
-            JSR   COMH00
+            >>>   JSRMODULE,TREELIB;COMH00
             LDA   UNIT
             JSR   SETSD
             JSR   DEVTYP

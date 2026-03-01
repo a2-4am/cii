@@ -18,7 +18,7 @@ UNDEL
 *        UNDELETE FILES            *
 ************************************
 *
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             LDY   #0
             STY   DELFLG
             INY
@@ -31,7 +31,7 @@ UNDEL
             BNE   :GOTFILS
             JMP   NOSEL
 :GOTFILS    JSR   SWPCHK
-            JSR   COMH00
+            >>>   JSRMODULE,TREELIB;COMH00
             LDA   #$00
             STA   :BADNUM
             STA   :MAYBE
@@ -57,7 +57,7 @@ UNDEL
 * 'MAYBE' FILES.
 *
 *
-            JSR   COMH00
+            >>>   JSRMODULE,TREELIB;COMH00
             LDA   #0
             STA   CURR
 :SMARTLP    >>>   JSRMODULE,CATLIB;FILEQ

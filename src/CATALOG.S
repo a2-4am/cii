@@ -25,11 +25,11 @@ CATALOG
 :NOTDEL     LDA   #$FF
             STA   OPTCHS
             JSR   DODEVP
-            JSR   TREEA
+            >>>   JSRMODULE,TREELIB;TREEA
             LDA   RRTN
             BEQ   :MAYBE80
-            JSR   COMH00
-            JSR   CT1
+            >>>   JSRMODULE,TREELIB;COMH00
+            >>>   JSRMODULE,TREELIB;CT1
 *
 * Only CATALOG W/FILE LENGTHS uses 80-column
 * mode now. Other catalogs are 40-column, but

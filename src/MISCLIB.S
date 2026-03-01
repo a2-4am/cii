@@ -34,7 +34,7 @@ MISCLIB
 ************************************
 *
 MAKESUBINTERNAL
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             BIT   DOSNOW
             BMI   :MK0
             JMP   NODOS3
@@ -251,7 +251,7 @@ SETCLOCKINTERNAL
 ************************************
 *
 BOOTPGINTERNAL
-            JSR   COMHDR
+            >>>   JSRMODULE,TREELIB;COMHDR
             LDA   #$04
             STA   STATE
             BIT   DOSNOW
@@ -323,7 +323,7 @@ BOOTPGINTERNAL
 ************************************
 *
 VIEWINTERNAL
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             LDA   #$05
             STA   STATE
             >>>   JSRMODULE,CATLIB;INITCD
@@ -533,7 +533,7 @@ VIEWINTERNAL
 ************************************
 *
 ALPHAINTERNAL
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             LDA   #$01
             STA   DELFLG
                               ;READ FILES
@@ -667,7 +667,7 @@ RENAMEINTERNAL
             STA   STATE
             LDA   CHOOZOPT
             BEQ   REN2        ;RENAME FILES
-            JSR   COMHDR
+            >>>   JSRMODULE,TREELIB;COMHDR
             BIT   DOSNOW
             BMI   RENVOL
             JMP   NODOS3
@@ -677,7 +677,7 @@ LOCKINTERNAL
             STA   STATE
 *
 REN2        EQU   *
-            JSR   COMTRE
+            >>>   JSRMODULE,TREELIB;COMTRE
             >>>   JSRMODULE,CATLIB;CATDIS
             LDA   FILNUM
             BNE   :GOTFILS
