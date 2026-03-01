@@ -6,6 +6,7 @@
             ORG   LINEINPUTEND
 
 * TSVALS    print current track and sector
+* PRTTRK    print current track
 * NOFIL0
 * NOFILS
 * NOSEL

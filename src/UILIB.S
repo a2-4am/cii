@@ -13,7 +13,6 @@
 * DODEV
 * PRVNM     print current slot+drive (if DOS)
 *           or current prefix (if ProDOS)
-* PRTTRK    print current track
 * PRTBLK    print current block
 * PRTFL1    print current prefix
 * PRTFIL    print current prefix + filename
