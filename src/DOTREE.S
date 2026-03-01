@@ -8,8 +8,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/TREELIB.VARS
-            PUT   ../build/DODEV.VARS
-            ORG   DODEVEND
+            ORG   TREELIBEND
 DOTREE      
             ORG   *+3
 *

@@ -313,7 +313,6 @@ MENUTBL     DS    MENUTSZ
 DELETE      DS    6
 FORMAT      DS    6
 JDOTREE     DS    3
-JDODEV      DS    3
 MAKESUB     DS    6
 SETCLOCK    DS    6
 BOOTPG      DS    6
@@ -321,7 +320,7 @@ VIEW        DS    6
 ALPHA       DS    6
 RENAME      DS    6
 LOCK        DS    6
-            DS    114 ;free space here
+            DS    117 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

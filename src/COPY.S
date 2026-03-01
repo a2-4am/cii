@@ -2250,7 +2250,7 @@ DODVP1      EQU   *
             ASC   "Select source device:"
             DB    $0
             LDA   CURDVP
-            JSR   JDODEV
+            JSR   DODEV
             STA   PUNIT
             STX   CURDVP
             RTS
@@ -2269,7 +2269,7 @@ DODVS1      EQU   *
             ASC   "Select target device:"
             DB    $0
             LDA   CURDVS
-            JSR   JDODEV
+            JSR   DODEV
             STA   SUNIT
             STX   CURDVS
             RTS
