@@ -28,30 +28,13 @@ DISKLIB
 * OPNFIL - open file             *
 * RDDATA - read file data        *
 **********************************
-DOWBLK      >>>   JMPMODULE,DECOMPRESS;_DOWBLK
-DOVTOC      >>>   JMPMODULE,DECOMPRESS;_DOVTOC
-CLRCAT      >>>   JMPMODULE,DECOMPRESS;_CLRCAT
-WRCAT1      >>>   JMPMODULE,DECOMPRESS;_WRCAT1
-WRCAT2      >>>   JMPMODULE,DECOMPRESS;_WRCAT2
-DOCAT       >>>   JMPMODULE,DECOMPRESS;_DOCAT
-DOS?        >>>   JMPMODULE,DECOMPRESS;_DOS?
-SET1A2      >>>   JMPMODULE,DECOMPRESS;_SET1A2
-DORWTS      >>>   JMPMODULE,DECOMPRESS;_DORWTS
-SWPCHK      >>>   JMPMODULE,DECOMPRESS;_SWPCHK
-SWCK        >>>   JMPMODULE,DECOMPRESS;_SWCK
-DOSTYP      >>>   JMPMODULE,DECOMPRESS;_DOSTYP
-RDTSL       >>>   JMPMODULE,DECOMPRESS;_RDTSL
-OPNSRC      >>>   JMPMODULE,DECOMPRESS;_OPNSRC
-OPNFIL      >>>   JMPMODULE,DECOMPRESS;_OPNFIL
-RDDATA      >>>   JMPMODULE,DECOMPRESS;_RDDATA
-DECOMPRESS  EQU   *
             ORG   *+3
             RTS
 
 *
 * WRITE BLOCK, WITH ERROR HANDLING
 *
-_DOWBLK     EQU   *
+DOWBLK
             JSR   WTBLK
             BCS   :ERROUT
             RTS
@@ -61,7 +44,7 @@ _DOWBLK     EQU   *
 * READ/WRITE VTOC, READY FOR CATALOG
 *
 * TAKES PAGE IN X
-_DOVTOC     EQU   *
+DOVTOC
             STX   RPAGE       ;SET PAGE
             STX   POINT+1
             JSR   STVTOC      ;RETURNS A=0
@@ -84,7 +67,7 @@ _DOVTOC     EQU   *
 * CLEAR CATALOG SECTORS
 * called by RDACNT(CATLIB), DELETE DISK(DELLIB),
 * RDCAT1, and RDCAT2
-_CLRCAT     EQU   *
+CLRCAT
             STA   POINT+1
             LDA   #$00
             STA   POINT
@@ -109,12 +92,12 @@ _CLRCAT     EQU   *
             BPL   :NXTSECT    ;BACK FOR MORE
             RTS
 *
-_WRCAT1     EQU   *
+WRCAT1
             LDX   #>VTOC1
             LDA   #$02
-            BNE   _DOCAT      ;ALWAYS
+            BNE   DOCAT       ;ALWAYS
 *
-_WRCAT2     EQU   *
+WRCAT2
             BIT   DOSNOW
             BPL   :DOS33
             JMP   CLOSE       ;NO JUST CLEAN UP
@@ -128,7 +111,7 @@ _WRCAT2     EQU   *
 * TAKES VTOC PAGE IN X
 * TAKES RWTS COMMAND (1 OR 2) IN A
 *
-_DOCAT      EQU   *
+DOCAT
             STA   RCMND
             BIT   DOSNOW
             BPL   :DOS33
@@ -209,7 +192,7 @@ PDOCAT      EQU   *
 * read T00S00 and check for recognized DOS-shaped bootloader
 * called by Copy DOS (COPY) and Delete DOS (DELLIB)
 * 
-_DOS?       EQU   *
+DOS?
             LDX   #0
             JSR   PUTSEC
             STX   RTRACK
@@ -222,7 +205,7 @@ _DOS?       EQU   *
 :NODOS      LDA   #MNODOS
             JMP   PRTPRS
 *
-_SET1A2     EQU   *
+SET1A2
             STA   CVTOC+$3C
             STA   CVTOC+$3D
             STA   CVTOC+$40
@@ -230,7 +213,7 @@ _SET1A2     EQU   *
             LDA   #2
             STA   RCMND
 * falls through to DORWTS
-_DORWTS     EQU   *
+DORWTS
             JSR   PHRWTS
             BCS   DISKLIBERR
             RTS
@@ -244,7 +227,7 @@ DISKLIBERR  EQU   *
 *
 * called by COPY FILES, DELETE FILES, DISK MAP,
 * BOOTPG, VIEW FILES, UNDELETE, and VERIFY FILES
-_SWPCHK     EQU   *
+SWPCHK
             LDA   DOSNOW
             STA   CURDOS
 :SWPCHK0    LDA   #>PFX
@@ -254,7 +237,7 @@ _SWPCHK     EQU   *
             BCS   :SWPCHK0
             RTS
 * alternate entry point also called by COPY FILES
-_SWCK       EQU   *
+SWCK
 * -> A/Y points to prefix
 * -> X is high byte of VTOC buffer
             STA   PFXADR+1
@@ -331,7 +314,7 @@ SWPRET      EQU   *
 *
 * called by COPY DISK, DELETE DISK(DELLIB),
 * FORMAT(DELLIB), SWCK
-_DOSTYP     EQU   *
+DOSTYP
             LDA   #0
             STA   RRTN
             LDA   UNIT
@@ -446,7 +429,7 @@ _DOSTYP     EQU   *
 * READ TSLIST & UPDATE SECTOR POINTER
 *
 * called by RDDATA and also VERIFY
-_RDTSL      EQU   *
+RDTSL
             LDA   RPAGE
             PHA
             LDA   #>SRCTSL    ;READ INTO
@@ -466,7 +449,7 @@ _RDTSL      EQU   *
 *
 RDDATAERR1  EQU   *
             JMP   ERROUT
-_RDDATA     EQU   *
+RDDATA
             LDY   RELCNT
             BEQ   :RDD1
             LDA   RBLKL-1,Y
@@ -641,14 +624,14 @@ RDDATAERR2  EQU   *
 *
 * OPEN SOURCE FILE
 * called by CATALOG, COPY, DISKMAP, and VIEW
-_OPNSRC     EQU   *
+OPNSRC
             JSR   OPNFIL
             BCS   :ERR1
             RTS
 :ERR1       JMP   ERROUT
 *
 * called by OPNSRC (above) and VERIFY
-_OPNFIL     EQU   *
+OPNFIL
             JSR   CURPNT      ;POINT TO FILE
             BIT   DOSNOW
             BPL   :DOS33

@@ -3,8 +3,8 @@
             PUT   VARS
             PUT   ../build/MESSAGES2.VARS
             PUT   ../build/MESSAGES.VARS
-            PUT   ../build/PRODOS.VARS
-            ORG   PRODOSEND
+            PUT   ../build/QUIT.VARS
+            ORG   QUITEND
 *
 ***********************************
 *                                 *
@@ -467,6 +467,7 @@ CROUT2      JSR   CROUT
 * READS KEYBOARD WITHOUT CURSOR GAMES
 * -> CHARACTER IN ACC
 GETKEY      BIT   KBDSTB
+            JSR   POSTDZX
 :LOOP       LDA   KBD
             BPL   :LOOP
             JSR   :CHKALT

@@ -20,3 +20,6 @@
             DW    SETCLOCK
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
+*POSTDZX
+            JSR   CATLIB
+            JMP   DISKLIB

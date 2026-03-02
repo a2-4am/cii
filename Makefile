@@ -53,6 +53,8 @@ IOO=$(BUILDDIR)/IO.O
 IOVARS=$(BUILDDIR)/IO.VARS.S
 ERRORSO=$(BUILDDIR)/ERRORS.O
 ERRORSVARS=$(BUILDDIR)/ERRORS.VARS.S
+QUITO=$(BUILDDIR)/QUIT.O
+QUITVARS=$(BUILDDIR)/QUIT.VARS.S
 LINEINPUTO=$(BUILDDIR)/LINEINPUT.O
 LINEINPUTX7=$(BUILDDIR)/LINEINPUT.X7
 LINEINPUTVARS=$(BUILDDIR)/LINEINPUT.VARS.S
@@ -217,10 +219,21 @@ $(PRODOSVARS): $(PRODOSO)
 	$(call VARS,!/;VARS;/,$(PRODOSO))
 
 #
+# QUIT module
+# contains quit code
+#
+$(QUITO): $(PRODOSVARS)
+	$(MERLIN) "$(SRCDIR)"/QUIT.S > "$(BUILDLOG)"
+	$(call POSTMERLIN)
+
+$(QUITVARS): $(QUITO)
+	$(call VARS,!/;VARS;/,$(QUITO))
+
+#
 # I/O module
 # contains low-level text handling routines
 #
-$(IOO): $(MESSAGES2VARS) $(MESSAGESVARS) $(PRODOSVARS)
+$(IOO): $(MESSAGES2VARS) $(MESSAGESVARS) $(QUITVARS)
 	$(MERLIN) "$(SRCDIR)"/IO.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -242,7 +255,7 @@ $(ERRORSVARS): $(ERRORSO)
 # MENU module
 # contains main menu and submenu routines
 #
-$(MENUO): $(MMVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS)
+$(MENUO): $(MMVARS) $(DRIVE35VARS) $(IOVARS) $(ERRORSVARS)
 	$(MERLIN) "$(SRCDIR)"/MENU.S > "$(BUILDLOG)"
 	$(call POSTMERLIN)
 
@@ -288,7 +301,7 @@ $(DISKLIBVARS): $(DISKLIBO)
 	$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 $(DISKLIBX7): $(DISKLIBO)
-	$(call X7,$(DISKLIBO),16)
+	$(call X7,$(DISKLIBO),0)
 
 #
 # TREELIB module (compressed)(self-decompressing)
@@ -327,7 +340,7 @@ $(CATLIBVARS): $(CATLIBO)
 	$(call VARS,/;CATLIB.S;/,$(CATLIBO))
 
 $(CATLIBX7): $(CATLIBO)
-	$(call X7,$(CATLIBO),13)
+	$(call X7,$(CATLIBO),0)
 
 #
 # Copy module (compressed)(self-decompressing)

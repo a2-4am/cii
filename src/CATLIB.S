@@ -31,27 +31,13 @@ CATLIB
 * TYPES - recognized filetypes   *
 * PLACE - input file into entry  *
 **********************************
-CATLIN      >>>   JMPMODULE,DECOMPRESS;_CATLIN
-CATLN1      >>>   JMPMODULE,DECOMPRESS;_CATLN1
-CATDIS      >>>   JMPMODULE,DECOMPRESS;_CATDIS
-CDDOKEY     >>>   JMPMODULE,DECOMPRESS;_CDDOKEY
-FILEQ       >>>   JMPMODULE,DECOMPRESS;_FILEQ
-UNMARK      >>>   JMPMODULE,DECOMPRESS;_UNMARK
-DIVEIN      >>>   JMPMODULE,DECOMPRESS;_DIVEIN
-DIVOUT      >>>   JMPMODULE,DECOMPRESS;_DIVOUT
-DIVECK      >>>   JMPMODULE,DECOMPRESS;_DIVECK
-INITCD      >>>   JMPMODULE,DECOMPRESS;_INITCD
-RDACNT      >>>   JMPMODULE,DECOMPRESS;_RDACNT
-SETHIM      >>>   JMPMODULE,DECOMPRESS;_SETHIM
-DOWAIT      >>>   JMPMODULE,DECOMPRESS;_DOWAIT
-DECOMPRESS  EQU   *
             ORG   *+3
             RTS
 
 *
 *
 * SHOW A LINE OF CATALOG
-_CATLIN     EQU   *
+CATLIN
             PHA
             JSR   PRSPC
             JSR   PRSPC
@@ -61,7 +47,7 @@ _CATLIN     EQU   *
 *
 * ENTRY POINT TO DISPLAY 1 CATALOG LINE
 *
-_CATLN1     EQU   *
+CATLN1
             PHA
             LDX   SHOW        ;SET *POINT
             JSR   SETPNT
@@ -446,7 +432,7 @@ TYPBYT      EQU   *
 * 'DO' THE CATALOG DISPLAY &
 * EVERYTHING THAT IT INVOLVES
 *
-_CATDIS     EQU   *
+CATDIS
             JSR   INITCD
             LDA   #0
             STA   SP
@@ -523,7 +509,7 @@ SCROLF      EQU   *
 * entry point called by this module
 * and VIEW
 *
-_CDDOKEY    EQU   *
+CDDOKEY
             JSR   SEECAT
             JSR   CHKKEY      ;GET CHARACTER
             STA   :TEMP
@@ -540,7 +526,7 @@ _CDDOKEY    EQU   *
             BNE   :DOLOOK     ;ALWAYS
 *
 :BSCROL     LDX   CURR        ;BACKWARD
-            BEQ   _CDDOKEY    ;SCROLL
+            BEQ   CDDOKEY     ;SCROLL
             DEX
             STX   CURR
             JMP   CDDOKEY
@@ -565,7 +551,7 @@ _CDDOKEY    EQU   *
             DEX
             BPL   :NXTCHAR
             CMP   #"D"
-            BNE   _CDDOKEY    ;NOT FOUND
+            BNE   CDDOKEY     ;NOT FOUND
             LDX   #3          ;ALLOW D=U
 *
 :INDEX      CPX   #6
@@ -592,7 +578,7 @@ _CDDOKEY    EQU   *
             LDA   (POINT),Y
             STA   :JUMP+2
 :JUMP       JSR   $1000
-            BCC   _CDDOKEY
+            BCC   CDDOKEY
             CMP   #$FF
             BNE   :OUT
             JMP   CATDS1      ;DIR CHANGE
@@ -937,7 +923,7 @@ NEWNAM      EQU   *
 * by the operation rather than by
 * user interaction.
 *
-_FILEQ      EQU   *
+FILEQ
             LDA   FILNUM
             STA   NACTIV
             LDA   #$FF
@@ -1071,7 +1057,7 @@ CSTAT       EQU   *
             JSR   HEXDEC      ;CVRT TO DEC
             JMP   PRT3RJ
 *
-_UNMARK     EQU   *
+UNMARK
             LDY   CURR        ;IS SOMETHING
             LDA   STATUS,Y    ;THERE?
             BEQ   :NOPE
@@ -1094,7 +1080,7 @@ _UNMARK     EQU   *
 * after operating on all the relevant files
 * in a subdirectory
 *
-_DIVOUT     EQU   *
+DIVOUT
             LDA   #0
             DB    $2C         ;HIDE LDA #$FF
 *
@@ -1199,7 +1185,7 @@ ST8MSG      EQU   *
 * deleting a subdirectory, and from
 * DISKMAP while entering a subdirectory
 *
-_DIVEIN     EQU   *
+DIVEIN
             JSR   CURPNT
             JSR   DIR?
             BCS   :NOTDIR
@@ -1252,7 +1238,7 @@ _DIVEIN     EQU   *
 * *CSECTR,*FILNUM
 *
 * called by COPY FILES and DELETE FILES(DELLIB)
-_DIVECK     EQU   *
+DIVECK
             BCS   :GOOUT
             LDA   SP
             CMP   #1
@@ -1329,7 +1315,7 @@ _DIVECK     EQU   *
 * from DIVECK after diving into or out of
 * a subdirectory, also from VIEW
 *
-_INITCD     EQU   *
+INITCD
             LDA   #$00
             STA   CURR
             STA   FILNUM
@@ -1358,7 +1344,7 @@ _INITCD     EQU   *
 * *DELFLG=$80 FOR ACTIVE FILES
 *        =$00 FOR DELETED
 *
-_RDACNT     EQU   *
+RDACNT
             BIT   DOSNOW
             BPL   :ISDOS33    ;DOS 3.3 DISK
 *
@@ -1647,7 +1633,7 @@ SHTIM0      EQU   *
 *
 *
 * called by COPY DISK, COPY FILE, DELETE FILE
-_SETHIM     EQU   *
+SETHIM
             SEC
             SBC   DATADR
             AND   #$FE
@@ -1660,7 +1646,7 @@ _SETHIM     EQU   *
 *
 *
 * called by COPY FILE and DELETE FILE(DELLIB)
-_DOWAIT     EQU   *
+DOWAIT
             LDX   #$03
 :WAITLP     LDA   #$C4
             JSR   WAIT
