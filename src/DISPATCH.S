@@ -21,5 +21,7 @@
             DW    QUIT
             ERR   *-]SPOT-MENUTSZ
 *POSTDZX
+            LDA   #$60
+            STA   POSTDZX
             JSR   CATLIB
             JMP   DISKLIB

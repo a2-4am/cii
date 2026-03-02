@@ -3,8 +3,8 @@
             PUT   VARS
             PUT   ../build/MESSAGES2.VARS
             PUT   ../build/MESSAGES.VARS
-            PUT   ../build/QUIT.VARS
-            ORG   QUITEND
+            PUT   ../build/DRIVE35.VARS
+            ORG   DRIVE35END
 *
 ***********************************
 *                                 *

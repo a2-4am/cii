@@ -7,6 +7,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
 
 **********************************
 *          TREE LIBRARY          *
@@ -26,7 +27,7 @@ COMH00      >>>   JMPMODULE,DECOMPRESS;_COMH00
 TREEA       >>>   JMPMODULE,DECOMPRESS;_TREEA
 SETA        >>>   JMPMODULE,DECOMPRESS;_SETA
 DOTREE      >>>   JMPMODULE,DECOMPRESS;_DOTREE
-            ORG   DISKLIBEND
+            ORG   CATLIBEND
 TREELIB
 DECOMPRESS  EQU   *
             ORG   *+3

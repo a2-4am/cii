@@ -8,8 +8,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/TREELIB.VARS
-            ORG   TREELIBEND
+            ORG   DISKLIBEND
 CATLIB
 **********************************
 *    CATALOG DISPLAY LIBRARY     *

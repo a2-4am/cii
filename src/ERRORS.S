@@ -2,7 +2,8 @@
             DSK   ../build/ERRORS.O
             PUT   VARS
             PUT   ../build/IO.VARS
-            ORG   IOEND
+            PUT   ../build/PRODOS.VARS
+            ORG   PRODOSEND
 
 * TSVALS    print current track and sector
 * PRTTRK    print current track

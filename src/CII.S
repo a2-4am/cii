@@ -112,16 +112,6 @@ DISKLIBX7BEG
             ORG
 DISKLIBX7END
 *
-TREELIBX7BEG
-            ORG   TREELIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    TREELIBEND
-            PUTBIN  ../build/TREELIB.X7
-:X7END
-            ORG
-TREELIBX7END
-*
 CATLIBX7BEG
             ORG   CATLIB
             PUTBIN ../build/CATLIB.O.JMP
@@ -132,6 +122,16 @@ CATLIBX7BEG
 :X7END
             ORG
 CATLIBX7END
+*
+TREELIBX7BEG
+            ORG   TREELIB
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    TREELIBEND
+            PUTBIN  ../build/TREELIB.X7
+:X7END
+            ORG
+TREELIBX7END
 *
 DELLIBX7BEG
             ORG   DELLIB

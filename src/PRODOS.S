@@ -2,7 +2,8 @@
             DSK   ../build/PRODOS.O
             PUT   VARS
             PUT   ../build/DRIVE35.VARS
-            ORG   DRIVE35END
+            PUT   ../build/MENU.VARS
+            ORG   MENUEND
 
 **********************************
 *         PRODOS LIBRARY         *

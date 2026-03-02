@@ -2,7 +2,8 @@
             DSK   ../build/QUIT.O
             PUT   VARS
             PUT   ../build/PRODOS.VARS
-            ORG   PRODOSEND
+            PUT   ../build/ERRORS.VARS
+            ORG   ERRORSEND
 
 QUIT        LDX   CHOOZOPT
             BEQ   :QUIT1

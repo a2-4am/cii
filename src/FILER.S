@@ -6,9 +6,9 @@
 *
             PUTBIN ../build/MESSAGES.O
             PUTBIN ../build/DRIVE35.O
-            PUTBIN ../build/PRODOS.O
-            PUTBIN ../build/QUIT.O
             PUTBIN ../build/IO.O
-            PUTBIN ../build/ERRORS.O
             PUTBIN ../build/MENU.O
+            PUTBIN ../build/PRODOS.O
+            PUTBIN ../build/ERRORS.O
+            PUTBIN ../build/QUIT.O
 MAINEND                       ;where image of main program ends

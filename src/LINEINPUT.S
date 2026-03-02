@@ -2,8 +2,8 @@
             DSK   ../build/LINEINPUT.O
             PUT   VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/MENU.VARS
-            ORG   MENUEND
+            PUT   ../build/QUIT.VARS
+            ORG   QUITEND
 LINEINPUT
 **********************************
 *       LINE INPUT LIBRARY       *
