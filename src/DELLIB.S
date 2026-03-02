@@ -204,7 +204,8 @@ _FORMAT     EQU   *
 :FPRODOS    EOR   #$FF
             STA   :TEMP
             STA   DOSNOW
-            JSR   DODEVF
+            LDA   #$FF        ;command=format
+            JSR   DODEVP
             JSR   COMH00
             LDA   UNIT
             JSR   SETSD

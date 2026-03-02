@@ -2,8 +2,7 @@
             DSK   ../build/ERRORS.O
             PUT   VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/LINEINPUT.VARS
-            ORG   LINEINPUTEND
+            ORG   IOEND
 
 * TSVALS    print current track and sector
 * PRTTRK    print current track
@@ -15,11 +14,11 @@
 * PRTPRS
 * PRESS
 * ERRMSG
-* OUCH
 * WDERR
 * ERROU1
 * ERROUT
 * BLK2ER
+* OUCH
 
 *
 *
@@ -68,9 +67,7 @@ PRTPRS      JSR   PRINT
 *
 * PRESS A KEY THEN RESTART PROGRAM
 *
-PRESS       LDA   #MPRESS
-            JSR   PRINT
-            JSR   GETKEY
+PRESS       JSR   JPRESS
             JMP   ($3F2)
 *
 * PRINT BEST ERROR MESSAGE
@@ -89,9 +86,8 @@ ERRMSG      LDA   RRTN
             ASC   "I/O "
             DB    $0
 *
-:NOT27      JSR   PRHERE
-            ASC   "Error"
-            DB    $0
+:NOT27      LDA   #MERROR
+            JSR   PRINT
             BIT   DOSNOW
             BPL   :DOS33
 *
@@ -148,12 +144,13 @@ BLK2ER      LDY   #0
             STY   DOSNOW
             LDA   #2
             STA   BLKNUM
-            JMP   ERROUT
+            BNE   ERROUT      ;ALWAYS
 *
 OUCH        JSR   HOME
             JSR   ERRMSG
             JSR   CROUT
             JSR   CLOSE
+JPRESS      EQU   *
             LDA   #MPRESS
             JSR   PRINT
             JMP   GETKEY

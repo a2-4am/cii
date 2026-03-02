@@ -24,6 +24,7 @@ CATALOG
             STA   DELFLG
 :NOTDEL     LDA   #$FF
             STA   OPTCHS
+            LDA   #0          ;command=not format
             JSR   DODEVP
             JSR   TREEA
             LDA   RRTN

@@ -121,7 +121,7 @@ PCATLN      EQU   *
             LDX   #" "
 :ISLOKD     TXA
             JSR   PCOUT
-            JSR   PCFILE
+            JSR   CFILE
 *
 * DISPLAY FILE TYPE
 *

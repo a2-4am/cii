@@ -9,6 +9,8 @@
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/MENU.VARS
             PUT   ../build/FILER.VARS
+            PUT   ../build/LINEINPUT.VARS
+            PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
@@ -75,6 +77,28 @@ DZX0BEG
             PUTBIN ../build/TREELIB.O.JMP
             ORG
 DZX0END
+*
+LINEINPUTX7BEG
+            ORG   LINEINPUT
+            PUTBIN ../build/LINEINPUT.O.JMP
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    LINEINPUTEND
+            PUTBIN  ../build/LINEINPUT.X7
+:X7END
+            ORG
+LINEINPUTX7END
+*
+UILIBX7BEG
+            ORG   UILIB
+            PUTBIN ../build/UILIB.O.JMP
+            JSR   ZXMODULE
+            DA    :X7END-7
+            DA    UILIBEND
+            PUTBIN  ../build/UILIB.X7
+:X7END
+            ORG
+UILIBX7END
 *
 DISKLIBX7BEG
             ORG   DISKLIB

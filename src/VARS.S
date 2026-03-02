@@ -110,6 +110,9 @@ CHOOZOPT    =     $A7         ;[4am] reuse unused address to store chosen menu i
 ISAUX       =     $A8
 A2E         =     $A9
 *
+SRCTAR      =     $B0
+OPTCHS      =     $B1
+DEVFLG      =     $B2
 TEMP        =     $B3
 TEMP2       =     $B4
 DIRBLK      =     $B5         ;2

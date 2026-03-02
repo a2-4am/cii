@@ -4,26 +4,40 @@
             PUT   ../build/PHRWTS.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/ERRORS.VARS
-            ORG   ERRORSEND
-
-* TOP1      clear screen and display function title
-* DODEVF
-* DODEVP
-* DODEV
-* PRVNM     print current slot+drive (if DOS)
-*           or current prefix (if ProDOS)
-* PRTBLK    print current block
-* PRTFL1    print current prefix
-* PRTFIL    print current prefix + filename
-* CFILE     print current filename
-* PCFILE    print current filename (ProDOS)
-* SEEDEV    print slot and drive
+            PUT   ../build/LINEINPUT.VARS
+            ORG   LINEINPUTEND
+UILIB
+**********************************
+*           UI LIBRARY           *
+* TOP1 - clear screen and display function title
+* DODEVP - print header, select device
+* DODEV - select device
+* PRVNM - print current slot+drive (if DOS)
+*         or current prefix (if ProDOS)
+* PRTBLK - print current block
+* PRTFL1 - print current prefix
+* PRTFIL - print current prefix + filename
+* CFILE - print current filename
+* SEEDEV - print slot and drive
+**********************************
+TOP1        >>>   JMPMODULE,DECOMPRESS;_TOP1
+DODEVP      >>>   JMPMODULE,DECOMPRESS;_DODEVP
+DODEV       >>>   JMPMODULE,DECOMPRESS;_DODEV
+PRVNM       >>>   JMPMODULE,DECOMPRESS;_PRVNM
+PRTBLK      >>>   JMPMODULE,DECOMPRESS;_PRTBLK
+PRTFL1      >>>   JMPMODULE,DECOMPRESS;_PRTFL1
+PRTFIL      >>>   JMPMODULE,DECOMPRESS;_PRTFIL
+CFILE       >>>   JMPMODULE,DECOMPRESS;_CFILE
+SEEDEV      >>>   JMPMODULE,DECOMPRESS;_SEEDEV
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
 
 *
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE
 *
-TOP1        JSR   HOME
+_TOP1       EQU   *
+            JSR   HOME
             LDA   #0
             STA   WNDTOP
             JSR   TABV
@@ -37,10 +51,9 @@ TOP1        JSR   HOME
 *
 * SHOW 'SELECT DEVICE' LIST
 *
-DEVFLG      DB    $0
-DODEVF      LDA   #$FF
-            DB    $2C
-DODEVP      LDA   #0
+* takes DEVFLG value in A
+*   FF=format, 00=not format
+_DODEVP     EQU   *
             STA   DEVFLG
             JSR   HOME
             JSR   PRHERE
@@ -54,7 +67,8 @@ DODEVP      LDA   #0
 * alternate entry point called by COPY
 * which prints its own headers for
 * 'source device' and 'target device'
-DODEV       STA   CURDEV
+_DODEV      EQU   *
+            STA   CURDEV
             LDA   #0
             STA   VOLFLG
             LDA   #$FF
@@ -282,7 +296,8 @@ DODEV       STA   CURDEV
 *
 * RETURNS WITH CV = 3, CH = 0
 *
-PRVNM       LDX   #PFX
+_PRVNM      EQU   *
+            LDX   #PFX
             LDY   #>PFX
             LDA   UNIT
 PRVCOM      STA   UNIT
@@ -354,13 +369,11 @@ PRVCOM      STA   UNIT
             JMP   VLEFT
 :PFXLEN     DB    $0
 *
-SRCTAR      DB    $0
-*
-*
-*
-PRTFL1      SEC
+_PRTFL1     EQU   *
+            SEC
             DB    $90
-PRTFIL      CLC
+_PRTFIL     EQU   *
+            CLC
             PHP
             BIT   DOSNOW
             BPL   :DOS33
@@ -398,7 +411,8 @@ PRTFIL      CLC
 *
 * PRINT FILENAME AT *POINT
 *
-CFILE       BIT   DOSNOW
+_CFILE      EQU   *
+            BIT   DOSNOW
             BMI   PCFILE
             LDY   #$00
             LDA   (POINT),Y
@@ -419,7 +433,8 @@ CFILE       BIT   DOSNOW
 :CFILEQ     RTS
 :LENGTH     DB    $21
 *
-PCFILE      LDY   #0
+PCFILE      EQU   *
+            LDY   #0
             LDA   (POINT),Y
             AND   #$0F
             BNE   :PCFL1
@@ -437,7 +452,8 @@ PCFILE      LDY   #0
 :PCFL3      RTS
 :LENGTH     DB    $0
 *
-PRTBLK      JSR   PRHERE
+_PRTBLK     EQU   *
+            JSR   PRHERE
             ASC   "Block $"
             DB    $0
             LDA   BLKNUM+1
@@ -448,7 +464,8 @@ PRTBLK      JSR   PRHERE
 *
 *
 * DISPLAY SLOT AND DRIVE
-SEEDEV      PHA
+_SEEDEV     EQU   *
+            PHA
             JSR   PRHERE
             ASC   "Slot "
             DB    $0

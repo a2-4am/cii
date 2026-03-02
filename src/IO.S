@@ -57,7 +57,6 @@
 * PRT5RJ    print 1 DIGIT right-justified in 5 spaces
 * PRT3RJ    print 1 DIGIT right-justified in 3 spaces
 * PRT2RJ    print 1 DIGIT right-justified in 2 spaces
-* PRT8LJ    print 1 DIGIT left-justified in 8 spaces
 * PRT5LJ    print 1 DIGIT left-justified in 5 spaces
 * PRT2DG    print 2 DIGITs
 * PRTDIG    print 1 DIGIT
@@ -251,8 +250,6 @@ PRT2RJ      LDX   #1
             BNE   :PRTRJ
             BEQ   PRTDIG      ;ALWAYS
 *
-PRT8LJ      LDX   #7
-            DB    $2C
 PRT5LJ      LDX   #4
 :PRTLJ      LDA   DIGIT,X
             BNE   PRTDIG
@@ -560,6 +557,5 @@ LAST        DB    MQUIT+1,MWHIDDEN+1,MDELDOS+1,MSPEED+1,MTEXT+1,MDOS33+1,MCOPDOS
 FIRST       DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
 CHOICE      DB    MCOPY,MNORMAL,MDELFILE,MVERFILE,MVALUES,MPRODOS,MCOPFILE,MFILES,MQPRODOS
 *
-OPTCHS      DB    $0
 *
 IOEND

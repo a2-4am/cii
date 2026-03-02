@@ -5,7 +5,8 @@
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
-            ORG   IOEND
+            PUT   ../build/ERRORS.VARS
+            ORG   ERRORSEND
 
 *************************************
 *                                   *

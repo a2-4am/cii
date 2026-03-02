@@ -32,6 +32,8 @@ MEMCPY      MAC
             >>>   MEMCPY,CATLIBX7BEG;CATLIBX7END;CATLIB
             >>>   MEMCPY,TREELIBX7BEG;TREELIBX7END;TREELIB
             >>>   MEMCPY,DISKLIBX7BEG;DISKLIBX7END;DISKLIB
+            >>>   MEMCPY,UILIBX7BEG;UILIBX7END;UILIB
+            >>>   MEMCPY,LINEINPUTX7BEG;LINEINPUTX7END;LINEINPUT
 *
 * Move interleave tables, unpacker, menu dispatch table,
 * and other global jump vectors into place

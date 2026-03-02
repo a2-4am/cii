@@ -7,10 +7,8 @@
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
-            PUT   ../build/MENU.VARS
-            PUT   ../build/LINEINPUT.VARS
             PUT   ../build/ERRORS.VARS
-            PUT   ../build/UILIB.VARS
+            PUT   ../build/MENU.VARS
 *
             ORG   MESSAGES2END
 *
@@ -18,8 +16,6 @@
             PUTBIN ../build/DRIVE35.O
             PUTBIN ../build/PRODOS.O
             PUTBIN ../build/IO.O
-            PUTBIN ../build/MENU.O
-            PUTBIN ../build/LINEINPUT.O
             PUTBIN ../build/ERRORS.O
-            PUTBIN ../build/UILIB.O
+            PUTBIN ../build/MENU.O
 MAINEND                       ;where image of main program ends

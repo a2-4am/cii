@@ -4,13 +4,33 @@
             PUT   ../build/IO.VARS
             PUT   ../build/MENU.VARS
             ORG   MENUEND
+LINEINPUT
+**********************************
+*       LINE INPUT LIBRARY       *
+* GETDNM - prompt for directory name
+* GETPAT - prompt for filename pattern
+* GET1FNM - prompt for 1 filename
+* GETNFNM - prompt for new filename
+* GETVNM - prompt for volume name
+* GETNVNM - promtp for new volume name
+**********************************
+GETDNM      >>>   JMPMODULE,DECOMPRESS;_GETDNM
+GETPAT      >>>   JMPMODULE,DECOMPRESS;_GETPAT
+GET1FNM     >>>   JMPMODULE,DECOMPRESS;_GET1FNM
+GETNFNM     >>>   JMPMODULE,DECOMPRESS;_GETNFNM
+GETVNM      >>>   JMPMODULE,DECOMPRESS;_GETVNM
+GETNVNM     >>>   JMPMODULE,DECOMPRESS;_GETNVNM
+DECOMPRESS  EQU   *
+            ORG   *+3
+            RTS
 
+*
 *
 * PROMPT FOR DIRECTORY NAME
 *
 * RETURNS: BCC --> |FILE| CONTAINS DIRECTORY NAME
 *          BCS --> USER CANCELED (ESC) OR NO INPUT
-GETDNM
+_GETDNM     EQU   *
             JSR   PRHERE
             ASC   8D,"Subdirectory name: ",00
             JSR   GVCOM1
@@ -27,7 +47,8 @@ GETDNM
 *
 * RETURNS: BCC --> |LINEIN| CONTAINS FILENAME PATTERN
 *          BCS --> USER CANCELED (ESC) OR NO INPUT
-GETPAT      JSR   LOHERE
+_GETPAT     EQU   *
+            JSR   LOHERE
             ASC   "Enter filename (,opt. filetypes)",8D,"? ",00
             LDA   #$24        ;PATTERN LIMIT
             BNE   GETLN0      ;ALWAYS
@@ -36,7 +57,8 @@ GETPAT      JSR   LOHERE
 *
 * RETURNS: BCC --> |LINEIN| CONTAINS FILENAME
 *          BCS --> USER CANCELED (ESC) OR NO INPUT
-GET1FNM     JSR   LOHERE
+_GET1FNM    EQU   *
+            JSR   LOHERE
             ASC   "Enter filename (one file)",8D,"? ",00
             LDA   #$1E        ;DOS FILENAME LIMIT
             BIT   DOSNOW
@@ -50,7 +72,7 @@ GETLN0      EQU   *
 *
 * RETURNS: BCC --> |FILE| CONTAINS NEW FILENAME
 *          BCS --> USER CANCELED
-GETNFNM
+_GETNFNM    EQU   *
             JSR   PRHERE
             ASC   8D,"New name?",FF,8D,FF,00
             LDA   #$16
@@ -87,7 +109,7 @@ GETNFNM
 *
 * RETURNS: BCC --> |VOLNAM| CONTAINS VOLUME NAME
 *          BCS --> USER CANCELED (ESC) OR NO INPUT
-GETVNM
+_GETVNM     EQU   *
             JSR   PRHERE
             ASC   8D,8D,"V",00
             JMP   GVCOM       ;GET VOL NAME
@@ -96,7 +118,7 @@ GETVNM
 *
 * RETURNS: BCC --> |VOLNAM| CONTAINS VOLUME NAME
 *          BCS --> USER CANCELED (ESC) OR NO INPUT
-GETNVNM
+_GETNVNM    EQU   *
             JSR   PRHERE
             ASC   8D,8D,"New v",00
 *            JMP   GVCOM       ;GET VOL NAME
