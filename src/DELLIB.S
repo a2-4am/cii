@@ -8,8 +8,8 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
-            PUT   ../build/TREELIB.VARS
             PUT   ../build/CATLIB.VARS
+            PUT   ../build/TREELIB.VARS
 *******************************
 *         DELETE LIBRARY      *
 * DELETE - option entry point *
@@ -32,7 +32,7 @@ PDSTRY      >>>   JMPMODULE,DECOMPRESS;_PDSTRY
 STINFO      >>>   JMPMODULE,DECOMPRESS;_STINFO
 GTINFO      >>>   JMPMODULE,DECOMPRESS;_GTINFO
 DOMLI       >>>   JMPMODULE,DECOMPRESS;_DOMLI
-            ORG   CATLIBEND
+            ORG   TREELIBEND
 DELLIB
 DECOMPRESS  EQU   *
             ORG   *+3
