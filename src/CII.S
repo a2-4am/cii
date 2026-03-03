@@ -103,7 +103,6 @@ UILIBX7END
 *
 DISKLIBX7BEG
             ORG   DISKLIB
-            PUTBIN ../build/DISKLIB.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    DISKLIBEND
@@ -114,7 +113,6 @@ DISKLIBX7END
 *
 CATLIBX7BEG
             ORG   CATLIB
-            PUTBIN ../build/CATLIB.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
             DA    CATLIBEND
