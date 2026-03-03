@@ -1,19 +1,4 @@
-            TYP   BIN
-            DSK   ../build/VERIFY.O
-            PUT   VARS
-            PUT   ../build/PHRWTS.VARS
-            PUT   ../build/PRODOS.VARS
-            PUT   ../build/IO.VARS
-            PUT   ../build/ERRORS.VARS
-            PUT   ../build/UILIB.VARS
-            PUT   ../build/DISKLIB.VARS
-            PUT   ../build/CATLIB.VARS
-            PUT   ../build/TREELIB.VARS
-            PUT   ../build/CATALOG.VARS
-            ORG   CATALOGEND
-VERIFY
-            ORG   *+3
-
+*
 *************************************
 *           VERIFY OPTIONS          *
 *************************************
@@ -449,5 +434,3 @@ CRIT2       EQU   *
 :DONE       STY   HEXNUM
             PLP
             RTS
-*
-VERIFYEND

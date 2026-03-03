@@ -18,9 +18,7 @@
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELLIB.VARS
-            PUT   ../build/VERIFY.VARS
-            PUT   ../build/DISKMAP.VARS
-            PUT   ../build/UNDELETE.VARS
+            PUT   ../build/APPLIB.VARS
             PUT   ../build/MISCLIB.VARS
             ORG   $2000
 *
@@ -161,35 +159,16 @@ CATALOGX7BEG
             ORG
 CATALOGX7END
 *
-VERIFYX7BEG
-            ORG   VERIFY
+APPLIBX7BEG
+            ORG   APPLIB
+            PUTBIN ../build/APPLIB.O.JMP
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    VERIFYEND
-            PUTBIN  ../build/VERIFY.X7
+            DA    APPLIBEND
+            PUTBIN  ../build/APPLIB.X7
 :X7END
             ORG
-VERIFYX7END
-*
-TSMAPX7BEG
-            ORG   TSMAP
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    TSMAPEND
-            PUTBIN  ../build/DISKMAP.X7
-:X7END
-            ORG
-TSMAPX7END
-*
-UNDELETEX7BEG
-            ORG   UNDEL
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    UNDELEND
-            PUTBIN  ../build/UNDELETE.X7
-:X7END
-            ORG
-UNDELETEX7END
+APPLIBX7END
 *
 MISCLIBX7BEG
             ORG   MISCLIB
