@@ -9,17 +9,13 @@
             PUT   ../build/MESSAGES.VARS
             PUT   ../build/QUIT.VARS
             PUT   ../build/MENU.VARS
-            PUT   ../build/FILER.VARS
-            PUT   ../build/LINEINPUT.VARS
-            PUT   ../build/UILIB.VARS
-            PUT   ../build/DISKLIB.VARS
-            PUT   ../build/TREELIB.VARS
-            PUT   ../build/CATLIB.VARS
+            PUT   ../build/MAINPACK.VARS
+            PUT   ../build/PROPACK.VARS
             PUT   ../build/COPY.VARS
             PUT   ../build/CATALOG.VARS
             PUT   ../build/DELLIB.VARS
-            PUT   ../build/APPLIB.VARS
-            PUT   ../build/MISCLIB.VARS
+            PUT   ../build/VERPACK.VARS
+            PUT   ../build/ALPHAPACK.VARS
             ORG   $2000
 *
             PUT   LOADER      ;This relocates & gets everything started.
@@ -48,7 +44,7 @@ MESSAGES2X7BEG
             ORG
 MESSAGES2X7END
 *
-            PUTBIN  ../build/FILER.X
+            PUTBIN  ../build/MAINPACK.X
 MAINXEND
 *
 MMXBEG
@@ -70,64 +66,22 @@ DZX0BEG
             PUTBIN ../build/PHRWTS.O.JMP
             ERR   *#JDELLIB
             PUTBIN ../build/DELLIB.O.JMP
-            ERR   *#JMISCLIB
-            PUTBIN ../build/MISCLIB.O.JMP
-            ERR   *#JTREELIB
-            PUTBIN ../build/TREELIB.O.JMP
+            ERR   *#JALPHAPACK
+            PUTBIN ../build/ALPHAPACK.O.JMP
+            ERR   *#JVERPACK
+            PUTBIN ../build/VERPACK.O.JMP
             ORG
 DZX0END
 *
-LINEINPUTX7BEG
-            ORG   LINEINPUT
-            PUTBIN ../build/LINEINPUT.O.JMP
+PROPACKX7BEG
+            ORG   PROPACK
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    LINEINPUTEND
-            PUTBIN  ../build/LINEINPUT.X7
+            DA    PROPACKEND
+            PUTBIN  ../build/PROPACK.X7
 :X7END
             ORG
-LINEINPUTX7END
-*
-UILIBX7BEG
-            ORG   UILIB
-            PUTBIN ../build/UILIB.O.JMP
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    UILIBEND
-            PUTBIN  ../build/UILIB.X7
-:X7END
-            ORG
-UILIBX7END
-*
-DISKLIBX7BEG
-            ORG   DISKLIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    DISKLIBEND
-            PUTBIN  ../build/DISKLIB.X7
-:X7END
-            ORG
-DISKLIBX7END
-*
-CATLIBX7BEG
-            ORG   CATLIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    CATLIBEND
-            PUTBIN  ../build/CATLIB.X7
-:X7END
-            ORG
-CATLIBX7END
-*
-TREELIBX7BEG
-            ORG   TREELIB
-            JSR   ZXMODULE
-            DA    :X7END-7
-            DA    TREELIBEND
-            PUTBIN  ../build/TREELIB.X7
-:X7END
-            ORG
-TREELIBX7END
+PROPACKX7END
 *
 DELLIBX7BEG
             ORG   DELLIB
@@ -159,25 +113,24 @@ CATALOGX7BEG
             ORG
 CATALOGX7END
 *
-APPLIBX7BEG
-            ORG   APPLIB
-            PUTBIN ../build/APPLIB.O.JMP
+VERPACKX7BEG
+            ORG   VERPACK
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    APPLIBEND
-            PUTBIN  ../build/APPLIB.X7
+            DA    VERPACKEND
+            PUTBIN  ../build/VERPACK.X7
 :X7END
             ORG
-APPLIBX7END
+VERPACKX7END
 *
-MISCLIBX7BEG
-            ORG   MISCLIB
+ALPHAPACKX7BEG
+            ORG   ALPHAPACK
             JSR   ZXMODULE
             DA    :X7END-7
-            DA    MISCLIBEND
-            PUTBIN  ../build/MISCLIB.X7
+            DA    ALPHAPACKEND
+            PUTBIN  ../build/ALPHAPACK.X7
 :X7END
             ORG
-MISCLIBX7END
+ALPHAPACKX7END
 *
-            ERR   MISCLIBEND>$BEFF  ; can't clobber ProDOS global page
+            ERR   ALPHAPACKEND>$BEFF ; can't clobber ProDOS global page

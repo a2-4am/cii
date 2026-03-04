@@ -1,3 +1,15 @@
+            TYP   BIN
+            DSK   ../build/DISKMAP.O
+            PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/ERRORS.VARS
+            PUT   ../build/UILIB.VARS
+            PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
+            PUT   ../build/TREELIB.VARS
+            PUT   ../build/VERIFY.VARS
+            ORG   VERIFYEND
 *
 ************************************
 *            DISK MAP              *
@@ -406,3 +418,5 @@
 SECS        EQU   *
             DB    $0,$E,$D,$C,$B,$A,$9,$8
             DB    $7,$6,$5,$4,$3,$2,$1,$F
+*
+TSMAPEND

@@ -23,5 +23,4 @@
 *POSTDZX
             LDA   #$60
             STA   POSTDZX
-            JSR   CATLIB
-            JMP   DISKLIB
+            JMP   PROPACK

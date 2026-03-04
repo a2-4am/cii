@@ -3,7 +3,7 @@
             PUT   VARS
             PUT   ../build/DRIVE35.VARS
             PUT   ../build/MENU.VARS
-            ORG   MENUEND
+            ORG   MENUEND+4
 
 **********************************
 *         PRODOS LIBRARY         *

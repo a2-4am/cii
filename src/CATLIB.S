@@ -9,7 +9,7 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
             ORG   DISKLIBEND
-CATLIB
+*
 **********************************
 *    CATALOG DISPLAY LIBRARY     *
 * CATLIN - display catalog line  *
@@ -30,9 +30,6 @@ CATLIB
 * TYPES - recognized filetypes   *
 * PLACE - input file into entry  *
 **********************************
-            ORG   *+3
-            RTS
-
 *
 *
 * SHOW A LINE OF CATALOG

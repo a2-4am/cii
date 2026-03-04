@@ -8,7 +8,8 @@
             PUT   ../build/UILIB.VARS
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
-
+            ORG   CATLIBEND
+*
 **********************************
 *          TREE LIBRARY          *
 * COMTRE
@@ -19,31 +20,17 @@
 * SETA
 * DOTREE
 **********************************
-            ORG   JTREELIB
-COMTRE      >>>   JMPMODULE,DECOMPRESS;_COMTRE
-CT1         >>>   JMPMODULE,DECOMPRESS;_CT1
-COMHDR      >>>   JMPMODULE,DECOMPRESS;_COMHDR
-COMH00      >>>   JMPMODULE,DECOMPRESS;_COMH00
-TREEA       >>>   JMPMODULE,DECOMPRESS;_TREEA
-SETA        >>>   JMPMODULE,DECOMPRESS;_SETA
-DOTREE      >>>   JMPMODULE,DECOMPRESS;_DOTREE
-            ORG   CATLIBEND
-TREELIB
-DECOMPRESS  EQU   *
-            ORG   *+3
-            RTS
-
 *
 *
 * COMMON TREE
 * Choose ProDOS device then choose directory
 * called by ALPHABETIZE, DELETE(DELLIB),
 * RENAME FILES, MAKESUB, UNDELETE, VERIFY, and VIEW
-_COMTRE     EQU   *
+COMTRE
             JSR   DODEVP
             JSR   TREEA
             JSR   COMH00
-_CT1        EQU   *
+CT1
             BIT   DOSNOW
             BPL   :CTOUT      ;DOS 3.3
             LDA   RRTN
@@ -62,20 +49,20 @@ _CT1        EQU   *
 *
 :CTERR1     JMP   WDERR
 *
-_COMHDR     EQU   *
+COMHDR
             JSR   DODEVP
             JSR   SETA
             JSR   COMH00
             LDA   CHOICE
             CMP   #MVERIFY    ;VERIFY DISK?
-            BNE   _CT1        ;NO
+            BNE   CT1         ;NO
             RTS
 *
-_COMH00     EQU   *
+COMH00
             JSR   TOP1
             JMP   PRVNM
 *
-_TREEA      EQU   *
+TREEA
             JSR   DOSTYP
             LDA   #APFX
             STA   PFXADR
@@ -83,11 +70,11 @@ _TREEA      EQU   *
             STA   PFXADR+1
             LDA   ACURR
             JSR   DOTREE
-            BCS   _SETA       ;I/O ERROR
+            BCS   SETA        ;I/O ERROR
             STA   ACURR
             RTS
 *
-_SETA       EQU   *
+SETA
             JSR   DOSTYP
             LDA   UNIT
             JMP   UNTPFX
@@ -109,7 +96,7 @@ _SETA       EQU   *
 * DIRBLK,+1= BLK # OF SUBDIR
 *
 * CALLS SETPFX AND SETSD
-_DOTREE     EQU   *
+DOTREE
             PHA
             LDY   FLAG80      ;FF OR 0
             INY

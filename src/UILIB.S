@@ -6,7 +6,7 @@
             PUT   ../build/IO.VARS
             PUT   ../build/LINEINPUT.VARS
             ORG   LINEINPUTEND
-UILIB
+*
 **********************************
 *           UI LIBRARY           *
 * TOP1 - clear screen and display function title
@@ -20,23 +20,11 @@ UILIB
 * CFILE - print current filename
 * SEEDEV - print slot and drive
 **********************************
-TOP1        >>>   JMPMODULE,DECOMPRESS;_TOP1
-DODEVP      >>>   JMPMODULE,DECOMPRESS;_DODEVP
-DODEV       >>>   JMPMODULE,DECOMPRESS;_DODEV
-PRVNM       >>>   JMPMODULE,DECOMPRESS;_PRVNM
-PRTBLK      >>>   JMPMODULE,DECOMPRESS;_PRTBLK
-PRTFL1      >>>   JMPMODULE,DECOMPRESS;_PRTFL1
-PRTFIL      >>>   JMPMODULE,DECOMPRESS;_PRTFIL
-CFILE       >>>   JMPMODULE,DECOMPRESS;_CFILE
-SEEDEV      >>>   JMPMODULE,DECOMPRESS;_SEEDEV
-DECOMPRESS  EQU   *
-            ORG   *+3
-            RTS
-
+*
 *
 * CLEAR SCREEN AND DISPLAY FUNCTION TITLE
 *
-_TOP1       EQU   *
+TOP1
             JSR   HOME
             LDA   #0
             STA   WNDTOP
@@ -53,7 +41,7 @@ _TOP1       EQU   *
 *
 * takes DEVFLG value in A
 *   FF=format, 00=not format
-_DODEVP     EQU   *
+DODEVP
             STA   DEVFLG
             JSR   HOME
             JSR   PRHERE
@@ -67,7 +55,7 @@ _DODEVP     EQU   *
 * alternate entry point called by COPY
 * which prints its own headers for
 * 'source device' and 'target device'
-_DODEV      EQU   *
+DODEV
             STA   CURDEV
             LDA   #0
             STA   VOLFLG
@@ -296,7 +284,7 @@ _DODEV      EQU   *
 *
 * RETURNS WITH CV = 3, CH = 0
 *
-_PRVNM      EQU   *
+PRVNM
             LDX   #PFX
             LDY   #>PFX
             LDA   UNIT
@@ -369,10 +357,10 @@ PRVCOM      STA   UNIT
             JMP   VLEFT
 :PFXLEN     DB    $0
 *
-_PRTFL1     EQU   *
+PRTFL1
             SEC
             DB    $90
-_PRTFIL     EQU   *
+PRTFIL
             CLC
             PHP
             BIT   DOSNOW
@@ -411,7 +399,7 @@ _PRTFIL     EQU   *
 *
 * PRINT FILENAME AT *POINT
 *
-_CFILE      EQU   *
+CFILE
             BIT   DOSNOW
             BMI   PCFILE
             LDY   #$00
@@ -452,7 +440,7 @@ PCFILE      EQU   *
 :PCFL3      RTS
 :LENGTH     DB    $0
 *
-_PRTBLK     EQU   *
+PRTBLK
             JSR   PRHERE
             ASC   "Block $"
             DB    $0
@@ -464,7 +452,7 @@ _PRTBLK     EQU   *
 *
 *
 * DISPLAY SLOT AND DRIVE
-_SEEDEV     EQU   *
+SEEDEV
             PHA
             JSR   PRHERE
             ASC   "Slot "

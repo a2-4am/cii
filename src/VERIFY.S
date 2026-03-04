@@ -1,3 +1,16 @@
+            TYP   BIN
+            DSK   ../build/VERIFY.O
+            PUT   VARS
+            PUT   ../build/PHRWTS.VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/ERRORS.VARS
+            PUT   ../build/UILIB.VARS
+            PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
+            PUT   ../build/TREELIB.VARS
+            PUT   ../build/CATALOG.VARS
+            ORG   CATALOGEND+4
 *
 *************************************
 *           VERIFY OPTIONS          *
@@ -347,10 +360,6 @@
 :SHIFTER    DB    $00,$00
 :DIVER      DB    $3E,$05
 *
-INTLV1      EQU   *
-            DB    $0,$7,$E,$6,$D,$5,$C,$4
-            DB    $B,$3,$A,$2,$9,$1,$8,$F
-*
 *
 *
 *
@@ -434,3 +443,9 @@ CRIT2       EQU   *
 :DONE       STY   HEXNUM
             PLP
             RTS
+*
+INTLV1      EQU   *
+            DB    $0,$7,$E,$6,$D,$5,$C,$4
+            DB    $B,$3,$A,$2,$9,$1,$8,$F
+*
+VERIFYEND

@@ -1,5 +1,5 @@
             TYP   BIN
-            DSK   ../build/MISCLIB.O
+            DSK   ../build/ALPHAPACK.O
             PUT   VARS
             PUT   ../build/PRODOS.VARS
             PUT   ../build/IO.VARS
@@ -9,7 +9,7 @@
             PUT   ../build/DISKLIB.VARS
             PUT   ../build/CATLIB.VARS
             PUT   ../build/TREELIB.VARS
-            PUT   ../build/APPLIB.VARS
+            PUT   ../build/VERPACK.VARS
 ************************************
 *      MISCELLANEOUS LIBRARY       *
 * MAKESUB - Create Subdirectory    *
@@ -22,7 +22,7 @@
 * private:                         *
 * FIXSUB - LOCK/REN/ALPHA cleanup  *
 ************************************
-            ORG   JMISCLIB
+            ORG   JALPHAPACK
 MAKESUB     >>>   JMPMODULE,DECOMPRESS;_MAKESUB
 SETCLOCK    >>>   JMPMODULE,DECOMPRESS;_SETCLOCK
 BOOTPG      >>>   JMPMODULE,DECOMPRESS;_BOOTPG
@@ -30,8 +30,8 @@ VIEW        >>>   JMPMODULE,DECOMPRESS;_VIEW
 ALPHA       >>>   JMPMODULE,DECOMPRESS;_ALPHA
 RENAME      >>>   JMPMODULE,DECOMPRESS;_RENAME
 LOCK        >>>   JMPMODULE,DECOMPRESS;_LOCK
-            ORG   APPLIBEND
-MISCLIB
+            ORG   VERPACKEND
+ALPHAPACK
 DECOMPRESS  EQU   *
             ORG   *+3
             RTS
@@ -159,4 +159,4 @@ FIXSUB      EQU   *
 *
             JMP   WTBLK
 *
-MISCLIBEND
+ALPHAPACKEND

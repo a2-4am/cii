@@ -306,12 +306,12 @@ DSYNC       DS    1
 ZXMODULE    DS    ZXMODSZ
 ZXUNPACK    DS    ZXUNPSZ
 MENUTBL     DS    MENUTSZ
-POSTDZX     DS    11
+POSTDZX     DS    8
 JPHRWTS     DS    6*3
 JDELLIB     DS    6*7
-JMISCLIB    DS    6*7
-JTREELIB    DS    6*7
-            DS    19 ;free space here
+JALPHAPACK  DS    6*7
+JVERPACK    DS    6*3
+            DS    46 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *

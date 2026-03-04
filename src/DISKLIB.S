@@ -8,7 +8,7 @@
             PUT   ../build/ERRORS.VARS
             PUT   ../build/UILIB.VARS
             ORG   UILIBEND
-DISKLIB
+*
 **********************************
 *          DISK LIBRARY          *
 * DOWBLK - write block (w/error) *
@@ -28,9 +28,7 @@ DISKLIB
 * OPNFIL - open file             *
 * RDDATA - read file data        *
 **********************************
-            ORG   *+3
-            RTS
-
+*
 *
 * WRITE BLOCK, WITH ERROR HANDLING
 *

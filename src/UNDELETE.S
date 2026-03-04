@@ -1,3 +1,15 @@
+            TYP   BIN
+            DSK   ../build/UNDELETE.O
+            PUT   VARS
+            PUT   ../build/PRODOS.VARS
+            PUT   ../build/IO.VARS
+            PUT   ../build/ERRORS.VARS
+            PUT   ../build/UILIB.VARS
+            PUT   ../build/DISKLIB.VARS
+            PUT   ../build/CATLIB.VARS
+            PUT   ../build/TREELIB.VARS
+            PUT   ../build/DISKMAP.VARS
+            ORG   TSMAPEND
 *
 ************************************
 *        UNDELETE FILES            *
@@ -698,3 +710,5 @@ RDCAT1      EQU   *
             LDX   #>VTOC1
             LDA   #$01
             JMP   DOCAT
+*
+UNDELEND
