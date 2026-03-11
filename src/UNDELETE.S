@@ -467,7 +467,7 @@ SWAPEM      EQU   *
 ********************************
 *
 PUNDOERR    EQU   *
-            JMP   ERROUT
+            JMP   OUCH
 PUNDO0      EQU   *
             LDA   #>BMDATA    ;[4am] lower to accommodate giant hard drives
                               ;that can use $2000 consecutive bytes for the

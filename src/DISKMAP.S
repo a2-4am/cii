@@ -34,7 +34,7 @@
             JSR   PRINT       ;CR OR ESC
             JSR   KYESC
             JMP   :CBITMAP
-:MAPERR     JMP   ERROUT
+:MAPERR     JMP   OUCH
 *
 :GOTFILS    
 *            JSR   ASKPR?

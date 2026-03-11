@@ -36,7 +36,7 @@ DOWBLK
             JSR   WTBLK
             BCS   :ERROUT
             RTS
-:ERROUT     JMP   ERROUT
+:ERROUT     JMP   OUCH
 *
 *
 * READ/WRITE VTOC, READY FOR CATALOG
@@ -217,7 +217,7 @@ DORWTS
             RTS
 *
 DISKLIBERR  EQU   *
-            JMP   ERROUT
+            JMP   OUCH
 *
 * SWAP CHECK
 * to the best of our ability, ensure that the correct
@@ -446,7 +446,7 @@ RDTSL
 * READ SOURCE DATA
 *
 RDDATAERR1  EQU   *
-            JMP   ERROUT
+            JMP   OUCH
 RDDATA
             LDY   RELCNT
             BEQ   :RDD1
@@ -541,7 +541,7 @@ RDDATA
 :TEMP2      DB    $0
 :SUM        DB    $0,$0
 RDDATAERR2  EQU   *
-            JMP   ERROUT
+            JMP   OUCH
 *
 :RDPRODOS   LDA   DATADR
             STA   :TEMP
@@ -611,7 +611,7 @@ RDDATAERR2  EQU   *
             STA   RRTN
             BCS   :ERROUT2
             RTS
-:ERROUT2    JMP   ERROUT
+:ERROUT2    JMP   OUCH
 :RBLST      DB    $3
 :UNIT       DB    $0
 :BUFF       DB    $0,$0
@@ -626,7 +626,7 @@ OPNSRC
             JSR   OPNFIL
             BCS   :ERR1
             RTS
-:ERR1       JMP   ERROUT
+:ERR1       JMP   OUCH
 *
 * called by OPNSRC (above) and VERIFY
 OPNFIL

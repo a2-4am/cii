@@ -383,6 +383,6 @@ PSPACE      EQU   *
             STA   USEDH
             RTS
 :TEMP       DB    $0
-:CATERR     JMP   ERROUT
+:CATERR     JMP   OUCH
 *
 CATALOGEND

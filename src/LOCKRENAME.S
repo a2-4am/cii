@@ -45,4 +45,4 @@ RENVOL      EQU   *
             JSR   WTBLK
             BCS   :RENERR
 :RENVOLQ    RTS
-:RENERR     JMP   ERROUT
+:RENERR     JMP   OUCH

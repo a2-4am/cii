@@ -13,13 +13,12 @@
 * NOPRO
 * FLONLY
 * PRTPRS
-* PRESS
 * ERRMSG
 * WDERR
 * ERROU1
-* ERROUT
 * BLK2ER
 * OUCH
+* PRESS
 
 *
 *
@@ -68,8 +67,7 @@ PRTPRS      JSR   PRINT
 *
 * PRESS A KEY THEN RESTART PROGRAM
 *
-PRESS       JSR   JPRESS
-            JMP   ($3F2)
+            JMP   PRESS
 *
 * PRINT BEST ERROR MESSAGE
 * FOR ERROR CODE IN RRTN
@@ -135,9 +133,7 @@ ERRMSG      LDA   RRTN
 *
 WDERR       LDA   #$52
 ERROU1      STA   RRTN
-ERROUT      JSR   CROUT
-            JSR   OUCH
-            JMP   ($3F2)
+            BNE   OUCH        ;ALWAYS
 *
 BLK2ER      LDY   #0
             STY   BLKNUM+1
@@ -145,15 +141,12 @@ BLK2ER      LDY   #0
             STY   DOSNOW
             LDA   #2
             STA   BLKNUM
-            BNE   ERROUT      ;ALWAYS
-*
 OUCH        JSR   HOME
             JSR   ERRMSG
             JSR   CROUT
-            JSR   CLOSE
-JPRESS      EQU   *
-            LDA   #MPRESS
+PRESS       LDA   #MPRESS
             JSR   PRINT
-            JMP   GETKEY
+            JSR   GETKEY
+            JMP   ($3F2)
 *
 ERRORSEND

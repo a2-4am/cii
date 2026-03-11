@@ -674,7 +674,7 @@ COPY
 :RWERR      LDA   RRTN        ;YES: WRITE-
             CMP   #$2B        ;PROTECTED?
             BNE   :NOTWP
-            JMP   ERROUT
+            JMP   OUCH
 *
 :NOTWP      JSR   :ERRWND     ;Set scrolling window area
             LDX   #MREAD      ;SET 'READ'
@@ -1215,7 +1215,7 @@ COPY
 :NODO       RTS
 *
 *
-:ERR        JMP   ERROUT
+:ERR        JMP   OUCH
 *
 :DTYPES     DB    $00,$01,$02,$04,$10,$04
 :PTYPES     DB    $04,$FA,$FC,$06,$FE,$06

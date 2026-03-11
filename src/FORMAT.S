@@ -125,7 +125,7 @@
             STA   GOTMM
 :DVFMT1     JMP   :FORMDN
 *
-:DVFMTX     JMP   ERROUT      ;FMT ERROR
+:DVFMTX     JMP   OUCH        ;FMT ERROR
 *
 *
 :DODSK2     LDA   #$40        ;RATCHET!

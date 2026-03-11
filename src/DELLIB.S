@@ -334,7 +334,7 @@ MLIERR      EQU   *
             JSR   WRCAT2
             LDA   #$48
             JMP   ERROU1
-:ERROU2     JMP   ERROUT
+:ERROU2     JMP   OUCH
 *
 * DELETE DISK
 *
@@ -589,7 +589,7 @@ ZIPDOS      EQU   *
             BCS   :MARKIT
             JSR   DOWBLK
 :MARKDN     RTS
-:ERROUT     JMP   ERROUT
+:ERROUT     JMP   OUCH
 *
 :BMWBLK     LDA   BLKNUM
             CMP   #6

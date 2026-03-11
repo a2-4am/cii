@@ -31,4 +31,4 @@ NODOS3      EQU   *
             ASC   "Subdirectory created",8D,00
             JMP   PRESS
 :OUT        RTS
-:ERROUT     JMP   ERROUT
+:ERROUT     JMP   OUCH
