@@ -1171,9 +1171,7 @@ _UNTPFX     EQU   *
 :UNIT       DB    $0
             DW    PFX+1
 *
-:PRODOS     LDA   PFX+1
-            AND   #$0F
-            TAY
+:PRODOS     TAY
             INY
             STY   PFX
             LDA   #$2F        ;"/"
