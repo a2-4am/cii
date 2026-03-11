@@ -20,10 +20,6 @@
 *
             PUT   LOADER      ;This relocates & gets everything started.
 *
-BOOTBEG
-            PUTBIN  ../build/BOOTSEC.33.O
-BOOTEND
-*
 PHRWTSX7BEG
             ORG   PHRWTSADR
             JSR   ZXMODULE

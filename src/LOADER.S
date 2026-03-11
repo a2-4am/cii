@@ -237,10 +237,10 @@ MEMCPY      MAC
 *
             >>>   UNPACK,MAINXEND;MAINEND
 *
-* Copy more self-decompressing modules into place
+* bank in LC RAM in anticipation of copying no-boot code
 *
-            >>>   MEMCPY,MESSAGES2X7BEG;MESSAGES2X7END;MESSAGES2
-            >>>   MEMCPY,PHRWTSX7BEG;PHRWTSX7END;PHRWTSLIB
+            LDA   $C083
+            LDA   $C083
 *
 * Check for //e
 *
@@ -266,8 +266,6 @@ MEMCPY      MAC
 * SAVE AUXMEM IRQ VECTOR.
 *
 :SAVEIRQ
-            LDA   $C083
-            LDA   $C083
             STA   $C009       ;AUX LC
             LDA   $FFFE
             STA   IRQSAV
@@ -285,22 +283,27 @@ MEMCPY      MAC
             STY   FMT400K
 *
 * MOVE DOS 3.3 NO-BOOT SECTOR TO LC RAM BANK 2
+* (this was part of the MAIN portion we just unpacked)
 *
 * Y IS ALREADY 0
 *           LDY   #0
 :NBLP       LDA   BOOTBEG,Y
             CPY   #BOOTEND-BOOTBEG
             BCC   :NBLP1
-            LDA   #0          ;FILL WITH 0'S FROM $A2(?) TO $FF
+            LDA   #0          ;FILL REST OF PAGE WITH 0'S
 :NBLP1      STA   D3NOBOOT,Y
             INY
             BNE   :NBLP
             LDA   $C082
 *
+* Copy more self-decompressing modules into place
+*
+            >>>   MEMCPY,MESSAGES2X7BEG;MESSAGES2X7END;MESSAGES2
+            >>>   MEMCPY,PHRWTSX7BEG;PHRWTSX7END;PHRWTSLIB
+*
 * Build data tables for PHRWTS
 *
-* Y IS ALREADY 0
-*           LDY   #0
+            LDY   #0
             LDX   #$16
 ]BLOOP1
             STX   $3C
