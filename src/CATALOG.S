@@ -249,9 +249,8 @@ CATALOG
             CMP   NACTIV
             RTS
 *
-:CROUNT     JSR   CROUT
-            INC   :COUNT
-            RTS
+:CROUNT     INC   :COUNT
+            JMP   CROUT
 :COUNT      DB    $0
 *
 :SEEADR     STY   YSAV
