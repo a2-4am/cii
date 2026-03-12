@@ -199,8 +199,7 @@ MESSAG      DW    :COPY       ;0 MENU 0
 :HEADER
             ASC   "           Copy ][ Reboot 1.0"
             DB    $8D
-            ASC   " (C) 1982-9 Central Point, (C) 2026 4am"
-            DB    $8D
+            ASC   "(C) 1982-9 Central Point, updates by 4am"
 DASHES      ASC   "-----------------------"
             DB    MDASH17
 :MORE       ASC   "----------------- MORE "
