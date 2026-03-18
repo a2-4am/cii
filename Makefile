@@ -5,26 +5,62 @@ BUILDDIR=build
 BUILDLOG=$(BUILDDIR)/log
 BUILDDISK=$(BUILDDIR)/$(DISKVOLUME).po
 
+# ANSI escape sequences
+OBJ_COLOR   = \033[0;38m
+OK_COLOR    = \033[0;32m
+ERROR_COLOR = \033[0;31m
+NO_COLOR    = \033[m
+
+CHECKOK = \
+	RESULT=$$?; \
+	if [ $$RESULT -ne 0 ]; then \
+	printf "%b" "$(ERROR_COLOR)[ERROR]$(NO_COLOR)\n"; \
+	else \
+		printf "%b" "$(OK_COLOR)[OK]$(NO_COLOR)\n"; \
+	fi; \
+	exit $$RESULT
+
 # https://brutaldeluxe.fr/products/crossdevtools/merlin/
 # https://github.com/lifepillar/homebrew-appleii/blob/HEAD/Formula/merlin32.rb
 MERLINBIN=Merlin32
 MERLINLIB=/opt/homebrew/opt/merlin32/lib
-MERLIN=$(MERLINBIN) -V $(MERLINLIB)
-POSTMERLIN = (mv "$(SRCDIR)/$(notdir $@)_S01_Segment1_Output.txt" "$(BUILDDIR)"/ && mv "$(SRCDIR)/$(notdir $@)_Symbols.txt" "$(BUILDDIR)"/)
+MERLIN = (\
+	printf "%-10b%-30b %s %-35b" "Assemble" "$(OBJ_COLOR)$1$(NO_COLOR)" "->" "$(OBJ_COLOR)$@$(NO_COLOR)"; \
+	$(MERLINBIN) -V $(MERLINLIB) "$1" >> $(BUILDLOG); \
+	exit 0)
+POSTMERLIN = (\
+	mv "$(SRCDIR)/$(notdir $@)_S01_Segment1_Output.txt" "$(BUILDDIR)"/ 2>/dev/null && \
+	mv "$(SRCDIR)/$(notdir $@)_Symbols.txt" "$(BUILDDIR)"/ 2>/dev/null; \
+	$(CHECKOK))
 
 # https://github.com/mach-kernel/cadius
 CADIUS=cadius
+COPY = (\
+	printf "%-10b%-30b %s %-35b" "Copy" "$(OBJ_COLOR)`echo $1|cut -d\# -f1`$(NO_COLOR)" "->" "$(OBJ_COLOR)$(BUILDDISK)$(NO_COLOR)"; \
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$1" -C >> $(BUILDLOG); \
+	$(CHECKOK))
 
 # https://github.com/einar-saukas/ZX0
 # note: -b flag to pack backwards
 # you can also add a -q flag during development
 # to do worse compression at a more reasonable speed
 # (does not affect format, so unpacker still works)
-ZX0=zx0 -b
+ZX0BIN=zx0 -b
+ZX0 = (\
+	printf "%-10b%-30b %s %-35b" "Compress" "$(OBJ_COLOR)`echo $1|sed s/\.O\.O/.O/g`$(NO_COLOR)" "->" "$(OBJ_COLOR)$@$(NO_COLOR)"; \
+	rm -f "$@"; \
+	$(ZX0BIN) "$1" "$@" 2>/dev/null >> $(BUILDLOG); \
+	$(CHECKOK))
 
 # macro to compress file with ZX0 then transpose first N bytes to end of file
 # (used for self-decompressing modules)
-X7 = (dd if="$1" of="$1.JMP" bs=1 count=$$((6*$2)) && dd if="$1" of="$1.O" bs=1 skip=$$((6*$2)) && $(ZX0) "$1.O" "$@" && dd if="$@" of="$@.HEAD" bs=1 count=7 && dd if="$@" of="$@.TAIL" bs=1 skip=7 && cat "$@.TAIL" "$@.HEAD" > "$@")
+X7 = (\
+	dd if="$1" of="$1.JMP" bs=1 count=$$((6*$2)) 2>> $(BUILDLOG) && \
+	dd if="$1" of="$1.O" bs=1 skip=$$((6*$2)) 2>> $(BUILDLOG) && \
+	$(call ZX0,"$1.O") && \
+	dd if="$@" of="$@.HEAD" bs=1 count=7 2>> $(BUILDLOG) && \
+	dd if="$@" of="$@.TAIL" bs=1 skip=7 2>> $(BUILDLOG) && \
+	cat "$@.TAIL" "$@.HEAD" > "$@")
 
 SRCDIR=src
 SOURCES=$(wildcard src/*.S)
@@ -97,338 +133,343 @@ ALPHAPACKVARS=$(BUILDDIR)/ALPHAPACK.VARS.S
 EXE=$(BUILDDIR)/$(SYSNAME)
 PRODOS=res/PRODOS\#FF0000
 MANUAL=$(BUILDDIR)/REBOOT.MANUAL\#040000
-VARS = (awk -F';' '$1 { printf "%s EQU %s\n", $$6, $$5 }' < "$2_Symbols.txt" | grep -v "_" | grep -v "Name EQU Address" | sed -e "s/00\//\$$/g" > "$@")
+VARS = (\
+	awk -F';' '$1 { printf "%s EQU %s\n", $$6, $$5 }' < "$2_Symbols.txt" \
+	| grep -v "_" \
+	| grep -v "Name EQU Address" \
+	| sed -e "s/00\//\$$/g" \
+	> "$@")
 
 .PHONY: clean mount all
 
 $(EXE): $(MMX7) $(PHRWTSX7) $(MESSAGES2X7) $(MAINPACKX) $(PROPACKX7) $(COPYX7) $(CATALOGX7) $(DELLIBX7) $(VERPACKX7) $(ALPHAPACKX7) $(MMVARS) $(PHRWTSVARS) $(BOOTSEC33VARS) $(MAINPACKVARS) $(PROPACKVARS) $(UILIBVARS) $(TREELIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(COPYVARS) $(CATALOGVARS) $(DELLIBVARS) $(VERPACKVARS) $(ALPHAPACKVARS) $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/CII.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/CII.S")
+	@$(call POSTMERLIN)
 
 $(MANUAL): $(BUILDDIR)
-	tr "\n" "\r" < docs/manual.txt > "$(MANUAL)"
+	@tr "\n" "\r" < docs/manual.txt > "$(MANUAL)"
 
 $(BUILDDISK): $(EXE) $(MANUAL)
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(PRODOS)" -C
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(EXE)" -C
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$(MANUAL)" -C
+	@$(call COPY,"$(PRODOS)")
+	@$(call COPY,"$(EXE)")
+	@$(call COPY,"$(MANUAL)")
 
 #
 # Memory Manager module (self-contained)(compressed)
 #
 $(MMO): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/MM.CII.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/MM.CII.S")
+	@$(call POSTMERLIN)
 
 $(MMX7): $(MMO)
-	$(call X7,$(MMO),0)
+	@$(call X7,$(MMO),0)
 
 $(MMVARS): $(MMO)
-	$(call VARS,/;MM.CII.S;/,$(MMO))
+	@$(call VARS,/;MM.CII.S;/,$(MMO))
 
 #
 # ZX0 unpacker module (self-contained)(not compressed)
 #
 $(DZX0TURBOO): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/DZX0TURBO.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/DZX0TURBO.S")
+	@$(call POSTMERLIN)
 
 $(DZX0TURBOVARS): $(DZX0TURBOO)
-	$(call VARS,/;DZX0TURBO.S;/,$(DZX0TURBOO))
+	@$(call VARS,/;DZX0TURBO.S;/,$(DZX0TURBOO))
 
 #
 # DOS 3.3 Boot Sector module
 #
 $(BOOTSEC33O): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/BOOTSEC.33.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/BOOTSEC.33.S")
+	@$(call POSTMERLIN)
 
 $(BOOTSEC33VARS): $(BOOTSEC33O)
-	$(call VARS,/;BOOTSEC.33.S;/,$(BOOTSEC33O))
+	@$(call VARS,/;BOOTSEC.33.S;/,$(BOOTSEC33O))
 
 #
 # ProDOS Boot Sector module
 #
 $(BOOTSECPROO): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/BOOTSEC.PRO.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/BOOTSEC.PRO.S")
+	@$(call POSTMERLIN)
 
 $(BOOTSECPROVARS): $(BOOTSECPROO)
-	$(call VARS,/;BOOTSEC.PRO.S;/,$(BOOTSECPROO))
+	@$(call VARS,/;BOOTSEC.PRO.S;/,$(BOOTSECPROO))
 
 #
 # PHRWTS module (compressed)(self-decompressing)
 #
 $(PHRWTSO): $(BUILDDIR)
-	$(MERLIN) "$(SRCDIR)"/PHRWTS.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/PHRWTS.S")
+	@$(call POSTMERLIN)
 
 $(PHRWTSVARS): $(PHRWTSO)
-	$(call VARS,/;PHRWTS.S;/,$(PHRWTSO))
+	@$(call VARS,/;PHRWTS.S;/,$(PHRWTSO))
 
 $(PHRWTSX7): $(PHRWTSO)
-	$(call X7,$(PHRWTSO),3)
+	@$(call X7,$(PHRWTSO),3)
 
 #
 # MESSAGES2 module (compressed)(self-decompressing)
 # contains less-common message strings
 #
 $(MESSAGES2O): $(PHRWTSVARS)
-	$(MERLIN) "$(SRCDIR)"/MESSAGES2.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/MESSAGES2.S")
+	@$(call POSTMERLIN)
 
 $(MESSAGES2VARS): $(MESSAGES2O)
-	$(call VARS,/;MESSAGES2.S;/,$(MESSAGES2O))
+	@$(call VARS,/;MESSAGES2.S;/,$(MESSAGES2O))
 
 $(MESSAGES2X7): $(MESSAGES2O)
-	$(call X7,$(MESSAGES2O),0)
+	@$(call X7,$(MESSAGES2O),0)
 
 #
 # MESSAGES module
 # contains message strings
 #
 $(MESSAGESO): $(MESSAGES2VARS)
-	$(MERLIN) "$(SRCDIR)"/MESSAGES.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/MESSAGES.S")
+	@$(call POSTMERLIN)
 
 $(MESSAGESVARS): $(MESSAGESO)
-	$(call VARS,/;MESSAGES.S;/,$(MESSAGESO))
+	@$(call VARS,/;MESSAGES.S;/,$(MESSAGESO))
 
 #
 # DRIVE35 module
 # contains low-level hardware routines for 3.5-inch drives
 #
 $(DRIVE35O): $(MESSAGESVARS)
-	$(MERLIN) "$(SRCDIR)"/DRIVE35.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/DRIVE35.S")
+	@$(call POSTMERLIN)
 
 $(DRIVE35VARS): $(DRIVE35O)
-	$(call VARS,!/;VARS;/,$(DRIVE35O))
+	@$(call VARS,!/;VARS;/,$(DRIVE35O))
 
 #
 # I/O module
 # contains low-level text handling routines
 #
 $(IOO): $(MESSAGES2VARS) $(MESSAGESVARS) $(DRIVE35VARS)
-	$(MERLIN) "$(SRCDIR)"/IO.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/IO.S")
+	@$(call POSTMERLIN)
 
 $(IOVARS): $(IOO)
-	$(call VARS,!/;VARS;/,$(IOO))
+	@$(call VARS,!/;VARS;/,$(IOO))
 
 #
 # MENU module
 # contains main menu and submenu routines
 #
 $(MENUO): $(MMVARS) $(DRIVE35VARS) $(IOVARS)
-	$(MERLIN) "$(SRCDIR)"/MENU.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/MENU.S")
+	@$(call POSTMERLIN)
 
 $(MENUVARS): $(MENUO)
-	$(call VARS,!/;VARS;/,$(MENUO))
+	@$(call VARS,!/;VARS;/,$(MENUO))
 
 #
 # PRODOS module
 # contains low-level ProDOS routines
 #
 $(PRODOSO): $(DRIVE35VARS) $(MENUVARS)
-	$(MERLIN) "$(SRCDIR)"/PRODOS.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/PRODOS.S")
+	@$(call POSTMERLIN)
 
 $(PRODOSVARS): $(PRODOSO)
-	$(call VARS,!/;VARS;/,$(PRODOSO))
+	@$(call VARS,!/;VARS;/,$(PRODOSO))
 
 #
 # ERRORS
 # contains error handling routines
 #
 $(ERRORSO): $(IOVARS) $(PRODOSVARS)
-	$(MERLIN) "$(SRCDIR)"/ERRORS.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/ERRORS.S")
+	@$(call POSTMERLIN)
 
 $(ERRORSVARS): $(ERRORSO)
-	$(call VARS,!/;VARS;/,$(ERRORSO))
+	@$(call VARS,!/;VARS;/,$(ERRORSO))
 
 #
 # QUIT module
 # contains quit code
 #
 $(QUITO): $(PRODOSVARS) $(ERRORSVARS)
-	$(MERLIN) "$(SRCDIR)"/QUIT.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/QUIT.S")
+	@$(call POSTMERLIN)
 
 $(QUITVARS): $(QUITO)
-	$(call VARS,!/;VARS;/,$(QUITO))
+	@$(call VARS,!/;VARS;/,$(QUITO))
 
 #
 # LINEINPUT module
 # contains text input handling routines
 #
 $(LINEINPUTO): $(IOVARS) $(QUITVARS)
-	$(MERLIN) "$(SRCDIR)"/LINEINPUT.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/LINEINPUT.S")
+	@$(call POSTMERLIN)
 
 $(LINEINPUTVARS): $(LINEINPUTO)
-	$(call VARS,!/;VARS;/,$(LINEINPUTO))
+	@$(call VARS,!/;VARS;/,$(LINEINPUTO))
 
 #
 # UILIB module
 # contains higher-level text routines
 #
 $(UILIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(LINEINPUTVARS)
-	$(MERLIN) "$(SRCDIR)"/UILIB.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/UILIB.S")
+	@$(call POSTMERLIN)
 
 $(UILIBVARS): $(UILIBO)
-	$(call VARS,!/;VARS;/,$(UILIBO))
+	@$(call VARS,!/;VARS;/,$(UILIBO))
 
 #
 # DISKLIB module
 #
 $(DISKLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS)
-	$(MERLIN) "$(SRCDIR)"/DISKLIB.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/DISKLIB.S")
+	@$(call POSTMERLIN)
 
 $(DISKLIBVARS): $(DISKLIBO)
-	$(call VARS,!/;VARS;/,$(DISKLIBO))
+	@$(call VARS,!/;VARS;/,$(DISKLIBO))
 
 #
 # Catalog Library module (compressed)(self-decompressing)
 #
 $(CATLIBO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS) $(DISKLIBVARS)
-	$(MERLIN) "$(SRCDIR)"/CATLIB.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/CATLIB.S")
+	@$(call POSTMERLIN)
 
 $(CATLIBVARS): $(CATLIBO)
-	$(call VARS,/;CATLIB.S;/,$(CATLIBO))
+	@$(call VARS,/;CATLIB.S;/,$(CATLIBO))
 
 $(CATLIBX7): $(CATLIBO)
-	$(call X7,$(CATLIBO),0)
+	@$(call X7,$(CATLIBO),0)
 
 #
 # TREELIB module (compressed)(self-decompressing)
 #
 $(TREELIBO): $(PHRWTSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS)
-	$(MERLIN) "$(SRCDIR)"/TREELIB.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/TREELIB.S")
+	@$(call POSTMERLIN)
 
 $(TREELIBVARS): $(TREELIBO)
-	$(call VARS,!/;VARS;/,$(TREELIBO))
+	@$(call VARS,!/;VARS;/,$(TREELIBO))
 
 #
 # PROPACK module (compressed,self-decompressing)
 # contains PRODOS,ERRORS,QUIT,LINEINPUT,UILIB,DISKLIB,CATLIB,TREELIB
 #
 $(PROPACKO): $(MAINPACKVARS) $(PRODOSVARS) $(ERRORSVARS) $(QUITVARS) $(LINEINPUTVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS)
-	$(MERLIN) "$(SRCDIR)"/PROPACK.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/PROPACK.S")
+	@$(call POSTMERLIN)
 
 $(PROPACKVARS): $(PROPACKO)
-	$(call VARS,!/;VARS;/,$(PROPACKO))
+	@$(call VARS,!/;VARS;/,$(PROPACKO))
 
 $(PROPACKX7): $(PROPACKO)
-	$(call X7,$(PROPACKO),0)
+	@$(call X7,$(PROPACKO),0)
 
 #
 # MAINPACK module (compressed)
 # contains MESSAGES,DRIVE35,IO,MENU
 #
 $(MAINPACKO): $(PHRWTSVARS) $(MESSAGES2VARS) $(BOOTSEC33VARS) $(MESSAGESVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS) $(MENUVARS)
-	$(MERLIN) "$(SRCDIR)"/MAINPACK.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/MAINPACK.S")
+	@$(call POSTMERLIN)
 
 $(MAINPACKVARS): $(MAINPACKO)
-	$(call VARS,!/;VARS;/,$(MAINPACKO))
+	@$(call VARS,!/;VARS;/,$(MAINPACKO))
 
 $(MAINPACKX): $(MAINPACKO)
-	$(ZX0) "$(MAINPACKO)" "$@"
+	@$(call ZX0,"$(MAINPACKO)")
 
 #
 # Copy module (compressed)(self-decompressing)
 #
 $(COPYO): $(PHRWTSVARS) $(DRIVE35VARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS) $(MMVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(DELLIBVARS)
-	$(MERLIN) "$(SRCDIR)"/COPY.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/COPY.S")
+	@$(call POSTMERLIN)
 
 $(COPYVARS): $(COPYO)
-	$(call VARS,/;COPY.S;/,$(COPYO))
+	@$(call VARS,/;COPY.S;/,$(COPYO))
 
 $(COPYX7): $(COPYO)
-	$(call X7,$(COPYO),0)
+	@$(call X7,$(COPYO),0)
 
 #
 # Catalog module (compressed)(self-decompressing)
 #
 $(CATALOGO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(COPYVARS)
-	$(MERLIN) "$(SRCDIR)"/CATALOG.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/CATALOG.S")
+	@$(call POSTMERLIN)
 
 $(CATALOGVARS): $(CATALOGO)
-	$(call VARS,/;CATALOG.S;/,$(CATALOGO))
+	@$(call VARS,/;CATALOG.S;/,$(CATALOGO))
 
 $(CATALOGX7): $(CATALOGO)
-	$(call X7,$(CATALOGO),0)
+	@$(call X7,$(CATALOGO),0)
 
 #
 # DELLIB module (compressed)(self-decompressing)
 # contains Delete, Format
 #
 $(DELLIBO): $(BOOTSECPROVARS) $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS)
-	$(MERLIN) "$(SRCDIR)"/DELLIB.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/DELLIB.S")
+	@$(call POSTMERLIN)
 
 $(DELLIBVARS): $(DELLIBO)
-	$(call VARS,/;DELLIB.S;/,$(DELLIBO))
+	@$(call VARS,/;DELLIB.S;/,$(DELLIBO))
 
 $(DELLIBX7): $(DELLIBO)
-	$(call X7,$(DELLIBO),7)
+	@$(call X7,$(DELLIBO),7)
 
 #
 # VERIFY module
 # contains Verify option
 #
 $(VERIFYO): $(PHRWTSVARS) $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(CATALOGVARS)
-	$(MERLIN) "$(SRCDIR)"/VERIFY.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/VERIFY.S")
+	@$(call POSTMERLIN)
 
 $(VERIFYVARS): $(VERIFYO)
-	$(call VARS,/;VERIFY.S;/,$(VERIFYO))
+	@$(call VARS,/;VERIFY.S;/,$(VERIFYO))
 
 #
 # DISKMAP module
 # contains Map Disk option
 #
 $(DISKMAPO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(VERIFYVARS)
-	$(MERLIN) "$(SRCDIR)"/DISKMAP.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/DISKMAP.S")
+	@$(call POSTMERLIN)
 
 $(DISKMAPVARS): $(DISKMAPO)
-	$(call VARS,/;DISKMAP.S;/,$(DISKMAPO))
+	@$(call VARS,/;DISKMAP.S;/,$(DISKMAPO))
 
 #
 # UNDELETE module
 # Contains Undelete option
 #
 $(UNDELETEO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(DISKMAPVARS)
-	$(MERLIN) "$(SRCDIR)"/UNDELETE.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/UNDELETE.S")
+	@$(call POSTMERLIN)
 
 $(UNDELETEVARS): $(UNDELETEO)
-	$(call VARS,/;UNDELETE.S;/,$(UNDELETEO))
+	@$(call VARS,/;UNDELETE.S;/,$(UNDELETEO))
 
 #
 # VERPACK module (compressed)(self-decompressing)
 # contains Verify, Map Disk, Undelete
 #
 $(VERPACKO): $(VERIFYVARS) $(DISKMAPVARS) $(UNDELETEVARS) $(CATALOGVARS)
-	$(MERLIN) "$(SRCDIR)"/VERPACK.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/VERPACK.S")
+	@$(call POSTMERLIN)
 
 $(VERPACKVARS): $(VERPACKO)
-	$(call VARS,/;VERPACK.S;/,$(VERPACKO))
+	@$(call VARS,/;VERPACK.S;/,$(VERPACKO))
 
 $(VERPACKX7): $(VERPACKO)
-	$(call X7,$(VERPACKO),3)
+	@$(call X7,$(VERPACKO),3)
 
 #
 # ALPHAPACK module (compressed)(self-decompressing)
@@ -436,25 +477,25 @@ $(VERPACKX7): $(VERPACKO)
 # Make Subdirectory, Change Boot Program, Alphabetize Catalog, &c.
 #
 $(ALPHAPACKO): $(PRODOSVARS) $(IOVARS) $(ERRORSVARS) $(LINEINPUTVARS) $(UILIBVARS) $(DISKLIBVARS) $(CATLIBVARS) $(TREELIBVARS) $(VERPACKVARS)
-	$(MERLIN) "$(SRCDIR)"/ALPHAPACK.S > "$(BUILDLOG)"
-	$(call POSTMERLIN)
+	@$(call MERLIN,"$(SRCDIR)/ALPHAPACK.S")
+	@$(call POSTMERLIN)
 
 $(ALPHAPACKVARS): $(ALPHAPACKO)
-	$(call VARS,/;ALPHAPACK.S;/,$(ALPHAPACKO))
+	@$(call VARS,/;ALPHAPACK.S;/,$(ALPHAPACKO))
 
 $(ALPHAPACKX7): $(ALPHAPACKO)
-	$(call X7,$(ALPHAPACKO),7)
+	@$(call X7,$(ALPHAPACKO),7)
 
 mount: $(BUILDDISK)
 	@open "$(BUILDDISK)"
 
 clean:
-	rm -rf "$(BUILDDIR)"
+	@rm -rf "$(BUILDDIR)"
 
 $(BUILDDIR):
-	mkdir -p "$@"
-	touch "$(BUILDLOG)"
-	$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 140KB -C
+	@mkdir -p "$@"
+	@touch "$(BUILDLOG)"
+	@$(CADIUS) CREATEVOLUME "$(BUILDDISK)" "$(DISKVOLUME)" 140KB -C > $(BUILDLOG)
 
 all: clean mount
 
