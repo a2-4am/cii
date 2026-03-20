@@ -182,6 +182,6 @@ eval "'$MAMEEXE' \
   $THROTTLE \
   $MAMEFLAGS \
   $SCRIPTARGS" \
-     2> >(IFS='' ; while read line; do echo "${COLOR_RED}${line}${COLOR_RESET}" >&1; done) | \
+     2> >(IFS='' ; while read line; do [[ ! $line =~ "evdev" ]] && echo "${COLOR_RED}${line}${COLOR_RESET}" >&1; done) | \
   grep -E --line-buffered -v "Secure coding is automatically enabled"
 popd > /dev/null
