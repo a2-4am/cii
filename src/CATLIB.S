@@ -762,8 +762,7 @@ CPYNUM      EQU   *
             BCC   :PUTIT      ;INSERT INTO
             LDA   :INSERT     ;STATUS
 :PUTIT      STA   STATUS,Y
-:OUT        LDA   #MPSTATE0
-            JMP   LOWMES
+:OUT        JMP   ST8MSG
 :INSERT     DB    $0
 :TEMP       DB    $0
 *
@@ -785,8 +784,7 @@ CPYENT      EQU   *
             BCC   :LOOP
             LDA   LASTM       ;RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        LDA   #MPSTATE0
-            JMP   LOWMES
+:OUT        JMP   ST8MSG
 *
 CPYDEL      EQU   *
             JSR   UNMARK
@@ -879,8 +877,7 @@ LOKPAT      EQU   *
             BCC   :LOOP
             LDA   LASTM       ;RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        LDA   #MPSTATE2
-            JMP   LOWMES
+:OUT        JMP   ST8MSG
 :LOCK       DB    $0
 *
 NEWNAM      EQU   *
@@ -901,8 +898,7 @@ NEWNAM      EQU   *
             STA   STATUS,X    ;RENAMED
             LDA   #$01
             STA   FILNUM      ;FLAG IT
-:OUT        LDA   #MPSTATE3
-            JMP   LOWMES
+:OUT        JMP   ST8MSG
 *
 * SEE FILE QUEUE
 *
