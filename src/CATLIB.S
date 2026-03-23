@@ -783,9 +783,9 @@ CPYENT      EQU   *
 :NEXT       JSR   SEECAT
             JSR   SCROLF
             BCC   :LOOP
-:OUT        LDA   LASTM
-            STA   CURR
-            LDA   #MPSTATE0
+            LDA   LASTM       ;RESTORE
+            STA   CURR        ;CURRENT FILE
+:OUT        LDA   #MPSTATE0
             JMP   LOWMES
 *
 CPYDEL      EQU   *
@@ -810,7 +810,7 @@ PATTRN      EQU   *
             BCS   :OUT
             LDA   #$00        ;INITIALIZE
             STA   CURR
-:LOOP       JSR   MATCH ;TRY A MATCH
+:LOOP       JSR   MATCH       ;TRY A MATCH
             BCS   :NEXT       ;IF SUCCESS:
             LDX   CURR
             LDA   #$FF        ; MARK THE
@@ -818,9 +818,9 @@ PATTRN      EQU   *
 :NEXT       JSR   SEECAT      ;DISPLAY &
             JSR   SCROLF      ;SCROLL
             BCC   :LOOP       ;TIL END
-:OUT        LDA   LASTM
-            STA   CURR
-            JMP   ST8MSG
+            LDA   LASTM       ;THEN RESTORE
+            STA   CURR        ;CURRENT FILE
+:OUT        JMP   ST8MSG
 *
 NOPATT      EQU   *
             LDA   CURR
@@ -857,7 +857,7 @@ LOKPAT      EQU   *
             ASC   "[L]ock or [U]nlock? ",00
 :ALTRY      JSR   CASKEY
             CMP   #$9B
-            BEQ   :ALOUT      ;C IS SET
+            BEQ   :OUT        ;C IS SET
             LDX   #$FF
             CMP   #"L"
             BEQ   :ALDO
@@ -865,9 +865,6 @@ LOKPAT      EQU   *
             BNE   :ALTRY
             INX               ;FF --> 0
 :ALDO       JSR   PCOUT
-            CLC
-:ALOUT
-            BCS   :OUT
             STX   :LOCK
             LDA   #$00
             STA   CURR
@@ -880,9 +877,9 @@ LOKPAT      EQU   *
 :NEXT       JSR   SEECAT
             JSR   SCROLF
             BCC   :LOOP
-:OUT        LDA   LASTM
-            STA   CURR
-            LDA   #MPSTATE2
+            LDA   LASTM       ;RESTORE
+            STA   CURR        ;CURRENT FILE
+:OUT        LDA   #MPSTATE2
             JMP   LOWMES
 :LOCK       DB    $0
 *
@@ -1085,7 +1082,7 @@ DIVOUT
 * entry point called when user presses [<]
 * to return to parent directory during the
 * interactive catalog display
-* 
+*
 DIVOT0      EQU   *
             LDA   #$FF
             STA   :DIVFLAG
