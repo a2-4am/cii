@@ -6,7 +6,7 @@
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'formatted-dos33-by-v84.do' -flop2 'DOS 3.3 System Master-filecopied-by-v84.do' -flop3 $FLOPIMG -flop4 'DOS 3.3 System Master.do'"
+  DISKARGS="-flop1 'formatted-prodos-by-v84.do' -flop2 'DOS 3.3 System Master-filecopied-to-ProDOS-by-v84.do' -flop3 $FLOPIMG -flop4 'DOS 3.3 System Master.do'"
 
   ======================================== ENDCONFIG ]]
 
@@ -21,7 +21,7 @@ s5d1:unload()
 s5d2:unload()
 
 test.Step(
-  "Copy files from DOS disk to DOS disk matches v8.4 behavior",
+  "Copy files from DOS disk to ProDOS disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(target_filename)
@@ -43,9 +43,9 @@ test.Step(
     apple2.TypeLine("=") -- will match all files
     cii.WaitForScreenContains("%[RETURN]%-MARK FILE, %[U]NMARK, %[E]NTER")
     apple2.Type("G") -- Go
-    cii.WaitForMainMenu({timeout=180})
+    cii.WaitForMainMenu({timeout=240})
     s6d1:unload()
     test.ExpectBinaryEquals(util.SlurpFile(target_filename),
                             util.SlurpFile(reference_filename),
-                            "Copy files from DOS disk to DOS disk does not match v8.4")
+                            "Copy files from DOS disk to ProDOS disk does not match v8.4")
 end)
