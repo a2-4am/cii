@@ -402,10 +402,10 @@ DDISK       EQU   *
 ZIPDOS      EQU   *
             LDY   #$00
             LDA   $C083
-:BOOTLP     LDA   D3NOBOOT,Y
+]BOOTLP     LDA   D3NOBOOT,Y
             STA   DATA,Y
             INY
-            BNE   :BOOTLP
+            BNE   ]BOOTLP
             LDA   $C082
             STY   RTRACK      ;0
             STY   RSECTR
@@ -440,12 +440,12 @@ ZIPDOS      EQU   *
             LDY   #0
             STY   BLKNUM
             STY   BLKNUM+1
-:BOOTLP     LDA   PBOOT,Y
+]BBBOOTLP   LDA   PBOOT,Y
             STA   VTOC1,Y
             LDA   PBOOT+$100,Y
             STA   VTOC1+$100,Y
             INY
-            BNE   :BOOTLP
+            BNE   ]BBBOOTLP
             LDA   #>VTOC1
             STA   RPAGE
             STA   POINT+1
