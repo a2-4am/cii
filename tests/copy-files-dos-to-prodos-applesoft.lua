@@ -5,8 +5,10 @@
 
 --[[ BEGINCONFIG ========================================
 
+  MODEL="apple2p"
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'formatted-prodos-by-v84.do' -flop2 'DOS 3.3 System Master-filecopied-to-ProDOS-by-v84.do' -flop3 $FLOPIMG -flop4 'DOS 3.3 System Master.do'"
+  DISKARGS="-flop1 'formatted-prodos-by-v84.do' -flop2 'DOS-applesoft-filecopied-to-ProDOS-by-v84.do' -flop3 $FLOPIMG -flop4 'Pronto-DOS Master.do'"
+  CHECKAUXMEMORY="false"
 
   ======================================== ENDCONFIG ]]
 
@@ -21,7 +23,7 @@ s5d1:unload()
 s5d2:unload()
 
 test.Step(
-  "Copy files from DOS disk to ProDOS disk matches v8.4 behavior",
+  "Copy Applesoft files from DOS disk to ProDOS disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(target_filename)
@@ -40,12 +42,12 @@ test.Step(
     cii.WaitForScreenContains("%[RETURN]%-MARK FILE, %[U]NMARK, %[E]NTER")
     apple2.Type("E") -- Enter Filename (pattern)
     cii.WaitForScreenContains("ENTER FILENAME %(,OPT%. FILETYPES%)")
-    apple2.TypeLine("=") -- will match all files
+    apple2.TypeLine("=,A") -- will match several Applesoft files
     cii.WaitForScreenContains("%[RETURN]%-MARK FILE, %[U]NMARK, %[E]NTER")
     apple2.Type("G") -- Go
-    cii.WaitForMainMenu({timeout=240})
+    cii.WaitForMainMenu()
     s6d1:unload()
     test.ExpectBinaryEquals(util.SlurpFile(target_filename),
                             util.SlurpFile(reference_filename),
-                            "Copy files from DOS disk to ProDOS disk does not match v8.4")
+                            "Copy Applesoft files from DOS disk to ProDOS disk does not match v8.4")
 end)
