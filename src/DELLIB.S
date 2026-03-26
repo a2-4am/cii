@@ -49,7 +49,7 @@ _FORMAT     EQU   *
 * and after failed Copy File operation
 *
 _D1FILE     EQU   *
-            STA   :TEMP
+            STA   :D1TEMP
             LDY   #$00
             LDA   (POINT),Y   ;MOVE TRACK #
             BIT   DOSNOW
@@ -59,7 +59,7 @@ _D1FILE     EQU   *
 *
 :DPRODOS    PHA
             AND   #$F0
-            STA   :TEMP
+            STA   :D1TEMP
             PLA
             AND   #$0F        ;NAME LEN
             BEQ   :D1FILEQ    ;ALREADY DEL'D
@@ -81,7 +81,7 @@ _D1FILE     EQU   *
             LDA   (POINT),Y
             STA   BLKNUM+1
             STA   :MIBNUM+1
-            LDA   :TEMP
+            LDA   :D1TEMP
             CMP   #$20
             BEQ   :SAVSAP
             CMP   #$30
@@ -99,9 +99,9 @@ _D1FILE     EQU   *
             JSR   RDBLK
             BCC   :DODSTRY
 :SAVERR     LDA   #$10
-            STA   :TEMP
+            STA   :D1TEMP
 :DODSTRY    JSR   PDSTRY
-            LDA   :TEMP
+            LDA   :D1TEMP
             AND   #$EF
             CMP   #$20
             BNE   :RESOUT     ;NOT SAPLING OR TREE FILE
@@ -121,7 +121,7 @@ _D1FILE     EQU   *
             LDY   #>DESBUF
             JSR   SWAPIB      ;REVERSE IT
             JSR   WTBLK       ;WRITE FIRST INDEX BLOCK
-            LDA   :TEMP
+            LDA   :D1TEMP
             CMP   #$30
             BNE   :RESOUT     ;NOT TREE FILE
 *
@@ -157,8 +157,8 @@ _D1FILE     EQU   *
             JSR   WTBLK       ;WRITE OUT REVERSED MIB
             LDY   #1          ;START AT 1 SINCE WE ALREADY
                               ;REVERSED FIRST INDEX BLOCK
-            STY   :TEMP
-:DOMORE1    LDY   :TEMP
+            STY   :D1TEMP
+:DOMORE1    LDY   :D1TEMP
             LDA   FILBUF+$100,Y
             STA   BLKNUM
             LDA   FILBUF,Y
@@ -173,7 +173,7 @@ _D1FILE     EQU   *
             JSR   SWAPIB
             JSR   WTBLK
             BCS   :RESOUT
-:DOMORE2    INC   :TEMP
+:DOMORE2    INC   :D1TEMP
             BPL   :DOMORE1
 :RESOUT     RTS
 *
@@ -188,7 +188,7 @@ _D1FILE     EQU   *
             LDA   (POINT),Y
             STA   SECTOR
             STA   RSECTR
-            LDX   :TEMP
+            LDX   :D1TEMP
             LDA   :VTOCPAG,X  ;SET POINTERS
             STA   POINT+1     ;TO PROPER
             LDA   :TSLPAG,X   ;VTOC & TSLIST
@@ -229,7 +229,7 @@ _D1FILE     EQU   *
             JMP   :NXTSECT    ;BACK FOR MORE.
 :TSOUT      RTS
 :COUNT      DB    $0
-:TEMP       DB    $0
+:D1TEMP     DB    $0
 :MIBNUM     DB    $0,$0
 :VTOCPAG    DB    #>VTOC1
             DB    #>VTOC2
@@ -267,9 +267,9 @@ _PDSTRY     EQU   *
 *
 PUNLOK      EQU   *
             LDA   #$C3
-            STA   :TEMP+1
+            STA   :UNLOKOP+1
             JSR   GTINFO
-:TEMP       LDA   #1
+:UNLOKOP    LDA   #1            ;SELF-MODIFIED
             STA   INFLST+3
 * FALL INTO STINFO
 _STINFO     EQU   *
@@ -573,18 +573,18 @@ ZIPDOS      EQU   *
             LDA   BLKNUM
             CMP   #6
             BEQ   :MARKDN     ;ONE BLK BM
-            STA   :TEMP
+            STA   :ZIPTEMP
             LDA   #6
             STA   BLKNUM
             LDA   #>VTOC1
             STA   BM
             JSR   RDBLK
             BCS   :ERROUT
-:MARKIT     LDX   :TEMP       ;BLK LO
+:MARKIT     LDX   :ZIPTEMP    ;BLK LO
             LDA   #0          ;BLK HI
             JSR   MRKBLK
-            DEC   :TEMP
-            LDA   :TEMP
+            DEC   :ZIPTEMP
+            LDA   :ZIPTEMP
             CMP   #7
             BCS   :MARKIT
             JSR   DOWBLK
@@ -602,7 +602,7 @@ ZIPDOS      EQU   *
 :BMW1       JMP   DOWBLK
 *
 :TOTBLK     DB    $0,$0
-:TEMP       DB    $0
+:ZIPTEMP    DB    $0
 :BITS       DB    $00,$80,$C0,$E0,$F0,$F8,$FC,$FE
 *
 PNTFIL0     EQU   *

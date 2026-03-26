@@ -2170,16 +2170,16 @@ INSS        EQU   *
 *
 INSS1       EQU   *
             LDA   ONLY1       ;IF ONLY 1:
-            BEQ   :SELECT
+            BEQ   :INSS1OUT
             LDA   SDFLG
-            BPL   :SELECT
+            BPL   :INSS1OUT
             LDA   #0
             STA   SDFLG
             JSR   LOHERE
             ASC   "Insert source disk",8D,00
             JSR   INSCOM      ;WAIT FOR KEY
             STA   PDOS        ;1
-:SELECT     RTS
+:INSS1OUT   RTS
 *
 INSD        EQU   *
             LDA   SDOS
@@ -2196,14 +2196,14 @@ INSD        EQU   *
 *
 INSD1       EQU   *
             LDA   ONLY1
-            BEQ   :SELECT
+            BEQ   :INSD1OUT
             LDA   SDFLG
-            BMI   :SELECT
+            BMI   :INSD1OUT
             LDA   #$FF
             STA   SDFLG
             JSR   PRINSTGT
             STA   SDOS        ;1
-:SELECT     RTS
+:INSD1OUT   RTS
 PRINSTGT    EQU   *
             JSR   LOHERE
             ASC   "Insert target disk",8D,00
@@ -2296,10 +2296,10 @@ SETP        EQU   *
             JSR   STPFXC
             LDA   PDOS
             CMP   #1
-            BNE   :NOT1
+            BNE   :SETPNOT1
             JSR   DOSTYP
             STA   PDOS
-:NOT1       STA   DOSNOW
+:SETPNOT1   STA   DOSNOW
             RTS
 *
 TREES       EQU   *
@@ -2328,10 +2328,10 @@ SETS        EQU   *
             JSR   STPFXC
             LDA   SDOS
             CMP   #1
-            BNE   :NOT1
+            BNE   :SETSNOT1
             JSR   DOSTYP
             STA   SDOS
-:NOT1       STA   DOSNOW
+:SETSNOT1   STA   DOSNOW
             RTS
 *
 RDCAT2      EQU   *
