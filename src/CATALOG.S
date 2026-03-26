@@ -158,7 +158,7 @@ CATALOG
             STA   DATADR
             LDA   #>DATPAG
             STA   HIMEM
-:FILELP4    
+:FILELP4
             JSR   CATLIN
             LDA   SHOW
             STA   CURR
@@ -317,27 +317,27 @@ CATALOG
 *
 SPACE       EQU   *
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :SPACE33
             JMP   PSPACE      ;DO PRODOS
 *
-:DOS33      STA   POINT+1
+:SPACE33    STA   POINT+1
             LDA   #$38        ;BITMAP START
             STA   POINT
             LDA   #$00        ;CLEAR BUFFER
             STA   FREEL
             STA   FREEH
             LDY   #$8B        ;BITMAP LENGTH
-:NXTBYTE    LDA   (POINT),Y
+:NXTBYTE1   LDA   (POINT),Y
             LDX   #$07
-:NEXTBIT    LSR               ;SHIFT BITS TO
-            BCC   :USED       ;FIND FREE
+:NEXTBIT1   LSR               ;SHIFT BITS TO
+            BCC   :USED1      ;FIND FREE
             INC   FREEL       ;SECTORS
-            BNE   :USED
+            BNE   :USED1
             INC   FREEH
-:USED       DEX
-            BPL   :NEXTBIT
+:USED1      DEX
+            BPL   :NEXTBIT1
             DEY
-            BNE   :NXTBYTE
+            BNE   :NXTBYTE1
             SEC               ;SUBTRACT FROM
             LDA   #$30        ;TOTAL # OF
             SBC   FREEL       ;SECTORS TO
@@ -359,20 +359,20 @@ PSPACE      EQU   *
             LDY   #0
             STY   FREEL
             STY   FREEH
-:NXTBYTE    LDA   (POINT),Y
+:NXTBYTE2   LDA   (POINT),Y
             LDX   #7
-:NEXTBIT    LSR
-            BCC   :USED
+:NEXTBIT2   LSR
+            BCC   :USED2
             INC   FREEL
-            BNE   :USED
+            BNE   :USED2
             INC   FREEH
-:USED       DEX
-            BPL   :NEXTBIT
+:USED2      DEX
+            BPL   :NEXTBIT2
             INY
-            BNE   :NXTBYTE
+            BNE   :NXTBYTE2
             INC   POINT+1
             DEC   :TEMP
-            BNE   :NXTBYTE
+            BNE   :NXTBYTE2
 *
             LDA   TOTBLK
             SEC

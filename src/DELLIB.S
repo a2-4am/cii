@@ -65,10 +65,10 @@ _D1FILE     EQU   *
             BEQ   :D1FILEQ    ;ALREADY DEL'D
             STA   (POINT),Y
             LDY   #$0F
-:D1LOOP     LDA   (POINT),Y
+]D1LOOP     LDA   (POINT),Y
             STA   FILE,Y
             DEY
-            BPL   :D1LOOP
+            BPL   ]D1LOOP
 *
 * SAVE INDEX BLOCK (IF SAPLING) AND
 * MASTER INDEX BLOCK (IF TREE)

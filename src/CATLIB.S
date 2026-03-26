@@ -73,7 +73,7 @@ CATLN1
             JSR   PRTLZ       ;PRINT DIGITS
             JSR   PRSPC       ;PRINT SPACE
             JSR   CFILE       ;SEE FILENAME
-:OUT        RTS
+            RTS
 :LENGTH     DB    $0
 *
 *
@@ -84,11 +84,11 @@ FILTYP      EQU   *
             LDY   #$02
             LDA   (POINT),Y
             AND   #$7F
-:LOOP       CMP   TYPBYT,X
-            BEQ   :OUT
+]FTLOOP     CMP   TYPBYT,X
+            BEQ   :FTOUT
             DEX
-            BNE   :LOOP
-:OUT        RTS
+            BNE   ]FTLOOP
+:FTOUT      RTS
 *
 PCATLN      EQU   *
             STA   :TYPE       ;CAT DPLY TYPE
@@ -117,7 +117,7 @@ PCATLN      EQU   *
 *PRTYPE (now inline)
             LDX   #TYPE1-TYPES-1
 :PRTY1      CMP   TYPES,X
-            BEQ   :GOTTYPE
+            BEQ   :GOTTYPE1
             DEX
             BPL   :PRTY1
 *
@@ -127,7 +127,7 @@ PCATLN      EQU   *
             JSR   PHBYTE
             JMP   :NOTYPE
 *
-:GOTTYPE    LDA   TYPE1,X
+:GOTTYPE1   LDA   TYPE1,X
             JSR   PCOUT
             LDA   TYPE2,X
             JSR   PCOUT
@@ -260,7 +260,7 @@ MATCH       EQU   *
             CMP   FILNAM,Y    ;MATCHES FILE-
             BEQ   :CHMATCH    ;NAME CHAR?
             SEC               ;MATCH FAILS
-:OUT        DEC   :SP         ;POP STACK
+:MATCHOUT   DEC   :SP         ;POP STACK
             LDX   :SP
             LDA   STACKX,X
             LDY   STACKY,X
@@ -269,7 +269,7 @@ MATCH       EQU   *
 *
 :EQUALS     INX               ;MATCH ON NEXT
 :TRYNEXT    JSR   :RECURSE    ;PATTERN CHAR?
-            BCC   :OUT        ;NO:
+            BCC   :MATCHOUT   ;NO:
             LDA   FILNAM,Y    ;AT END OF
             CMP   #$8D        ;FILENAME?
             BEQ   :FAILOUT    ;YES: FAILS
@@ -287,12 +287,12 @@ MATCH       EQU   *
 :ENDNAME    LDA   :CAMAFLG    ;ELSE CHECK
             BMI   :DOCAMA     ;COMMA
             CLC               ;SUCCEEDS
-            BCC   :OUT
+            BCC   :MATCHOUT
 *
 :CHMATCH    INX               ;MATCH NEXT
             INY               ;CHAR OF BOTH
             JSR   :RECURSE    ;STRINGS
-            JMP   :OUT
+            JMP   :MATCHOUT
 *
 :PROTYP3    LDA   TYPES,Y     ;FILETYPE
             CMP   :FILTYPE
@@ -308,17 +308,17 @@ MATCH       EQU   *
 *
             LDY   #$08
 :TRYTYPE    CMP   TYPCHR,Y    ;MATCH FILTYP?
-            BEQ   :GOTTYPE
+            BEQ   :GOTTYPE2
             DEY               ;NO:TRY NEXT
             BNE   :TRYTYPE
             BEQ   :DOCAMA     ;(NO BAD STOP)
-:GOTTYPE    LDA   TYPBYT,Y    ;GET TYPE BYTE
+:GOTTYPE2   LDA   TYPBYT,Y    ;GET TYPE BYTE
             CMP   :FILTYPE    ;FILTYPE MATCH?
             BNE   :DOCAMA     ;NO:TRY NEXT
 :SUCCOUT    CLC               ;YES:SUCCEED
-            BCC   :GOOUT
+            BCC   :GOMOUT
 :FAILOUT    SEC
-:GOOUT      JMP   :OUT
+:GOMOUT     JMP   :MATCHOUT
 *
 :PROTYP     LDY   #TYPE1-TYPES-1  ;# of filetypes - 1
 :PROTYP0    LDA   LINEIN,X
@@ -352,11 +352,11 @@ MATCH       EQU   *
 *
 GETTYP      EQU   *
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :GET33
             LDY   #$10
             LDA   (POINT),Y
             RTS
-:DOS33      LDY   #2
+:GET33      LDY   #2
             LDA   (POINT),Y
             AND   #$7F
             RTS
@@ -576,9 +576,9 @@ CDDOKEY
 :JUMP       JSR   $1000
             BCC   CDDOKEY
             CMP   #$FF
-            BNE   :OUT
+            BNE   :CDDOOUT
             JMP   CATDS1      ;DIR CHANGE
-:OUT        RTS
+:CDDOOUT    RTS
 *
 :TEMP       DB    $00
 :CHARS      DB    $8D,$23
@@ -637,11 +637,11 @@ CDDOKEY
 CPYADD      EQU   *
             LDX   CURR        ;IS IT NOW
             LDA   STATUS,X    ;EMPTY?
-            BNE   :NOPE
+            BNE   :ADDNOPE
             INC   FILNUM      ;YES:INC TOTAL
             LDA   FILNUM      ;& PUT # INTO
             STA   STATUS,X    ;STATUS
-:NOPE       CLC
+:ADDNOPE    CLC
             RTS
 *
 CPYTAB      EQU   *
@@ -664,15 +664,15 @@ CPYNUM      EQU   *
             JSR   PHHEX
             JSR   PNORML
             LDA   #2
-            STA   :TEMP
+            STA   :NUMTEMP
 :CHAR2      JSR   PRDKEY
             CMP   #$8D        ;INPUT CR?
             BEQ   :CPYCR      ; INSERT #
             CMP   #$9B        ;ESCAPE OR
-            BEQ   :GOOUT1
+            BEQ   :GONOUT1
             CMP   #$88        ;LEFT ARROW?
-            BEQ   :GOOUT1     ; BACK OUT
-            LDX   :TEMP
+            BEQ   :GONOUT1    ; BACK OUT
+            LDX   :NUMTEMP
             BEQ   :CHAR2      ;NO MORE DIGS
             SEC
             SBC   #$B0        ;ANOTHER DIGIT?
@@ -686,43 +686,43 @@ CPYNUM      EQU   *
             JSR   PINVRS      ; & PRINT IT
             JSR   PHHEX
             JSR   PNORML
-            DEC   :TEMP
+            DEC   :NUMTEMP
             JMP   :CHAR2
-:GOOUT1     JMP   :OUT
+:GONOUT1    JMP   :NUMOUT
 *
 :CPYCR      LDA   CPYDIG+2
             CMP   #3
-            BCS   :OUT1       ;>=300
+            BCS   :NUMOUT1    ;>=300
             ASL
             ASL
             ASL
-            STA   :TEMP
+            STA   :NUMTEMP
             ASL
-            ADC   :TEMP
+            ADC   :NUMTEMP
             ADC   CPYDIG+2
             ASL
             ASL
-            STA   :TEMP
+            STA   :NUMTEMP
             LDA   CPYDIG+1    ;CONVERT
             ASL               ;DECIMAL DIGITS
             ASL               ;TO HEX BYTE
             ADC   CPYDIG+1
             ASL
             ADC   CPYDIG
-            ADC   :TEMP
-            BCS   :OUT1       ;>255
-            BEQ   :OUT1       ;# = 0
+            ADC   :NUMTEMP
+            BCS   :NUMOUT1    ;>255
+            BEQ   :NUMOUT1    ;# = 0
             STA   :INSERT     ;SAVE IT
             LDX   #$FF        ;SET UP
             LDY   CURR
             LDA   STATUS,Y    ;IS A # ALREADY
             BEQ   :LOOP2      ;THERE?
             CMP   :INSERT     ;YES:EXIT IF =
-            BEQ   :OUT1       ;TO INSERT
+            BEQ   :NUMOUT1    ;TO INSERT
             BCC   :LOOP3
 *
 *  INSERT < CURRENT STATUS #
-:LOOP1      LDA   STATUS,X    ;INC ALL #'S
+]LOOP1      LDA   STATUS,X    ;INC ALL #'S
             CMP   :INSERT     ;THAT ARE
             BCC   :NOT1       ;>= INSERT
             CMP   STATUS,Y    ;& < CURRENT
@@ -730,10 +730,10 @@ CPYNUM      EQU   *
             INC   STATUS,X
 :NOT1       DEX
             CPX   #$FF
-            BNE   :LOOP1
+            BNE   ]LOOP1
             LDA   :INSERT     ;PUT INSERT
             STA   STATUS,Y    ;INTO STATUS
-:OUT1       JMP   :OUT
+:NUMOUT1    JMP   :NUMOUT
 *
 *  NO # IN CURRENT STATUS YET
 :LOOP2      LDA   STATUS,X    ;INC ALL #'S
@@ -762,29 +762,29 @@ CPYNUM      EQU   *
             BCC   :PUTIT      ;INSERT INTO
             LDA   :INSERT     ;STATUS
 :PUTIT      STA   STATUS,Y
-:OUT        JMP   ST8MSG
+:NUMOUT     JMP   ST8MSG
 :INSERT     DB    $0
-:TEMP       DB    $0
+:NUMTEMP    DB    $0
 *
 CPYENT      EQU   *
             JSR   GETPAT      ;GET FILENAME PATTERN
-            BCS   :OUT
+            BCS   :ENTOUT
             LDA   #$00
             STA   CURR
-:LOOP       JSR   MATCH
-            BCS   :NEXT
+]ENTLOOP    JSR   MATCH
+            BCS   :ENTNEXT
             LDX   CURR
             LDA   STATUS,X
-            BNE   :NEXT
+            BNE   :ENTNEXT
             INC   FILNUM
             LDA   FILNUM
             STA   STATUS,X
-:NEXT       JSR   SEECAT
+:ENTNEXT    JSR   SEECAT
             JSR   SCROLF
-            BCC   :LOOP
+            BCC   ]ENTLOOP
             LDA   LASTM       ;RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        JMP   ST8MSG
+:ENTOUT     JMP   ST8MSG
 *
 CPYDEL      EQU   *
             JSR   UNMARK
@@ -805,36 +805,36 @@ NIL         EQU   *
 *
 PATTRN      EQU   *
             JSR   GETPAT      ;READ PATTERN
-            BCS   :OUT
+            BCS   :PATTOUT
             LDA   #$00        ;INITIALIZE
             STA   CURR
-:LOOP       JSR   MATCH       ;TRY A MATCH
-            BCS   :NEXT       ;IF SUCCESS:
+]PATTLOOP   JSR   MATCH       ;TRY A MATCH
+            BCS   :PATTNEXT   ;IF SUCCESS:
             LDX   CURR
             LDA   #$FF        ; MARK THE
             STA   STATUS,X    ; ENTRY
-:NEXT       JSR   SEECAT      ;DISPLAY &
+:PATTNEXT   JSR   SEECAT      ;DISPLAY &
             JSR   SCROLF      ;SCROLL
-            BCC   :LOOP       ;TIL END
+            BCC   ]PATTLOOP   ;TIL END
             LDA   LASTM       ;THEN RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        JMP   ST8MSG
+:PATTOUT    JMP   ST8MSG
 *
 NOPATT      EQU   *
             LDA   CURR
             STA   LASTM
             JSR   GET1FNM     ;GET 1 FILENAME
-            BCS   :OUT
+            BCS   :NOPTOUT
             LDA   #$00
             STA   CURR
-:LOOP       JSR   MATCH       ;MATCH:ALL DONE
-            BCC   :OUT
+]NOPTLOOP   JSR   MATCH       ;MATCH:ALL DONE
+            BCC   :NOPTOUT
             JSR   SEECAT
             JSR   SCROLF      ;NO MATCH:
-            BCC   :LOOP       ;TRY NEXT FILE
+            BCC   ]NOPTLOOP   ;TRY NEXT FILE
             LDA   LASTM       ;NONE:RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        JMP   ST8MSG
+:NOPTOUT    JMP   ST8MSG
 *
 LOKAST      EQU   *
             JSR   CURPNT
@@ -847,7 +847,7 @@ LOKAST      EQU   *
 *
 LOKPAT      EQU   *
             JSR   GETPAT      ;GET PATTERN
-            BCS   :OUT
+            BCS   :LOKOUT
 *           JSR   ASKLOK
 *ASKLOK
             JSR   PRHERE
@@ -855,7 +855,7 @@ LOKPAT      EQU   *
             ASC   "[L]ock or [U]nlock? ",00
 :ALTRY      JSR   CASKEY
             CMP   #$9B
-            BEQ   :OUT        ;C IS SET
+            BEQ   :LOKOUT     ;C IS SET
             LDX   #$FF
             CMP   #"L"
             BEQ   :ALDO
@@ -866,18 +866,18 @@ LOKPAT      EQU   *
             STX   :LOCK
             LDA   #$00
             STA   CURR
-:LOOP       JSR   MATCH
-            BCS   :NEXT       ;IF MATCH, GET
+]LOKLOOP    JSR   MATCH
+            BCS   :LOKNEXT    ;IF MATCH, GET
             LDA   :LOCK
             JSR   SETLOK
             LDA   #$01
             STA   FILNUM      ;FLAG IT
-:NEXT       JSR   SEECAT
+:LOKNEXT    JSR   SEECAT
             JSR   SCROLF
-            BCC   :LOOP
+            BCC   ]LOKLOOP
             LDA   LASTM       ;RESTORE
             STA   CURR        ;CURRENT FILE
-:OUT        JMP   ST8MSG
+:LOKOUT     JMP   ST8MSG
 :LOCK       DB    $0
 *
 NEWNAM      EQU   *
@@ -891,14 +891,14 @@ NEWNAM      EQU   *
             ASC   "as? "
             DB    $0
             JSR   GETNFNM     ;GET NEW FILENAME
-            BCS   :OUT
+            BCS   :NAMEOUT
             JSR   PLACE       ;CHECK & PLACE
             LDX   CURR
             LDA   #$FF        ;MARK AS
             STA   STATUS,X    ;RENAMED
             LDA   #$01
             STA   FILNUM      ;FLAG IT
-:OUT        JMP   ST8MSG
+:NAMEOUT    JMP   ST8MSG
 *
 * SEE FILE QUEUE
 *
@@ -931,7 +931,7 @@ SEECAT      EQU   *
             LDA   #0
             STA   CFLAG
             LDA   NACTIV      ;IF ANY
-            BEQ   :OUT        ;ACTIVE FILES:
+            BEQ   :SEEOUT     ;ACTIVE FILES:
             LDX   #$00        ;FIND CAT. TOP
             LDA   NACTIV
             CMP   #$10
@@ -964,7 +964,7 @@ SEECAT      EQU   *
             BMI   :TOPLINE
             LDA   #MMORE      ;'--MORE--'
 :TOPLINE    JSR   PRINT
-:NEXT       INC   :VCOUNT     ;NEXT LINE
+]SCNEXT     INC   :VCOUNT     ;NEXT LINE
             LDA   :VCOUNT
             JSR   VLEFT
             LDA   SHOW        ;AT CURRENT
@@ -981,14 +981,14 @@ SEECAT      EQU   *
             INC   SHOW        ;NEXT ENTRY
             LDA   SHOW
             CMP   NACTIV      ;END OF
-            BEQ   :OUT        ;CATALOG?
+            BEQ   :SEEOUT     ;CATALOG?
             DEC   :COUNTER    ;ENOUGH FILES?
-            BNE   :NEXT
+            BNE   ]SCNEXT
             BIT   CFLAG
-            BMI   :OUT        ;SKIP 'MORE'
+            BMI   :SEEOUT     ;SKIP 'MORE'
             LDA   #MMORE
             DB    $2C
-:OUT        LDA   #MDASHES
+:SEEOUT     LDA   #MDASHES
             PHA
             LDA   #$13
             JSR   VLEFT
@@ -1049,18 +1049,18 @@ CSTAT       EQU   *
 UNMARK
             LDY   CURR        ;IS SOMETHING
             LDA   STATUS,Y    ;THERE?
-            BEQ   :NOPE
+            BEQ   :UNMKOUT
             LDX   #$FF        ;YES: LOOP
-:LOOP       CMP   STATUS,X    ;THROUGH TO
+]UNMKLOOP   CMP   STATUS,X    ;THROUGH TO
             BCS   :SMALLER    ;DECREMENT ALL
             DEC   STATUS,X    ;HIGHER #'ED
 :SMALLER    DEX               ;FILES
             CPX   #$FF
-            BNE   :LOOP
+            BNE   ]UNMKLOOP
             LDA   #$00        ;THEN DELETE
             STA   STATUS,Y    ;SELECTED ONE
             DEX               ;SET Z = 0
-:NOPE       RTS
+:UNMKOUT    RTS
 *
 * 'DIVE OUT' of subdirectory (non-interactive)
 *
@@ -1110,11 +1110,11 @@ DIVOT0      EQU   *
             LDY   PFX
             LDA   PFX,Y
             CMP   #$2F
-            BNE   :LOOP1
-:LOOP       DEY
-:LOOP1      LDA   PFX,Y
+            BNE   :LOOPSTRT
+]LOOP       DEY
+:LOOPSTRT   LDA   PFX,Y
             CMP   #$2F
-            BNE   :LOOP
+            BNE   ]LOOP
             DEY
             STY   PFX
             LDA   SP
@@ -1194,17 +1194,17 @@ DIVEIN
             LDX   PFX
             LDA   #$2F
             CMP   PFX,X       ;ENDING '/'?
-            BEQ   :LOOP       ;YES: DON'T ADD
+            BEQ   :APPLOOP    ;YES: DON'T ADD
             STA   PFX+$1,X
             INX
-:LOOP       INY
+:APPLOOP    INY
             INX
             CPX   #$40
             BCS   :TOOLONG
             LDA   (POINT),Y
             STA   PFX,X
             CPY   :NAMELEN
-            BCC   :LOOP
+            BCC   :APPLOOP
             STX   PFX
             LDX   SP
             LDA   CURR
@@ -1228,7 +1228,7 @@ DIVEIN
 *
 * called by COPY FILES and DELETE FILES(DELLIB)
 DIVECK
-            BCS   :GOOUT
+            BCS   :GOOUT2
             LDA   SP
             CMP   #1
             BNE   :DVCK00
@@ -1247,7 +1247,7 @@ DIVECK
             JSR   SETHIM      ;8/27/86
 :DVCK00     JMP   :DVINIT
 *
-:GOOUT      LDA   SP
+:GOOUT2     LDA   SP
             BNE   :DVINIT
             JSR   :DVINIT
             LDX   :MYHI
@@ -1310,9 +1310,9 @@ INITCD
             STA   FILNUM
             STA   GO
             TAX               ;SET STATUSES
-:LOOP       STA   STATUS,X    ;TO ZERO
+]CDLOOP     STA   STATUS,X    ;TO ZERO
             DEX
-            BNE   :LOOP
+            BNE   ]CDLOOP
             LDA   WNDTOP
             PHA
             LDA   WNDBTM
@@ -1359,7 +1359,7 @@ RDACNT
 *
 :SECTLP     LDY   #$01        ;FIND PTR TO
             LDA   (POINT),Y   ;NEXT SECTOR
-            BEQ   :OUT        ;NIL PTR?
+            BEQ   :CNTOUT     ;NIL PTR?
             CMP   #$28
             BCS   CATERR
             STA   RTRACK      ;NO:SAVE TRACK
@@ -1371,10 +1371,10 @@ RDACNT
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
             JSR   PHRWTS      ;READ CATALOG
-            BCS   :OUT        ;BAD SECTOR?
+            BCS   :CNTOUT     ;BAD SECTOR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
-            BEQ   :OUT        ;NO MORE FILES?
+            BEQ   :CNTOUT     ;NO MORE FILES?
             AND   #$80
             EOR   DELFLG
             BEQ   :NOTWANT    ;WANTED FILE?
@@ -1391,7 +1391,7 @@ RDACNT
             BNE   :POSNLP     ;DONE SECTOR?
             DEC   COUNT       ;ROOM 4 MORE?
             BNE   :SECTLP
-:OUT        RTS
+:CNTOUT     RTS
 CATERR      EQU   *
             LDA   #$52
             JMP   ERROU1
@@ -1456,7 +1456,7 @@ PRDCNT      EQU   *
 *
             LDY   #4
 :RDRLP      INY
-            BEQ   :NEXT
+            BEQ   :DCNEXT
             LDA   (POINT),Y
             DEY
             CMP   #0
@@ -1497,7 +1497,7 @@ PRDCNT      EQU   *
             INC   RPAGE
             BNE   :RDRLP      ;ALWAYS
 *
-:NEXT       INC   POINT+1
+:DCNEXT     INC   POINT+1
             INC   RPAGE
             LDA   BLKNUM
             ORA   BLKNUM+1
