@@ -94,8 +94,9 @@ CHOOZ0      EQU   *
             ASC   "arrows & [Return]"
             ASC   "to select",FF,8D,FF,8D,FF,8D,FF,8D,FF,8D,FF,00
             JSR   INIT
-            LDX   #:UMAIN
+]MAINLOOP   LDX   #:UMAIN
             JSR   CHOOZ
+            BCS   ]MAINLOOP
             LDX   #$FF
             STX   OPTCHS
             TAX
