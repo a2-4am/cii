@@ -155,12 +155,12 @@
             STA   TRACK
             STA   RTRACK      ;POINTER TO
             ORA   SRCTSL+2    ;NEXT TSLIST?
-            BEQ   :DID
+            BEQ   :UNDID
             LDA   SRCTSL+2    ;YES: LOOP
             STA   SECTOR      ;BACK
             STA   RSECTR
             JMP   :TSLLP
-:DID        JSR   WRCAT1      ;WRITE FREED
+:UNDID      JSR   WRCAT1      ;WRITE FREED
             LDA   #$00        ;CATALOG
             BEQ   :MARKIT     ;ALWAYS
 :CANT       JSR   RDCAT1      ;RE-READ IF
@@ -179,10 +179,10 @@
             TAX
             LDA   VTOC1,X
             AND   BITMSK
-            STA   :TEMP
+            STA   :UNDOTEMP
             LDA   VTOC1+$1,X
             AND   BITMSK+1
-            ORA   :TEMP
+            ORA   :UNDOTEMP
             SEC
             BEQ   :USED
             LDA   BITMSK
@@ -196,17 +196,17 @@
             CLC
 :USED       RTS
 *
-:TEMP       DB    $0
+:UNDOTEMP   DB    $0
 :COUNT      DB    $0
 *
 SMART       EQU   *
             JSR   CURPNT
             LDA   STRTYP
             CMP   #$20
-            BEQ   :ISSAP
+            BEQ   :ISSAP1
             JMP   :NOPE
 *
-:ISSAP      LDY   #1
+:ISSAP1     LDY   #1
             STY   IBPTR
             STY   MIBPTR
 *
@@ -504,15 +504,15 @@ PUNDO0      EQU   *
             BNE   :GOTSTR
 *
 :NOTTREE    CMP   #0
-            BNE   :ISSAP      ;EOF SAYS SAPLING
+            BNE   :ISSAP2     ;EOF SAYS SAPLING
             DEY
             LDA   (POINT),Y
             CMP   #2
-            BCS   :ISSAP
+            BCS   :ISSAP2
             LDA   #$10        ;SEEDLING
             BNE   :GOTSTR
 *
-:ISSAP      LDA   #$20
+:ISSAP2     LDA   #$20
 :GOTSTR     STA   STRTYP
             LDY   #0
             ORA   (POINT),Y   ;OR WITH FILENAME LENGTH
@@ -530,7 +530,7 @@ PUNDO0      EQU   *
             BEQ   :GOBAD      ;KEY BLOCK REALLOCATED
             LDA   STRTYP
             CMP   #$10        ;SEEDLING FILE?
-            BEQ   :DID        ;YES: KEY BLOCK IS ALL
+            BEQ   :UNDID2     ;YES: KEY BLOCK IS ALL
             CMP   #$20
             BEQ   :DOSAP
             CMP   #$30
@@ -542,7 +542,7 @@ PUNDO0      EQU   *
             BCS   :GOBAD1     ;I/O ERROR
             JSR   :MRKIDXB
             BCS   :GOBAD1     ;SOME BLOCK WAS REALLOCATED
-:DID        CLC
+:UNDID2     CLC
             RTS
 *
 * TREE FILE
@@ -590,7 +590,7 @@ PUNDO0      EQU   *
             BCS   :BAD        ;SOME BLOCK REALLOCATED
 :NXTIB      INC   MIBPTR
             BPL   :MIBAGN     ;MIBPTR < $80
-            BMI   :DID
+            BMI   :UNDID2
 *
 
 :DIRLP      LDA   SIB+2
@@ -598,7 +598,7 @@ PUNDO0      EQU   *
             LDA   SIB+3
             STA   BLKNUM+1
             ORA   BLKNUM
-            BEQ   :DID        ;END OF SUBDIR
+            BEQ   :UNDID2     ;END OF SUBDIR
             LDA   BLKNUM+1
             LDX   BLKNUM
             JSR   MRKBLK
@@ -687,7 +687,7 @@ WRITBM      EQU   *
             LDA   BM
             STA   RPAGE
             LDA   BMLEN
-            STA   :TEMP
+            STA   :BMTEMP
             LDA   BMBLK
             STA   BLKNUM
             LDA   BMBLK+1
@@ -698,11 +698,11 @@ WRITBM      EQU   *
             INC   BLKNUM+1
 :WTBM1      INC   RPAGE
             INC   RPAGE
-            DEC   :TEMP
+            DEC   :BMTEMP
             BNE   :WTBM0
             RTS
 *
-:TEMP       DB    $0
+:BMTEMP     DB    $0
 *
 RDCAT1      EQU   *
             LDA   #>CAT1

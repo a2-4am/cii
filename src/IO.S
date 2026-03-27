@@ -336,7 +336,7 @@ PCOUT       BIT   A2E
 :FLASH      AND   #$3F        ;MAKE FLASH
             ORA   #$40
 *
-:CHKPRTR    
+:CHKPRTR
 *            CMP   #$80        ;IF FLASH OR
 *            BCS   :GOCOUT     ;INVERSE:
 *            PHA               ;SAVE CHAR...
@@ -357,7 +357,7 @@ PCOUT       BIT   A2E
 *            BNE   :GOCOUT     ;(ALWAYS)
 *
 *:NOTPRTR    PLA
-:GOCOUT     
+:GOCOUT
 *            CMP   #$FF        ;SOME PRINTERS
 *            BNE   :GOCOUT2    ;DELETE WITH
 *            LDA   #$DF        ;FF'S
@@ -468,8 +468,8 @@ CROUT2      JSR   CROUT
 * -> CHARACTER IN ACC
 GETKEY      BIT   KBDSTB
             JSR   POSTDZX
-:LOOP       LDA   KBD
-            BPL   :LOOP
+]KBDLOOP    LDA   KBD
+            BPL   ]KBDLOOP
             JSR   :CHKALT
             BCS   GETKEY
             BIT   KBDSTB
@@ -492,11 +492,11 @@ GETDAT      JSR   MLI
             DB    $82
             DB    $0,$0
             LDY   #3
-:LOOP       LDA   DATE,Y
+]DATLOOP    LDA   DATE,Y
             STA   CRTDAT,Y
             STA   MODDAT,Y
             DEY
-            BPL   :LOOP
+            BPL   ]DATLOOP
             RTS
 *
 SHDAT0      JSR   PRSPC

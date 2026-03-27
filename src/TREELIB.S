@@ -287,12 +287,12 @@ DOTREE
             STA   :ERRFLG
 *
 :MK00       LDA   CURR
-            STA   :TEMP
+            STA   :DTTEMP
             LDX   #$3F
 *
 :MK0        LDA   #0
             STA   POINT2+1
-            LDA   :TEMP
+            LDA   :DTTEMP
             LDY   #4
 :MK1        ASL
             ROL   POINT2+1
@@ -314,9 +314,9 @@ DOTREE
             BPL   :MK2
             LDA   #$2F
             STA   PFX+$1,X
-            LDY   :TEMP
+            LDY   :DTTEMP
             LDA   MOM,Y
-            STA   :TEMP
+            STA   :DTTEMP
             CMP   #$FF
             BNE   :MK0
 :MK2A       LDY   #0
@@ -349,7 +349,7 @@ DOTREE
             JMP   COMH00
 *
 :ERRFLG     DB    $0
-:TEMP       DB    $0
+:DTTEMP     DB    $0
 :CHMAX      DB    $4F,$27
 :DSPNUM     DB    $03,$01
 :KEYS       DB    $88,$95,$8B,$8A,$C1,$DA
@@ -511,7 +511,6 @@ DOTREE
 :CURR       DB    $0
 :CH         DB    $1,$13,$25,$37
 :CHINDX     DB    $0
-:TEMP       DB    $0
 :CHL        DB    $0,$1,$9,$12,$13,$1B
 *
 *

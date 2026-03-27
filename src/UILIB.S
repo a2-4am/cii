@@ -419,7 +419,6 @@ CFILE
             CPY   #$21
             BCC   :NXTCHAR
 :CFILEQ     RTS
-:LENGTH     DB    $21
 *
 PCFILE      EQU   *
             LDY   #0
@@ -429,15 +428,15 @@ PCFILE      EQU   *
             LDA   #$0F
 :PCFL1      STA   :LENGTH
             LDY   #1
-:PCFL2      LDA   (POINT),Y
-            BEQ   :PCFL3
+]PCFL2      LDA   (POINT),Y
+            BEQ   :PCFLOUT
             ORA   #$80
             JSR   PCOUT
             INY
             CPY   :LENGTH
-            BCC   :PCFL2
-            BEQ   :PCFL2
-:PCFL3      RTS
+            BCC   ]PCFL2
+            BEQ   ]PCFL2
+:PCFLOUT    RTS
 :LENGTH     DB    $0
 *
 PRTBLK

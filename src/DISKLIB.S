@@ -97,9 +97,9 @@ WRCAT1
 *
 WRCAT2
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :WCDOS33
             JMP   CLOSE       ;NO JUST CLEAN UP
-:DOS33      LDX   #>VTOC2     ;YES WRITE CATALOG
+:WCDOS33    LDX   #>VTOC2     ;YES WRITE CATALOG
             LDA   #$02
 *            JMP   DOCAT
 * fall through to DOCAT
@@ -112,15 +112,15 @@ WRCAT2
 DOCAT
             STA   RCMND
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :CATDOS33
             LDX   #>SDIR
             STX   DIRADR
             JMP   PDOCAT
 *
-:DOS33      JSR   DOVTOC      ;R/W VTOC.
+:CATDOS33   JSR   DOVTOC      ;R/W VTOC.
 :SECTLP     LDY   #$01        ;FIND PTR TO
             LDA   (POINT),Y   ;NEXT SECTOR
-            BEQ   :OUT        ;NIL PTR?
+            BEQ   :CATOUT     ;NIL PTR?
             STA   RTRACK      ;NO:SAVE TRACK
             INY
             LDA   (POINT),Y   ;& SECTOR
@@ -128,10 +128,10 @@ DOCAT
             INC   RPAGE       ;NEXT PAGE
             INC   POINT+1
             JSR   PHRWTS      ;R/W CATALOG
-            BCS   :OUT        ;ERROR?
+            BCS   :CATOUT     ;ERROR?
             LDY   #$0B
 :POSNLP     LDA   (POINT),Y
-            BEQ   :OUT        ;NO MORE FILES?
+            BEQ   :CATOUT     ;NO MORE FILES?
             TYA
             CLC
             ADC   #$23        ;NEXT FILE
@@ -139,7 +139,7 @@ DOCAT
             BNE   :POSNLP     ;DONE SECTOR?
             DEC   COUNT       ;ROOM 4 MORE?
             BNE   :SECTLP
-:OUT        RTS
+:CATOUT     RTS
 *
 *
 *
@@ -153,7 +153,7 @@ DOCAT
 PDOCAT      EQU   *
             LDA   RCMND
             CMP   #2
-            BNE   :OUT
+            BNE   :PCATOUT
 *
 :DOWRT      LDA   DIRBLK
             STA   BLKNUM
@@ -181,15 +181,15 @@ PDOCAT      EQU   *
 *
             LDY   RPAGE
             CPY   #$3C
-            BCS   :OUT
+            BCS   :PCATOUT
             ORA   BLKNUM
             BNE   :WTMORE
-:OUT        RTS
+:PCATOUT    RTS
 *
 * DOS?
 * read T00S00 and check for recognized DOS-shaped bootloader
 * called by Copy DOS (COPY) and Delete DOS (DELLIB)
-* 
+*
 DOS?
             LDX   #0
             JSR   PUTSEC
@@ -316,26 +316,26 @@ DOSTYP
             LDA   #0
             STA   RRTN
             LDA   UNIT
-            STA   :UNIT
+            STA   :DTUNIT
             JSR   SETSD
             LDA   CURDEV
             ASL
             ASL
             ASL
             ASL
-            STA   :BUFF
+            STA   :DTBUFF
             JSR   MLI
             DB    $C5
             DW    :OLNLST
-            LDX   :BUFF
+            LDX   :DTBUFF
             LDA   VOLNMS,X
             AND   #$0F
-            BEQ   :ERR
-            STA   :TEMP
+            BEQ   :DTERR
+            STA   :DTTEMP
             INX
             LDY   #0
 :MOVELP     LDA   VOLNMS,X
-            CPY   :TEMP
+            CPY   :DTTEMP
             BCC   :USEIT
             LDA   #0
             BEQ   :CHROK
@@ -365,10 +365,10 @@ DOSTYP
 * PRODOS DISK WITH INVALID VOLUME NAME
 *
 :ERR52      LDA   #$52
-            BNE   :DTERR
+            BNE   :DTERR2
 *
-:ERR        LDA   VOLNMS+$1,X
-:DTERR      STA   RRTN
+:DTERR      LDA   VOLNMS+$1,X
+:DTERR2     STA   RRTN
 *
             CMP   #$52
             BNE   :NOT52
@@ -412,15 +412,15 @@ DOSTYP
             BNE   :SKIPFAK    ;NOT DOS
             LDA   #0
             JSR   FAKTRK
-:SKIPFAK    LDX   :BUFF
+:SKIPFAK    LDX   :DTBUFF
             PLP
             LDA   DOSNOW
             RTS
 *
 :OLNLST     DB    $2
-:UNIT       DB    $0
-:BUFF       DW    VOLNMS
-:TEMP       DB    $0
+:DTUNIT     DB    $0
+:DTBUFF     DW    VOLNMS
+:DTTEMP     DB    $0
 *
 *
 *
@@ -532,9 +532,9 @@ RDDATA
             RTS
 :EOTSL      LDA   SRCTSL+1    ;A NEXT TSLIST?
             ORA   SRCTSL+2
-            BEQ   :OUT
+            BEQ   :RDOUT
             JMP   :NXTTSL
-:OUT        DEC   EOF         ;NO: EOF
+:RDOUT      DEC   EOF         ;NO: EOF
             RTS
 :TEMP0      DB    $0
 :TEMP1      DB    $0
@@ -544,11 +544,11 @@ RDDATAERR2  EQU   *
             JMP   OUCH
 *
 :RDPRODOS   LDA   DATADR
-            STA   :TEMP
+            STA   :RDTEMP
             LDA   BLKNUM
             ORA   BLKNUM+1
             BEQ   :READ2
-            LDA   :TEMP
+            LDA   :RDTEMP
 :READLP     STA   RPAGE
             JSR   :RDBLOK
             JSR   CURPNT
@@ -565,21 +565,21 @@ RDDATAERR2  EQU   *
             LDA   MIBPTR
             STA   RBLKH,Y
             INC   RELCNT
-            INC   :TEMP
-            INC   :TEMP
+            INC   :RDTEMP
+            INC   :RDTEMP
 :READ2      JSR   FNBLK1
             BCS   :GOTEOF
             CMP   #$FF
             BEQ   :ERROUT2
-            LDA   :TEMP
+            LDA   :RDTEMP
             CMP   HIMEM
             BCC   :READLP
             STA   RPAGE
             RTS
 *
-:GOTEOF     LDA   :TEMP
+:GOTEOF     LDA   :RDTEMP
             STA   RPAGE
-            LDA   :BUFF
+            LDA   :RBBUFF
             BEQ   :GTEOF1
             LDY   RELCNT
             LDA   RBLKL-1,Y
@@ -593,18 +593,18 @@ RDDATAERR2  EQU   *
             INC   RPAGE
 :GTEOF1     DEC   EOF
             RTS
-:TEMP       DB    $0
+:RDTEMP     DB    $0
 *
 :RDBLOK     LDA   UNIT
-            STA   :UNIT
+            STA   :RBUNIT
             LDA   BLKNUM
             STA   :BLKNUM
             LDA   BLKNUM+1
             STA   :BLKNUM+1
             LDA   RPAGE
-            STA   :BUFF+1
+            STA   :RBBUFF+1
             LDA   RADR
-            STA   :BUFF
+            STA   :RBBUFF
             JSR   MLI
             DB    $80
             DW    :RBLST
@@ -613,8 +613,8 @@ RDDATAERR2  EQU   *
             RTS
 :ERROUT2    JMP   OUCH
 :RBLST      DB    $3
-:UNIT       DB    $0
-:BUFF       DB    $0,$0
+:RBUNIT     DB    $0
+:RBBUFF     DB    $0,$0
 :BLKNUM     DB    $0,$0
 *
 *
@@ -632,7 +632,7 @@ OPNSRC
 OPNFIL
             JSR   CURPNT      ;POINT TO FILE
             BIT   DOSNOW
-            BPL   :DOS33
+            BPL   :OFDOS33
 *
 :PRODOS     LDY   #$11
             LDA   (POINT),Y   ;KEY BLK LO
@@ -662,7 +662,7 @@ OPNFIL
 :OPENMIB    LDA   #>SMIB
             STA   RPAGE
             JSR   RDBLK
-            BCS   :ERR
+            BCS   :OPENERR
             LDA   SMIB
             STA   BLKNUM
             LDA   SMIB+$100
@@ -670,7 +670,7 @@ OPNFIL
 :OPENIB     LDA   #>SIB
             STA   RPAGE
             JSR   RDBLK
-            BCS   :ERR
+            BCS   :OPENERR
             LDA   SIB
             STA   BLKNUM
             LDA   SIB+$100
@@ -680,9 +680,9 @@ OPNFIL
             STA   IBPTR
             STA   RELCNT
             CLC
-:ERR        RTS
+:OPENERR    RTS
 *
-:DOS33      LDA   #$10
+:OFDOS33    LDA   #$10
             STA   STRTYP
             LDY   #$FF
             STY   TSLCTR

@@ -170,12 +170,12 @@ UNTDV0      LDA   #0
             STA   GODEV+1
             STA   GODEV+2
             LDX   NUMDEV
-:LOOP       LDA   UNIT
+]DEVLOOP    LDA   UNIT
             EOR   DVICES,X
             AND   #$F0
             BEQ   :GOTIT
             DEX
-            BPL   :LOOP
+            BPL   ]DEVLOOP
 *
 * CAN'T FALL THROUGH
 *
@@ -226,7 +226,7 @@ DVTYPX      LDA   #0
             LDA   DEVADR+$1,Y
             STA   GODEV+2
             CMP   #$FF
-            BEQ   :RAM        ;MAYBE /RAM
+            BEQ   :DEVRAM     ;MAYBE /RAM
             CMP   #$C8
             BCS   :RAMDRV
             CMP   #$C1
@@ -307,7 +307,7 @@ DVTYPX      LDA   #0
             AND   #$03
             RTS
 *
-:RAM        LDA   GODEV+1
+:DEVRAM     LDA   GODEV+1
             BNE   :RAMDRV     ;NOT /RAM
 *
 * DRIVER ADDRESS IS $FF00, NOW CHECK
@@ -371,7 +371,7 @@ GODEV       JMP   $0000
 * called by COPY DISK, DELETE DISK(DELLIB),
 * UNDELETE, VERIFY
 GTBLKS      JSR   DEVTYP
-            BCS   :RAM
+            BCS   :GBRAM
             BEQ   :DISKII
 *
 * DEVICE IS NOT A DISK II OR /RAM.
@@ -405,7 +405,7 @@ GTBLKS      JSR   DEVTYP
 * UP THERE OWN, PROBABLY NON-STANDARD,
 * DIRECTORY AND BITMAP.
 *
-:RAM        JSR   :RAMDRVR
+:GBRAM      JSR   :RAMDRVR
             SEC
             RTS
 *
@@ -672,9 +672,9 @@ STPFXC      STA   TMPPTR+1
             JSR   MLI
             DB    $C6
             DW    :PFXLST
-            BCC   :OUT
+            BCC   :PFXOUT
             STA   RRTN
-:OUT        RTS
+:PFXOUT     RTS
 :PFXLST     DB    $1
             DW    PFX
 *
@@ -711,11 +711,11 @@ DOMASK      TAX
             STA   BITMSK+1
             STA   BITMSK
             SEC
-:NEXT       ROL   BITMSK+1
+]MASKLOOP   ROL   BITMSK+1
             ROL   BITMSK
             DEX
-            BPL   :NEXT
-:OUT        RTS
+            BPL   ]MASKLOOP
+            RTS
 *
 *
 STVTOC      LDA   #$11
@@ -761,17 +761,17 @@ CHKDOS      LDA   #2
 *
 PATMOV      LDX   #$00
             LDY   #$00
-:LOOP       LDA   STATUS,Y
-            BEQ   :NEXT
+]PATLOOP    LDA   STATUS,Y
+            BEQ   :PATNEXT
             STA   STATUS,X
             LDA   CBYTE,Y
             STA   CBYTE,X
             LDA   CSECTR,Y
             STA   CSECTR,X
             INX
-:NEXT       INY
+:PATNEXT    INY
             CPY   NACTIV
-            BCC   :LOOP
+            BCC   ]PATLOOP
             STX   FILNUM
             RTS
 *
@@ -785,8 +785,8 @@ DIR?        LDY   #0
             LDA   (POINT),Y
             CMP   #$0F
             CLC
-            BEQ   :OUT
+            BEQ   :DIROUT
 :NOTDIR     SEC
-:OUT        RTS
+:DIROUT     RTS
 *
 PRODOSEND
