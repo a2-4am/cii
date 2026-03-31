@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests whole-disk copy on a 64K //e, without an extended 80-column card. C2Reboot takes 9 passes to copy the whole disk, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing' -aux ''"

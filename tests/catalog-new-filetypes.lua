@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+C2Reboot backports several new filetypes from Copy II Plus v9.0 and adds several previously unsupported ones. This tests most of those new filetypes in a simple catalog listing.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   DISKARGS="-flop1 $FLOPIMG -flop2 'filetypes.do'"

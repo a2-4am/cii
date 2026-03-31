@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests that Copy DOS displays an error message when attempting to Copy DOS onto a drive with no disk in it, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   DISKARGS="-flop1 $FLOPIMG -flop2 'DOS 3.3 System Master.do'"

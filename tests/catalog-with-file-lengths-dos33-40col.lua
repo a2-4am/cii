@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests 'Catalog w/File Lengths' on a DOS 3.3 disk, on a machine that can not display 80 columns. C2Reboot changed the logic for which catalog displays end up in 80 columns. This is one of the cases that would be in 80 columns if the machine supported it, but since this machine does NOT support it, it should appear in 40 columns. File lengths appear on the following line after each filename, matching v8.4 behavior when 80-column catalog displays are turned off or unsupported.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2p"

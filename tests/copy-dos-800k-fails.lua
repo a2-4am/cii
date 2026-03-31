@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests that C2Reboot displays an error message when attempting to Copy DOS on a 3.5-inch (800K) disk, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'superdrive'"

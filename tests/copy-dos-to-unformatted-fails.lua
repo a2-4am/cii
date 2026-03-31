@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests that Copy DOS displays an error message when attempting to Copy DOS onto an unformatted disk, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"

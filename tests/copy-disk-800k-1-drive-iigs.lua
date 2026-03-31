@@ -1,3 +1,12 @@
+--[[
+  License:MIT
+  Copyright (C) 2026 4am
+]]
+
+--[[
+This tests whole-disk copy of a 3.5-inch (800K) disk on a IIgs with a 1MB RAM card. C2Reboot uses IIgs memory to copy the whole disk in 1 pass, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2gs"

@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+At one point a label confusion introduced a regression where entering a filename then canceling with Esc would corrupt the screen. This tests that regression.
+]]
+
 test.Step(
   "Cancel 'Enter Filename' restores selection",
   function()

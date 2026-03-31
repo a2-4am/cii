@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests 'Catalog w/File Lengths' on a DOS 3.3 disk, on a machine that can display 80 columns. C2Reboot changed the logic for which catalog displays end up in 80 columns. This is one of the cases that should be in 80 columns if the machine supports it. File lengths appear on the same line as each filename, matching v8.4 behavior when 80-column catalog displays are supported and selected on startup.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   DISKARGS="-flop1 $FLOPIMG -flop2 'DOS 3.3 System Master.do'"

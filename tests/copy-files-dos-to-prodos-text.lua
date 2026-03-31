@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests copying several text files from a DOS 3.3 disk to a ProDOS disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, and the contents of each sector. Text files copied between DOS 3.3 and ProDOS disks are NOT a bit-for-bit copy; they are heavily modified in transit to match the hi-bit convention of the target operating system.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2p"

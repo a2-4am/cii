@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests 'Catalog w/Deleted Files' on a DOS 3.3 disk where several files have in fact been deleted. Deleted files show with a 'D' before the rest of the catalog line, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   DISKARGS="-flop1 $FLOPIMG -flop2 'DOS 3.3 System Master-deleted-files-by-v84.do'"
@@ -59,7 +63,7 @@ test.Step(
       cii.WaitForScreenContains(last_line[pagenum])
       local pagetext = apple2.GrabTextScreen():upper()
       for dummy,line in ipairs(lines) do
-        test.Expect(pagetext:find(line), "Catalog Disk w/File Lengths does not contain " .. line)
+        test.Expect(pagetext:find(line), "Catalog Disk w/Deleted Files does not contain " .. line)
       end
     end
 end)

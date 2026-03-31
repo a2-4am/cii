@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests that C2Reboot displays an error message when attempting to Copy DOS from a disk that has had its DOS 'deleted' (by C2Reboot/Copy II Plus), matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"

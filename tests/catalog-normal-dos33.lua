@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests 'Catalog - Normal' with a simple multi-page DOS 3.3 disk catalog, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   DISKARGS="-flop1 $FLOPIMG -flop2 'DOS 3.3 System Master.do'"

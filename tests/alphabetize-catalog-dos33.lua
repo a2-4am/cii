@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests Alphabetize Catalog on a DOS 3.3 disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact contents of the VTOC and all directory sectors.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"
