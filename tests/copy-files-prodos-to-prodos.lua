@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests copying several files from a ProDOS disk to a ProDOS disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, and the contents of each sector.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2p"

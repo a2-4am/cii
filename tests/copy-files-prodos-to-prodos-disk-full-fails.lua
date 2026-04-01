@@ -3,6 +3,10 @@
   Copyright (C) 2026 4am
 ]]
 
+--[[
+This tests copying a file from a ProDOS disk to a ProDOS disk that does not have enough free space to store it. The operation should fail and delete the partial file, leaving behind remnants of the file's data on disk, matching v8.4 behavior.
+]]
+
 --[[ BEGINCONFIG ========================================
 
   MODEL="apple2p"
