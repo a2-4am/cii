@@ -20,16 +20,8 @@ local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
 local source_filename = s6d2.filename
 s5d1:unload()
 
-local function ReadPartialFile(pathname, seek_in_bytes, size_in_bytes)
-  local f = assert(io.open(pathname, "rb"))
-  f:seek("set", seek_in_bytes)
-  local bytes = f:read(size_in_bytes)
-  assert(f:close())
-  return bytes
-end
-
 test.Step(
-  "Format Disk (DOS 3.3) matches v8.4 behavior",
+  "Format Disk (DOS 3.3) of blank disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("F") -- Format
@@ -52,12 +44,12 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForMainMenu()
     s6d2:unload() -- eject disk (ensures disk image is updated)
-    local source1 = ReadPartialFile(source_filename, 0, 0xA1)
-    local reference1 = ReadPartialFile(reference_filename, 0, 0xA1)
+    local source1 = cii.ReadPartialFile(source_filename, 0, 0xA1)
+    local reference1 = cii.ReadPartialFile(reference_filename, 0, 0xA1)
     test.ExpectBinaryEquals(source1, reference1,
                             "Format Disk (DOS 3.3) disk image does not match v8.4")
-    local source2 = ReadPartialFile(source_filename, 0xA3, "*all")
-    local reference2 = ReadPartialFile(reference_filename, 0xA3, "*all")
+    local source2 = cii.ReadPartialFile(source_filename, 0xA3, "*all")
+    local reference2 = cii.ReadPartialFile(reference_filename, 0xA3, "*all")
     test.ExpectBinaryEquals(source2, reference2,
                             "Format Disk (DOS 3.3) disk image does not match v8.4")
 end)

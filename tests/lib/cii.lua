@@ -70,4 +70,12 @@ function cii.Beat()
   emu.wait(1/60)
 end
 
+function cii.ReadPartialFile(pathname, seek_in_bytes, size_in_bytes)
+  local f = assert(io.open(pathname, "rb"))
+  f:seek("set", seek_in_bytes)
+  local bytes = f:read(size_in_bytes)
+  assert(f:close())
+  return bytes
+end
+
 return cii
