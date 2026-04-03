@@ -23,7 +23,7 @@ local source_filename = s6d2.filename
 s5d1:unload()
 
 test.Step(
-  "Format Disk (ProDOS) matches v8.4 behavior",
+  "Format Disk (ProDOS) of blank disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("F") -- Format
