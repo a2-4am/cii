@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests displaying the list of available devices on a //e with an extended 80-column card and a RAMFactor memory card. The device list should be identical to the one offered by v8.4 under the same configuration.
+  This tests displaying the list of available devices on a //e with an extended 80-column card and a RAMFactor memory card. The device list should be identical to the one offered by v8.4 under the same configuration. Included here because there was once a regression (caused by mis-initialization of a loop counter) that populated the device list with phantom devices.
 ]]
 
 --[[ BEGINCONFIG ========================================
