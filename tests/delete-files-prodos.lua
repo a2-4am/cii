@@ -16,9 +16,6 @@ This tests deleting several files from a ProDOS disk, some in the root directory
 
   ======================================== ENDCONFIG ]]
 
--- note: using apple2p for this because it has no clock (I don't know how to disable
--- the No-Slot Clock that is installed and active by default in apple2e models)
-
 local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
 local actual_filename = s6d2.filename
 local s5d1 = manager.machine.images[":sl5:diskiing:0:525"]
