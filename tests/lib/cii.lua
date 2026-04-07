@@ -78,4 +78,18 @@ function cii.ReadPartialFile(pathname, seek_in_bytes, size_in_bytes)
   return bytes
 end
 
+function cii.DisableRTC()
+  cii.WaitForMainMenu()
+  apple2.WriteRAMDevice(0xBF06, 0x60) -- disable clock
+  apple2.WriteRAMDevice(0xBF90, 0x00) -- set date/time to 0
+  apple2.WriteRAMDevice(0xBF91, 0x00)
+  apple2.WriteRAMDevice(0xBF92, 0x00)
+  apple2.WriteRAMDevice(0xBF93, 0x00)
+  local machid = apple2.ReadRAMDevice(0xBF98)
+  machid = machid&0xFE -- strip clock bit of ProDOS MACHID global
+  apple2.WriteRAMDevice(0xBF98, machid)
+  apple2.Type("E") -- Enter Date
+  apple2.EscapeKey() -- refreshes main menu, which refreshes CRTDAT and MODDAT globals
+end
+
 return cii
