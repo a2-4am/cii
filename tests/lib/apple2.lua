@@ -1,4 +1,3 @@
-
 --[[============================================================
 
   Generic utilities for Apple II
@@ -189,9 +188,10 @@ elseif machine.system.name:match("^apple2p") then
     keyboard = {
       ["Control"]     = { port = ":keyb_special", field = "Control"     },
       ["Shift"]       = { port = ":keyb_special", field = "Left Shift"  },
+      ["Reset"]       = { port = ":keyb_special", field = "Reset"       },
 
       ["Right Arrow"] = { port = ":X2", field = "→" },
-      ["Down Arrow"]  = { port = ":X2", field = "↓"  },
+      ["Left Arrow"]  = { port = ":X2", field = "↓"  },
       ["Return"]      = { port = ":X4", field = "Return" },
       ["Escape"]      = { port = ":X4", field = "Esc"    }
     }
@@ -200,9 +200,10 @@ elseif machine.system.name:match("^apple2p") then
     keyboard = {
       ["Control"]     = { port = ":kbd:nkbd:keyb_special", field = "Ctrl"        },
       ["Shift"]       = { port = ":kbd:nkbd:keyb_special", field = "Left Shift"  },
+      ["Reset"]       = { port = ":kbd:nkbd:keyb_special", field = "Reset"       },
 
       ["Right Arrow"] = { port = ":kbd:nkbd:X2", field = "Cursor Right" },
-      ["Down Arrow"]  = { port = ":kbd:nkbd:X2", field = "Cursor Left"  },
+      ["Left Arrow"]  = { port = ":kbd:nkbd:X2", field = "Cursor Left"  },
       ["Return"]      = { port = ":kbd:nkbd:X4", field = "Return" },
       ["Escape"]      = { port = ":kbd:nkbd:X4", field = "Esc"    }
     }
