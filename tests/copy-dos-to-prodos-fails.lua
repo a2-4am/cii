@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that Copy DOS displays an error message when attempting to Copy DOS onto a ProDOS disk, matching v8.4 behavior.
+  This tests that Copy DOS displays an error message when attempting to Copy DOS onto a ProDOS disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

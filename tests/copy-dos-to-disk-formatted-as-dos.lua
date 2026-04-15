@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that Copy DOS works when copying DOS 3.3 onto a disk that already has DOS 3.3, matching v8.4 behavior.
+  This tests that Copy DOS works when copying DOS 3.3 onto a disk that already has DOS 3.3, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

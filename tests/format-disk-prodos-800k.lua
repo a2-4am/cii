@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests formatting a 3.5-inch (800K) disk in ProDOS format, on a //e with a Superdrive. The operation should succeed, and the final disk image should be identical to one where the same operation was performed by v8.4. Note: for reproducibility, the test disables the real-time clock because C2Reboot (and Copy II Plus) would otherwise write the creation date to the root directory.
+  This tests formatting a 3.5-inch (800K) disk in ProDOS format, on a //e with a Superdrive. The operation should succeed, and the final disk image should be identical to one where the same operation was performed by v8.4. Note: for reproducibility, the test disables the real-time clock because C2Reboot (and Copy II Plus) would otherwise write the creation date to the root directory.
 ]]
 
 --[[ BEGINCONFIG ========================================

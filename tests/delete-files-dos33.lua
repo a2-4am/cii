@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests deleting several non-contiguous files from a DOS 3.3 disk. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
+  This tests deleting several non-contiguous files from a DOS 3.3 disk. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
 ]]
 
 --[[ BEGINCONFIG ========================================

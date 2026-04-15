@@ -4,7 +4,7 @@
 ]]
 
 --[[
-C2Reboot backports several new filetypes from Copy II Plus v9.0 and adds several previously unsupported ones. This tests most of those new filetypes in a simple catalog listing.
+  C2Reboot backports several new filetypes from Copy II Plus v9.0 and adds several previously unsupported ones. This tests most of those new filetypes in a simple catalog listing.
 ]]
 
 --[[ BEGINCONFIG ========================================

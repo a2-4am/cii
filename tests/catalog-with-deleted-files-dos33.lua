@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests 'Catalog w/Deleted Files' on a DOS 3.3 disk where several files have in fact been deleted. Deleted files show with a 'D' before the rest of the catalog line, matching v8.4 behavior.
+  This tests 'Catalog w/Deleted Files' on a DOS 3.3 disk where several files have in fact been deleted. Deleted files show with a 'D' before the rest of the catalog line, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

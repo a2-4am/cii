@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests whole-disk copy on a 128K //e with extended 80-column card. C2Reboot uses auxiliary memory to reduce the number of passes to 2, matching v8.4 behavior.
+  This tests whole-disk copy on a 128K //e with extended 80-column card. C2Reboot uses auxiliary memory to reduce the number of passes to 2, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

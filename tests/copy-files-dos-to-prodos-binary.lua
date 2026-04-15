@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests copying several binary files from a DOS 3.3 disk to a ProDOS disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, and the contents of each sector.
+  This tests copying several binary files from a DOS 3.3 disk to a ProDOS disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, and the contents of each sector.
 ]]
 
 --[[ BEGINCONFIG ========================================

@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests 'Catalog - Normal' with a simple multi-page DOS 3.3 disk catalog, matching v8.4 behavior.
+  This tests 'Catalog - Normal' with a simple multi-page DOS 3.3 disk catalog, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

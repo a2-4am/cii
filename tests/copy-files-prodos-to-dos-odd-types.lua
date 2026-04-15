@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests copying several binary files from a ProDOS disk to a DOS 3.3 disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, the contents of each sector, and the filetype of each file. All of these files are odd filetypes, some of which are supported by C2Reboot in catalog displays. (Copy II Plus simply displays their 1-byte hex code in lieu of a filetype.) However, catalog display logic and 'is this a binary file' logic are entirely separate, and all of these files should be treated as binary ('B' type in DOS), despite being 'recognized' in catalog displays.
+  This tests copying several binary files from a ProDOS disk to a DOS 3.3 disk. The operation should succeed, matching v8.4 behavior. C2Reboot matches v8.4 with the exact order of files in the disk catalog, the exact placement of sectors for each file on disk, the contents of each sector, and the filetype of each file. All of these files are odd filetypes, some of which are supported by C2Reboot in catalog displays. (Copy II Plus simply displays their 1-byte hex code in lieu of a filetype.) However, catalog display logic and 'is this a binary file' logic are entirely separate, and all of these files should be treated as binary ('B' type in DOS), despite being 'recognized' in catalog displays.
 ]]
 
 --[[ BEGINCONFIG ========================================

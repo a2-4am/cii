@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that C2Reboot displays an error message when attempting to Copy DOS from a ProDOS disk, matching v8.4 behavior.
+  This tests that C2Reboot displays an error message when attempting to Copy DOS from a ProDOS disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

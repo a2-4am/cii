@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests whole-disk copy of a 3.5-inch (800K) disk on a //e with an 8MB RAMWorks memory card. C2Reboot can only use this memory if it is formatted as a RAM disk, which neither C2Reboot nor ProDOS can do by themselves. This test pre-boots a driver disk that sets up all available RAMWorks memory as a RAM disk, then launches C2Reboot. C2Reboot uses the vendor-formatted RAM disk to read the entire disk in 1 pass, matching v8.4 behavior. After the copy is complete, C2Reboot prompts to make another copy. If selected, it writes out the second copy to the same drive entirely from memory (without re-reading the original disk), matching v8.4 behavior.
+  This tests whole-disk copy of a 3.5-inch (800K) disk on a //e with an 8MB RAMWorks memory card. C2Reboot can only use this memory if it is formatted as a RAM disk, which neither C2Reboot nor ProDOS can do by themselves. This test pre-boots a driver disk that sets up all available RAMWorks memory as a RAM disk, then launches C2Reboot. C2Reboot uses the vendor-formatted RAM disk to read the entire disk in 1 pass, matching v8.4 behavior. After the copy is complete, C2Reboot prompts to make another copy. If selected, it writes out the second copy to the same drive entirely from memory (without re-reading the original disk), matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

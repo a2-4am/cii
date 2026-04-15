@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests displaying the list of available devices on a //e with an 8MB RAMWorks card. The device list should be identical to the one offered by v8.4 under the same configuration.
+  This tests displaying the list of available devices on a //e with an 8MB RAMWorks card. The device list should be identical to the one offered by v8.4 under the same configuration.
 ]]
 
 --[[ BEGINCONFIG ========================================

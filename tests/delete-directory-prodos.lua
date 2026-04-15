@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests copying deleting a subdirectory, and all the files within it, from a ProDOS disk. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
+  This tests copying deleting a subdirectory, and all the files within it, from a ProDOS disk. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
 ]]
 
 --[[ BEGINCONFIG ========================================

@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that pressing Esc at the top level of the main menu does not crash. C2Reboot improves on v8.4's menu handling behavior. For example, v8.4 will flash and redisplay the entire menu if you press Esc at the top level of the main menu, while C2Reboot will simply do nothing. At one point C2Reboot would crash, which was not considered an improvement.
+  This tests that pressing Esc at the top level of the main menu does not crash. C2Reboot improves on v8.4's menu handling behavior. For example, v8.4 will flash and redisplay the entire menu if you press Esc at the top level of the main menu, while C2Reboot will simply do nothing. At one point C2Reboot would crash, which was not considered an improvement.
 ]]
 
 test.Step(

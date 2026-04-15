@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests deleting several files from a ProDOS disk, some in the root directory and others in a subdirectory. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
+  This tests deleting several files from a ProDOS disk, some in the root directory and others in a subdirectory. The operation should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
 ]]
 
 --[[ BEGINCONFIG ========================================

@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that C2Reboot displays the volume name while performing a whole-disk copy of a ProDOS disk, matching v8.4 behavior.
+  This tests that C2Reboot displays the volume name while performing a whole-disk copy of a ProDOS disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================

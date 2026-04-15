@@ -4,7 +4,7 @@
 ]]
 
 --[[
-At one point a label confusion introduced a regression where entering a filename then canceling with Esc would corrupt the screen. This tests that regression.
+  At one point a label confusion introduced a regression where entering a filename then canceling with Esc would corrupt the screen. This tests that regression.
 ]]
 
 test.Step(

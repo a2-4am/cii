@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests that Copy DOS works without complaint when copying Pronto-DOS onto a disk that already has DOS 3.3, matching v8.4 behavior. C2Reboot performs some spot-checks to ensure that the source disk is actually DOS-shaped, but these checks also pass on Pronto-DOS.
+  This tests that Copy DOS works without complaint when copying Pronto-DOS onto a disk that already has DOS 3.3, matching v8.4 behavior. C2Reboot performs some spot-checks to ensure that the source disk is actually DOS-shaped, but these checks also pass on Pronto-DOS.
 ]]
 
 --[[ BEGINCONFIG ========================================

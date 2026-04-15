@@ -4,7 +4,7 @@
 ]]
 
 --[[
-This tests whole-disk copy on a //e with a 1MB Ramfactor memory card. RAMFactor presents as a large RAM disk, which C2Reboot uses to read the entire disk in 1 pass, matching v8.4 behavior. After the copy is complete, C2Reboot prompts to make another copy. If selected, it writes out the second copy to the same drive entirely from memory (without re-reading the original disk), matching v8.4 behavior.
+  This tests whole-disk copy on a //e with a 1MB Ramfactor memory card. RAMFactor presents as a large RAM disk, which C2Reboot uses to read the entire disk in 1 pass, matching v8.4 behavior. After the copy is complete, C2Reboot prompts to make another copy. If selected, it writes out the second copy to the same drive entirely from memory (without re-reading the original disk), matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
