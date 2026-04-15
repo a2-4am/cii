@@ -11,7 +11,7 @@ This tests copying several files from a ProDOS disk to a ProDOS disk. The operat
 
   MODEL="apple2p"
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'formatted-prodos-by-v84.do' -flop2 'beagle-graphics-filecopied-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-ProDOS.do'"
+  DISKARGS="-flop1 'formatted-prodos-by-v84.do' -flop2 'beagle-graphics-filecopied-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics.do'"
   CHECKAUXMEMORY="false"
 
   ======================================== ENDCONFIG ]]

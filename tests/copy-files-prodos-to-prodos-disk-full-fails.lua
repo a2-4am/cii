@@ -11,7 +11,7 @@ This tests copying a file from a ProDOS disk to a ProDOS disk that does not have
 
   MODEL="apple2p"
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'beagle-graphics-ProDOS.do' -flop2 'beagle-graphics-after-failed-filecopy.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-filecopied-by-v84.do'"
+  DISKARGS="-flop1 'beagle-graphics.do' -flop2 'beagle-graphics-after-failed-filecopy.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-filecopied-by-v84.do'"
   CHECKAUXMEMORY="false"
 
   ======================================== ENDCONFIG ]]

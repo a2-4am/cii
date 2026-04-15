@@ -11,7 +11,7 @@ This tests deleting several files from a ProDOS disk, some in the root directory
 
   MODEL="apple2p"
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'beagle-graphics-ProDOS-deleted-files-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-ProDOS.do'"
+  DISKARGS="-flop1 'beagle-graphics-deleted-files-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics.do'"
   CHECKAUXMEMORY="false"
 
   ======================================== ENDCONFIG ]]

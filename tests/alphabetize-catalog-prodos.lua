@@ -10,7 +10,7 @@ This tests Alphabetize Catalog on a ProDOS disk, sorting the root directory and 
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'beagle-graphics-ProDOS-sorted-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-ProDOS.do'"
+  DISKARGS="-flop1 'beagle-graphics-sorted-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics.do'"
 
   ======================================== ENDCONFIG ]]
 

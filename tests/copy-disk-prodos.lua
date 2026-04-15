@@ -9,7 +9,7 @@ This tests that C2Reboot displays the volume name while performing a whole-disk 
 
 --[[ BEGINCONFIG ========================================
 
-  DISKARGS="-flop1 $FLOPIMG -flop2 'beagle-graphics-ProDOS.do'"
+  DISKARGS="-flop1 $FLOPIMG -flop2 'beagle-graphics.do'"
 
   ======================================== ENDCONFIG ]]
 

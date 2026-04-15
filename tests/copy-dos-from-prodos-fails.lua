@@ -10,7 +10,7 @@ This tests that C2Reboot displays an error message when attempting to Copy DOS f
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'formatted-dos33-by-v84.do' -flop2 'formatted-dos33-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics-ProDOS.do'"
+  DISKARGS="-flop1 'formatted-dos33-by-v84.do' -flop2 'formatted-dos33-by-v84.do' -flop3 $FLOPIMG -flop4 'beagle-graphics.do'"
 
   ======================================== ENDCONFIG ]]
 

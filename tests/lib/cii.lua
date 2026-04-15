@@ -89,6 +89,7 @@ function cii.DisableRTC()
   machid = machid&0xFE -- strip clock bit of ProDOS MACHID global
   apple2.WriteRAMDevice(0xBF98, machid)
   apple2.Type("E") -- Enter Date
+  cii.Beat()
   apple2.EscapeKey() -- refreshes main menu, which refreshes CRTDAT and MODDAT globals
 end
 
