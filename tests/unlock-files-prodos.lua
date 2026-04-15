@@ -17,7 +17,7 @@
   ======================================== ENDCONFIG ]]
 
 local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
-local actual_filename = s6d2.filename
+local source_filename = s6d2.filename
 local s5d1 = manager.machine.images[":sl5:diskiing:0:525"]
 local reference_filename = s5d1.filename
 s5d1:unload()
@@ -45,7 +45,7 @@ test.Step(
     apple2.Type("G") -- Go
     cii.WaitForMainMenu()
     s6d2:unload() -- eject disk (ensures disk image is updated)
-    test.ExpectBinaryEquals(util.SlurpFile(actual_filename),
+    test.ExpectBinaryEquals(util.SlurpFile(source_filename),
                             util.SlurpFile(reference_filename),
                             "Unlock Files (ProDOS) disk image differs from v8.4")
 end)

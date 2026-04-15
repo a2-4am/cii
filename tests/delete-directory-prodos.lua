@@ -17,9 +17,9 @@
   ======================================== ENDCONFIG ]]
 
 local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
-local actual_filename = s6d2.filename
+local source_filename = s6d2.filename
 local s5d1 = manager.machine.images[":sl5:diskiing:0:525"]
-local expected_filename = s5d1.filename
+local reference_filename = s5d1.filename
 s5d1:unload()
 
 test.Step(
@@ -46,7 +46,7 @@ test.Step(
     -- takes a while
     cii.WaitForMainMenu({timeout=360})
     s6d2:unload() -- eject disk (ensures disk image is updated)
-    test.ExpectBinaryEquals(util.SlurpFile(actual_filename),
-                            util.SlurpFile(expected_filename),
+    test.ExpectBinaryEquals(util.SlurpFile(source_filename),
+                            util.SlurpFile(reference_filename),
                             "Delete Directory (ProDOS) disk image differs from v8.4")
 end)
