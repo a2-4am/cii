@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-02-17.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-04-20.
 
 With Copy ][ Reboot, you can
 
@@ -95,7 +95,7 @@ After booting the Copy ][ Reboot disk or launching the program from your hard dr
                  --v--
 
            Copy ][ Reboot 1.0
- (C) 1982-9 Central Point, (C) 2026 4am
+(C) 1982-9 Central Point, updates by 4am
 ----------------------------------------
 
 X-Copy                 Use hotkey or
@@ -762,7 +762,21 @@ Next Copy ][ Reboot will ask you to enter the new "Subdirectory name:". Type in 
 
 Quit Option
 
-When you want to exit Copy ][ Reboot and run another ProDOS program or boot another disk, choose the Quit option. To boot a new disk, insert the disk and press [Control-Reset]. To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
+When you want to exit Copy ][ Reboot and run another ProDOS program or boot another disk, choose the Quit option. You will see three sub-options:
+
+                 --v--
+
+                       Q-Quit to ProDOS
+                       M-Enter Monitor
+                       R-Reboot
+
+                 --^--
+
+To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
+
+To enter the monitor, press [M]. Once in the monitor, you can press [Ctrl-Reset] to return to Copy ][ Reboot.
+
+To boot a new disk, insert the disk and press [R] to reboot.
 
 Large Memory Boards
 
