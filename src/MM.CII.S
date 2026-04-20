@@ -742,6 +742,12 @@ RAMDCHK2    EQU   *
             STA   SLOTPTR+1   ;Yes:Pt at it.
             LDA   #0
             STA   SLOTPTR
+            LDY   #$FE
+            LDA   (SLOTPTR),Y ;[4am] Is this device non-removable?
+            ASL               ; (Is CnFE bit 7 = 0?)
+            BCS   :NORAMD     ;->Device is removeable, skip it.
+                              ; (removes Superdrive from consideration
+                              ; for reasons explained in BROKEN35)
             LDY   #$07        ;Is this a Smartport device?
             LDA   (SLOTPTR),Y  ; (Is Cn07=0?)
             BNE   :NORAMD     ;->Nope.

@@ -3,6 +3,7 @@
             PUT   VARS
             PUT   ../build/MESSAGES.VARS
             ORG   MESSAGESEND
+
 *
 *
 * Called after the format, and at Reset time.
@@ -68,6 +69,54 @@ SETSIDS     BEQ   :UNISIDE
 *
 UNIFLG      DS    1
 *
+*[4am] Certain SmartPort devices (e.g. Superdrive)
+* set an internal 'busy' status on entry and
+* clear it on exit to avoid re-entry, but if
+* the user presses Ctrl-Reset during a disk
+* operation (such as format) then the 'busy'
+* status is never reset and the device thinks
+* it is 'busy' forever. This condition is checked
+* inside a ROM subroutine which manipulates the
+* stack to return immediately to the non-ROM
+* caller with an error. As long as the ROM was
+* initially called via a JSR to the ProDOS block
+* driver entry point, this works, in the sense
+* that it returns to the non-ROM caller with C=1
+* lets the caller handle that. But if the ROM
+* was called via the SmartPort entry point, the
+* error handler returns without skipping the
+* SmartPort parameters after the JSR, and
+* execution continues (incorrectly) at the first
+* SmartPort parameter.
+* In other words, it is not actually safe to issue
+* any SmartPort call on a Superdrive without first
+* detecting if it is perma-'busy', because even
+* doing a SmartPort RESET Control call might fail
+* in a way that leads execution to non-code and
+* crashes.
+* To detect this perma-'busy' state, we issue an
+* ONLINE MLI command on the unit. If it succeeds
+* (C=0) then we're OK. If it fails, we check if
+* the failure code is 0x01, which technically means
+* 'you passed an invalid MLI command' but we know
+* that's not true (ONLINE is a valid MLI command)
+* so it must mean that we hit the broken fallback
+* in the ROM which sets A=01 on exit.
+*
+BROKEN35    JSR   MLI
+            DB    $C5
+            DW    FFONLINE
+            BCC   :CCQ
+            CMP   #$01
+            BEQ   :CSQ
+:CCQ        CLC
+            RTS
+:CSQ        SEC
+            RTS
+FFONLINE    DB    $2
+FFUNIT      DB    $0
+            DW    VOLNMS
+*
 *
 *
 * Pass unit # in Acc.
@@ -77,7 +126,8 @@ UNIFLG      DS    1
 *          NE if Apple 3.5 drive
 * Also sets up unit numbers in Smartport-call tables.
 *
-SET35       LSR               ;0dss s000
+SET35       STA   FFUNIT
+            LSR               ;0dss s000
             LSR               ;00ds ss00
             LSR               ;000d sss0
             TAX
@@ -111,6 +161,8 @@ SET35       LSR               ;0dss s000
             CLC
             ADC   #3
             STA   SLOTPTR
+            JSR   BROKEN35
+            BCS   :SET35NO
             JSR   :JMPSLOT    ;Call to get the status for this device.
             DB    $00
             DW    :UNITLST
