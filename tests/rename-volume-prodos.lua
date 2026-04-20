@@ -26,7 +26,6 @@ test.Step(
   "Rename Volume (ProDOS) matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
-    -- rename file in root directory first
     apple2.Type("R") -- Rename
     cii.WaitForSelection("RENAMEFILES") -- two items are selected, Rename and Files
     apple2.Type("V") -- Volume
