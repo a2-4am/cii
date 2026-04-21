@@ -10,7 +10,7 @@
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'superdrive' -sl6 'diskiing'"
-  DISKARGS="-flop1 'System Disk v3.1 800K.po' -flop2 'System Disk v3.1 800K.po' -flop3 $FLOPIMG"
+  DISKARGS="-flop1 'System Disk v3.1 800K.po' -flop3 $FLOPIMG"
 
   ======================================== ENDCONFIG ]]
 
