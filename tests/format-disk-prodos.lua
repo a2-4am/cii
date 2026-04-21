@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests formatting a blank 5.25-inch disk in ProDOS format. The operation should succeed and write ProDOS boot blocks and a blank ProDOS root directory with no files. The final disk image should be identical to one where the same operation was performed by v8.4.
+  This tests formatting a blank (formatted but all-0s) 5.25-inch disk in ProDOS format. The operation should succeed and write ProDOS boot blocks and a blank ProDOS root directory with no files. The final disk image should be identical to one where the same operation was performed by v8.4.
 ]]
 
 --[[ BEGINCONFIG ========================================

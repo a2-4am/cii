@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests formatting a blank 5.25-inch disk in DOS 3.3 format, with Central Point's 'no-boot' boot sector on T00S00 and no DOS on tracks 1 and 2. The operation should succeed, however the final disk image may not be identical to one where the same operation was performed by v8.4, because v8.4 had an off-by-1 bug in its no-boot memory copy loop that ended up storing garbage in byte $A2 of T00S00 of DOS 3.3-formatted disks. C2Reboot fixes this bug, hence the disk images may differ on that one specific byte. Any other differences are a regression.
+  This tests formatting a blank (formatted but all-0s) 5.25-inch disk in DOS 3.3 format, with Central Point's 'no-boot' boot sector on T00S00 and no DOS on tracks 1 and 2. The operation should succeed, however the final disk image may not be identical to one where the same operation was performed by v8.4, because v8.4 had an off-by-1 bug in its no-boot memory copy loop that ended up storing garbage in byte $A2 of T00S00 of DOS 3.3-formatted disks. C2Reboot fixes this bug, hence the disk images may differ on that one specific byte. Any other differences are a regression.
 ]]
 
 --[[ BEGINCONFIG ========================================
