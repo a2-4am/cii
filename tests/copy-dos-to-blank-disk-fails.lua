@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests that Copy DOS displays an error message when attempting to Copy DOS onto an unformatted disk, matching v8.4 behavior.
+  This tests that Copy DOS displays an error message when attempting to Copy DOS onto a blank (all-0s) disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
@@ -26,7 +26,7 @@ s5d2:unload()
 s6d2:unload()
 
 test.Step(
-  "Copy DOS to unformatted disk fails, matches v8.4 behavior",
+  "Copy DOS to blank disk fails, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(source_filename)
@@ -52,5 +52,5 @@ test.Step(
     -- target disk should not be modified
     test.ExpectBinaryEquals(util.SlurpFile(target_filename),
                             util.SlurpFile(blank_filename),
-                            "Copy DOS to unformatted disk unexpectedly modified target disk")
+                            "Copy DOS to blank disk unexpectedly modified target disk")
 end)
