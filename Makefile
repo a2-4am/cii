@@ -487,7 +487,7 @@ $(ALPHAPACKX7): $(ALPHAPACKO)
 	@$(call X7,$(ALPHAPACKO),7)
 
 mount: $(BUILDDISK)
-	@open "$(BUILDDISK)"
+	@open "$(BUILDDISK)" &
 
 clean:
 	@rm -rf "$(BUILDDIR)"
