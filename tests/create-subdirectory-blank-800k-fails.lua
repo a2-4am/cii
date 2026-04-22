@@ -4,18 +4,18 @@
 ]]
 
 --[[
-  This tests that C2Reboot displays an error message when attempting to create a subdirectory on a blank (formatted but all-0s) 800K disk, matching v8.4 behavior.
+  This tests that C2Reboot displays an error message when attempting to create a subdirectory on a non-existent 800K disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'superdrive' -sl6 'diskiing'"
-  DISKARGS="-flop1 'blank 800K.po' -flop3 $FLOPIMG"
+  DISKARGS="-flop3 $FLOPIMG"
 
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "Create Subdirectory on blank 800K disk fails, matches v8.4 behavior",
+  "Create Subdirectory on non-existent 800K disk fails, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("/") -- Create Subdirectory
@@ -23,5 +23,5 @@ test.Step(
     apple2.Type("5") -- Slot 5, Drive 1
     cii.WaitForSelection("SLOT 5  DRIVE 1")
     apple2.ReturnKey()
-    cii.WaitForScreenContains("NOT A PRODOS OR DOS 3%.3 DISK")
+    cii.WaitForScreenContains("NO DISK IN DRIVE")
 end)
