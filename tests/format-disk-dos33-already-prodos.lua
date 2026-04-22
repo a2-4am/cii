@@ -38,7 +38,7 @@ test.Step(
     cii.WaitForScreenContains("INSERT DISK TO FORMAT")
     cii.WaitForScreenContains("READY TO FORMAT %(Y/N%) %?")
     apple2.Type("Y")
-    cii.WaitForScreenContains("DESTROY /BEAGLE.GRAPHICS %?") -- volume name read from already-formatted disk
+    cii.WaitForScreenContains("DESTROY /BEAGLE%.GRAPHICS %?") -- volume name read from already-formatted disk
     apple2.Type("Y")
     cii.WaitForScreenContains("FORMATTING DISK")
     cii.WaitForScreenContains("FORMATTING COMPLETE")

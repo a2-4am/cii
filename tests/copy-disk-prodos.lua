@@ -31,5 +31,5 @@ test.Step(
     cii.WaitForScreenContains("INSERT DISKS")
     apple2.ReturnKey()
     cii.WaitForScreenContains("READING TRACK")
-    test.Expect(cii.ScreenContains("/BEAGLE.GRAPHICS"), "Copy Disk does not display source disk volume name")
+    test.Expect(cii.ScreenContains("/BEAGLE%.GRAPHICS"), "Copy Disk does not display source disk volume name")
 end)

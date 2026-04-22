@@ -52,7 +52,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitFor40Column()
     cii.WaitForScreenContains("ALPHABETIZE CATALOG")
-    cii.WaitForScreenContains("%*DP.OBJ1")
+    cii.WaitForScreenContains("%*DP%.OBJ1")
     apple2.Type(" ") -- page
     cii.WaitForScreenContains("%*PATTERNS")
     apple2.Type(" ") -- page

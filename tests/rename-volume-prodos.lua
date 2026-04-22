@@ -34,7 +34,7 @@ test.Step(
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
     cii.WaitForScreenContains("RENAME VOLUME")
-    cii.WaitForScreenContains("/BEAGLE.GRAPHICS")
+    cii.WaitForScreenContains("/BEAGLE%.GRAPHICS")
     cii.WaitForScreenContains("NEW VOLUME NAME: /")
     apple2.TypeLine("BG")
     apple2.Type("G") -- Go
