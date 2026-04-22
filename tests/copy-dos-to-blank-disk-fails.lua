@@ -45,7 +45,7 @@ test.Step(
     cii.WaitForScreenContains("INSERT DISKS")
     apple2.ReturnKey()
     cii.WaitForScreenContains("COPY DOS         TARGET: SLOT 6  DRIVE 2")
-    cii.WaitForScreenContains("NOT A PRODOS OR DOS 3.3 DISK")
+    cii.WaitForScreenContains("NOT A PRODOS OR DOS 3%.3 DISK")
     apple2.ReturnKey()
     s6d2:unload()
     cii.WaitForMainMenu()

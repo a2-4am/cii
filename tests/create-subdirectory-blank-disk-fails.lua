@@ -22,5 +22,5 @@ test.Step(
     apple2.Type("62") -- Slot 6, Drive 2
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
-    cii.WaitForScreenContains("NOT A DOS 3.3 FUNCTION")
+    cii.WaitForScreenContains("NOT A DOS 3%.3 FUNCTION")
 end)

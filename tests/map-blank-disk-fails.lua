@@ -22,5 +22,5 @@ test.Step(
     apple2.Type("62") -- Slot 6, Drive 2
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
-    cii.WaitForScreenContains("NOT A PRODOS OR DOS 3.3 DISK")
+    cii.WaitForScreenContains("NOT A PRODOS OR DOS 3%.3 DISK")
 end)

@@ -33,7 +33,7 @@ test.Step(
     apple2.Type("62") -- Slot 6, Drive 2
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
-    cii.WaitForScreenContains("FORMAT DISK DOS 3.3")
+    cii.WaitForScreenContains("FORMAT DISK DOS 3%.3")
     cii.WaitForScreenContains("SLOT 6  DRIVE 2")
     cii.WaitForScreenContains("INSERT DISK TO FORMAT")
     cii.WaitForScreenContains("READY TO FORMAT %(Y/N%) %?")
