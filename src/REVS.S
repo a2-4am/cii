@@ -148,8 +148,16 @@
 *    tables makes all Copy Disk operations of floppy disks fail
 *    until the program is restarted and the interleave tables
 *    are reinitialized. This has been fixed by moving the bitmap
-*    buffer starting address down to $1C00, which is unused at
-*    the time READBM is called.
+*    buffer starting address down in memory.
+*  Apple Superdrive device can enter a "permanently busy" state
+*    if you interrupt a long-running disk operation such as
+*    Format Disk. Once the device is in this state, all
+*    SmartPort API calls on the drive will fast-fail in a way
+*    that corrupts the stack, leading to crashes. This has been
+*    worked around by detecting the "perma-busy" state before
+*    issuing SmartPort API calls.
+*  Fixed off-by-1 bug that ended up writing junk data at the
+*    end of the boot sector code on DOS-formatted floppy disks.
 *  Use lowercase for most strings, if available.
 *  Add single-letter hotkeys to the main menu and submenus.
 *    Most are back-ported from v9.
@@ -185,10 +193,12 @@
 *      $D8  SND  Apple IIgs Audio
 *      $E0  LBR  Archive
 *  Change "[D]elete" to "[U]nmark" in Copy File list.
-*    [D] still works.
+*    [D] hotkey still works.
 *  Change "[Q]" to "[Return]" in Quit options.
-*    [Q] still works.
-*  Add "[M] to enter monitor" in Quit options. This was
+*    [Q] hotkey still works.
+*  Change Quit menu to use "Select option:" submenu
+*    like other features.
+*  Add "[M]-Enter Monitor" in Quit options. This was
 *    first implemented in v6.0 but never displayed.
 *  If there were no prompts at program startup, the header
 *    was briefly displayed then cleared then displayed again.
@@ -199,8 +209,6 @@
 *    if available. Other catalog displays now use 40 columns.
 *  No longer warn on startup about ProDOS 1.3. You should
 *    still upgrade ProDOS though. That is a very old version!
-*  Fixed off-by-1 bug that ended up writing junk data at the
-*    end of the boot sector code on DOS-formatted floppy disks.
 *  Rebranded as Copy ][ Reboot.
 *  Distributed on a self-booting disk image with
 *    ProDOS 2.4.3 from <https://prodos8.com/>
@@ -209,4 +217,3 @@
 *
 ********************************
 *
-
