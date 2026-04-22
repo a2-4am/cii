@@ -36,5 +36,5 @@ test.Step(
     cii.WaitForScreenContains("INSERT DISKS")
     apple2.ReturnKey()
     cii.WaitForScreenContains("COPY DOS         TARGET: SLOT 6  DRIVE 1")
-    cii.WaitForScreenContains("I/O ERROR: TRACK $11, SECTOR %$0")
+    cii.WaitForScreenContains("I/O ERROR: TRACK %$11, SECTOR %$0")
 end)

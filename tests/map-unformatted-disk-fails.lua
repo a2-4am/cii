@@ -22,5 +22,5 @@ test.Step(
     apple2.Type("62") -- Slot 6, Drive 2
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
-    cii.WaitForScreenContains("I/O ERROR: TRACK $11, SECTOR %$0")
+    cii.WaitForScreenContains("I/O ERROR: TRACK %$11, SECTOR %$0")
 end)
