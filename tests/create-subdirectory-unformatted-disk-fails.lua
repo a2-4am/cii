@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests that C2Reboot displays an error message when attempting to create a subdirectory on a blank (formatted but all-0s) disk, matching v8.4 behavior.
+  This tests that C2Reboot displays an error message when attempting to create a subdirectory on an unformatted disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
