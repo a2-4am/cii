@@ -1,5 +1,6 @@
 DISKVOLUME=COPY.II.REBOOT
 SYSNAME=UTIL.SYSTEM
+export SOURCE_DATE_EPOCH = $(shell git log -1 --format=%ct)
 
 BUILDDIR=build
 BUILDLOG=$(BUILDDIR)/log
@@ -34,17 +35,14 @@ POSTMERLIN = (\
 	$(CHECKOK))
 
 # https://github.com/mach-kernel/cadius
-CADIUS=cadius
+CADIUS=TZ=UTC0 cadius
 COPY = (\
 	printf "%-10b%-30b %s %-35b" "Copy" "$(OBJ_COLOR)`echo $1|cut -d\# -f1`$(NO_COLOR)" "->" "$(OBJ_COLOR)$(BUILDDISK)$(NO_COLOR)"; \
+	touch -d"@$(SOURCE_DATE_EPOCH)" "$1"; \
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$1" -C >> $(BUILDLOG); \
 	$(CHECKOK))
 
 # https://github.com/einar-saukas/ZX0
-# note: -b flag to pack backwards
-# you can also add a -q flag during development
-# to do worse compression at a more reasonable speed
-# (does not affect format, so unpacker still works)
 ZX0BIN=zx0 -b
 ZX0 = (\
 	printf "%-10b%-30b %s %-35b" "Compress" "$(OBJ_COLOR)`echo $1|sed s/\.O\.O/.O/g`$(NO_COLOR)" "->" "$(OBJ_COLOR)$@$(NO_COLOR)"; \
