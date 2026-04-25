@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests that C2Reboot displays an error message when attempting to rename a a blank (formatted but all-0s) 3.5-inch (800K) disk, matching v8.4 behavior.
+  This tests that C2Reboot displays an error message when attempting to rename a blank (formatted but all-0s) 3.5-inch (800K) disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
