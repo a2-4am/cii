@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-04-20.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-04-25.
 
 With Copy ][ Reboot, you can
 
@@ -108,7 +108,7 @@ F-Format Disk
 Y-Verify
 V-View Files
 M-Map Disk
-P-Change Boot Program
+B-Change Boot Program
 U-Undelete Files
 /-Create Subdirectory
 E-Enter Date
