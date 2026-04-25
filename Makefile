@@ -1,5 +1,7 @@
 DISKVOLUME=COPY.II.REBOOT
 SYSNAME=UTIL.SYSTEM
+SOURCE_DATE_UTC := $(shell TZ=UTC0 git show -s --date='format-local:%Y-%m-%dT%H:%M:%SZ' --format="%cd")
+export SOURCE_DATE_EPOCH = $(shell git show -s --format=%ct)
 
 BUILDDIR=build
 BUILDLOG=$(BUILDDIR)/log
@@ -34,9 +36,10 @@ POSTMERLIN = (\
 	$(CHECKOK))
 
 # https://github.com/mach-kernel/cadius
-CADIUS=cadius
+CADIUS=TZ=UTC0 cadius
 COPY = (\
 	printf "%-10b%-30b %s %-35b" "Copy" "$(OBJ_COLOR)`echo $1|cut -d\# -f1`$(NO_COLOR)" "->" "$(OBJ_COLOR)$(BUILDDISK)$(NO_COLOR)"; \
+	touch -d"$(SOURCE_DATE_UTC)" "$1"; \
 	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$1" -C >> $(BUILDLOG); \
 	$(CHECKOK))
 
