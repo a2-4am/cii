@@ -14,7 +14,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "Copy Files from non-existent disk fails, matches v8.4 behavior",
+  "Copy Files to non-existent disk fails, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy
