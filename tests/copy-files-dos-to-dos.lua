@@ -25,7 +25,7 @@ s5d1:unload()
 s5d2:unload()
 
 test.Step(
-  "Copy files from DOS disk to DOS disk matches v8.4 behavior",
+  "Copy Files from DOS disk to DOS disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(target_filename)
@@ -51,5 +51,5 @@ test.Step(
     s6d1:unload()
     test.ExpectBinaryEquals(util.SlurpFile(target_filename),
                             util.SlurpFile(reference_filename),
-                            "Copy files from DOS disk to DOS disk does not match v8.4")
+                            "Copy Files from DOS disk to DOS disk does not match v8.4")
 end)

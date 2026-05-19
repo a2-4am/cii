@@ -14,7 +14,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "Copy files when file exists prompts for action, matches v8.4 behavior",
+  "Copy Files when file exists prompts for action, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy
@@ -44,6 +44,6 @@ test.Step(
     cii.WaitForScreenContains("%[C]OPY ANYWAY, %[N]EW NAME, %[D]ON'T COPY")
     cii.WaitForScreenContains("%[ESC]%-EXIT COPY")
     local screen = apple2.GrabTextScreen()
-    test.ExpectIMatch(screen, "FILE: STARTUP", "Copy files did not prompt correctly")
-    test.ExpectIMatch(screen, "ALREADY EXISTS & IS LOCKED%.  NOW WHAT%?", "Copy files did not prompt correctly")
+    test.ExpectIMatch(screen, "FILE: STARTUP", "Copy Files did not prompt correctly")
+    test.ExpectIMatch(screen, "ALREADY EXISTS & IS LOCKED%.  NOW WHAT%?", "Copy Files did not prompt correctly")
 end)

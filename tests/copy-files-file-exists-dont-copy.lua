@@ -20,7 +20,7 @@ local s6d2 = manager.machine.images[":sl6:diskiing:1:525"]
 local source_filename = s6d2.filename
 
 test.Step(
-  "Copy files when file exists prompts for action, selecting \"Don't Copy\" matches v8.4 behavior",
+  "Copy Files when file exists prompts for action, selecting \"Don't Copy\" matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("X") -- Copy
@@ -63,5 +63,5 @@ test.Step(
     test.ExpectBinaryEquals(
       util.SlurpFile(reference_filename),
       util.SlurpFile(source_filename),
-      "Copy files with file exists, user said don't copy on each file, but disk was unexpectedly modified")
+      "Copy Files with file exists, user said don't copy on each file, but disk was unexpectedly modified")
 end)
