@@ -14,7 +14,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "Verify files on disk with bad sectors matches v8.4 behavior",
+  "Verify files (ProDOS) with bad sectors matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
