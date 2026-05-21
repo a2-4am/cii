@@ -1,0 +1,30 @@
+--[[
+  License:MIT
+  Copyright (C) 2026 4am
+]]
+
+--[[
+  This tests that C2Reboot displays an error message when attempting to verify disk on a non-existent 3.5-inch (800K) disk, matching v8.4 behavior.
+]]
+
+--[[ BEGINCONFIG ========================================
+
+  MODELARGS="-sl5 'superdrive' -sl6 'diskiing'"
+  DISKARGS="-flop3 $FLOPIMG"
+
+  ======================================== ENDCONFIG ]]
+
+test.Step(
+  "Verify disk on non-existent 800K disk fails, matches v8.4 behavior",
+  function()
+    cii.WaitForMainMenu()
+    apple2.Type("Y") -- Verify
+    cii.WaitForSelection("FILESVERIFY") -- two items are selected, Files and Verify
+    apple2.Type("D") -- Disk
+    cii.WaitForScreenContains("SELECT DEVICE:")
+    apple2.Type("5") -- Slot 5, Drive 1
+    cii.WaitForSelection("SLOT 5  DRIVE 1")
+    apple2.ReturnKey()
+    cii.WaitForScreenContains("ERROR: BLOCK %$0000")
+    cii.WaitForScreenContains("TOTAL: 1 ERROR")
+end)
