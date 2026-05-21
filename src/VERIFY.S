@@ -367,6 +367,35 @@
 *    DISK SPEED CRITICAL CODE      *
 ************************************
 *
+CRIT2       EQU   *
+            PHP
+            SEI
+            LDY   #$00        ;INIT COUNT
+            STY   HEXNUM+1
+            LDX   HSLOT
+]SPOT       =     *
+:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
+            BPL   :LOOPD5
+            CMP   #$D5
+            BNE   :LOOPD5
+:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
+            BPL   :NOTD5
+            CMP   #$D5
+            BEQ   :NOTD5
+:LOOP1      PHA               ;20 U-SEC LOOP
+            PLA
+:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
+            CMP   #$D5        ;DONE COUNTING?
+            BEQ   :DONE
+            INY
+            BNE   :LOOP1
+            INC   HEXNUM+1
+            BNE   :LOOP2
+            ERR   {*&$FF00}-{]SPOT&$FF00}
+:DONE       STY   HEXNUM
+            PLP
+            RTS
+*
 CRIT1       EQU   *
             PHP
             SEI
@@ -413,35 +442,6 @@ CRIT1       EQU   *
             CMP   $00
 :WRITE0     STA   $C08D,X
             CMP   $C08C,X
-            RTS
-*
-CRIT2       EQU   *
-            PHP
-            SEI
-            LDY   #$00        ;INIT COUNT
-            STY   HEXNUM+1
-            LDX   HSLOT
-]SPOT       =     *
-:LOOPD5     LDA   $C08C,X     ;WAIT FOR 'D5'
-            BPL   :LOOPD5
-            CMP   #$D5
-            BNE   :LOOPD5
-:NOTD5      LDA   $C08C,X     ;WAIT FOR NOND5
-            BPL   :NOTD5
-            CMP   #$D5
-            BEQ   :NOTD5
-:LOOP1      PHA               ;20 U-SEC LOOP
-            PLA
-:LOOP2      LDA   $C08C,X     ;20 U-SEC LOOP
-            CMP   #$D5        ;DONE COUNTING?
-            BEQ   :DONE
-            INY
-            BNE   :LOOP1
-            INC   HEXNUM+1
-            BNE   :LOOP2
-            ERR   {*&$FF00}-{]SPOT&$FF00}
-:DONE       STY   HEXNUM
-            PLP
             RTS
 *
 INTLV1      EQU   *

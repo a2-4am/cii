@@ -26,6 +26,8 @@
 * SETHIM
 * DOWAIT
 *private:                        *
+* SAVECURR - save file index     *
+* RESTCURR - restore file index  *
 * MATCH - pattern matcher        *
 * TYPES - recognized filetypes   *
 * PLACE - input file into entry  *
@@ -223,6 +225,15 @@ PCATLN      EQU   *
             JSR   HEXDC2
             JMP   PRT5RJ
 *
+SAVECURR    EQU   *           ;SAVE CURRENT FILE IDX
+            LDA   CURR
+            STA   LASTM
+            RTS
+RESTCURR    EQU   *           ;RESTORE CURRENT FILE IDX
+            LDA   LASTM
+            STA   CURR
+            RTS
+*
 *
 * THE PATTERN MATCHER ENTRY POINT
 *
@@ -236,8 +247,7 @@ MATCH       EQU   *
             LDY   #$00
             JSR   :RECURSE
             BCS   :MOUT
-            LDA   CURR
-            STA   LASTM
+            JSR   SAVECURR
 :MOUT       RTS
 *
 * THE PATTERN MATCHER ITSELF
@@ -767,6 +777,7 @@ CPYNUM      EQU   *
 :NUMTEMP    DB    $0
 *
 CPYENT      EQU   *
+            JSR   SAVECURR    ;SAVE CURRENT FILE IDX
             JSR   GETPAT      ;GET FILENAME PATTERN
             BCS   :ENTOUT
             LDA   #$00
@@ -782,9 +793,8 @@ CPYENT      EQU   *
 :ENTNEXT    JSR   SEECAT
             JSR   SCROLF
             BCC   ]ENTLOOP
-            LDA   LASTM       ;RESTORE
-            STA   CURR        ;CURRENT FILE
-:ENTOUT     JMP   ST8MSG
+:ENTOUT     JSR   RESTCURR    ;RESTORE CURRENT FILE IDX
+            JMP   ST8MSG
 *
 CPYDEL      EQU   *
             JSR   UNMARK
@@ -803,7 +813,8 @@ NIL         EQU   *
             CLC
             RTS
 *
-PATTRN      EQU   *
+PATTRN
+            JSR   SAVECURR    ;SAVE CURRENT FILE IDX
             JSR   GETPAT      ;READ PATTERN
             BCS   :PATTOUT
             LDA   #$00        ;INITIALIZE
@@ -816,13 +827,11 @@ PATTRN      EQU   *
 :PATTNEXT   JSR   SEECAT      ;DISPLAY &
             JSR   SCROLF      ;SCROLL
             BCC   ]PATTLOOP   ;TIL END
-            LDA   LASTM       ;THEN RESTORE
-            STA   CURR        ;CURRENT FILE
-:PATTOUT    JMP   ST8MSG
+:PATTOUT    JSR   RESTCURR    ;RESTORE CURRENT FILE IDX
+            JMP   ST8MSG
 *
 NOPATT      EQU   *
-            LDA   CURR
-            STA   LASTM
+            JSR   SAVECURR    ;SAVE CURRENT FILE IDX
             JSR   GET1FNM     ;GET 1 FILENAME
             BCS   :NOPTOUT
             LDA   #$00
@@ -832,9 +841,8 @@ NOPATT      EQU   *
             JSR   SEECAT
             JSR   SCROLF      ;NO MATCH:
             BCC   ]NOPTLOOP   ;TRY NEXT FILE
-            LDA   LASTM       ;NONE:RESTORE
-            STA   CURR        ;CURRENT FILE
-:NOPTOUT    JMP   ST8MSG
+:NOPTOUT    JSR   RESTCURR    ;RESTORE CURRENT FILE IDX
+            JMP   ST8MSG
 *
 LOKAST      EQU   *
             JSR   CURPNT
@@ -846,6 +854,7 @@ LOKAST      EQU   *
             RTS
 *
 LOKPAT      EQU   *
+            JSR   SAVECURR    ;SAVE CURRENT FILE IDX
             JSR   GETPAT      ;GET PATTERN
             BCS   :LOKOUT
 *           JSR   ASKLOK
@@ -875,9 +884,8 @@ LOKPAT      EQU   *
 :LOKNEXT    JSR   SEECAT
             JSR   SCROLF
             BCC   ]LOKLOOP
-            LDA   LASTM       ;RESTORE
-            STA   CURR        ;CURRENT FILE
-:LOKOUT     JMP   ST8MSG
+:LOKOUT     JSR   RESTCURR    ;RESTORE CURRENT FILE IDX
+            JMP   ST8MSG
 :LOCK       DB    $0
 *
 NEWNAM      EQU   *
