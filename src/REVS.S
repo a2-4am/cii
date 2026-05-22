@@ -137,8 +137,6 @@
 *    The utilities stand alone.
 *  Remove printer support.
 *  Don't format RAM disk on quit if we didn't actually find one.
-*    This fixes a long-standing bug that could overwrite block 2
-*    of the last used device before quitting to ProDOS.
 *  PSPACE routine (used by all Catalog functions) and PUNDO0
 *    (used by Undelete Files) calls READBM to read the entire
 *    volume bitmap into a variable length buffer. On a large
@@ -194,8 +192,6 @@
 *      $E0  LBR  Archive
 *  Change "[D]elete" to "[U]nmark" in Copy File list.
 *    [D] hotkey still works.
-*  Change "[Q]" to "[Return]" in Quit options.
-*    [Q] hotkey still works.
 *  Change Quit menu to use "Select option:" submenu
 *    like other features.
 *  Add "[M]-Enter Monitor" in Quit options. This was

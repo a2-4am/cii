@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-04-25.
+This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-05-22.
 
 With Copy ][ Reboot, you can
 
@@ -87,6 +87,20 @@ When you boot the Copy ][ Reboot disk, the program automatically starts up and t
 If you have a hard disk, you may find it convenient to copy the program to your hard disk. The entire program is in the file UTIL.SYSTEM.
 
 The Copy ][ Reboot disk is a standard ProDOS disk and is not copy-protected in any way. You can make a backup of the disk using the Copy Disk option, or with any other standard disk copy program. We encourage you to back up Copy ][ Reboot right away, then put the original disk in a safe place, in case anything happens to your copy.
+
+Differences from Copy ][ Plus 8.4 to Copy ][ Reboot 1.0
+
+- Bit copy support has been removed.
+- Printer support has been removed.
+- Menu items and messages are displayed in mixed case if available.
+- Menu items and options can be selected with single-letter hotkeys.
+- Catalog displays and file lists recognize 23 more filetypes, mostly IIgs-related.
+- Directory trees and "Catalog w/File Lengths" always use 80 columns if available. Other "Catalog Disk" options always use 40 columns.
+- "Change Boot Program" supports Pronto-DOS in addition to Apple DOS 3.3.
+- During "Copy Files" file selection, "Delete" has been renamed to "Unmark", and the hotkey [D] has been changed to [U]. Pressing [D] still works to unmark a file.
+- "Quit" uses the same options UI as other features.
+- "Quit" options include "[M]-Enter Monitor" (which was first implemented in v6.0 but never displayed).
+- "Catalog Disk" on a 32MB hard disk would cause all subsequent floppy disk operations to fail until the program was relaunched. This has been fixed.
 
 The Main Menu
 
