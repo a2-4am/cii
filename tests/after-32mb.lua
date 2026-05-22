@@ -17,7 +17,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "Catalog 32MB device",
+  "Catalog 32MB volume",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
@@ -34,7 +34,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then catalog floppy (DOS)",
+  "Catalog 32MB volume then catalog floppy (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
@@ -51,7 +51,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then catalog floppy (ProDOS)",
+  "Catalog 32MB volume then catalog floppy (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
@@ -68,7 +68,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then delete files (DOS)",
+  "Catalog 32MB volume then delete files (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -86,7 +86,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then delete files (ProDOS)",
+  "Catalog 32MB volume then delete files (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -104,7 +104,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then delete disk (DOS)",
+  "Catalog 32MB volume then delete disk (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -121,7 +121,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then delete disk (ProDOS)",
+  "Catalog 32MB volume then delete disk (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -138,7 +138,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then delete DOS",
+  "Catalog 32MB volume then delete DOS",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -155,7 +155,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then lock/unlock files (DOS)",
+  "Catalog 32MB volume then lock/unlock files (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("L") -- Lock/Unlock
@@ -171,7 +171,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then lock/unlock files (ProDOS)",
+  "Catalog 32MB volume then lock/unlock files (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("L") -- Lock/Unlock
@@ -187,7 +187,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then rename files (DOS)",
+  "Catalog 32MB volume then rename files (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("R") -- Rename
@@ -205,7 +205,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then rename files (ProDOS)",
+  "Catalog 32MB volume then rename files (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("R") -- Rename
@@ -223,7 +223,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then rename volume",
+  "Catalog 32MB volume then rename volume",
   function()
     cii.WaitForMainMenu()
     apple2.Type("R") -- Rename
@@ -240,7 +240,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then alphabetize catalog (DOS)",
+  "Catalog 32MB volume then alphabetize catalog (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("A") -- Alphabetize Catalog
@@ -256,7 +256,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then alphabetize catalog (ProDOS)",
+  "Catalog 32MB volume then alphabetize catalog (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("A") -- Alphabetize Catalog
@@ -272,7 +272,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then verify files (DOS)",
+  "Catalog 32MB volume then verify files (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
@@ -295,7 +295,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then verify files (ProDOS)",
+  "Catalog 32MB volume then verify files (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
@@ -313,7 +313,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then verify disk",
+  "Catalog 32MB volume then verify disk",
   function()
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
@@ -330,7 +330,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then view files as values (DOS)",
+  "Catalog 32MB volume then view files as values (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -348,7 +348,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then view files as values (ProDOS)",
+  "Catalog 32MB volume then view files as values (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -366,7 +366,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then view files as text (DOS)",
+  "Catalog 32MB volume then view files as text (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -384,7 +384,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then view files as text (ProDOS)",
+  "Catalog 32MB volume then view files as text (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -402,7 +402,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then map disk (DOS)",
+  "Catalog 32MB volume then map disk (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("M") -- Map Disk
@@ -422,7 +422,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then map disk (ProDOS)",
+  "Catalog 32MB volume then map disk (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("M") -- Map Disk
@@ -442,7 +442,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then change boot program",
+  "Catalog 32MB volume then change boot program",
   function()
     cii.WaitForMainMenu()
     apple2.Type("B") -- Change Boot Program
@@ -457,7 +457,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then undelete files (DOS)",
+  "Catalog 32MB volume then undelete files (DOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("U") -- Undelete Files
@@ -473,7 +473,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then undelete files (ProDOS)",
+  "Catalog 32MB volume then undelete files (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("U") -- Undelete Files
@@ -489,7 +489,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB device then create subdirectory (ProDOS)",
+  "Catalog 32MB volume then create subdirectory (ProDOS)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("/") -- Create Subdirectory
