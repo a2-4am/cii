@@ -34,7 +34,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then catalog floppy (DOS)",
+  "Catalog 32MB volume then catalog floppy (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("C") -- Catalog
@@ -45,7 +45,7 @@ test.Step(
     cii.WaitForSelection("SLOT 5  DRIVE 1")
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
-    test.ExpectIMatch(apple2.GrabTextScreen(), "SECTORS FREE:528  USED:32    TOTAL:560", "After 32MB catalog, catalog floppy (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "SECTORS FREE:528  USED:32    TOTAL:560", "After 32MB catalog, catalog floppy (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -68,7 +68,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then delete files (DOS)",
+  "Catalog 32MB volume then delete files (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -80,7 +80,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, delete files (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, delete files (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -104,7 +104,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then delete disk (DOS)",
+  "Catalog 32MB volume then delete disk (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("D") -- Delete
@@ -115,7 +115,7 @@ test.Step(
     cii.WaitForSelection("SLOT 5  DRIVE 1")
     apple2.ReturnKey()
     cii.WaitForScreenContains("READY TO DELETE %(Y/N%) %?")
-    test.ExpectIMatch(apple2.GrabTextScreen(), "DISK VOLUME 254", "After 32MB catalog, delete disk (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "DISK VOLUME 254", "After 32MB catalog, delete disk (DOS 3.3) failed")
     apple2.EscapeKey()
     cii.WaitForMainMenu()
 end)
@@ -155,7 +155,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then lock/unlock files (DOS)",
+  "Catalog 32MB volume then lock/unlock files (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("L") -- Lock/Unlock
@@ -165,7 +165,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, lock/unlock files (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, lock/unlock files (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -187,7 +187,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then rename files (DOS)",
+  "Catalog 32MB volume then rename files (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("R") -- Rename
@@ -199,7 +199,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, rename files (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, rename files (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -240,7 +240,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then alphabetize catalog (DOS)",
+  "Catalog 32MB volume then alphabetize catalog (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("A") -- Alphabetize Catalog
@@ -250,7 +250,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, alphabetize catalog (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, alphabetize catalog (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -272,7 +272,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then verify files (DOS)",
+  "Catalog 32MB volume then verify files (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
@@ -289,7 +289,7 @@ test.Step(
     cii.WaitForScreenContains("%[RETURN]%-TOGGLE MARKER, %[E]NTER")
     apple2.Type("G") -- Go
     cii.WaitForScreenContains("I/O ERROR: TRACK %$1E, SECTOR %$3")
-    test.ExpectMatch(cii.GetSelection(), "RENUMBER", "After 32MB catalog, verify files (DOS) failed")
+    test.ExpectMatch(cii.GetSelection(), "RENUMBER", "After 32MB catalog, verify files (DOS 3.3) failed")
     apple2.EscapeKey() -- Return here would show the total errors, but we don't care
     cii.WaitForMainMenu()
 end)
@@ -330,7 +330,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then view files as values (DOS)",
+  "Catalog 32MB volume then view files as values (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -342,7 +342,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, view files as values (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, view files as values (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -366,7 +366,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then view files as text (DOS)",
+  "Catalog 32MB volume then view files as text (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -378,7 +378,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, view files as text (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, view files as text (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -402,7 +402,7 @@ test.Step(
 end)
 
 test.Step(
-  "Catalog 32MB volume then map disk (DOS)",
+  "Catalog 32MB volume then map disk (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("M") -- Map Disk
@@ -412,11 +412,11 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("%[RETURN]%-CONTINUE, %[ESC]%-EXIT")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, map disk (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, map disk (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForScreenContains("0123456789ABCDEF0123456789ABCDEF012")
     cii.WaitForScreenContains("%[RETURN]%-CONTINUE, %[ESC]%-EXIT")
-    test.ExpectEquals(cii.GetSelection(), "********************************", "After 32MB catalog, map disk (DOS) failed")
+    test.ExpectEquals(cii.GetSelection(), "********************************", "After 32MB catalog, map disk (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -436,7 +436,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("0123456789ABCDEF0123456789ABCDEF012")
     cii.WaitForScreenContains("%[RETURN]%-CONTINUE, %[ESC]%-EXIT")
-    test.ExpectEquals(cii.GetSelection(), "**************", "After 32MB catalog, map disk (DOS) failed")
+    test.ExpectEquals(cii.GetSelection(), "**************", "After 32MB catalog, map disk (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)
@@ -451,13 +451,13 @@ test.Step(
     cii.WaitForSelection("SLOT 6  DRIVE 2")
     apple2.ReturnKey()
     cii.WaitForScreenContains("%[E]NTER FILENAME, %[G]O, %[ESC]%-EXIT") -- note different prompt wording from v8.4
-    test.ExpectIMatch(apple2.GrabTextScreen(), "FILE: HELLO", "After 32MB catalog, change boot program (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "FILE: HELLO", "After 32MB catalog, change boot program (DOS 3.3) failed")
     apple2.EscapeKey()
     cii.WaitForMainMenu()
 end)
 
 test.Step(
-  "Catalog 32MB volume then undelete files (DOS)",
+  "Catalog 32MB volume then undelete files (DOS 3.3)",
   function()
     cii.WaitForMainMenu()
     apple2.Type("U") -- Undelete Files
@@ -467,7 +467,7 @@ test.Step(
     apple2.ReturnKey()
     cii.WaitForScreenContains("PRESS %[RETURN]")
     -- valid test even though it finds no files because v8.4 wouldn't even be able to read the disk catalog
-    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, undelete files (DOS) failed")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "NO FILES", "After 32MB catalog, undelete files (DOS 3.3) failed")
     apple2.ReturnKey()
     cii.WaitForMainMenu()
 end)

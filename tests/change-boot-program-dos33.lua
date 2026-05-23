@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests C2Reboot attempting to change the boot program on a DOS disk. The test should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
+  This tests C2Reboot attempting to change the boot program on a DOS 3.3-formatted disk. The test should succeed, matching v8.4 behavior. The final disk image should be identical to one where the same operation was performed by v8.4.
 ]]
 
 --[[ BEGINCONFIG ========================================
@@ -21,7 +21,7 @@ local reference_filename = s5d1.filename
 s5d1:unload()
 
 test.Step(
-  "Change Boot Program on DOS disk matches v8.4 behavior",
+  "Change Boot Program (DOS 3.3) matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("B") -- Change Boot Program

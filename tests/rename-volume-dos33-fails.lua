@@ -21,7 +21,7 @@ local source_filename = s6d2.filename
 s5d1:unload()
 
 test.Step(
-  "Rename Volume on DOS disk fails, matches v8.4 behavior",
+  "Rename Volume (DOS 3.3) fails, matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("R") -- Rename
@@ -37,5 +37,5 @@ test.Step(
     s6d2:unload()
     test.ExpectBinaryEquals(util.SlurpFile(source_filename),
                             util.SlurpFile(reference_filename),
-                            "Failing to rename DOS volume unexpectedly modified disk")
+                            "Failing to rename DOS 3.3 volume unexpectedly modified disk")
 end)

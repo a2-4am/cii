@@ -27,7 +27,7 @@ s5d1:unload()
 s5d2:unload()
 
 test.Step(
-  "Copy Applesoft files from DOS disk to ProDOS disk matches v8.4 behavior",
+  "Copy Applesoft files from DOS 3.3 disk to ProDOS disk matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     s6d1:load(target_filename)
@@ -53,5 +53,5 @@ test.Step(
     s6d1:unload()
     test.ExpectBinaryEquals(util.SlurpFile(target_filename),
                             util.SlurpFile(reference_filename),
-                            "Copy Applesoft files from DOS disk to ProDOS disk does not match v8.4")
+                            "Copy Applesoft files from DOS 3.3 disk to ProDOS disk does not match v8.4")
 end)
