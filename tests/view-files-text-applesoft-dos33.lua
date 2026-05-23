@@ -4,7 +4,7 @@
 ]]
 
 --[[
-  This tests View Files as Text on a DOS 3.3 formatted disk with a variety of file types, matching v8.4 behavior.
+  This tests View Files as Text on an Applesoft BASIC file from a DOS 3.3 formatted disk, matching v8.4 behavior.
 ]]
 
 --[[ BEGINCONFIG ========================================
@@ -14,7 +14,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "View Files as Text (DOS 3.3) matches v8.4 behavior",
+  "View Files as Text on Applesoft BASIC file (DOS 3.3) matches v8.4 behavior",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
@@ -27,12 +27,12 @@ test.Step(
     cii.WaitForScreenContains("%[E]NTER FILENAME, %[G]O, %[ESC]%-EXIT")
     apple2.Type("E")
     cii.WaitForScreenContains("ENTER FILENAME %(ONE FILE%)")
-    apple2.TypeLine("DO GPLE DOS MOVER") -- will match that file
+    apple2.TypeLine("HELLO") -- will match that file
     cii.WaitForScreenContains("%[E]NTER FILENAME, %[G]O, %[ESC]%-EXIT")
     apple2.Type("G") -- enter view mode
     cii.WaitForScreenContains("%[RETURN]%-CONTINUE, %[ESC]%-EXIT")
-    test.ExpectIMatch(apple2.GrabTextScreen(), "IF PEEK%(978%)", "View Files as Text behavior does not match v8.4")
-    test.ExpectIMatch(apple2.GrabTextScreen(), "POKE 17240,0", "View Files as Text behavior does not match v8.4")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "02======================", "View Files as Text behavior does not match v8.4")
+    test.ExpectIMatch(apple2.GrabTextScreen(), "RUN HI%-RES DEMO\"BXYP1A123:", "View Files as Text behavior does not match v8.4")
     apple2.EscapeKey() -- back to file selection
     cii.WaitForScreenContains("%[E]NTER FILENAME, %[G]O, %[ESC]%-EXIT")
     apple2.EscapeKey() -- back to main menu
