@@ -9,10 +9,14 @@ QUIT        LDX   CHOOZOPT
             BEQ   :QUIT1
             DEX
             BEQ   :MONITOR
-            LDA   $FBB3
-            CMP   #$38        ;pre-II+ has no reboot routine
-            BEQ   :MONITOR
-            JMP   $FAA6
+            ;JMP   $FAA6      ;fails on Laser 128 (uses F9C8),
+                              ;Laser 128EX (uses F9CD),
+                              ;Franklin Ace (uses FB11),
+                              ;Apple II non-autostart ROM (no
+                              ;reboot routine at all), so the
+                              ;most compatible solution is to
+            INC   $03F4       ;mess up page 3 reset checksum
+            JMP   ($FFFC)     ;and jump to ROM reset vector
 :MONITOR    JMP   $FF59
 *
 :QUIT1      LDY   #0

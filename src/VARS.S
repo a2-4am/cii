@@ -311,7 +311,8 @@ JPHRWTS     DS    6*3
 JDELLIB     DS    6*7
 JALPHAPACK  DS    6*7
 JVERPACK    DS    6*3
-            DS    46 ;free space here
+JREBOOT     DS    2
+            DS    44 ;free space here
 *
 * PHRWTS tables (now built in LOADER)
 *
