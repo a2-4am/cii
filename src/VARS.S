@@ -109,6 +109,8 @@ COUNT       =     $A6
 CHOOZOPT    =     $A7         ;[4am] reuse unused address to store chosen menu index
 ISAUX       =     $A8
 A2E         =     $A9
+HASLOWER    =     $AA         ;[4am] split out from A2E for machines like Pravetz 8C
+                              ;that have 128K but can't display lowercase well
 *
 SRCTAR      =     $B0
 OPTCHS      =     $B1

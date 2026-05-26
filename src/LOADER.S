@@ -139,16 +139,20 @@ MEMCPY      MAC
             DW    :PFXLST
 *
 *
-* SETUP A2E, FLAG80, ISAUX
+* SETUP A2E, FLAG80, ISAUX, HASLOWER
 *
 * A2E:
 *  0 --> NOT AN APPLE //E OR //C
 * 80 --> UNENHANCED //E
 * C0 --> ENHANCED //E OR //C
 *
+* HASLOWER:
+*  0 --> DOES NOT SUPPORT LOWERCASE
+* FF --> SUPPORTS LOWERCASE
+*
 * FLAG80:
 *  0 --> NO 80-COLUMN
-* FF --> 80-COLUMN
+* FF --> SUPPORTS 80-COLUMN
 *
 * ISAUX:
 *  0 --> No aux memory.
@@ -160,11 +164,12 @@ MEMCPY      MAC
             LDX   #0
             STX   FLAG80      ;ASSUME 40 COL
             STX   A2E         ;ASSUME NOT 2E
+            STX   HASLOWER    ;ASSUME no lowercase
             STX   GOTMM       ;Assume MM not available
             STX   MMISOPEN    ; & of course not open.
             LDA   $FBB3
             CMP   #$06
-            BNE   :NO80COL    ;->NOT //E, so not 80 col, either.
+            BNE   :NO80COL    ;->NOT //E, so no 80 col and no lowercase
             LDA   #$00
             DB    $1A         ;check for 65c02 using INC opcode
             BEQ   :UNENH      ;if A is still 0, 65c02 was not found
@@ -173,6 +178,11 @@ MEMCPY      MAC
 :UNENH
             LDA   #$80        ;unenhanced //e
             STA   A2E
+            LDA   $FB09
+            CMP   #$A0        ;Pravetz 8C
+            BEQ   :NOLOWER
+            DEC   HASLOWER    ;supports lowercase
+:NOLOWER
             LDY   MACHID
             TYA
             AND   #2

@@ -285,7 +285,7 @@ PRSPC       LDA   #" "
 *
 * MY COUT ROUTINE
 *
-PCOUT       BIT   A2E
+PCOUT       BIT   HASLOWER
             BMI   :CHKMASK    ;ON //E
 *
 * ON A II PLUS: CONVERT LOWERCASE
@@ -295,8 +295,10 @@ PCOUT       BIT   A2E
             SBC   #$20        ;MAKE UPPER.
             BNE   :NO80A      ;ALWAYS
 *
-:CHKMASK    BIT   $C01F       ;80-COL?
-            BPL   :NO80A      ;NO
+:CHKMASK    BIT   FLAG80      ;supports 80-col?
+            BPL   :NO80A      ;no
+            BIT   $C01F       ;currently 80-col?
+            BPL   :NO80A      ;no
 *
             CMP   #$20
             BCC   :FLASH      ;MAKE $40-$5F
@@ -305,14 +307,10 @@ PCOUT       BIT   A2E
             BVC   :FLASH      ;IF INVERSE,
 *
 * IF II+: NO SPECIAL CHECK
-* IF //E: CHECK FOR ALTCHARSET
+* IF //E: CHECK FOR 80-COL
 *
             BIT   A2E         ;//E OR II+?
             BPL   :N2EALTL    ;II+
-*
-*//E:
-*IF ALTSET: ALLOW INVERSE LOWER CASE
-*
             BIT   $C01F       ;80-COL?
             BPL   :NO80       ;NO
 *
@@ -337,30 +335,7 @@ PCOUT       BIT   A2E
             ORA   #$40
 *
 :CHKPRTR
-*            CMP   #$80        ;IF FLASH OR
-*            BCS   :GOCOUT     ;INVERSE:
-*            PHA               ;SAVE CHAR...
-*            LDA   PSLOT
-*            ORA   #$C0
-*            CMP   CSWL+1      ;PRINTING?
-*            BNE   :NOTPRTR    ;NO
-*            PLA               ;YES:
-*            BIT   A2E         ;WATCHING OUT
-*            BPL   :NLOWINV    ;FOR ALTCHR,
-*            BIT   $C01E
-*            BMI   :MAKNORM
-*:NLOWINV    AND   #$3F
-*:MAKNORM    ORA   #$80        ;CONVERT BACK
-*            CMP   #$A0        ;TO PRINTING
-*            BCS   :GOCOUT
-*            ORA   #$40
-*            BNE   :GOCOUT     ;(ALWAYS)
-*
-*:NOTPRTR    PLA
 :GOCOUT
-*            CMP   #$FF        ;SOME PRINTERS
-*            BNE   :GOCOUT2    ;DELETE WITH
-*            LDA   #$DF        ;FF'S
 :GOCOUT2    JMP   COUT
 *
 * BOTTOM OF SCREEN MESSAGE
