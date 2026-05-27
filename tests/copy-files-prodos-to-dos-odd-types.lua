@@ -46,7 +46,7 @@ test.Step(
     cii.WaitForScreenContains("%[RETURN]%-MARK FILE, %[U]NMARK, %[E]NTER")
     apple2.Type("E") -- Enter Filename (pattern)
     cii.WaitForScreenContains("ENTER FILENAME %(,OPT%. FILETYPES%)")
-    apple2.TypeLine("=B=") -- will match several oddly typed files
+    apple2.TypeLine("H=") -- will match several oddly typed files
     cii.WaitForScreenContains("%[RETURN]%-MARK FILE, %[U]NMARK, %[E]NTER")
     apple2.Type("G") -- Go
     cii.WaitForMainMenu()
