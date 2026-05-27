@@ -58,6 +58,7 @@ test.Step(
     cii.WaitForScreenContains("6656") -- visible byte offset
     test.ExpectIMatch(apple2.GrabTextScreen(), "C QUAM FELIS, ULTRICIES NEC, PELLENTESQU", "View Files as Text behavior does not match v8.4")
     apple2.ReturnKey() -- back to file selection
+    cii.WaitForScreenContains("%[E]NTER FILENAME, %[G]O, %[ESC]%-EXIT")
     apple2.EscapeKey() -- back to main menu
     cii.WaitForMainMenu()
 end)
