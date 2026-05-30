@@ -10,7 +10,7 @@
 --[[ BEGINCONFIG ========================================
 
   MODELARGS="-sl5 'diskiing'"
-  DISKARGS="-flop1 'prodos-root-directory-full.do' -flop2 'prodos-root-directory-full.do' -flop3 $FLOPIMG -flop4 'lorem.do'"
+  DISKARGS="-flop1 'directory-full-prodos.do' -flop2 'directory-full-prodos.do' -flop3 $FLOPIMG -flop4 'lorem.do'"
 
   ======================================== ENDCONFIG ]]
 
