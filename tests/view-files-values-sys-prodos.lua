@@ -14,7 +14,7 @@
   ======================================== ENDCONFIG ]]
 
 test.Step(
-  "View Files as Values on SYS file (ProDOS) matches v8.4 behavior",
+  "View Files as Values on SYS file (ProDOS) matches v8.4 behavior except $FF character",
   function()
     cii.WaitForMainMenu()
     apple2.Type("V") -- View Files
