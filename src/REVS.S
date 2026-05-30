@@ -156,6 +156,10 @@
 *    issuing SmartPort API calls.
 *  Fixed off-by-1 bug that ended up writing junk data at the
 *    end of the boot sector code on DOS-formatted floppy disks.
+*  Treat CFFA3000 as a "removable" device, since the user can
+*    hot-swap mounted devices without rebooting. This enables
+*    single-slot disk copying of CFFA-controlled devices, with
+*    'insert source'/'insert target' swap prompts.
 *  Use lowercase for most strings, if available.
 *  Add single-letter hotkeys to the main menu and submenus.
 *    Most are back-ported from v9.
