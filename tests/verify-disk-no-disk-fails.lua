@@ -19,7 +19,7 @@ test.Step(
     cii.WaitForMainMenu()
     apple2.Type("Y") -- Verify
     cii.WaitForSelection("FILESVERIFY") -- two items are selected, Files and Verify
-    apple2.Type("F") -- Files
+    apple2.Type("D") -- Disk
     cii.WaitForScreenContains("SELECT DEVICE:")
     apple2.Type("62") -- Slot 6, Drive 2
     cii.WaitForSelection("SLOT 6  DRIVE 2")
