@@ -1,4 +1,4 @@
-This manual describes Copy ][ Reboot version 1, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-05-22.
+This manual describes Copy ][ Reboot version 1.0, a powerful DOS/ProDOS disk utility package based on Copy ][ Plus version 8.4 by Central Point Software. It is almost entirely based on the manual for Copy ][ Plus version 8.4, with additions, deletions, and corrections only as needed. It was last updated on 2026-06-02.
 
 With Copy ][ Reboot, you can
 
@@ -168,7 +168,7 @@ If any supported clock is detected, its driver is installed and Copy ][ Reboot d
 
 To enter the date yourself, use the arrow keys to choose the "Enter Date" option, then press [Return]. The cursor will move to the date field in the lower left corner of the screen. Type in the 2-digit day of the month, the 3-letter abbreviation for the month, and the last 2 digits of the year. If you make a mistake, you can press the left arrow key to back up and type it again.
 
-If it can not determine the date automatically, and you do not enter a date manually, Copy ][ Reboot will simply stamp "<No Date>" as the date on any ProDOS files you copy.
+If it can not determine the date automatically, and you do not enter a date manually, Copy ][ Reboot will stamp "<No Date>" as the date on any ProDOS files you copy.
 
 Catalog Disk Options
 
@@ -215,7 +215,7 @@ Here are the usual "slot" assignments made by different computers for drives con
 
 - The Apple IIgs drive connector is slot 6 drives 1 & 2 for 5.25-inch drives, slot 5 drive 1 for the first 3.5-inch drive. If a RAMdisk is set up with the Control Panel, the RAMdisk is slot 5 drive 2 and a second 3.5-inch drive is slot 2 drive 1. Without a RAMdisk, a second 3.5-inch drive is slot 5 drive 2.
 
-The drive selection menu works very much like the main menu. To choose a drive, all you need to do is use the arrow keys so that the desired drive is highlighted, then press [Return].
+The drive selection menu works much like the main menu. To choose a drive, all you need to do is use the arrow keys so that the desired drive is highlighted, then press [Return].
 
 In addition, from this menu you can press [?] (you don't have to hold down the SHIFT key) to see what disks are in each drive. Suppose the Copy ][ Reboot disk is in drive 1 and a DOS 3.3 disk is in drive 2. If you press [?], the drives will whir and you'll see a list like this:
 
@@ -253,7 +253,7 @@ This diagram shows that the main, or "root" directory (which goes by the volume 
 
 By using the arrow keys, you can select any subdirectory. You can move up, down, right, or left, following the "branches" between directories. (If you have an Apple ][ or ][ Plus, press [A] to move up and [Z] to move down.) If the diagram is too large to fit on the screen, it will scroll automatically as you move around on the tree.
 
-When the directory you want is selected, press [Return] to actually see the files in that directory.
+When the directory you want is selected, press [Return] to see the files in that directory.
 
 Normal Catalog Disk Option
 
@@ -383,7 +383,7 @@ This approach is intentional, as it provides useful information: if the created 
 
 Converting Files Between DOS 3.3 and ProDOS
 
-Converting files between DOS 3.3 and ProDOS is very straightforward with Copy Files. To convert files from DOS to ProDOS, simply choose the Copy Files option and select the DOS disk as the source disk and the ProDOS disk as the target disk. Select the files you want to convert and press [G] for Go. Copy ][ Reboot will automatically recognize that the disks are of different types, and convert the files as it copies. To convert ProDOS to DOS, instead select the ProDOS disk as the source and the DOS disk as the target disk.
+Converting files between DOS 3.3 and ProDOS is straightforward with Copy Files. To convert files from DOS to ProDOS, choose the Copy Files option and select the DOS disk as the source disk and the ProDOS disk as the target disk. Select the files you want to convert and press [G] for Go. Copy ][ Reboot will automatically recognize that the disks are of different types, and convert the files as it copies. To convert ProDOS to DOS, instead select the ProDOS disk as the source and the DOS disk as the target disk.
 
 Copy Disk Option
 
@@ -391,7 +391,7 @@ The Copy Disk option can make fast, reliable copies of any standard unprotected 
 
 The Copy Disk option is not intended for copying information between disks of different sizes. If, for example, you could copy all the blocks from a 140K floppy disk (including the disk "bookkeeping" blocks) onto a 1Meg RAMdisk, the RAMdisk would now "think" that it was only a 140K disk, too. That would leave the rest of the RAMdisk unusable. If you want to copy information between disks of different sizes, instead choose the Copy Files option.
 
-To copy a disk, simply choose the Copy Disk option, select source and target drives, insert the disks, and press [Return]. If for some reason you wish to stop the copying, pressing [Esc] will take you back to the main menu. If you're copying using only one drive, Copy ][ Reboot will tell you when to insert each disk.
+To copy a disk, choose the Copy Disk option, select source and target drives, insert the disks, and press [Return]. If for some reason you wish to stop the copying, pressing [Esc] will take you back to the main menu. If you're copying using only one drive, Copy ][ Reboot will tell you when to insert each disk.
 
 Copy Disk can take advantage of most kinds of extra memory in your computer to reduce the number of passes needed to copy a disk. As the Copy Disk option makes the copy, it first reads a number of tracks (or a number of blocks) from the "source" disk into memory, then writes those tracks (or blocks) to the "target" disk. It repeats this process (each called a "pass") until all the tracks or blocks are copied. If you're copying from one drive to another, the number of "passes" back and forth between the two drives doesn't really matter much. However, if you're copying with only one drive, the extra-memory handling can reduce the number of times you have to swap disks. See Appendix B for information about what kinds of memory Copy ][ Reboot can use.
 
@@ -429,7 +429,7 @@ Copy DOS is similar to Copy Disk, but it copies only the first three tracks of a
 
 You can copy a new DOS onto a disk that has somehow had its DOS tracks damaged or erased. You can also convert an initialized, or "slave" disk into a "master" disk. The difference between initialized and master disks is not important in most applications. See the Apple DOS 3.3 manual for more information.
 
-To copy the DOS from one disk to another, insert a disk that contains the DOS into the source drive and the disk to "receive" the DOS into the target drive, then choose the Copy DOS option. The DOS will be copied onto the target disk. If you choose Copy DOS and select a ProDOS disk by mistake, Copy ][ Reboot will simply inform you that this is "Not a ProDOS function".
+To copy the DOS from one disk to another, insert a disk that contains the DOS into the source drive and the disk to "receive" the DOS into the target drive, then choose the Copy DOS option. The DOS will be copied onto the target disk. If you choose Copy DOS and select a ProDOS disk by mistake, Copy ][ Reboot will inform you that this is "Not a ProDOS function".
 
 Delete Options
 
@@ -553,7 +553,7 @@ To rename a file, move the inverse field to that file with the arrow keys, then 
 
 If you enter a bad filename, the warning message "Invalid filename" will appear and you will be prompted for another filename. If you decide that you do not want to rename the file, press [Esc].
 
-For every file that is renamed, an arrow ("->") appears to the left of the file. This simply serves as a reminder as to which files have been renamed.
+For every file that is renamed, an arrow ("->") appears to the left of the file. This serves as a reminder as to which files have been renamed.
 
 The Enter filename option is available, but since files must be renamed manually, the [E] option stops at the first file that matches the pattern, leaving that file highlighted. From here you can press [Return] to rename the file.
 
@@ -700,7 +700,7 @@ When finished, the program will show the total number of errors. If you want to 
 
 Verify Disk will work with standard 16-sector (DOS 3.3, ProDOS, SOS, CP/M, and Pascal) 5.25-inch disks and with other ProDOS compatible disk devices. Unformatted disks will produce errors, since there are no sectors written on the disk to verify. Most copy-protected disks will also produce errors, since the formatting on these disks is often different than the standard Apple 16-sector format.
 
-If a normal DOS or ProDOS disk you're using is giving DOS I/O errors, it can be one of three things: bad data, bad sectors, or a physically damaged disk. Bad data means the catalog or file information is wrong, for example, telling the DOS to look for a file on track 200! A bad sector is one that simply can't be read (possibly caused by a "power glitch" or by opening the drive door or pressing Reset while the drive was writing) even though the disk is still capable of storing good data. A disk can also be permanently damaged from improper handling, fingerprints, heat, spilled coffee, rabid dogs, etc.
+If a normal DOS or ProDOS disk you're using is giving DOS I/O errors, it can be one of three things: bad data, bad sectors, or a physically damaged disk. Bad data means the catalog or file information is wrong, for example, telling the DOS to look for a file on track 200! A bad sector is one that can't be read (possibly caused by a "power glitch" or by opening the drive door or pressing Reset while the drive was writing) even though the disk is still capable of storing good data. A disk can also be permanently damaged from improper handling, fingerprints, heat, spilled coffee, rabid dogs, etc.
 
 It's a good idea to verify suspect disks to see where the errors are. If Verify Files shows errors, but Verify Disk does not, then bad data stored in the catalog is the most likely culprit. If Verify Disk shows errors, then you have either bad sectors or a damaged disk (or a blank or copy-protected disk). You should use Copy Files or Copy Disk to save as much of the information as you can, then try to reformat the disk. If the formatting fails, then the disk is most likely permanently damaged.
 
@@ -786,7 +786,7 @@ When you want to exit Copy ][ Reboot and run another ProDOS program or boot anot
 
                  --^--
 
-To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may simply ask you for a new prefix and for which .SYSTEM file you want to run next.
+To run another ProDOS program, insert the disk and press [Q]. The ProDOS system itself will decide what happens next. If you booted the Copy ][ Reboot disk directly, ProDOS will quit to the 'Bitsy Bye' file selector. If you launched the Copy ][ Reboot program from another file selector like ProSel or Apple II Desktop, ProDOS will return you to the file selector. Older versions of ProDOS may ask you for a new prefix and for which .SYSTEM file you want to run next.
 
 To enter the monitor, press [M]. Once in the monitor, you can press [Ctrl-Reset] to return to Copy ][ Reboot.
 
@@ -804,7 +804,7 @@ Memory cards that can plug into or are assigned to a numbered slot don't need an
 - Apple IIe (newer versions) internal slot 4 memory expansion,
 - Apple IIgs Control Panel (slot 5 drive 2) RAMdisk.
 
-Memory cards that are auxiliary-slot based need to be set up before Copy ][ Reboot can work with them. This is because these cards are simply large memory boards, and mean nothing to ProDOS unless a "RAMDisk driver" program is first installed to make the memory look like a RAMdisk. Here are some examples of auxiliary-slot based memory cards:
+Memory cards that are auxiliary-slot based need to be set up before Copy ][ Reboot can work with them. This is because these cards are large memory boards, and mean nothing to ProDOS unless a "RAMDisk driver" program is first installed to make the memory look like a RAMdisk. Here are some examples of auxiliary-slot based memory cards:
 
 - Applied Engineering RAMWorks board,
 - CheckMate Technology MultiMate board,
@@ -874,13 +874,13 @@ For 3.5-inch disks, blocks and sectors are really the same thing; they're just n
 
 Disk Hardware - Reading & Writing Bytes, Speed
 
-Most of this section deals with 5.25-inch drives, but 3.5-inch drives are very similar. The differences for 3.5-inch drives are discussed in the next section.
+Most of this section deals with 5.25-inch drives, but 3.5-inch drives are similar. The differences for 3.5-inch drives are discussed in the next section.
 
 A 5.25-inch drive spins the disk at about 5 revolutions per second, or .2 seconds = 200 milliseconds per revolution.
 
 The bytes on the disk, and the bits that make up those bytes, must be written at evenly spaced intervals around the circular track. Since the disk media is passing over the read/ write head at a fairly constant speed, that means each bit must be written onto the media at the right moment, in order to be placed onto the correct spot on the disk.
 
-The timing involved in accessing the disk, especially when writing, must be precise. This makes disk access very "timing critical".
+The timing involved in accessing the disk, especially when writing, must be precise. This makes disk access "timing critical".
 
 When writing a single byte to the disk, DOS sends the byte to a special "data latch" on the disk controller card. The hardware on the card then writes the 8 bits of the byte, one bit at a time, onto the disk media passing over the head. The hardware writes one bit every 4 usec (microseconds, or millionths of a second). It takes 32 microseconds to write all 8 bits of the byte (4 usec per bit * 8 bits per byte).
 
@@ -898,7 +898,7 @@ If a byte is read back as invalid, then some invalid byte is stored on the disk,
 
 Since not all possible byte values can be read correctly, information being written to the disk must usually be "encoded" in some way first, so that only valid bytes are written. DOS does this encoding for every sector it writes.
 
-Another problem in reading the disk is finding where one byte ends and the next byte begins. The data on the disk is stored simply as a long stream of bits. Here is an example bit stream:
+Another problem in reading the disk is finding where one byte ends and the next byte begins. The data on the disk is stored as a long stream of bits. Here is an example bit stream:
 
 11010101101010101001011
 
@@ -926,7 +926,7 @@ Disk Hardware - 3.5-inch Drives
 
 A 3.5-inch disk spins faster than a 5.25-inch disk. The rotational speed also varies: It spins more slowly on the outer tracks (about 150 milliseconds per revolution), to accommodate the greater number of sectors, and faster on the inner tracks (about 100 milliseconds per revolution) for the fewer sectors there.
 
-The hardware writes a bit every 2 microseconds. It takes 16 microseconds to write all 8 bits of the byte. The timing for writing bytes isn't as critical as it is for 5.25-inch disks, because the Apple 3.5-inch circuitry provides its own timing for writing a new byte every 16 microseconds. The disk routines must simply be ready to give it the next byte "soon enough". If the disk routines don't deliver the next byte in time, the hardware leaves "write mode", not writing any more bytes to the disk until it has been reset.
+The hardware writes a bit every 2 microseconds. It takes 16 microseconds to write all 8 bits of the byte. The timing for writing bytes isn't as critical as it is for 5.25-inch disks, because the Apple 3.5-inch circuitry provides its own timing for writing a new byte every 16 microseconds. The disk routines must be ready to give it the next byte "soon enough". If the disk routines don't deliver the next byte in time, the hardware leaves "write mode", not writing any more bytes to the disk until it has been reset.
 
 Since the timing is fixed at 16 microseconds, or exactly 8 bit times, the disk routines can't use delays to directly write 10-bit sync bytes. However, it can write a repeating pattern of bytes which ends up on the disk as a series of sync bytes. This is the usual pattern:
 
@@ -1016,7 +1016,7 @@ Epilogue: DE AA. These bytes mark the end of the data field and the end of the s
 
 Reading, Writing, and Formatting
 
-A 3.5-inch drive controller (whether built into the computer or on a plug-in card) contains its own programming for handling reading and writing blocks and formatting the disk. ProDOS itself simply makes requests to the controller to perform the reading and writing as it needs them. Most other kinds of ProDOS- compatible disk devices, such as hard disks and RAMdisks, are the same way.
+A 3.5-inch drive controller (whether built into the computer or on a plug-in card) contains its own programming for handling reading and writing blocks and formatting the disk. ProDOS itself makes requests to the controller to perform the reading and writing as it needs them. Most other kinds of ProDOS- compatible disk devices, such as hard disks and RAMdisks, are the same way.
 
 A 5.25-inch drive controller contains only enough programming to boot a disk; it does not provide for reading and writing sectors or formatting the disk. DOS 3.3 has its own set of internal routines (called RWTS, for Read Write Track Sector) for accomplishing this. ProDOS also has its own set of internal routines for reading and writing blocks (pairs of sectors) on 5.25-inch disks. It does not provide for formatting 5.25-inch disks, though. A separate application that includes its own formatting routines, such as Copy ][ Reboot or Apple's Filer program, must be run to do this. Copy ][ Reboot contains its own optimized 5.25-inch routines for formatting, reading, writing, verifying, etc.
 
