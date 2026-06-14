@@ -108,7 +108,7 @@ CHECKAUXMEMORY="true"
 
 CONFIG="$(cat "$SCRIPT" | sed -n '/BEGINCONFIG/,/ENDCONFIG/p' | grep -E -v 'BEGINCONFIG|ENDCONFIG' || true)"
 if [ -n "$CONFIG" ]; then
-  eval "$CONFIG"
+    eval "$CONFIG"
 fi
 
 # --------------------------------------------------
@@ -135,12 +135,12 @@ cp "${BASEDIR}/tests/cfg/${MODEL}.cfg" "$CFGDIR"
 
 OUTPUTARGS=""
 if [ -z "$VISIBLE" ]; then
-  export SDL_VIDEODRIVER=dummy
-  OUTPUTARGS="$OUTPUTARGS -video none"
+    export SDL_VIDEODRIVER=dummy
+    OUTPUTARGS="$OUTPUTARGS -video none"
 fi
 if [ -z "$AUDIBLE" ]; then
-  export SDL_AUDIODRIVER=dummy
-  OUTPUTARGS="$OUTPUTARGS -sound none"
+    export SDL_AUDIODRIVER=dummy
+    OUTPUTARGS="$OUTPUTARGS -sound none"
 fi
 
 if [ "$CONSOLE" ]; then
@@ -174,7 +174,6 @@ pushd "$MAMEDIR" > /dev/null
 eval "'$MAMEEXE' \
   -skip_gameinfo -nosamples \
   -window -nomax \
-  -mouse \
   -cfg_directory '$CFGDIR' \
   -nvram_directory '$NVRAMDIR' \
   $OUTPUTARGS \
@@ -183,5 +182,5 @@ eval "'$MAMEEXE' \
   $MAMEFLAGS \
   $SCRIPTARGS" \
      2> >(IFS='' ; while read line; do [[ ! $line =~ "evdev" ]] && echo "${COLOR_RED}${line}${COLOR_RESET}" >&1; done) | \
-  grep -E --line-buffered -v "Secure coding is automatically enabled"
+    grep --text -E --line-buffered -v "Secure coding is automatically enabled"
 popd > /dev/null
