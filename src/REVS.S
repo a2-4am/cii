@@ -131,7 +131,7 @@
 *    source code. UTIL.SYSTEM is byte-for-byte identical
 *    to v8.4 from 1989.
 *
-*  (in progress)  Copy ][ Reboot 1.0
+*  2026-06-19  Copy ][ Reboot 1.0
 *
 *  Remove bitcopy launchers and associated text and menu items.
 *    The utilities stand alone.
