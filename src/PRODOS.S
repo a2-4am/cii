@@ -381,6 +381,7 @@ GTBLKS      JSR   DEVTYP
 *
             CMP   #3
             BNE   ROMBLK
+            BEQ   NOTROM  ;RAM DEVICE DRIVER. GET FROM STATUS REQUEST
 *
 :RAMDRVR    JSR   RDBLK2
             BCS   NOTROM
