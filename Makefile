@@ -48,7 +48,7 @@ COPY = (\
 # you can also add a -q flag during development
 # to do worse compression at a more reasonable speed
 # (does not affect format, so unpacker still works)
-ZX0BIN=salvador -b
+ZX0BIN=zx0 -b
 ZX0 = (\
 	printf "%-10b%-30b %s %-35b" "Compress" "$(OBJ_COLOR)`echo $1|sed s/\.O\.O/.O/g`$(NO_COLOR)" "->" "$(OBJ_COLOR)$@$(NO_COLOR)"; \
 	rm -f "$@"; \
