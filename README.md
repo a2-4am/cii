@@ -15,6 +15,7 @@ $ brew tap lifepillar/appleii
 $ brew trust lifepillar/appleii
 $ brew install merlin32 mach-kernel-cadius
 ```
+*Note*: an uninvestigated bug in cadius 1.4.5 prevents the COPY.II.REBOOT.po floppy from booting, with a "Check Disk Drive" message. Please use this fork for now: [Cadius](https://github.com/a2-4am/cadius).
 
 You will need to compile `ZX0` manually.
 
@@ -26,6 +27,16 @@ $ sudo mv ./zx0.exe /usr/local/bin/zx0
 ```
 
 (`zx0` can go anywhere in your `$PATH`. I personally keep a `bin` directory in my home directory and put all manually compiled programs there, then update my `$PATH` to include that directory.)
+
+*Note*: zx0 is built with Open Watcom, which is harder than it should be to install, and generates a segfaulting `zx0` at least on Ubuntu 26.04. If so, use [Salvador](https://github.com/emmanuel-marty/salvador) instead:
+
+``` shell
+$ git clone https://github.com/emmanuel-marty/salvador.git
+$ cd salvador
+$ make
+$ sudo mv ./salvador /usr/local/bin/zx0
+```
+
 
 Then open a terminal window and type
 

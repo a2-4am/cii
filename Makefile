@@ -40,7 +40,7 @@ CADIUS=TZ=UTC0 cadius
 COPY = (\
 	printf "%-10b%-30b %s %-35b" "Copy" "$(OBJ_COLOR)`echo $1|cut -d\# -f1`$(NO_COLOR)" "->" "$(OBJ_COLOR)$(BUILDDISK)$(NO_COLOR)"; \
 	touch -d"$(SOURCE_DATE_UTC)" "$1"; \
-	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$1" -C >> $(BUILDLOG); \
+	$(CADIUS) REPLACEFILE "$(BUILDDISK)" "/$(DISKVOLUME)/" "$1" -C 2>> $(BUILDLOG); \
 	$(CHECKOK))
 
 # https://github.com/einar-saukas/ZX0
@@ -52,7 +52,8 @@ ZX0BIN=zx0 -b
 ZX0 = (\
 	printf "%-10b%-30b %s %-35b" "Compress" "$(OBJ_COLOR)`echo $1|sed s/\.O\.O/.O/g`$(NO_COLOR)" "->" "$(OBJ_COLOR)$@$(NO_COLOR)"; \
 	rm -f "$@"; \
-	$(ZX0BIN) "$1" "$@" 2>/dev/null >> $(BUILDLOG); \
+	echo $(ZX0BIN) "$1" "$@" >> $(BUILDLOG); \
+	$(ZX0BIN) "$1" "$@" 2>> $(BUILDLOG); \
 	$(CHECKOK))
 
 # macro to compress file with ZX0 then transpose first N bytes to end of file

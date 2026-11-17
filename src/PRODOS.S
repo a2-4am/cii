@@ -381,16 +381,11 @@ GTBLKS      JSR   DEVTYP
 *
             CMP   #3
             BNE   ROMBLK
+            BEQ   NOTROM
 *
-:RAMDRVR    JSR   RDBLK2
-            BCS   NOTROM
-            LDX   VTOC1+$29
-            LDY   VTOC1+$2A
+* UNREACHABLE
 *
-* CARRY IS ALREADY CLEAR
-*
-            RTS
-*
+
 :DISKII     LDX   #$18
             LDY   #1
             CLC
@@ -405,8 +400,11 @@ GTBLKS      JSR   DEVTYP
 * UP THERE OWN, PROBABLY NON-STANDARD,
 * DIRECTORY AND BITMAP.
 *
-:GBRAM      JSR   :RAMDRVR
-            SEC
+:GBRAM      JSR   RDBLK2
+            BCS   NOTROM
+            LDX   VTOC1+$29
+            LDY   VTOC1+$2A
+            SEC               ;NOT A STANDARD DIRECTORY STRUCTURE
             RTS
 *
 ROMBLK      EQU   *
