@@ -1614,6 +1614,13 @@ SETLOK      EQU   *
 *
 SHTIM0      EQU   *
             JSR   PRSPC
+            
+            ;IS DATE/TIME IN PRODOS 2.5 EXTENDED FORMAT??
+            LDA   (POINT),Y
+            AND   #%11100000  ;TOP 3 BITS
+            BNE   SHTIM0_25   ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
+            ;USE ORIGINAL IMPLEMENTATION
+
             LDA   (POINT),Y
             TAX
             DEY
@@ -1627,6 +1634,40 @@ SHTIM0      EQU   *
             PLA
             JSR   HEXDC1
             JMP   PRT2DG
+            
+*
+*SHOW PRODOS 2.5 EXTENDED TIME FORMAT
+*(POINT),Y IS DATE/TIME OFFSET 3            
+SHTIM0_25            
+            DEY
+            DEY
+            LDA   (POINT),Y   ;DATE/TIME OFFSET 1
+            TAX
+            DEY
+            LDA   (POINT),Y   ;DATE/TIME OFFSET 2
+            STA   :TIMTEMP
+            TXA
+            
+            ;HOUR
+            ASL   :TIMTEMP
+            ROL
+            ASL   :TIMTEMP
+            ROL
+            AND   #$1F
+            JSR   HEXDC1
+            JSR   PRT2RJ
+            LDA   #":"
+            JSR   PCOUT
+            
+            ;MINUTE
+            LDA   :TIMTEMP
+            LSR
+            LSR
+            JSR   HEXDC1
+            JMP   PRT2DG            
+            
+:TIMTEMP    DB    0
+            
 *
 *
 * called by COPY DISK, COPY FILE, DELETE FILE

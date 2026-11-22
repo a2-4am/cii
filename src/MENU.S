@@ -81,7 +81,7 @@ FILER       LDX   #$FF
             JSR   VLEFT
             LDA   DATE
             LDX   DATE+1
-            JSR   SHODAT
+            JSR   SHODATEX
             LDX   #$00        ;MAIN MENU
             STX   RADR
             STX   TOPDIF

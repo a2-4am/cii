@@ -474,7 +474,19 @@ GETDAT      JSR   MLI
             BPL   ]DATLOOP
             RTS
 *
-SHDAT0      JSR   PRSPC
+SHDAT0      
+            ;CHECK IF THE DATE IS IN PRODOS 2.5 EXTENDED DATE FORMAT
+            INY               ;ADD 2 TO Y
+            INY
+            LDA   (POINT),Y   ;READ OFFSET 3 OF DATE/TIME
+            AND   #%11100000  ;TOP 3 BITS
+            BNE   SHDAT0_25   ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
+            
+            DEY               ;RESTORE Y-REGISTER
+            DEY
+            ;USE ORIGINAL IMPLEMENTATION
+
+            JSR   PRSPC
             LDA   (POINT),Y
             TAX
             DEY
@@ -517,6 +529,100 @@ SHODAT      CMP   #0
 MONTH1      ASC   "JFMAMJJASOND"
 MONTH2      ASC   "AEAPAUUUECOE"
 MONTH3      ASC   "NBRRYNLGPTVC"
+
+*
+*SHOW PRODOS 2.5 EXTENDED DATE FORMAT
+*(POINT),Y IS THE OFFSET 3 OF DATE/TIME STRUCTURE
+SHDAT0_25   LDA   (POINT),Y
+            STA   :DATEMP
+            DEY
+            LDA   (POINT),Y
+            TAX
+            DEY
+            LDA   (POINT),Y
+
+SHODAT_25
+            ;INPUT:
+            ;A = DATE/TIME OFFSET 1
+            ;X = DATE/TIME OFFSET 2
+            ;:DATEMP = DATE/TIME OFFSET 3
+            STX  :DATEMP2
+            
+            ;DATE 
+            LSR
+            LSR
+            LSR
+            JSR   HEXDC1
+            JSR   PRT2RJ
+            LDA   #"-"
+            JSR   PCOUT            
+            
+            ;MONTH
+            LDA   :DATEMP
+            LSR
+            LSR
+            LSR
+            LSR
+            TAX
+            LDA   MONTH1-2,X  ;MONTH IS 2-13 IN PRODOS 2.5
+            JSR   PCOUT
+            LDA   MONTH2-2,X
+            EOR   #$20        ;CHANGE TO LOWER CASE
+            JSR   PCOUT
+            LDA   MONTH3-2,X
+            EOR   #$20        ;CHANGE TO LOWER CASE
+            JSR   PCOUT
+            
+            ;YEAR
+            LDA   :DATEMP
+            AND   #$0F        ;LOWER 4-BIT
+            TAX
+            LDA   :DATEMP2
+            JSR   HEXDC2
+
+            ;PRINT YEARS IN 4-CHARACTER WIDTH
+PRT4LJ      LDX   #3
+            LDY   #0         ;COUNT NUMBER OF SPACE NEEDED
+:PRT4LJ1    LDA   DIGIT,X
+            BNE   :PRT4LJ2
+            INY
+            DEX
+            BNE   :PRT4LJ1
+:PRT4LJ2    TYA
+            PHA
+            JSR   PRTDIG
+            PLA
+            TAX
+            BEQ   :PRT4LJ4   
+:PRT4LJ3    JSR   PRSPC
+            DEX
+            BNE   :PRT4LJ3
+:PRT4LJ4    RTS
+
+:DATEMP2    DB    $0
+
+;PATCH SHODAT FOR PRODOS 2.5 EXTENDED DATE FORMAT
+SHODATEX
+            ;IF PRODOS VERSION>=$25 AND $BF93 TOP 3 BITS NOT ZERO
+            ;THE DATE IN $BF93-$BF90 IS IN PRODOS 2.5 EXTENDED FORMAT
+            ;OTHERWISE USE ORIGINAL IMPLEMENTATION (SHODAT)
+            LDY   KVERSION
+            CPY   #$25
+            BCC   :SHODATEX2
+            TAY
+            LDA   DATE+3
+            AND   #%11100000  ;TOP 3 BITS
+            BNE   :SHODATEX3  ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
+            TYA
+:SHODATEX2  JMP   SHODAT
+
+:SHODATEX3  LDA   DATE+3
+            STA   :DATEMP
+            LDX   DATE+2
+            LDA   DATE+1
+            JMP   SHODAT_25
+            
+
 *
 * Menus: (USE THE NAMED IDS LISTED IN MESSAGES)
 *  0 Main
