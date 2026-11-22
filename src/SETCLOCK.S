@@ -213,13 +213,13 @@
             TAX
             
             ;IF YEAR<26, TREAT IT AS 2100-2125
+            ;WE ARE GOOD UNTIL YEAR 2126
             LDA   :YEAR
             CMP   #26
             BCS   :SETYEAR
             ADC   #100        
             
 :SETYEAR    ;ADD 2000 TO YEAR. ALSO ADD 1 TO MONTH
-            ;WE ARE GOOD UNTIL YEAR 2100
             ;2000 = $7D0           
             CLC
             ADC   #$D0
