@@ -161,7 +161,7 @@ PCATLN      EQU   *
 *
 * MODIFIED TIME
 *
-:MODTIM     LDY   #$24
+:MODTIM     LDY   #$21        ;OFFSET 0 OF MODIFIED DATE/TIME RECORD
             JSR   SHTIM0
 *
 * CREATION DATE
@@ -172,7 +172,7 @@ PCATLN      EQU   *
 *
 * CREATION TIME
 *
-            LDY   #$1B
+            LDY   #$18        ;OFFSET 0 OF CREATION DATE/TIME RECORD
             JSR   SHTIM0
 *
 * ENDFILE
@@ -1613,12 +1613,30 @@ SETLOK      EQU   *
             JMP   :SLK4
 *
 SHTIM0      EQU   *
-            JSR   PRSPC
+            ;(POINT),Y IS OFFSET 0 OF DATE/TIME RECORD
+            
+            ;DON'T SHOW TIME IF NO DATE IS SET
+            ;FOR PRODOS 2.5 EXTENDED FORMAT, OFFSET 1 OF DATE/TIME != 0 IF DATE IS SET
+            LDA   (POINT),Y
+            INY
+            ORA   (POINT),Y
+            BNE   :SHTIMGO
+            ;BOTH OFFSET 0 AND OFFSET 1 ARE ZERO.
+            ;NO DATE IS SET. PRINT 6 SPACE CHARACTERS
+            LDX   #6
+:SPCLOOP    JSR   PRSPC
+            DEX
+            BNE   :SPCLOOP
+            RTS
+
+:SHTIMGO    JSR   PRSPC
             
             ;IS DATE/TIME IN PRODOS 2.5 EXTENDED FORMAT??
-            LDA   (POINT),Y
+            INY
+            INY            
+            LDA   (POINT),Y   ;READ OFFSET 3
             AND   #%11100000  ;TOP 3 BITS
-            BNE   SHTIM0_25   ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
+            BNE   :SHTIMGO_25 ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
             ;USE ORIGINAL IMPLEMENTATION
 
             LDA   (POINT),Y
@@ -1627,7 +1645,7 @@ SHTIM0      EQU   *
             LDA   (POINT),Y
             PHA
             TXA
-            JSR   HEXDC1
+:PRTTIME    JSR   HEXDC1
             JSR   PRT2RJ
             LDA   #":"
             JSR   PCOUT
@@ -1638,35 +1656,25 @@ SHTIM0      EQU   *
 *
 *SHOW PRODOS 2.5 EXTENDED TIME FORMAT
 *(POINT),Y IS DATE/TIME OFFSET 3            
-SHTIM0_25            
-            DEY
-            DEY
-            LDA   (POINT),Y   ;DATE/TIME OFFSET 1
-            TAX
-            DEY
-            LDA   (POINT),Y   ;DATE/TIME OFFSET 2
-            STA   :TIMTEMP
-            TXA
-            
-            ;HOUR
-            ASL   :TIMTEMP
-            ROL
-            ASL   :TIMTEMP
-            ROL
-            AND   #$1F
-            JSR   HEXDC1
-            JSR   PRT2RJ
-            LDA   #":"
-            JSR   PCOUT
-            
+:SHTIMGO_25            
             ;MINUTE
-            LDA   :TIMTEMP
-            LSR
-            LSR
-            JSR   HEXDC1
-            JMP   PRT2DG            
-            
-:TIMTEMP    DB    0
+            DEY
+            DEY
+            DEY
+            LDA   (POINT),Y   ;READ DATE/TIME OFFSET 0
+            STA   TEMP
+            AND   #%00111111  ;6 BITS ONLY    
+            PHA               ;PUSH MINUTE TO STACK            
+   
+            ;HOUR   
+            INY
+            LDA   (POINT),Y   ;READ DATE/TIME OFFSET 1
+            ASL   TEMP
+            ROL
+            ASL   TEMP
+            ROL
+            AND   #%00011111  ;5 BITS ONLY
+            JMP   :PRTTIME
             
 *
 *
