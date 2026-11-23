@@ -533,22 +533,24 @@ MONTH3      ASC   "NBRRYNLGPTVC"
 *
 *SHOW PRODOS 2.5 EXTENDED DATE FORMAT
 *(POINT),Y IS THE OFFSET 3 OF DATE/TIME STRUCTURE
-SHDAT0_25   LDA   (POINT),Y
+SHDAT0_25   LDA   (POINT),Y   ;READ OFFSET 3
             STA   :DATEMP
             DEY
-            LDA   (POINT),Y
-            TAX
             DEY
-            LDA   (POINT),Y
+            LDA   (POINT),Y   ;READ OFFSET 1
+            TAX
+            INY
+            LDA   (POINT),Y   ;READ OFFSET 2
 
 SHODAT_25
             ;INPUT:
-            ;A = DATE/TIME OFFSET 1
-            ;X = DATE/TIME OFFSET 2
+            ;A = DATE/TIME OFFSET 2
+            ;X = DATE/TIME OFFSET 1
             ;:DATEMP = DATE/TIME OFFSET 3
-            STX  :DATEMP2
+            PHA               ;SAVE OFFSET 2 TO STACK
             
-            ;DATE 
+            ;DAY
+            TXA
             LSR
             LSR
             LSR
@@ -574,32 +576,19 @@ SHODAT_25
             JSR   PCOUT
             
             ;YEAR
-            LDA   :DATEMP
-            AND   #$0F        ;LOWER 4-BIT
+            LDA   :DATEMP     ;READ OFFSET 3
+            AND   #$0F        ;LOWER 4-BIT ONLY
             TAX
-            LDA   :DATEMP2
+            PLA               ;RESTORE OFFSET 2 FROM STACK
             JSR   HEXDC2
 
-            ;PRINT YEARS IN 4-CHARACTER WIDTH
-PRT4LJ      LDX   #3
-            LDY   #0         ;COUNT NUMBER OF SPACE NEEDED
+            ;PRINT YEAR WITH LEADING ZER0S TO AVOID CONFUSION
+            LDX   #3
 :PRT4LJ1    LDA   DIGIT,X
-            BNE   :PRT4LJ2
-            INY
-            DEX
-            BNE   :PRT4LJ1
-:PRT4LJ2    TYA
-            PHA
             JSR   PRTDIG
-            PLA
-            TAX
-            BEQ   :PRT4LJ4   
-:PRT4LJ3    JSR   PRSPC
             DEX
-            BNE   :PRT4LJ3
-:PRT4LJ4    RTS
-
-:DATEMP2    DB    $0
+            BPL   :PRT4LJ1
+            RTS
 
 ;PATCH SHODAT FOR PRODOS 2.5 EXTENDED DATE FORMAT
 SHODATEX
@@ -610,16 +599,16 @@ SHODATEX
             CPY   #$25
             BCC   :SHODATEX2
             TAY
-            LDA   DATE+3
+            LDA   DATE+3      ;$BF93
             AND   #%11100000  ;TOP 3 BITS
             BNE   :SHODATEX3  ;IF TOP 3 BITS IS NOT 0, THE DATE/TIME IS IN PRODOS 2.5 EXTENDED FORMAT
             TYA
 :SHODATEX2  JMP   SHODAT
 
-:SHODATEX3  LDA   DATE+3
+:SHODATEX3  LDA   DATE+3      ;$BF93
             STA   :DATEMP
-            LDX   DATE+2
-            LDA   DATE+1
+            LDA   DATE+2      ;$BF92
+            LDX   DATE+1      ;$BF91
             JMP   SHODAT_25
             
 
