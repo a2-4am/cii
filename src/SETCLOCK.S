@@ -3,6 +3,12 @@
 *
             LDA   #$16
             JSR   VLEFT
+            ;DONT SHOW DATE ON PRODOS 2.5
+            ;SINCE THE DISPLAY FORMAT IS DIFFERENT FROM INPUT FORMAT
+            LDA   KVERSION
+            CMP   #$25
+            BCS   :NODAT
+            
             LDA   DATE
             BEQ   :NODAT
             LDX   DATE+1
@@ -31,7 +37,7 @@
             DB    $1F,$20
 *
 :NODAT      JSR   PRHERE
-            ASC   "DD-MMM-YY"
+            ASC   "DD-MMM-YY "    ;PRODOS 2.5 DATE IS ONE CHARACTER LONGER. EXTRA SPACE TO COVER IT
             DB    $0
 :NXTIN0     LDX   #0
 :NXTINX     STX   CH
@@ -151,7 +157,13 @@
             LDA   :DAY
             CMP   #$1D        ;29TH?
             BEQ   :BADDAY
-:LEAP       LDA   :MONTH
+:LEAP       
+            ;PRODOS 2.5?
+            LDA   KVERSION
+            CMP   #$25
+            BCS   :SETDATE_25
+            
+            LDA   :MONTH
             ASL
             ASL
             ASL
@@ -170,7 +182,7 @@
 *
 * disable clock driver after setting date
 * and update ProDOS machine byte to say there's no clock
-            LDA   #$60
+:DISCLK     LDA   #$60
             STA   JCLOCK
             LDA   MACHID
             AND   #$FE
@@ -183,3 +195,37 @@
             LDA   #$87
             JSR   PCOUT
             JMP   :NXTINX
+
+:SETDATE_25
+            LDA    #0
+            STA    DATE       ;$BF90
+            LDA    :DAY
+            ASL
+            ASL
+            ASL
+            STA    DATE+1     ;$BF91
+            
+            LDA    :MONTH
+            ASL
+            ASL
+            ASL
+            ASL
+            TAX
+            
+            ;IF YEAR<26, TREAT IT AS 2100-2125
+            ;WE ARE GOOD UNTIL YEAR 2126
+            LDA   :YEAR
+            CMP   #26
+            BCS   :SETYEAR
+            ADC   #100        
+            
+:SETYEAR    ;ADD 2000 TO YEAR. ALSO ADD 1 TO MONTH
+            ;2000 = $7D0           
+            CLC
+            ADC   #$D0
+            STA   DATE+2      ;$BF92
+            TXA
+            ADC   #$07+$10    ;+$10 TO ADD 1 TO MONTH
+            STA   DATE+3      ;$BF93
+            JMP   :DISCLK
+            
